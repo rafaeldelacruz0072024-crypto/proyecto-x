@@ -2250,8 +2250,8 @@
 
         // Fetch landing stats from Supabase
         (async function loadLandingStats() {
-            const SUPABASE_URL = 'https://fejzahnvcxyxnckphcuu.supabase.co';
-            const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlanphaG52Y3h5eG5ja3BoY3V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwMTQ2MzcsImV4cCI6MjA4NjU5MDYzN30.I5BfncDQiiP57DDeG6CxE8twijVnbxtx9qJEwMZul8M';
+            const SUPABASE_URL = '%VITE_SUPABASE_URL%';
+            const SUPABASE_ANON = '%VITE_SUPABASE_ANON_KEY%';
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/site_stats?limit=1`, {
                     headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
