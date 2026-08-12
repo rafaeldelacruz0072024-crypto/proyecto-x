@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEMINIX Protocol — Road Map</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+    overflow: hidden;
+  }
+
+  /* ── Slide engine ── */
+  .slides { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    background: #030712;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .slide.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  /* ── Grid bg ── */
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,243,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,243,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+  }
+
+  /* ── Navigation ── */
+  .nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    padding: 12px 24px;
+    backdrop-filter: blur(12px);
+  }
+  .nav button {
+    background: none;
+    border: 1px solid rgba(0,243,255,0.3);
+    color: #00f3ff;
+    padding: 8px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: rgba(0,243,255,0.1); }
+  .nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .slide-counter {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Typography ── */
+  .orbitron { font-family: 'Orbitron', sans-serif; }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid;
+    margin-bottom: 20px;
+  }
+  .tag-cyan  { color: #00f3ff; border-color: rgba(0,243,255,0.3); background: rgba(0,243,255,0.05); }
+  .tag-green { color: #4ade80; border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.05); }
+  .tag-blue  { color: #60a5fa; border-color: rgba(96,165,250,0.3); background: rgba(96,165,250,0.05); }
+  .tag-purple{ color: #c084fc; border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.05); }
+  .tag-amber { color: #fbbf24; border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.05); }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(24px, 4vw, 48px);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(14px, 2vw, 22px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .subtitle {
+    color: rgba(255,255,255,0.4);
+    font-size: clamp(11px, 1.2vw, 14px);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .glow-cyan  { text-shadow: 0 0 30px rgba(0,243,255,0.6); color: #00f3ff; }
+  .glow-green { text-shadow: 0 0 30px rgba(74,222,128,0.6); color: #4ade80; }
+  .glow-blue  { text-shadow: 0 0 30px rgba(96,165,250,0.6); color: #60a5fa; }
+
+  /* ── Cards ── */
+  .card-grid {
+    display: grid;
+    gap: 16px;
+    width: 100%;
+    max-width: 1100px;
+  }
+  .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .card-grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+  .card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .card:hover { border-color: rgba(0,243,255,0.2); }
+  .card-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+  .card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+    letter-spacing: 0.05em;
+  }
+  .card-accent-green { border-top: 2px solid #4ade80; }
+  .card-accent-blue  { border-top: 2px solid #60a5fa; }
+  .card-accent-cyan  { border-top: 2px solid #00f3ff; }
+  .card-accent-purple{ border-top: 2px solid #c084fc; }
+  .card-accent-amber { border-top: 2px solid #fbbf24; }
+
+  /* ── Timeline ── */
+  .timeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: 900px;
+    margin: 40px 0;
+  }
+  .tl-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .tl-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid;
+    position: relative;
+  }
+  .tl-dot.active {
+    background: #4ade80;
+    border-color: #4ade80;
+    box-shadow: 0 0 16px rgba(74,222,128,0.6);
+  }
+  .tl-dot.future {
+    background: transparent;
+    border-color: rgba(96,165,250,0.5);
+  }
+  .tl-dot.far {
+    background: transparent;
+    border-color: rgba(192,132,252,0.3);
+  }
+  .tl-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+  }
+  .tl-line {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .tl-line.progress {
+    background: linear-gradient(90deg, #4ade80, rgba(96,165,250,0.3));
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, #00f3ff, transparent);
+    margin: 20px auto;
+  }
+
+  /* ── Slide 1: Cover ── */
+  #s1 { text-align: center; }
+  #s1 .logo-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    color: #00f3ff;
+    text-shadow: 0 0 60px rgba(0,243,255,0.4), 0 0 120px rgba(0,243,255,0.1);
+  }
+  #s1 .logo-x { color: #fff; }
+
+  /* ── Slide 4: Comparison ── */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 1000px;
+    align-items: start;
+  }
+  .vs-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 40px;
+  }
+  .vs-circle {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: rgba(0,243,255,0.05);
+    border: 1px solid rgba(0,243,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    color: #00f3ff;
+    letter-spacing: 0.05em;
+  }
+  .feature-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .feature-row:last-child { border-bottom: none; }
+  .feature-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .feature-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
+  .feature-detail { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; letter-spacing: 0.05em; }
+
+  /* ── Slide 5: Mind Map ── */
+  .mindmap {
+    position: relative;
+    width: 800px;
+    height: 420px;
+  }
+  .mm-node {
+    position: absolute;
+    border-radius: 12px;
+    padding: 12px 18px;
+    text-align: center;
+    border: 1px solid;
+  }
+  .mm-center {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(0,243,255,0.15), rgba(0,243,255,0.02));
+    border-color: rgba(0,243,255,0.4);
+    box-shadow: 0 0 40px rgba(0,243,255,0.15);
+  }
+  .mm-center .emoji { font-size: 28px; }
+  .mm-center .label { font-family:'Orbitron',sans-serif; font-size:9px; font-weight:900; letter-spacing:0.15em; color:#00f3ff; margin-top:6px; line-height:1.4; }
+
+  .mm-phase1 { background: rgba(74,222,128,0.05); border-color: rgba(74,222,128,0.3); top:50%; left:5%; transform:translateY(-50%); width:160px; }
+  .mm-phase2 { background: rgba(96,165,250,0.05); border-color: rgba(96,165,250,0.3); top:50%; right:5%; transform:translateY(-50%); width:160px; }
+  .mm-phase3 { background: rgba(192,132,252,0.05); border-color: rgba(192,132,252,0.3); bottom:0; left:50%; transform:translateX(-50%); width:180px; }
+
+  .mm-node-title { font-family:'Orbitron',sans-serif; font-size:9px; font-weight:900; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+  .mm-item { font-size:9px; color:rgba(255,255,255,0.5); margin:3px 0; letter-spacing:0.05em; }
+
+  svg.mm-lines { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+
+  /* ── Quote slide ── */
+  .quote {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(16px, 2.5vw, 28px);
+    font-weight: 700;
+    line-height: 1.6;
+    letter-spacing: 0.08em;
+    text-align: center;
+    color: rgba(255,255,255,0.8);
+    max-width: 800px;
+  }
+  .quote-mark { font-size: 80px; color: rgba(0,243,255,0.15); line-height: 0.5; }
+</style>
+</head>
+<body>
+
+<div class="slides">
+
+  <!-- ═══════════════════════════════════════════ SLIDE 1: COVER -->
+  <div class="slide active" id="s1">
+    <div class="tag tag-cyan">Plan de Evolución Oficial 2025</div>
+    <div class="logo-text">GEMINI<span class="logo-x">X</span></div>
+    <p class="subtitle" style="margin-top:16px; font-size:13px;">P R O T O C O L &nbsp;&nbsp;·&nbsp;&nbsp; R O A D &nbsp; M A P</p>
+    <div class="divider" style="margin-top:40px;"></div>
+    <p class="subtitle">De la Fase 1 a un ecosistema financiero sin límites</p>
+    <div style="position:absolute; bottom:80px; display:flex; gap:32px; opacity:0.25; font-size:11px; letter-spacing:0.2em;">
+      <span>CONFIDENCIAL</span><span>·</span><span>geminixprotocol.com</span><span>·</span><span>2025</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SLIDE 2: FASE 1 -->
+  <div class="slide" id="s2">
+    <div class="tag tag-green">● Activo Ahora</div>
+    <h2 class="glow-green" style="margin-bottom:8px;">FASE 1</h2>
+    <p class="subtitle" style="margin-bottom:36px;">Estado actual del protocolo</p>
+    <div class="card-grid card-grid-3" style="max-width:960px;">
+      <div class="card card-accent-green">
+        <span class="card-icon">📊</span>
+        <div class="card-title">GEMINIX GOLD</div>
+        <div class="card-desc">5 IAs Neurales operando XAU/USD en tiempo real. +1000% auditado en Myfxbook 2025.</div>
+      </div>
+      <div class="card card-accent-green">
+        <span class="card-icon">🌐</span>
+        <div class="card-title">30 Niveles Referidos</div>
+        <div class="card-desc">Comisiones residuales en 30 niveles. Regla de Oro: 10% · 5% · 3% · 2% · 1% · 0.8%</div>
+      </div>
+      <div class="card card-accent-green">
+        <span class="card-icon">💰</span>
+        <div class="card-title">Salario Semanal</div>
+        <div class="card-desc">Pago automático cada Sábado para miembros activos calificados del protocolo.</div>
+      </div>
+      <div class="card card-accent-green">
+        <span class="card-icon">🎯</span>
+        <div class="card-title">Predictions V1</div>
+        <div class="card-desc">Módulo de mercados de predicción activo con operaciones en tiempo real.</div>
+      </div>
+      <div class="card card-accent-green">
+        <span class="card-icon">💎</span>
+        <div class="card-title">Sistema Créditos</div>
+        <div class="card-desc">Créditos internos del ecosistema para transferencias entre usuarios.</div>
+      </div>
+      <div class="card card-accent-green" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:rgba(74,222,128,0.03);">
+        <div style="font-family:'Orbitron',sans-serif; font-size:32px; font-weight:900; color:#4ade80; text-shadow:0 0 20px rgba(74,222,128,0.5);">100%</div>
+        <div class="card-title" style="margin-top:8px;">Operativo</div>
+        <div class="card-desc">Sistema activo y funcionando</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SLIDE 3: COUNTDOWN -->
+  <div class="slide" id="s3">
+    <div class="tag tag-blue">En Progreso</div>
+    <h2 class="glow-blue" style="margin-bottom:8px;">TRANSICIÓN</h2>
+    <p class="subtitle" style="margin-bottom:48px;">Contador oficial de 60 días hacia la Fase 2</p>
+
+    <div class="timeline">
+      <div class="tl-node">
+        <div class="tl-dot active"></div>
+        <div class="tl-label">Fase 1<br/>Activa</div>
+      </div>
+      <div class="tl-line progress"></div>
+      <div class="tl-node">
+        <div class="tl-dot future" style="width:24px;height:24px; background:rgba(96,165,250,0.2); border-color:#60a5fa; box-shadow:0 0 20px rgba(96,165,250,0.4);"></div>
+        <div class="tl-label" style="color:#60a5fa;">Fase 2<br/>~60 Días</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-node">
+        <div class="tl-dot far"></div>
+        <div class="tl-label">Fase 3<br/>Horizonte</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:24px; margin-top:8px;">
+      {['60','DÍAS','00','HORAS','00','MIN','00','SEG'].reduce((acc,v,i)=>{
+        return acc; /* rendered below */
+      },null)}
+    </div>
+    <div style="display:flex; gap:16px;">
+      {['60D','00H','00M','00S'].map(v => '')}
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="background:#0a0f1a; border:1px solid rgba(96,165,250,0.2); border-radius:12px; padding:20px 28px; text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif; font-size:48px; font-weight:900; color:#60a5fa; text-shadow:0 0 30px rgba(96,165,250,0.5); line-height:1;">60</div>
+          <div style="font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3); margin-top:8px; text-transform:uppercase;">Días</div>
+        </div>
+        <div style="font-size:32px; color:rgba(255,255,255,0.15); font-weight:900; margin-bottom:20px;">:</div>
+        <div style="background:#0a0f1a; border:1px solid rgba(96,165,250,0.2); border-radius:12px; padding:20px 28px; text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif; font-size:48px; font-weight:900; color:#60a5fa; text-shadow:0 0 30px rgba(96,165,250,0.5); line-height:1;">00</div>
+          <div style="font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3); margin-top:8px; text-transform:uppercase;">Horas</div>
+        </div>
+        <div style="font-size:32px; color:rgba(255,255,255,0.15); font-weight:900; margin-bottom:20px;">:</div>
+        <div style="background:#0a0f1a; border:1px solid rgba(96,165,250,0.2); border-radius:12px; padding:20px 28px; text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif; font-size:48px; font-weight:900; color:#60a5fa; text-shadow:0 0 30px rgba(96,165,250,0.5); line-height:1;">00</div>
+          <div style="font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3); margin-top:8px; text-transform:uppercase;">Min</div>
+        </div>
+        <div style="font-size:32px; color:rgba(255,255,255,0.15); font-weight:900; margin-bottom:20px;">:</div>
+        <div style="background:#0a0f1a; border:1px solid rgba(96,165,250,0.2); border-radius:12px; padding:20px 28px; text-align:center;">
+          <div style="font-family:'Orbitron',sans-serif; font-size:48px; font-weight:900; color:#60a5fa; text-shadow:0 0 30px rgba(96,165,250,0.5); line-height:1;" id="sec-counter">00</div>
+          <div style="font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3); margin-top:8px; text-transform:uppercase;">Seg</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:32px; font-size:10px; letter-spacing:0.25em; color:rgba(255,255,255,0.2); text-transform:uppercase;">El contador oficial se encuentra en el panel administrativo</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SLIDE 4: FASE 2 -->
+  <div class="slide" id="s4">
+    <div class="tag tag-blue">⏳ Próximamente</div>
+    <h2 class="glow-blue" style="margin-bottom:8px;">FASE 2</h2>
+    <p class="subtitle" style="margin-bottom:36px;">Nuevas funcionalidades del protocolo</p>
+    <div class="card-grid card-grid-5" style="max-width:1100px;">
+      <div class="card card-accent-blue" style="text-align:center;">
+        <span class="card-icon" style="font-size:36px;">📈</span>
+        <div class="card-title">Pasivo<br/>1.1% Diario</div>
+        <div class="card-desc" style="margin-top:10px;">Lunes a Viernes sobre capital activo</div>
+      </div>
+      <div class="card card-accent-blue" style="text-align:center;">
+        <span class="card-icon" style="font-size:36px;">🌐</span>
+        <div class="card-title">15 Niveles<br/>Referidos</div>
+        <div class="card-desc" style="margin-top:10px;">25% distribuido en red de afiliados</div>
+      </div>
+      <div class="card card-accent-blue" style="text-align:center;">
+        <span class="card-icon" style="font-size:36px;">💰</span>
+        <div class="card-title">Salario<br/>Quincenal</div>
+        <div class="card-desc" style="margin-top:10px;">Pago cada 15 días · Mayor liquidez</div>
+      </div>
+      <div class="card card-accent-blue" style="text-align:center;">
+        <span class="card-icon" style="font-size:36px;">🔄</span>
+        <div class="card-title">Fee 10%<br/>Crédito</div>
+        <div class="card-desc" style="margin-top:10px;">Comisión en transferencias internas</div>
+      </div>
+      <div class="card card-accent-blue" style="text-align:center;">
+        <span class="card-icon" style="font-size:36px;">🎯</span>
+        <div class="card-title">Predictions<br/>V2</div>
+        <div class="card-desc" style="margin-top:10px;">Más mercados · Más activos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SLIDE 5: COMPARATIVA -->
+  <div class="slide" id="s5">
+    <div class="tag tag-cyan">Evolución</div>
+    <h2 style="margin-bottom:36px;">FASE 1 <span style="color:rgba(255,255,255,0.2); font-size:0.6em;">VS</span> FASE 2</h2>
+    <div class="vs-grid">
+      <!-- Fase 1 -->
+      <div>
+        <div style="font-family:'Orbitron',sans-serif; font-size:10px; font-weight:900; letter-spacing:0.2em; color:#4ade80; margin-bottom:16px; text-align:center;">● FASE 1 · AHORA</div>
+        <div class="feature-row">
+          <span class="feature-icon">📊</span>
+          <div><div class="feature-title">Rendimiento Variable</div><div class="feature-detail">GEMINIX GOLD · IAs XAU/USD</div></div>
+        </div>
+        <div class="feature-row">
+          <span class="feature-icon">🌐</span>
+          <div><div class="feature-title">30 Niveles</div><div class="feature-detail">Red profunda de referidos</div></div>
+        </div>
+        <div class="feature-row">
+          <span class="feature-icon">💰</span>
+          <div><div class="feature-title">Salario Semanal</div><div class="feature-detail">Pago cada Sábado</div></div>
+        </div>
+        <div class="feature-row">
+          <span class="feature-icon">🎯</span>
+          <div><div class="feature-title">Predictions V1</div><div class="feature-detail">Mercados básicos</div></div>
+        </div>
+      </div>
+
+      <!-- VS -->
+      <div class="vs-divider">
+        <div class="vs-circle">→</div>
+        <div style="width:2px; height:200px; background:linear-gradient(to bottom, rgba(0,243,255,0.3), transparent);"></div>
+      </div>
+
+      <!-- Fase 2 -->
+      <div>
+        <div style="font-family:'Orbitron',sans-serif; font-size:10px; font-weight:900; letter-spacing:0.2em; color:#60a5fa; margin-bottom:16px; text-align:center;">⏳ FASE 2 · +60 DÍAS</div>
+        <div class="feature-row">
+          <span class="feature-icon">📈</span>
+          <div><div class="feature-title" style="color:#60a5fa;">1.1% Diario Fijo</div><div class="feature-detail">Lunes a Viernes · Predecible</div></div>
+        </div>
+        <div class="feature-row">
+          <span class="feature-icon">🌐</span>
+          <div><div class="feature-title" style="color:#60a5fa;">15 Niveles · 25%</div><div class="feature-detail">Mayor % de distribución</div></div>
+        </div>
+        <div class="feature-row">
+          <span class="feature-icon">💰</span>
+          <div><div class="feature-title" style="color:#60a5fa;">Salario Quincenal</div><div class="feature-detail">2 pagos al mes · Más frecuente</div></div>
+        </div>
+        <div class="feature-row">
+          <span class="feature-icon">🎯</span>
+          <div><div class="feature-title" style="color:#60a5fa;">Predictions V2</div><div class="feature-detail">Más mercados · V2 mejorada</div></div>
+        </div>
+        <div class="feature-row">
+          <span class="feature-icon">🔄</span>
+          <div><div class="feature-title" style="color:#60a5fa;">Fee 10% Crédito</div><div class="feature-detail">Nueva fuente de ingresos</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SLIDE 6: FASE 3 -->
+  <div class="slide" id="s6">
+    <div class="tag tag-purple">🔮 Visión Futura</div>
+    <h2 class="glow-blue" style="color:#c084fc; text-shadow:0 0 30px rgba(192,132,252,0.5); margin-bottom:8px;">FASE 3</h2>
+    <p class="subtitle" style="margin-bottom:40px;">El horizonte del ecosistema GEMINIX</p>
+    <div class="card-grid card-grid-2" style="max-width:800px; gap:20px;">
+      <div class="card card-accent-purple">
+        <span class="card-icon">🏦</span>
+        <div class="card-title">Exchange Propio</div>
+        <div class="card-desc">Plataforma de trading interna del ecosistema GEMINIX. Operaciones peer-to-peer entre miembros sin intermediarios externos.</div>
+      </div>
+      <div class="card card-accent-purple">
+        <span class="card-icon">📱</span>
+        <div class="card-title">App Móvil Nativa</div>
+        <div class="card-desc">Aplicación iOS y Android. Gestión completa del portafolio, retiros, red de referidos y predicciones desde el móvil.</div>
+      </div>
+      <div class="card card-accent-purple">
+        <span class="card-icon">🌍</span>
+        <div class="card-title">NFTs GEMINIX</div>
+        <div class="card-desc">Activos digitales exclusivos del protocolo. Membresías NFT con beneficios especiales y acceso a funciones premium.</div>
+      </div>
+      <div class="card card-accent-purple">
+        <span class="card-icon">⚡</span>
+        <div class="card-title">DeFi Protocol</div>
+        <div class="card-desc">Integración con finanzas descentralizadas. Pools de liquidez, yield farming y staking del token nativo GEMINIX.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SLIDE 7: MIND MAP -->
+  <div class="slide" id="s7">
+    <div class="tag tag-cyan">Vista Global</div>
+    <h3 style="margin-bottom:32px; letter-spacing:0.15em;">MAPA MENTAL DEL PROTOCOLO</h3>
+    <div class="mindmap">
+      <svg class="mm-lines">
+        <!-- Center to Phase 1 -->
+        <line x1="50%" y1="50%" x2="22%" y2="50%" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.4"/>
+        <!-- Center to Phase 2 -->
+        <line x1="50%" y1="50%" x2="78%" y2="50%" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.4"/>
+        <!-- Center to Phase 3 -->
+        <line x1="50%" y1="50%" x2="50%" y2="88%" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.4"/>
+        <!-- Center to top decorative -->
+        <line x1="50%" y1="50%" x2="50%" y2="8%" stroke="rgba(0,243,255,0.2)" stroke-width="1" stroke-dasharray="4,6" opacity="0.3"/>
+      </svg>
+
+      <!-- Center -->
+      <div class="mm-node mm-center">
+        <div class="emoji">💎</div>
+        <div class="label">GEMINIX<br/>PROTOCOL</div>
+      </div>
+
+      <!-- Phase 1 -->
+      <div class="mm-node mm-phase1">
+        <div class="mm-node-title" style="color:#4ade80;">✅ Fase 1</div>
+        <div class="mm-item">📊 GEMINIX GOLD</div>
+        <div class="mm-item">🌐 30 Niv. Referidos</div>
+        <div class="mm-item">💰 Salario Semanal</div>
+        <div class="mm-item">🎯 Predictions V1</div>
+        <div class="mm-item">💎 Créditos</div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="mm-node mm-phase2">
+        <div class="mm-node-title" style="color:#60a5fa;">⏳ Fase 2</div>
+        <div class="mm-item">📈 1.1% Diario</div>
+        <div class="mm-item">🌐 15 Niv. 25%</div>
+        <div class="mm-item">💰 Sal. Quincenal</div>
+        <div class="mm-item">🔄 Fee 10%</div>
+        <div class="mm-item">🎯 Predictions V2</div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="mm-node mm-phase3">
+        <div class="mm-node-title" style="color:#c084fc;">🔮 Fase 3</div>
+        <div style="display:flex; gap:12px; justify-content:center; margin-top:4px;">
+          <span style="font-size:18px;" title="Exchange">🏦</span>
+          <span style="font-size:18px;" title="App Móvil">📱</span>
+          <span style="font-size:18px;" title="NFTs">🌍</span>
+          <span style="font-size:18px;" title="DeFi">⚡</span>
+        </div>
+      </div>
+
+      <!-- Top label -->
+      <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); text-align:center;">
+        <div style="font-size:9px; letter-spacing:0.2em; color:rgba(0,243,255,0.3); text-transform:uppercase;">ECOSISTEMA FINANCIERO DESCENTRALIZADO</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SLIDE 8: CIERRE -->
+  <div class="slide" id="s8" style="text-align:center;">
+    <div class="quote-mark">"</div>
+    <div class="quote" style="margin: 20px 0;">
+      El protocolo más avanzado de<br/>
+      inteligencia financiera del ecosistema cripto —<br/>
+      <span style="color:#00f3ff;">construido para escalar sin límites.</span>
+    </div>
+    <div class="quote-mark" style="transform:rotate(180deg);">"</div>
+    <div class="divider" style="margin: 40px auto;"></div>
+    <div style="font-family:'Orbitron',sans-serif; font-size:28px; font-weight:900; letter-spacing:0.2em; color:#00f3ff; text-shadow:0 0 30px rgba(0,243,255,0.4);">
+      GEMINIX<span style="color:white;">X</span>
+    </div>
+    <p style="margin-top:12px; font-size:11px; letter-spacing:0.3em; color:rgba(255,255,255,0.3); text-transform:uppercase;">geminixprotocol.com</p>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="btn-prev" onclick="changeSlide(-1)" disabled>← PREV</button>
+  <span class="slide-counter" id="counter">1 / 8</span>
+  <button id="btn-next" onclick="changeSlide(1)">NEXT →</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  function changeSlide(dir) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    slides[current].classList.add('active');
+    document.getElementById('counter').textContent = `${current + 1} / ${total}`;
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').disabled = current === total - 1;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    changeSlide(-1);
+  });
+
+  // Live seconds counter on slide 3
+  setInterval(() => {
+    const el = document.getElementById('sec-counter');
+    if (el) {
+      const s = parseInt(el.textContent) + 1;
+      el.textContent = String(s % 60).padStart(2, '0');
+    }
+  }, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "GEMINIX Admin Panel",
+  "description": "Professional standalone administration panel for the GEMINIX fintech investment platform, built with React, Tailwind CSS, and Supabase.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

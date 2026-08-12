@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GK GEMINIX — Prediction Markets</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #020817;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── GRID BG ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,243,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,243,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── GLOW ORBS ─── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+  .orb1 { width: 600px; height: 600px; background: rgba(99,102,241,0.12); top: -200px; left: -200px; }
+  .orb2 { width: 500px; height: 500px; background: rgba(0,243,255,0.08); bottom: -100px; right: -100px; animation-delay: -4s; }
+  .orb3 { width: 300px; height: 300px; background: rgba(168,85,247,0.1); top: 40%; left: 40%; animation-delay: -8s; }
+
+  @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(30px, 20px) scale(1.05); } }
+
+  /* ─── LAYOUT ─── */
+  .wrapper { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 40px 48px; }
+
+  /* ─── HEADER ─── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(0,243,255,0.1);
+  }
+  .logo-area { display: flex; align-items: center; gap: 16px; }
+  .logo-mark {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, #6366f1, #00f3ff);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: #020817;
+    box-shadow: 0 0 30px rgba(0,243,255,0.3);
+  }
+  .logo-text { font-family: 'Orbitron', sans-serif; }
+  .logo-text .gk { font-size: 22px; font-weight: 900; letter-spacing: 0.1em; color: #fff; }
+  .logo-text .sub { font-size: 10px; font-weight: 700; letter-spacing: 0.35em; color: #00f3ff; text-transform: uppercase; }
+
+  .header-right { display: flex; align-items: center; gap: 24px; }
+  .live-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.2em;
+    color: #4ade80; text-transform: uppercase;
+  }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+    animation: pulse-dot 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse-dot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+
+  .header-stat { text-align: right; }
+  .header-stat .val { font-size: 22px; font-weight: 900; color: #fff; }
+  .header-stat .lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #475569; }
+
+  /* ─── TOP METRICS ─── */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .metric-card {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: border-color 0.3s;
+  }
+  .metric-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--c1, transparent) 0%, transparent 60%);
+    opacity: 0.07;
+  }
+  .metric-card:nth-child(1) { --c1: #6366f1; }
+  .metric-card:nth-child(2) { --c1: #00f3ff; }
+  .metric-card:nth-child(3) { --c1: #f59e0b; }
+  .metric-card:nth-child(4) { --c1: #a855f7; }
+  .metric-icon { font-size: 22px; margin-bottom: 12px; }
+  .metric-val { font-size: 28px; font-weight: 900; letter-spacing: -0.02em; }
+  .metric-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #64748b; margin-top: 4px; }
+  .metric-change { font-size: 11px; font-weight: 700; margin-top: 8px; }
+  .metric-change.up { color: #4ade80; }
+  .metric-change.down { color: #f87171; }
+
+  /* ─── MAIN GRID ─── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ─── MARKET CARDS ─── */
+  .markets-col { display: flex; flex-direction: column; gap: 16px; }
+
+  .market-card {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  .market-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0,243,255,0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(0,243,255,0.05);
+  }
+  .market-card.featured {
+    border-color: rgba(99,102,241,0.3);
+    box-shadow: 0 0 40px rgba(99,102,241,0.1);
+  }
+  .market-card.featured::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #6366f1, #00f3ff, transparent);
+  }
+
+  .market-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
+  .market-category {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.2em;
+    text-transform: uppercase; padding: 5px 12px;
+    border-radius: 100px; margin-bottom: 10px;
+  }
+  .cat-crypto { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+  .cat-defi { background: rgba(99,102,241,0.1); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+  .cat-macro { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+  .cat-nft { background: rgba(168,85,247,0.1); color: #c084fc; border: 1px solid rgba(168,85,247,0.2); }
+  .cat-ai { background: rgba(0,243,255,0.1); color: #00f3ff; border: 1px solid rgba(0,243,255,0.2); }
+
+  .market-title { font-size: 17px; font-weight: 800; line-height: 1.3; color: #f1f5f9; max-width: 520px; }
+  .market-meta { font-size: 11px; color: #475569; margin-top: 6px; font-weight: 500; }
+
+  .market-volume {
+    text-align: right; flex-shrink: 0;
+  }
+  .market-volume .vol-val { font-size: 16px; font-weight: 900; color: #fff; }
+  .market-volume .vol-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #475569; }
+
+  /* PROBABILITY BAR */
+  .prob-section { margin-bottom: 18px; }
+  .prob-bar-wrap {
+    height: 12px; border-radius: 100px;
+    background: rgba(255,255,255,0.05);
+    overflow: hidden;
+    margin: 12px 0 8px;
+    position: relative;
+  }
+  .prob-fill-yes {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, #4ade80, #22d3ee);
+    transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+  .prob-fill-yes::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: #fff;
+    border-radius: 0 100px 100px 0;
+    box-shadow: 0 0 12px #fff;
+  }
+  .prob-labels {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .prob-yes { display: flex; align-items: center; gap: 8px; }
+  .prob-yes .pct { font-size: 22px; font-weight: 900; color: #4ade80; }
+  .prob-yes .lbl { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prob-no { display: flex; align-items: center; gap: 8px; }
+  .prob-no .pct { font-size: 22px; font-weight: 900; color: #f87171; }
+  .prob-no .lbl { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* SPARKLINE */
+  .sparkline-wrap { margin-top: 4px; }
+
+  /* BET BUTTONS */
+  .bet-row { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-yes {
+    flex: 1; padding: 12px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 14px;
+    color: #4ade80; font-weight: 800; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-yes:hover { background: rgba(34,197,94,0.2); box-shadow: 0 0 20px rgba(34,197,94,0.15); }
+  .btn-no {
+    flex: 1; padding: 12px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 14px;
+    color: #f87171; font-weight: 800; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-no:hover { background: rgba(239,68,68,0.2); box-shadow: 0 0 20px rgba(239,68,68,0.15); }
+
+  /* ─── RIGHT PANEL ─── */
+  .right-col { display: flex; flex-direction: column; gap: 16px; }
+
+  /* LEADERBOARD */
+  .panel {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 24px;
+    backdrop-filter: blur(20px);
+  }
+  .panel-title {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.25em;
+    text-transform: uppercase; color: #00f3ff;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-title::before {
+    content: ''; width: 3px; height: 14px;
+    background: linear-gradient(#6366f1, #00f3ff);
+    border-radius: 100px;
+  }
+
+  .leader-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .leader-row:last-child { border-bottom: none; }
+  .leader-rank { width: 24px; font-size: 12px; font-weight: 900; color: #475569; text-align: center; }
+  .leader-rank.top1 { color: #fbbf24; }
+  .leader-rank.top2 { color: #94a3b8; }
+  .leader-rank.top3 { color: #f97316; }
+  .leader-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--av1), var(--av2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900; color: #020817;
+    flex-shrink: 0;
+  }
+  .leader-info { flex: 1; }
+  .leader-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .leader-wins { font-size: 10px; font-weight: 600; color: #475569; margin-top: 1px; }
+  .leader-pnl { text-align: right; }
+  .leader-pnl .amt { font-size: 14px; font-weight: 900; }
+  .leader-pnl .amt.pos { color: #4ade80; }
+  .leader-pnl .pct { font-size: 10px; font-weight: 600; color: #475569; }
+
+  /* ACTIVITY FEED */
+  .activity-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    animation: slideIn 0.4s ease-out;
+  }
+  .activity-item:last-child { border-bottom: none; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+  .act-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .act-dot.yes { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+  .act-dot.no { background: #f87171; box-shadow: 0 0 8px #f87171; }
+  .act-text { flex: 1; font-size: 12px; color: #94a3b8; line-height: 1.4; }
+  .act-text strong { color: #e2e8f0; }
+  .act-time { font-size: 10px; color: #475569; }
+
+  /* MINI CHART PANEL */
+  .chart-panel { position: relative; }
+  .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .chart-title-area .ct { font-size: 14px; font-weight: 800; color: #f1f5f9; }
+  .chart-title-area .cs { font-size: 11px; color: #475569; margin-top: 2px; }
+  .chart-price { text-align: right; }
+  .chart-price .cp { font-size: 22px; font-weight: 900; color: #4ade80; }
+  .chart-price .cc { font-size: 11px; font-weight: 700; color: #4ade80; }
+
+  /* ─── FOOTER STRIP ─── */
+  .footer-strip {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0,243,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand { font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.3em; color: rgba(255,255,255,0.2); }
+  .footer-tags { display: flex; gap: 12px; }
+  .ftag {
+    font-size: 9px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #475569;
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-area">
+      <div class="logo-mark">GK</div>
+      <div class="logo-text">
+        <div class="gk">GEMINIX</div>
+        <div class="sub">Prediction Markets</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-stat">
+        <div class="val" style="color:#00f3ff">$4.2M</div>
+        <div class="lbl">Total Volume</div>
+      </div>
+      <div class="header-stat">
+        <div class="val">847</div>
+        <div class="lbl">Active Markets</div>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        Live
+      </div>
+    </div>
+  </header>
+
+  <!-- METRICS -->
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-icon">🏆</div>
+      <div class="metric-val" style="color:#818cf8">12,491</div>
+      <div class="metric-lbl">Total Traders</div>
+      <div class="metric-change up">↑ +8.3% this week</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">💎</div>
+      <div class="metric-val" style="color:#22d3ee">$284K</div>
+      <div class="metric-lbl">24h Volume</div>
+      <div class="metric-change up">↑ +22.1% vs yesterday</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-val" style="color:#fbbf24">94.7%</div>
+      <div class="metric-lbl">Payout Rate</div>
+      <div class="metric-change up">↑ On-time delivery</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">🌐</div>
+      <div class="metric-val" style="color:#c084fc">48</div>
+      <div class="metric-lbl">Countries Active</div>
+      <div class="metric-change up">↑ +3 this month</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- LEFT: MARKET CARDS -->
+    <div class="markets-col">
+
+      <!-- MARKET 1 — FEATURED -->
+      <div class="market-card featured">
+        <div class="market-header">
+          <div>
+            <div class="market-category cat-crypto">₿ Crypto</div>
+            <div class="market-title">¿Bitcoin superará los $120,000 antes del Q3 2025?</div>
+            <div class="market-meta">Cierra en 47 días · 3,241 posiciones abiertas</div>
+          </div>
+          <div class="market-volume">
+            <div class="vol-val" style="color:#fbbf24">$892K</div>
+            <div class="vol-lbl">volumen</div>
+          </div>
+        </div>
+        <div class="prob-section">
+          <div class="prob-labels">
+            <div class="prob-yes">
+              <span class="pct">73%</span>
+              <span class="lbl">YES</span>
+            </div>
+            <div class="prob-no">
+              <span class="lbl">NO</span>
+              <span class="pct">27%</span>
+            </div>
+          </div>
+          <div class="prob-bar-wrap">
+            <div class="prob-fill-yes" style="width:73%"></div>
+          </div>
+        </div>
+        <svg width="100%" height="48" viewBox="0 0 400 48">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4ade80" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,38 L20,35 L40,30 L60,28 L80,32 L100,25 L120,20 L140,22 L160,16 L180,18 L200,12 L220,14 L240,10 L260,8 L280,11 L300,7 L320,9 L340,5 L360,8 L380,4 L400,6 L400,48 L0,48 Z" fill="url(#g1)"/>
+          <path d="M0,38 L20,35 L40,30 L60,28 L80,32 L100,25 L120,20 L140,22 L160,16 L180,18 L200,12 L220,14 L240,10 L260,8 L280,11 L300,7 L320,9 L340,5 L360,8 L380,4 L400,6" fill="none" stroke="#4ade80" stroke-width="2"/>
+        </svg>
+        <div class="bet-row">
+          <button class="btn-yes">▲ Apostar YES — $0.73</button>
+          <button class="btn-no">▼ Apostar NO — $0.27</button>
+        </div>
+      </div>
+
+      <!-- MARKET 2 -->
+      <div class="market-card">
+        <div class="market-header">
+          <div>
+            <div class="market-category cat-defi">◈ DeFi</div>
+            <div class="market-title">¿Ethereum superará a Bitcoin en market cap en 2025?</div>
+            <div class="market-meta">Cierra en 182 días · 1,847 posiciones abiertas</div>
+          </div>
+          <div class="market-volume">
+            <div class="vol-val">$341K</div>
+            <div class="vol-lbl">volumen</div>
+          </div>
+        </div>
+        <div class="prob-section">
+          <div class="prob-labels">
+            <div class="prob-yes"><span class="pct">41%</span><span class="lbl">YES</span></div>
+            <div class="prob-no"><span class="lbl">NO</span><span class="pct">59%</span></div>
+          </div>
+          <div class="prob-bar-wrap">
+            <div class="prob-fill-yes" style="width:41%; background: linear-gradient(90deg,#6366f1,#a855f7);"></div>
+          </div>
+        </div>
+        <svg width="100%" height="40" viewBox="0 0 400 40">
+          <defs>
+            <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#818cf8" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#818cf8" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,20 L30,22 L60,18 L90,24 L120,20 L150,16 L180,22 L210,18 L240,24 L270,20 L300,16 L330,20 L360,18 L400,22 L400,40 L0,40 Z" fill="url(#g2)"/>
+          <path d="M0,20 L30,22 L60,18 L90,24 L120,20 L150,16 L180,22 L210,18 L240,24 L270,20 L300,16 L330,20 L360,18 L400,22" fill="none" stroke="#818cf8" stroke-width="2"/>
+        </svg>
+        <div class="bet-row">
+          <button class="btn-yes">▲ Apostar YES — $0.41</button>
+          <button class="btn-no">▼ Apostar NO — $0.59</button>
+        </div>
+      </div>
+
+      <!-- MARKET 3 -->
+      <div class="market-card">
+        <div class="market-header">
+          <div>
+            <div class="market-category cat-macro">🌍 Macro</div>
+            <div class="market-title">¿La Fed reducirá tasas de interés en la reunión de Junio 2025?</div>
+            <div class="market-meta">Cierra en 28 días · 2,103 posiciones abiertas</div>
+          </div>
+          <div class="market-volume">
+            <div class="vol-val">$218K</div>
+            <div class="vol-lbl">volumen</div>
+          </div>
+        </div>
+        <div class="prob-section">
+          <div class="prob-labels">
+            <div class="prob-yes"><span class="pct">61%</span><span class="lbl">YES</span></div>
+            <div class="prob-no"><span class="lbl">NO</span><span class="pct">39%</span></div>
+          </div>
+          <div class="prob-bar-wrap">
+            <div class="prob-fill-yes" style="width:61%; background: linear-gradient(90deg,#4ade80,#84cc16);"></div>
+          </div>
+        </div>
+        <div class="bet-row">
+          <button class="btn-yes">▲ Apostar YES — $0.61</button>
+          <button class="btn-no">▼ Apostar NO — $0.39</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-col">
+
+      <!-- MINI CHART -->
+      <div class="panel chart-panel">
+        <div class="chart-header">
+          <div class="chart-title-area">
+            <div class="ct">BTC/USD Oracle</div>
+            <div class="cs">Feed en tiempo real · Binance</div>
+          </div>
+          <div class="chart-price">
+            <div class="cp">$98,420</div>
+            <div class="cc">+4.8% 24h</div>
+          </div>
+        </div>
+        <!-- Candlestick chart SVG -->
+        <svg width="100%" height="120" viewBox="0 0 352 120">
+          <defs>
+            <linearGradient id="candleGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(0,243,255,0.05)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </linearGradient>
+          </defs>
+          <rect width="352" height="120" fill="url(#candleGrad)" rx="8"/>
+          <!-- Grid lines -->
+          <line x1="0" y1="30" x2="352" y2="30" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="60" x2="352" y2="60" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="90" x2="352" y2="90" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <!-- Green candles -->
+          <g fill="#4ade80">
+            <rect x="8" y="70" width="10" height="30" rx="2"/>
+            <line x1="13" y1="65" x2="13" y2="105" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#f87171">
+            <rect x="28" y="55" width="10" height="35" rx="2"/>
+            <line x1="33" y1="50" x2="33" y2="95" stroke="#f87171" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="48" y="45" width="10" height="25" rx="2"/>
+            <line x1="53" y1="40" x2="53" y2="80" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="68" y="35" width="10" height="20" rx="2"/>
+            <line x1="73" y1="30" x2="73" y2="65" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#f87171">
+            <rect x="88" y="40" width="10" height="28" rx="2"/>
+            <line x1="93" y1="35" x2="93" y2="75" stroke="#f87171" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="108" y="28" width="10" height="22" rx="2"/>
+            <line x1="113" y1="24" x2="113" y2="58" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="128" y="20" width="10" height="18" rx="2"/>
+            <line x1="133" y1="15" x2="133" y2="48" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#f87171">
+            <rect x="148" y="25" width="10" height="20" rx="2"/>
+            <line x1="153" y1="20" x2="153" y2="55" stroke="#f87171" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="168" y="15" width="10" height="18" rx="2"/>
+            <line x1="173" y1="10" x2="173" y2="45" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="188" y="10" width="10" height="15" rx="2"/>
+            <line x1="193" y1="6" x2="193" y2="35" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#f87171">
+            <rect x="208" y="14" width="10" height="18" rx="2"/>
+            <line x1="213" y1="10" x2="213" y2="40" stroke="#f87171" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="228" y="8" width="10" height="14" rx="2"/>
+            <line x1="233" y1="4" x2="233" y2="30" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="248" y="5" width="10" height="12" rx="2"/>
+            <line x1="253" y1="2" x2="253" y2="25" stroke="#4ade80" stroke-width="1.5"/>
+          </g>
+          <g fill="#f87171">
+            <rect x="268" y="8" width="10" height="14" rx="2"/>
+            <line x1="273" y1="4" x2="273" y2="30" stroke="#f87171" stroke-width="1.5"/>
+          </g>
+          <g fill="#4ade80">
+            <rect x="288" y="4" width="10" height="12" rx="2" opacity="0.6"/>
+            <line x1="293" y1="2" x2="293" y2="24" stroke="#4ade80" stroke-width="1.5" opacity="0.6"/>
+          </g>
+          <!-- Current price line -->
+          <line x1="0" y1="16" x2="352" y2="16" stroke="rgba(0,243,255,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+          <!-- Price label -->
+          <rect x="300" y="8" width="48" height="16" rx="4" fill="rgba(0,243,255,0.15)"/>
+          <text x="324" y="20" text-anchor="middle" fill="#00f3ff" font-size="9" font-weight="800" font-family="Inter">$98,420</text>
+        </svg>
+      </div>
+
+      <!-- LEADERBOARD -->
+      <div class="panel">
+        <div class="panel-title">Top Traders</div>
+
+        <div class="leader-row">
+          <div class="leader-rank top1">🥇</div>
+          <div class="leader-avatar" style="--av1:#fbbf24;--av2:#f59e0b">CK</div>
+          <div class="leader-info">
+            <div class="leader-name">CryptoKing_MX</div>
+            <div class="leader-wins">142 wins · 89% accuracy</div>
+          </div>
+          <div class="leader-pnl">
+            <div class="amt pos">+$14,820</div>
+            <div class="pct">ROI 412%</div>
+          </div>
+        </div>
+
+        <div class="leader-row">
+          <div class="leader-rank top2">🥈</div>
+          <div class="leader-avatar" style="--av1:#6366f1;--av2:#8b5cf6">VK</div>
+          <div class="leader-info">
+            <div class="leader-name">VaultKing</div>
+            <div class="leader-wins">98 wins · 84% accuracy</div>
+          </div>
+          <div class="leader-pnl">
+            <div class="amt pos">+$9,440</div>
+            <div class="pct">ROI 287%</div>
+          </div>
+        </div>
+
+        <div class="leader-row">
+          <div class="leader-rank top3">🥉</div>
+          <div class="leader-avatar" style="--av1:#f97316;--av2:#ef4444">NX</div>
+          <div class="leader-info">
+            <div class="leader-name">NexusTrader</div>
+            <div class="leader-wins">76 wins · 81% accuracy</div>
+          </div>
+          <div class="leader-pnl">
+            <div class="amt pos">+$7,210</div>
+            <div class="pct">ROI 198%</div>
+          </div>
+        </div>
+
+        <div class="leader-row">
+          <div class="leader-rank">4</div>
+          <div class="leader-avatar" style="--av1:#22d3ee;--av2:#0ea5e9">AP</div>
+          <div class="leader-info">
+            <div class="leader-name">AlphaProtocol</div>
+            <div class="leader-wins">61 wins · 79% accuracy</div>
+          </div>
+          <div class="leader-pnl">
+            <div class="amt pos">+$5,830</div>
+            <div class="pct">ROI 156%</div>
+          </div>
+        </div>
+
+        <div class="leader-row">
+          <div class="leader-rank">5</div>
+          <div class="leader-avatar" style="--av1:#a855f7;--av2:#ec4899">SR</div>
+          <div class="leader-info">
+            <div class="leader-name">SignalRider</div>
+            <div class="leader-wins">54 wins · 76% accuracy</div>
+          </div>
+          <div class="leader-pnl">
+            <div class="amt pos">+$4,190</div>
+            <div class="pct">ROI 124%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE ACTIVITY -->
+      <div class="panel">
+        <div class="panel-title">Actividad en Vivo</div>
+
+        <div class="activity-item">
+          <div class="act-dot yes"></div>
+          <div class="act-text"><strong>@CryptoKing_MX</strong> apostó $500 en YES · BTC $120K</div>
+          <div class="act-time">ahora</div>
+        </div>
+        <div class="activity-item">
+          <div class="act-dot no"></div>
+          <div class="act-text"><strong>@VaultKing</strong> apostó $200 en NO · ETH Flippening</div>
+          <div class="act-time">2m</div>
+        </div>
+        <div class="activity-item">
+          <div class="act-dot yes"></div>
+          <div class="act-text"><strong>@NexusTrader</strong> ganó $840 · Fed Rate Cut</div>
+          <div class="act-time">5m</div>
+        </div>
+        <div class="activity-item">
+          <div class="act-dot yes"></div>
+          <div class="act-text"><strong>@AlphaProtocol</strong> apostó $1,200 en YES · BTC $120K</div>
+          <div class="act-time">8m</div>
+        </div>
+        <div class="activity-item">
+          <div class="act-dot no"></div>
+          <div class="act-text"><strong>@SignalRider</strong> apostó $350 en NO · Fed Rate Cut</div>
+          <div class="act-time">12m</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-strip">
+    <div class="footer-brand">GK GEMINIX · PREDICTION MARKETS</div>
+    <div class="footer-tags">
+      <div class="ftag">Blockchain Verified</div>
+      <div class="ftag">Non-Custodial</div>
+      <div class="ftag">Real-Time Oracle</div>
+      <div class="ftag">48 Countries</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Environment variables and local credentials
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependencies and generated output
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/.vercel/
+**/*.log
+
+# Local/private data
+**/user_full_data.json
+**/user_info.txt
+
+# Editor and operating-system files
+**/.vscode/
+**/.idea/
+**/.DS_Store
+**/Thumbs.db
+

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEMINIX — Auditoría de Candados Financieros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --card: #111118;
+            --border: #1e1e2e;
+            --text: #c8c8d4;
+            --text-dim: #5a5a72;
+            --accent: #6366f1;
+            --accent2: #06b6d4;
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --rose: #f43f5e;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 40px;
+        }
+        @media print {
+            body { background: white; color: #1a1a2e; padding: 20px; }
+            .card { background: #f8f8fc !important; border-color: #e0e0ea !important; }
+            .header { background: #1a1a2e !important; }
+            .badge { border-color: #ccc !important; }
+            .no-print { display: none !important; }
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a3e 100%);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+        }
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99,102,241,0.1);
+            border: 1px solid rgba(99,102,241,0.2);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+        .header p { color: var(--text-dim); font-size: 14px; font-weight: 500; }
+        .header .date {
+            margin-top: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            margin-bottom: 24px;
+            position: relative;
+            transition: border-color 0.3s;
+        }
+        .card:hover { border-color: rgba(99,102,241,0.3); }
+        .card-number {
+            position: absolute;
+            top: -1px; left: 32px;
+            background: var(--accent);
+            color: white;
+            font-weight: 900;
+            font-size: 12px;
+            padding: 4px 16px;
+            border-radius: 0 0 12px 12px;
+            letter-spacing: 1px;
+        }
+        .card h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 6px;
+            margin-top: 12px;
+        }
+        .card .subtitle {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 16px 0;
+            font-size: 13px;
+        }
+        thead th {
+            background: rgba(99,102,241,0.06);
+            color: var(--text-dim);
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        thead th:first-child { border-radius: 12px 0 0 0; }
+        thead th:last-child { border-radius: 0 12px 0 0; }
+        tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(30,30,46,0.5);
+            font-weight: 500;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(99,102,241,0.03); }
+        .center { text-align: center; }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 800;
+            border: 1px solid;
+        }
+        .badge-green { color: var(--green); border-color: rgba(16,185,129,0.2); background: rgba(16,185,129,0.06); }
+        .badge-yellow { color: var(--yellow); border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.06); }
+        .badge-red { color: var(--red); border-color: rgba(239,68,68,0.2); background: rgba(239,68,68,0.06); }
+
+        /* Stars */
+        .stars { color: var(--yellow); letter-spacing: 2px; }
+
+        /* Example box */
+        .example {
+            background: rgba(6,182,212,0.05);
+            border: 1px solid rgba(6,182,212,0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 13px;
+        }
+        .example-label {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--accent2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        /* Impact section */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .impact-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .impact-item .label {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .impact-item .value {
+            font-size: 20px;
+            margin-top: 4px;
+        }
+
+        /* Recommendation */
+        .recommendation {
+            background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(6,182,212,0.08) 100%);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 20px;
+            padding: 36px;
+            margin-top: 32px;
+        }
+        .recommendation h2 {
+            color: white;
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+        .step {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            color: white;
+            font-weight: 900;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .step-content h3 { color: white; font-size: 15px; font-weight: 800; }
+        .step-content p { font-size: 12px; color: var(--text-dim); font-weight: 500; margin-top: 2px; }
+
+        /* Print button */
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(99,102,241,0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .print-btn:hover { filter: brightness(1.1); }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 12px 0;
+        }
+
+        .flow-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--accent2);
+            line-height: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-badge">🔒 Documento Confidencial</div>
+            <h1>Auditoría de Candados Financieros</h1>
+            <p>Sistema de Comisiones Residuales — 30 Niveles de Profundidad</p>
+            <div class="date">GEMINIX · 3 de Marzo de 2026</div>
+        </div>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-number">CANDADO 01</div>
+            <h2>🏦 Cap Máximo de Comisión por Usuario</h2>
+            <p class="subtitle">Limitar cuánto puede ganar un usuario en comisiones por período de tiempo</p>
+            
+            <table>
+                <thead><tr><th>Parámetro</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr><td>Cap diario</td><td>$500/día en comisiones</td></tr>
+                    <tr><td>Cap semanal</td><td>$2,000/semana</td></tr>
+                    <tr><td>Cap mensual</td><td>$10,000/mes</td></tr>
+                </tbody>
+            </table>
+
+            <div class="example">
+                <div class="example-label">💡 Ejemplo</div>
+                Un líder genera $600 en comisiones hoy. Con cap de $500/día, recibe $500 hoy y los $100 restantes se congelan o eliminan.
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="label">Sostenibilidad</div>
+                    <div class="value"><span class="badge badge-green">🟢 Alto</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Complejidad</div>
+                    <div class="value"><span class="badge badge-green">🟢 Baja</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Prioridad</div>
+                    <div class="value stars">★★★★★</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-number">CANDADO 02</div>
+            <h2>💎 Inversión Mínima Activa por Nivel</h2>
+            <p class="subtitle">Para cobrar comisiones de un nivel, el referrer debe tener inversión activa mínima</p>
+            
+            <table>
+                <thead><tr><th>Nivel</th><th>Inversión Mínima Activa</th></tr></thead>
+                <tbody>
+                    <tr><td>L1 – L3</td><td class="center">$10 (básico)</td></tr>
+                    <tr><td>L4 – L10</td><td class="center">$100</td></tr>
+                    <tr><td>L11 – L20</td><td class="center">$500</td></tr>
+                    <tr><td>L21 – L30</td><td class="center">$1,000</td></tr>
+                </tbody>
+            </table>
+
+            <div class="example">
+                <div class="example-label">💡 Ejemplo</div>
+                Un referrer en L15 tiene solo $50 invertidos. Necesita $500 para cobrar niveles L11-L20. <strong>No cobra</strong> — la comisión no se genera.
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="label">Sostenibilidad</div>
+                    <div class="value"><span class="badge badge-green">🟢 Alto</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Complejidad</div>
+                    <div class="value"><span class="badge badge-green">🟢 Baja</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Prioridad</div>
+                    <div class="value stars">★★★★★</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-number">CANDADO 03</div>
+            <h2>👥 Qualificación por Directos Activos</h2>
+            <p class="subtitle">Desbloquear niveles profundos según cantidad de referidos directos con inversión</p>
+            
+            <table>
+                <thead><tr><th>Niveles Desbloqueados</th><th>Directos Activos Requeridos</th></tr></thead>
+                <tbody>
+                    <tr><td>L1 – L3</td><td class="center">0 (todo el mundo cobra)</td></tr>
+                    <tr><td>L4 – L10</td><td class="center">3 directos activos</td></tr>
+                    <tr><td>L11 – L20</td><td class="center">5 directos activos</td></tr>
+                    <tr><td>L21 – L30</td><td class="center">10 directos activos</td></tr>
+                </tbody>
+            </table>
+
+            <div class="example">
+                <div class="example-label">💡 Ejemplo</div>
+                Un usuario con 2 directos activos cobra L1-L3 pero <strong>no cobra L4-L30</strong>. Necesita 3 directos para desbloquear hasta L10.
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="label">Sostenibilidad</div>
+                    <div class="value"><span class="badge badge-green">🟢 Alto</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Complejidad</div>
+                    <div class="value"><span class="badge badge-yellow">🟡 Media</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Prioridad</div>
+                    <div class="value stars">★★★★☆</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-number">CANDADO 04</div>
+            <h2>📊 Cap Diario Global del Sistema</h2>
+            <p class="subtitle">Presupuesto máximo diario para comisiones totales del sistema</p>
+            
+            <table>
+                <thead><tr><th>Parámetro</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr><td>Presupuesto diario</td><td>$5,000 en comisiones totales</td></tr>
+                    <tr><td>Al agotar</td><td>Cola FIFO para mañana</td></tr>
+                    <tr><td>Reset</td><td>Cada día a las 00:00 UTC</td></tr>
+                </tbody>
+            </table>
+
+            <div class="example">
+                <div class="example-label">💡 Ejemplo</div>
+                Hoy se han pagado $4,800 en comisiones. Llega una inversión que genera $300 más. Solo se pagan $200 hoy, los $100 restantes van a cola para mañana.
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="label">Sostenibilidad</div>
+                    <div class="value"><span class="badge badge-green">🟢 Máximo</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Complejidad</div>
+                    <div class="value"><span class="badge badge-red">🔴 Alta</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Prioridad</div>
+                    <div class="value stars">★★★☆☆</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-number">CANDADO 05</div>
+            <h2>🎖️ Niveles Desbloqueables (Rank System)</h2>
+            <p class="subtitle">Los niveles de comisión se desbloquean según el rango del usuario</p>
+            
+            <table>
+                <thead><tr><th>Rango</th><th>Requisitos</th><th class="center">Niveles</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>⚪ Starter</strong></td><td>Inversión ≥ $10</td><td class="center">L1 – L3</td></tr>
+                    <tr><td><strong>🔵 Builder</strong></td><td>Inversión ≥ $100 + 3 directos</td><td class="center">L1 – L10</td></tr>
+                    <tr><td><strong>🟣 Leader</strong></td><td>Inversión ≥ $500 + 5 directos + $5K vol.</td><td class="center">L1 – L20</td></tr>
+                    <tr><td><strong>🟡 Executive</strong></td><td>Inversión ≥ $1K + 10 directos + $25K vol.</td><td class="center">L1 – L30</td></tr>
+                </tbody>
+            </table>
+
+            <div class="example">
+                <div class="example-label">💡 Ejemplo</div>
+                Un "Builder" con $100 invertidos y 3 directos cobra L1-L10. Los niveles L11-L30 permanecen <strong>bloqueados</strong> hasta que rankee a "Leader".
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="label">Sostenibilidad</div>
+                    <div class="value"><span class="badge badge-green">🟢 Máximo</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Complejidad</div>
+                    <div class="value"><span class="badge badge-red">🔴 Alta</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Prioridad</div>
+                    <div class="value stars">★★★★★</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-number">CANDADO 06</div>
+            <h2>🔄 Compresión Dinámica</h2>
+            <p class="subtitle">Si un nivel no califica, su comisión sube al siguiente nivel calificado</p>
+
+            <div class="flow-box">
+                Sin compresión: &nbsp; L1 ✅ → L2 ❌ (se pierde) → L3 ✅<br>
+                Con compresión: &nbsp; L1 ✅ → L2 ❌ (skip) → L3 ✅ (cobra L2 + L3)
+            </div>
+
+            <div class="example">
+                <div class="example-label">💡 Ejemplo</div>
+                L2 no califica (no tiene inversión suficiente). En vez de perder esa comisión, L3 la recibe junto con la suya. Las comisiones siempre se distribuyen a usuarios calificados.
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="label">Sostenibilidad</div>
+                    <div class="value"><span class="badge badge-yellow">🟡 Medio</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Complejidad</div>
+                    <div class="value"><span class="badge badge-yellow">🟡 Media</span></div>
+                </div>
+                <div class="impact-item">
+                    <div class="label">Prioridad</div>
+                    <div class="value stars">★★★☆☆</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Matrix -->
+        <div class="card">
+            <h2>📊 Matriz Comparativa</h2>
+            <p class="subtitle">Vista general de todos los candados</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Candado</th>
+                        <th class="center">Sostenibilidad</th>
+                        <th class="center">Complejidad</th>
+                        <th class="center">Impacto UX</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cap por usuario</td>
+                        <td class="center"><span class="badge badge-green">Alto</span></td>
+                        <td class="center"><span class="badge badge-green">Baja</span></td>
+                        <td class="center"><span class="badge badge-yellow">Medio</span></td>
+                    </tr>
+                    <tr>
+                        <td>Inversión mínima por nivel</td>
+                        <td class="center"><span class="badge badge-green">Alto</span></td>
+                        <td class="center"><span class="badge badge-green">Baja</span></td>
+                        <td class="center"><span class="badge badge-yellow">Medio</span></td>
+                    </tr>
+                    <tr>
+                        <td>Directos activos</td>
+                        <td class="center"><span class="badge badge-green">Alto</span></td>
+                        <td class="center"><span class="badge badge-yellow">Media</span></td>
+                        <td class="center"><span class="badge badge-red">Alto</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cap global diario</td>
+                        <td class="center"><span class="badge badge-green">Máximo</span></td>
+                        <td class="center"><span class="badge badge-red">Alta</span></td>
+                        <td class="center"><span class="badge badge-yellow">Medio</span></td>
+                    </tr>
+                    <tr>
+                        <td>Rank System</td>
+                        <td class="center"><span class="badge badge-green">Máximo</span></td>
+                        <td class="center"><span class="badge badge-red">Alta</span></td>
+                        <td class="center"><span class="badge badge-green">Positivo</span></td>
+                    </tr>
+                    <tr>
+                        <td>Compresión dinámica</td>
+                        <td class="center"><span class="badge badge-yellow">Medio</span></td>
+                        <td class="center"><span class="badge badge-yellow">Media</span></td>
+                        <td class="center"><span class="badge badge-green">Positivo</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="recommendation">
+            <h2>🚀 Recomendación de Implementación</h2>
+            <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 24px;">Orden sugerido para máximo impacto con mínimo esfuerzo:</p>
+            
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h3>Inversión Mínima por Nivel</h3>
+                    <p>Rápido, potente y justo. Obliga a tener "skin in the game".</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h3>Directos Activos</h3>
+                    <p>Complementa el anterior. Incentiva reclutamiento real.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h3>Rank System</h3>
+                    <p>Objetivo a mediano plazo. Profesionaliza la plataforma con gamificación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 20px;">
+            <p style="font-size: 10px; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase;">
+                GEMINIX · Documento Confidencial · Marzo 2026
+            </p>
+        </div>
+    </div>
+
+    <button class="print-btn no-print" onclick="window.print()">📄 Descargar PDF</button>
+</body>
+</html>

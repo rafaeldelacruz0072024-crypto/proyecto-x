@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>BootCamp Punta Cana 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#000; display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:'Inter',sans-serif; }
+
+    .wrap { width:900px; background:#05070a; border-radius:32px; overflow:hidden; border:1px solid #1e293b; position:relative; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position:relative;
+      height:320px;
+      background:linear-gradient(160deg,#0a1020 0%,#071528 40%,#040c18 100%);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:40px;
+    }
+    /* ocean glow */
+    .hero::before {
+      content:'';
+      position:absolute;
+      bottom:-80px; left:50%;
+      transform:translateX(-50%);
+      width:700px; height:300px;
+      background:radial-gradient(ellipse, rgba(6,182,212,0.18) 0%, rgba(14,165,233,0.08) 40%, transparent 70%);
+    }
+    /* sun glow */
+    .hero::after {
+      content:'';
+      position:absolute;
+      top:-60px; right:-60px;
+      width:320px; height:320px;
+      background:radial-gradient(circle, rgba(234,179,8,0.18) 0%, transparent 65%);
+    }
+    /* grid */
+    .hero-grid {
+      position:absolute; inset:0;
+      background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:50px 50px;
+    }
+    /* palm silhouette strip */
+    .palm-strip {
+      position:absolute;
+      bottom:0; left:0; right:0;
+      height:90px;
+      background:linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%);
+    }
+    /* stars */
+    .star { position:absolute; width:2px; height:2px; background:#fff; border-radius:50%; opacity:0.4; }
+
+    .hero-logo {
+      position:relative; z-index:2;
+      display:flex; align-items:center; gap:12px;
+      margin-bottom:20px;
+    }
+    .hero-logo-icon {
+      width:44px; height:44px;
+      background:rgba(0,243,255,0.1);
+      border:1px solid rgba(0,243,255,0.3);
+      border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 20px rgba(0,243,255,0.2);
+    }
+    .hero-logo-icon svg { width:22px; height:22px; stroke:#00f3ff; }
+    .hero-logo-text { font-size:16px; font-weight:900; color:#fff; letter-spacing:2px; }
+
+    .hero-tag {
+      position:relative; z-index:2;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 16px;
+      background:rgba(234,179,8,0.12);
+      border:1px solid rgba(234,179,8,0.35);
+      border-radius:100px;
+      font-size:10px; font-weight:900; color:#eab308;
+      letter-spacing:3px; text-transform:uppercase;
+      margin-bottom:18px;
+    }
+    .tag-dot { width:6px; height:6px; border-radius:50%; background:#eab308; }
+
+    .hero-title {
+      position:relative; z-index:2;
+      font-size:52px; font-weight:900;
+      line-height:1.05; letter-spacing:-2px;
+      color:#fff;
+      margin-bottom:10px;
+    }
+    .hero-title .year {
+      background:linear-gradient(90deg,#eab308,#f59e0b,#fcd34d);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .hero-loc {
+      position:relative; z-index:2;
+      font-size:15px; font-weight:700;
+      color:rgba(148,163,184,0.9);
+      letter-spacing:1px;
+    }
+    .hero-loc span { color:#22d3ee; }
+
+    /* ─── BODY ─── */
+    .body { padding:48px 56px; }
+
+    /* DATE + SPOTS row */
+    .info-row {
+      display:flex; gap:16px;
+      margin-bottom:36px;
+    }
+    .info-chip {
+      flex:1;
+      padding:18px 20px;
+      border-radius:20px;
+      border:1px solid;
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .info-chip.date { background:rgba(234,179,8,0.06); border-color:rgba(234,179,8,0.2); }
+    .info-chip.trip  { background:rgba(6,182,212,0.06); border-color:rgba(6,182,212,0.2); }
+    .info-chip.spots { background:rgba(168,85,247,0.06); border-color:rgba(168,85,247,0.2); }
+    .info-chip.limit { background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.2); }
+    .chip-label { font-size:9px; font-weight:900; letter-spacing:3px; text-transform:uppercase; }
+    .info-chip.date  .chip-label { color:#a16207; }
+    .info-chip.trip  .chip-label { color:#0e7490; }
+    .info-chip.spots .chip-label { color:#7e22ce; }
+    .info-chip.limit .chip-label { color:#991b1b; }
+    .chip-value { font-size:16px; font-weight:900; color:#fff; }
+    .chip-sub   { font-size:11px; font-weight:600; color:#64748b; }
+
+    /* Prize list */
+    .prize-section { margin-bottom:36px; }
+    .section-title {
+      font-size:10px; font-weight:900; color:#475569;
+      letter-spacing:4px; text-transform:uppercase;
+      margin-bottom:16px;
+    }
+    .prize-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .prize-item {
+      display:flex; align-items:center; gap:14px;
+      padding:16px 18px;
+      background:rgba(255,255,255,0.02);
+      border:1px solid #1e293b;
+      border-radius:16px;
+    }
+    .prize-emoji { font-size:24px; }
+    .prize-text { font-size:14px; font-weight:700; color:#e2e8f0; }
+    .prize-sub  { font-size:11px; font-weight:600; color:#475569; margin-top:2px; }
+
+    /* Goal / Progress */
+    .goal-section {
+      background:linear-gradient(135deg,rgba(234,179,8,0.07),rgba(245,158,11,0.03));
+      border:1px solid rgba(234,179,8,0.2);
+      border-radius:24px;
+      padding:28px 32px;
+      margin-bottom:36px;
+      position:relative;
+      overflow:hidden;
+    }
+    .goal-section::before {
+      content:'';
+      position:absolute; top:-1px; left:-1px; right:-1px;
+      height:2px;
+      background:linear-gradient(90deg,#eab308,#f59e0b,transparent);
+      border-radius:24px 24px 0 0;
+    }
+    .goal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .goal-title { font-size:18px; font-weight:900; color:#fff; }
+    .goal-badge {
+      padding:6px 14px;
+      background:rgba(234,179,8,0.12);
+      border:1px solid rgba(234,179,8,0.3);
+      border-radius:100px;
+      font-size:11px; font-weight:900; color:#eab308;
+    }
+    .goal-bar-wrap {
+      height:20px;
+      background:rgba(0,0,0,0.4);
+      border:1px solid #1e293b;
+      border-radius:100px;
+      overflow:hidden;
+      margin-bottom:10px;
+      position:relative;
+    }
+    .goal-bar-fill {
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#ca8a04,#eab308,#fcd34d);
+      border-radius:100px;
+      position:relative;
+      transition:width 2s ease;
+    }
+    .goal-marks { display:flex; justify-content:space-between; }
+    .goal-mark  { font-size:10px; font-weight:700; color:#334155; }
+
+    .goal-ranks { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:20px; }
+    .rank-chip {
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid #1e293b;
+      background:rgba(0,0,0,0.3);
+      text-align:center;
+    }
+    .rank-name  { font-size:10px; font-weight:900; letter-spacing:1px; }
+    .rank-pv   { font-size:13px; font-weight:900; color:#fff; margin-top:2px; }
+    .rank-chip.starter .rank-name { color:#94a3b8; }
+    .rank-chip.bronze  .rank-name { color:#d97706; }
+    .rank-chip.silver  .rank-name { color:#cbd5e1; }
+    .rank-chip.gold    .rank-name { color:#eab308; }
+
+    /* CTA */
+    .cta {
+      background:linear-gradient(135deg,rgba(234,179,8,0.1),rgba(245,158,11,0.05));
+      border:1px solid rgba(234,179,8,0.25);
+      border-radius:20px;
+      padding:24px 28px;
+      display:flex; align-items:center; justify-content:space-between; gap:20px;
+    }
+    .cta-text { font-size:16px; font-weight:900; color:#fff; margin-bottom:4px; }
+    .cta-sub  { font-size:12px; font-weight:600; color:#64748b; }
+    .cta-btn {
+      flex-shrink:0;
+      padding:14px 28px;
+      background:linear-gradient(135deg,#ca8a04,#eab308);
+      border-radius:14px;
+      font-size:12px; font-weight:900; color:#000;
+      letter-spacing:2px; text-transform:uppercase;
+      white-space:nowrap;
+      box-shadow:0 8px 30px rgba(234,179,8,0.3);
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      border-top:1px solid #0f172a;
+      padding:22px 56px;
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(0,0,0,0.4);
+    }
+    .footer-brand { font-size:12px; font-weight:900; color:#1e293b; letter-spacing:1px; }
+    .footer-brand span { color:#00f3ff; }
+    .footer-url   { font-size:11px; font-weight:700; color:#1e293b; }
+    .footer-date  { font-size:11px; font-weight:700; color:#0f172a; letter-spacing:2px; text-transform:uppercase; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-grid"></div>
+      <!-- Stars -->
+      <div class="star" style="top:15%;left:10%"></div>
+      <div class="star" style="top:25%;left:22%;width:3px;height:3px;opacity:.6"></div>
+      <div class="star" style="top:10%;left:45%"></div>
+      <div class="star" style="top:30%;left:60%;width:3px;height:3px"></div>
+      <div class="star" style="top:12%;left:75%;opacity:.5"></div>
+      <div class="star" style="top:20%;left:88%"></div>
+      <div class="star" style="top:40%;left:5%;opacity:.3"></div>
+      <div class="star" style="top:35%;left:35%;opacity:.4"></div>
+      <div class="palm-strip"></div>
+
+      <div class="hero-logo">
+        <div class="hero-logo-icon">
+          <svg fill="none" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <span class="hero-logo-text">GEMINIX PROTOCOL</span>
+      </div>
+
+      <div class="hero-tag">
+        <div class="tag-dot"></div>
+        Evento Exclusivo · Socios Geminix
+      </div>
+
+      <div class="hero-title">
+        BootCamp <span class="year">Punta Cana</span>
+      </div>
+      <div class="hero-loc">📍 <span>Punta Cana, República Dominicana</span> · Miércoles 21 de Mayo, 2026</div>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+
+      <!-- INFO ROW -->
+      <div class="info-row">
+        <div class="info-chip date">
+          <span class="chip-label">📅 Fecha del Evento</span>
+          <span class="chip-value">21 Mayo 2026</span>
+          <span class="chip-sub">Miércoles</span>
+        </div>
+        <div class="info-chip trip">
+          <span class="chip-label">✈️ Incluye</span>
+          <span class="chip-value">Todo Incluido</span>
+          <span class="chip-sub">Vuelo · Hotel · 3 Días</span>
+        </div>
+        <div class="info-chip spots">
+          <span class="chip-label">🏆 Cupos</span>
+          <span class="chip-value">Solo 10</span>
+          <span class="chip-sub">Primeros en clasificar</span>
+        </div>
+        <div class="info-chip limit">
+          <span class="chip-label">⏳ Fecha Límite</span>
+          <span class="chip-value">20 Mayo 2026</span>
+          <span class="chip-sub">Inicia 22 de Abril</span>
+        </div>
+      </div>
+
+      <!-- PRIZE -->
+      <div class="prize-section">
+        <div class="section-title">¿Qué incluye el premio?</div>
+        <div class="prize-grid">
+          <div class="prize-item">
+            <span class="prize-emoji">✈️</span>
+            <div><div class="prize-text">Vuelo Redondo</div><div class="prize-sub">Ida y Vuelta incluido</div></div>
+          </div>
+          <div class="prize-item">
+            <span class="prize-emoji">🏨</span>
+            <div><div class="prize-text">Hotel Todo Incluido</div><div class="prize-sub">Resort 5 estrellas</div></div>
+          </div>
+          <div class="prize-item">
+            <span class="prize-emoji">📅</span>
+            <div><div class="prize-text">3 Días · 2 Noches</div><div class="prize-sub">Estancia completa</div></div>
+          </div>
+          <div class="prize-item">
+            <span class="prize-emoji">🤝</span>
+            <div><div class="prize-text">Networking Geminix</div><div class="prize-sub">Con el equipo directivo</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GOAL -->
+      <div class="goal-section">
+        <div class="goal-header">
+          <div class="goal-title">Objetivo de Clasificación</div>
+          <div class="goal-badge">10,000 PV de Equipo</div>
+        </div>
+        <div class="goal-bar-wrap">
+          <div class="goal-bar-fill" style="width:72%"></div>
+        </div>
+        <div class="goal-marks">
+          <span class="goal-mark">0</span>
+          <span class="goal-mark">2,500</span>
+          <span class="goal-mark">5,000</span>
+          <span class="goal-mark">7,500</span>
+          <span class="goal-mark">10,000 PV ✓</span>
+        </div>
+        <div class="goal-ranks">
+          <div class="rank-chip starter">
+            <div class="rank-name">STARTER</div>
+            <div class="rank-pv">10,000 PV</div>
+          </div>
+          <div class="rank-chip bronze">
+            <div class="rank-name">BRONZE</div>
+            <div class="rank-pv">10,000 PV</div>
+          </div>
+          <div class="rank-chip silver">
+            <div class="rank-name">SILVER</div>
+            <div class="rank-pv">10,000 PV</div>
+          </div>
+          <div class="rank-chip gold">
+            <div class="rank-name">GOLD+</div>
+            <div class="rank-pv">10,000 PV</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta">
+        <div>
+          <div class="cta-text">¿Listo para Punta Cana?</div>
+          <div class="cta-sub">Crece tu red entre el 22 de Abril y el 20 de Mayo. Solo los primeros 10 socios en alcanzar 10,000 PV clasifican.</div>
+        </div>
+        <div class="cta-btn">CLASIFICAR AHORA</div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-brand"><span>GEMINIX</span> Protocol · Equipo Oficial</div>
+      <div class="footer-date">Abril 2026</div>
+      <div class="footer-url">geminixprotocol.com</div>
+    </div>
+
+  </div>
+</body>
+</html>

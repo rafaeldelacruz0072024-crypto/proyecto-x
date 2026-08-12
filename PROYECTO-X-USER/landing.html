@@ -1,0 +1,2391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEMINIX | The Future of Decentralized Finance</title>
+    <meta name="description"
+        content="GEMINIX - Institutional-grade DeFi platform. Earn 2.2% daily returns with automated arbitrage technology. Join our growing community of investors worldwide.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo-white.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo-white.png">
+    <link rel="apple-touch-icon" href="/logo-white.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --space: #030712;
+            --dark: #020617;
+            --brand: #2563eb;
+            --cyan: #00f3ff;
+            --purple: #bc13fe;
+            --gold: #ffd700;
+            --green: #00ff9d;
+            --pink: #ff0055;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--space);
+            color: #e2e8f0;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 243, 255, .08) 0%, transparent 50%),
+                radial-gradient(circle at 0% 50%, rgba(188, 19, 254, .04) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--space)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyan);
+            border-radius: 2px
+        }
+
+        /* Fix for Google Translate injecting <font> tags and breaking WebKit fonts */
+        font {
+            font-family: inherit !important;
+            font-weight: inherit !important;
+        }
+
+        .font-outfit {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .font-chakra {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .glow-cyan {
+            text-shadow: 0 0 10px rgba(0, 243, 255, .5)
+        }
+
+        .glow-purple {
+            text-shadow: 0 0 10px rgba(188, 19, 254, .5)
+        }
+
+        .glow-gold {
+            text-shadow: 0 0 10px rgba(255, 215, 0, .5)
+        }
+
+        .glow-green {
+            text-shadow: 0 0 10px rgba(0, 255, 157, .5)
+        }
+
+        /* NAV */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(3, 7, 18, .85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 243, 255, .1);
+            transition: all .3s
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: .15em;
+            color: #fff;
+            text-transform: uppercase
+        }
+
+        .nav-logo span {
+            color: var(--cyan)
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center
+        }
+
+        .nav-links a {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .75rem;
+            color: #94a3b8;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            transition: all .3s;
+            position: relative
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan)
+        }
+
+        .nav-cta {
+            background: var(--brand);
+            color: #fff !important;
+            padding: .6rem 1.5rem;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-weight: 700;
+            transition: all .3s !important
+        }
+
+        .nav-cta:hover {
+            background: var(--cyan);
+            color: #000 !important;
+            box-shadow: 0 0 25px rgba(0, 243, 255, .4)
+        }
+
+        @media(max-width:768px) {
+            .nav-links {
+                display: none
+            }
+
+            .nav {
+                padding: .8rem 1rem
+            }
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 8rem 2rem 4rem;
+            overflow: hidden
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(0, 243, 255, .03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 243, 255, .03) 1px, transparent 1px);
+            pointer-events: none
+        }
+
+        .hero-orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, .3), rgba(188, 19, 254, .15), transparent 70%);
+            filter: blur(60px);
+            animation: float 8s ease-in-out infinite;
+            pointer-events: none
+        }
+
+        .hero-orb-2 {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 243, 255, .2), transparent 70%);
+            filter: blur(40px);
+            animation: float 6s ease-in-out infinite reverse;
+            top: 20%;
+            right: 15%;
+            pointer-events: none
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1)
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.05)
+            }
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            max-width: 900px
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem 1.2rem;
+            border: 1px solid rgba(0, 243, 255, .3);
+            background: rgba(0, 243, 255, .05);
+            margin-bottom: 2rem;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(0, 243, 255, .7)
+            }
+
+            70% {
+                opacity: 1;
+                box-shadow: 0 0 0 8px transparent
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1.05;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            letter-spacing: -.02em
+        }
+
+        .hero h1 .accent {
+            background: linear-gradient(135deg, var(--cyan), var(--brand));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: inherit;
+        }
+        .hero h1 .accent font {
+            font-family: inherit !important;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: 1rem 2.5rem;
+            background: var(--brand);
+            color: #fff;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all .4s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .btn-primary:hover {
+            background: var(--cyan);
+            color: #000;
+            box-shadow: 0 0 40px rgba(0, 243, 255, .3);
+            transform: translateY(-2px)
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1), transparent);
+            transform: translateX(-100%);
+            transition: transform .6s
+        }
+
+        .btn-primary:hover::after {
+            transform: translateX(100%)
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: var(--cyan);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            border: 1px solid rgba(0, 243, 255, .3);
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all .4s
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 243, 255, .1);
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, .15)
+        }
+
+        .hero-rate {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap
+        }
+
+        .hero-rate-item {
+            text-align: center
+        }
+
+        .hero-rate-item .val {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--cyan)
+        }
+
+        .hero-rate-item .lbl {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .6rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            margin-top: .25rem
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 6rem 2rem;
+            position: relative
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: .25em;
+            margin-bottom: 1rem;
+            padding: .3rem 1rem;
+            border: 1px solid rgba(0, 243, 255, .2);
+            background: rgba(0, 243, 255, .03)
+        }
+
+        .section-title {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            color: #fff;
+            margin-bottom: .75rem;
+            letter-spacing: -.02em
+        }
+
+        .section-sub {
+            font-size: 1rem;
+            color: #64748b;
+            max-width: 600px;
+            line-height: 1.7;
+            margin-bottom: 3rem
+        }
+
+        /* STATS */
+        .stats {
+            background: linear-gradient(180deg, transparent, rgba(37, 99, 235, .03), transparent);
+            border-top: 1px solid rgba(0, 243, 255, .06);
+            border-bottom: 1px solid rgba(0, 243, 255, .06)
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem
+        }
+
+        @media(max-width:768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:480px) {
+            .stats-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .stat-card {
+            background: rgba(8, 14, 28, .7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 243, 255, .12);
+            border-top: 1px solid rgba(0, 243, 255, .25);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            position: relative;
+            overflow: hidden;
+            transition: all .5s
+        }
+
+        .stat-card:hover {
+            border-color: rgba(0, 243, 255, .4);
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, .08)
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: .4
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1.2rem;
+            background: rgba(0, 243, 255, .08);
+            border: 1px solid rgba(0, 243, 255, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)
+        }
+
+        .stat-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--cyan);
+            fill: none;
+            stroke-width: 1.5
+        }
+
+        .stat-val {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: #fff;
+            line-height: 1
+        }
+
+        .stat-val .counter {
+            color: var(--cyan)
+        }
+
+        .stat-lbl {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            margin-top: .5rem
+        }
+
+        /* PLANS */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            align-items: start
+        }
+
+        @media(max-width:900px) {
+            .plans-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .plan-card {
+            background: rgba(8, 14, 28, .7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, .06);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all .5s
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brand), transparent);
+            opacity: .5
+        }
+
+        .plan-card:hover {
+            border-color: rgba(37, 99, 235, .4);
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(37, 99, 235, .1)
+        }
+
+        .plan-card.featured {
+            border-color: rgba(0, 243, 255, .3)
+        }
+
+        .plan-card.featured::before {
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: .8
+        }
+
+        .plan-card.featured:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 50px rgba(0, 243, 255, .15)
+        }
+
+        .plan-tag {
+            display: inline-block;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .6rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            padding: .25rem .8rem;
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: #94a3b8;
+            margin-bottom: 1.5rem
+        }
+
+        .plan-card.featured .plan-tag {
+            border-color: rgba(0, 243, 255, .3);
+            color: var(--cyan);
+            background: rgba(0, 243, 255, .05)
+        }
+
+        .plan-title {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: .5rem
+        }
+
+        .plan-rate {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 3rem;
+            color: var(--cyan);
+            line-height: 1
+        }
+
+        .plan-rate small {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 400
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            font-size: .9rem;
+            color: #94a3b8
+        }
+
+        .plan-features li .check {
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 255, 157, .1);
+            border: 1px solid rgba(0, 255, 157, .3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px)
+        }
+
+        .plan-features li .check svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--green);
+            fill: none;
+            stroke-width: 3
+        }
+
+        /* COMMISSIONS */
+        .comm-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem
+        }
+
+        @media(max-width:768px) {
+            .comm-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:480px) {
+            .comm-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .comm-card {
+            background: rgba(8, 14, 28, .6);
+            border: 1px solid rgba(255, 255, 255, .05);
+            padding: 2rem;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            position: relative;
+            overflow: hidden;
+            transition: all .4s
+        }
+
+        .comm-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            opacity: .4
+        }
+
+        .comm-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, .1)
+        }
+
+        .comm-level {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            margin-bottom: .5rem
+        }
+
+        .comm-pct {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            line-height: 1
+        }
+
+        .comm-pct small {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 400
+        }
+
+        .comm-desc {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .7rem;
+            color: #475569;
+            margin-top: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .1em
+        }
+
+        .c1 {
+            border-color: rgba(0, 243, 255, .2)
+        }
+
+        .c1::before {
+            background: var(--cyan)
+        }
+
+        .c1 .comm-pct {
+            color: var(--cyan)
+        }
+
+        .c2 {
+            border-color: rgba(37, 99, 235, .2)
+        }
+
+        .c2::before {
+            background: var(--brand)
+        }
+
+        .c2 .comm-pct {
+            color: var(--brand)
+        }
+
+        .c3 {
+            border-color: rgba(188, 19, 254, .2)
+        }
+
+        .c3::before {
+            background: var(--purple)
+        }
+
+        .c3 .comm-pct {
+            color: var(--purple)
+        }
+
+        .c4 {
+            border-color: rgba(255, 215, 0, .15)
+        }
+
+        .c4::before {
+            background: var(--gold)
+        }
+
+        .c4 .comm-pct {
+            color: var(--gold)
+        }
+
+        .c5 {
+            border-color: rgba(0, 255, 157, .15)
+        }
+
+        .c5::before {
+            background: var(--green)
+        }
+
+        .c5 .comm-pct {
+            color: var(--green)
+        }
+
+        .c6 {
+            border-color: rgba(255, 0, 85, .15)
+        }
+
+        .c6::before {
+            background: var(--pink)
+        }
+
+        .c6 .comm-pct {
+            color: var(--pink)
+        }
+
+        /* SALARY TABLE */
+        .salary-table-wrap {
+            background: rgba(8, 14, 28, .7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 243, 255, .1);
+            clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+            overflow: hidden;
+            position: relative
+        }
+
+        .salary-table-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: .5
+        }
+
+        .salary-table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .salary-table thead {
+            background: rgba(0, 0, 0, .4)
+        }
+
+        .salary-table th {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, .05)
+        }
+
+        .salary-table td {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .03);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            transition: background .3s
+        }
+
+        .salary-table tr:hover td {
+            background: rgba(255, 215, 0, .02)
+        }
+
+        .salary-table .vol {
+            font-weight: 700;
+            color: #e2e8f0;
+            font-size: .95rem
+        }
+
+        .salary-table .bonus {
+            font-weight: 800;
+            color: var(--gold);
+            font-size: 1.1rem
+        }
+
+        .salary-table .rank-badge {
+            display: inline-block;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .55rem;
+            padding: .2rem .6rem;
+            border: 1px solid;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px)
+        }
+
+        @media(max-width:600px) {
+
+            .salary-table th,
+            .salary-table td {
+                padding: .8rem .7rem;
+                font-size: .8rem
+            }
+
+            .salary-table .bonus {
+                font-size: .95rem
+            }
+        }
+
+        /* SECURITY */
+        .sec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem
+        }
+
+        @media(max-width:768px) {
+            .sec-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .sec-card {
+            background: rgba(8, 14, 28, .5);
+            border: 1px solid rgba(255, 255, 255, .05);
+            padding: 2.5rem 2rem;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all .4s
+        }
+
+        .sec-card:hover {
+            border-color: rgba(0, 243, 255, .2);
+            transform: translateY(-3px)
+        }
+
+        .sec-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(0, 243, 255, .05);
+            border: 1px solid rgba(0, 243, 255, .15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)
+        }
+
+        .sec-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--cyan);
+            fill: none;
+            stroke-width: 1.5
+        }
+
+        .sec-title {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .05em
+        }
+
+        .sec-desc {
+            font-size: .85rem;
+            color: #64748b;
+            line-height: 1.7
+        }
+
+        /* TELEGRAM CTA */
+        .tg-section {
+            background: linear-gradient(180deg, transparent, rgba(99, 102, 241, .04), transparent);
+            border-top: 1px solid rgba(99, 102, 241, .1)
+        }
+
+        .tg-box {
+            background: rgba(8, 14, 28, .8);
+            border: 1px solid rgba(99, 102, 241, .2);
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            padding: 4rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden
+        }
+
+        .tg-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6366f1, transparent);
+            opacity: .6
+        }
+
+        @media(max-width:600px) {
+            .tg-box {
+                padding: 2.5rem 1.5rem
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, .05);
+            text-align: center
+        }
+
+        footer .brand {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: #fff;
+            letter-spacing: .1em;
+            margin-bottom: .5rem;
+            white-space: nowrap
+        }
+
+        footer .brand span {
+            color: var(--cyan)
+        }
+
+        footer .legal {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            max-width: 700px;
+            margin: .8rem auto 0;
+            line-height: 1.8
+        }
+
+        /* SCROLL ANIMATIONS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all .8s cubic-bezier(.16, 1, .3, 1)
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        .reveal-delay-1 {
+            transition-delay: .1s
+        }
+
+        .reveal-delay-2 {
+            transition-delay: .2s
+        }
+
+        .reveal-delay-3 {
+            transition-delay: .3s
+        }
+
+        .reveal-delay-4 {
+            transition-delay: .4s
+        }
+
+        /* SCANLINE */
+        .scanline {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: .03;
+            z-index: 0
+        }
+
+        .scanline::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 243, 255, .3) 50%, transparent 100%);
+            animation: scan 4s linear infinite
+        }
+
+        @keyframes scan {
+            0% {
+                transform: translateY(-100%)
+            }
+
+            100% {
+                transform: translateY(100%)
+            }
+        }
+
+        /* LANGUAGE SELECTOR */
+        .lang-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-selector {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            color: #00f3ff;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 0.75rem;
+            padding: 0.4rem 1rem;
+            outline: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 4px;
+            letter-spacing: 0.1em;
+        }
+
+        .lang-selector option {
+            background: #030712;
+            color: #fff;
+        }
+
+        .VIpgJd-ZVi9od-ORHb-OEVmcd,
+        .goog-te-banner-frame,
+        .goog-te-menu-frame,
+        #goog-gt-tt,
+        .goog-tooltip,
+        .goog-tooltip:hover,
+        .goog-text-highlight {
+            display: none !important;
+        }
+
+        body {
+            top: 0 !important;
+            position: static !important;
+        }
+
+        iframe.skiptranslate {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="nav">
+        <div class="nav-logo" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <img src="/logo-new.png.png" alt="GEMINIX"
+                style="width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));">
+            <div style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 900; letter-spacing: .1em; font-size: 1.25rem; white-space: nowrap;">GEMINI<span style="color: var(--cyan);">X</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="#plans">Plans</a>
+            <a href="#commissions">Referrals</a>
+            <a href="#salary">Salary</a>
+            <a href="#security">Security</a>
+            <a href="#prediction-markets">Predicciones</a>
+            <a href="#geminix-gold" style="color:var(--gold)">GOLD</a>
+            <a href="#geminix-baccarat" style="color:#f59e0b;font-weight:700">BACCARAT</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#community">Community</a>
+            <div class="lang-wrapper">
+                <select class="lang-selector" onchange="doGTranslate(this.value)">
+                    <option value="">Language</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="pt">Português</option>
+                    <option value="it">Italiano</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="ru">Русский</option>
+                    <option value="ar">العربية</option>
+                    <option value="zh-CN">中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="vi">Tiếng VI</option>
+                    <option value="fil">Filipino</option>
+                </select>
+            </div>
+            <a href="https://geminixprotocol.com/?action=register" class="nav-cta">Launch App</a>
+            <a href="https://geminixprotocol.com/login" class="nav-cta"
+                style="background:transparent;border:1px solid rgba(0,243,255,.3);color:var(--cyan)">Login Protocol</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-orb" style="top:-10%;left:30%"></div>
+        <div class="hero-orb-2"></div>
+        <div class="scanline"></div>
+        <div class="hero-content">
+            <div class="hero-badge reveal"><span class="dot"></span> Institutional-Grade DeFi Protocol</div>
+            <h1 class="reveal reveal-delay-1">The Future of <span class="accent">Decentralized Finance</span></h1>
+            <p class="reveal reveal-delay-2">Automated arbitrage technology generating consistent returns across
+                institutional-grade liquidity pools. Secure. Transparent. Unstoppable.</p>
+            <div class="hero-ctas reveal reveal-delay-3">
+                <a href="https://geminixprotocol.com/?action=register" class="btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    Launch App
+                </a>
+                <a href="https://geminixprotocol.com/login" class="btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M13.8 12H3" />
+                    </svg>
+                    Login Protocol
+                </a>
+            </div>
+            <div class="hero-rate reveal reveal-delay-4">
+                <div class="hero-rate-item">
+                    <div class="val glow-cyan">2.2%</div>
+                    <div class="lbl">Daily Returns</div>
+                </div>
+                <div class="hero-rate-item">
+                    <div class="val glow-green">200%</div>
+                    <div class="lbl">Max Cap</div>
+                </div>
+                <div class="hero-rate-item">
+                    <div class="val glow-gold">30</div>
+                    <div class="lbl">Referral Levels</div>
+                </div>
+                <div class="hero-rate-item">
+                    <div class="val glow-purple">$30K</div>
+                    <div class="lbl">Max Weekly Salary</div>
+                </div>
+                <div class="hero-rate-item">
+                    <div class="val" style="color:#f59e0b;text-shadow:0 0 20px rgba(245,158,11,.6)">98%</div>
+                    <div class="lbl">Baccarat AI</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats" id="stats">
+        <div class="section-container">
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+                        </svg></div>
+                    <div class="stat-val"><span class="counter" id="stat-investors" data-target="0">0</span>+</div>
+                    <div class="stat-lbl">Active Investors</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-1">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path
+                                d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2" />
+                        </svg></div>
+                    <div class="stat-val"><span class="counter" id="stat-countries" data-target="0">0</span>+</div>
+                    <div class="stat-lbl">Countries</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-2">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                        </svg></div>
+                    <div class="stat-val">$<span class="counter" id="stat-payouts" data-target="0" data-prefix="">0</span>+</div>
+                    <div class="stat-lbl">Total Payouts</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-3">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 6v6l4 2" />
+                        </svg></div>
+                    <div class="stat-val"><span class="counter" id="stat-years" data-target="0">0</span> Years</div>
+                    <div class="stat-lbl">In The Market</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GEMINIX ECOSYSTEM -->
+    <section id="ecosystem" style="background:linear-gradient(180deg,transparent,rgba(0,243,255,.02),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🌐 Product Ecosystem</div>
+            <h2 class="section-title reveal">El Ecosistema <span style="color:var(--cyan)">GEMINIX</span></h2>
+            <p class="section-sub reveal">Una plataforma. Múltiples vías de rentabilidad. Desde inversión automatizada hasta software AI para casino — todo integrado en un solo protocolo.</p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin-top:2.5rem">
+
+                <!-- ROI Investment -->
+                <a href="#plans" style="text-decoration:none">
+                    <div class="sec-card reveal" style="border-color:rgba(0,243,255,.2);background:rgba(0,243,255,.03);cursor:pointer;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(0,243,255,.5)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(0,243,255,.2)';this.style.transform='translateY(0)'">
+                        <div style="font-size:2rem;margin-bottom:.75rem">⚡</div>
+                        <div class="sec-title" style="color:var(--cyan);font-size:.9rem">Nodos de Inversión</div>
+                        <div class="sec-desc" style="font-size:.8rem">ROI 2.2% diario · Cap 200% · Desde $10</div>
+                        <div style="margin-top:.75rem;font-size:.65rem;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.15em;opacity:.7">Ver Planes →</div>
+                    </div>
+                </a>
+
+                <!-- GOLD -->
+                <a href="#geminix-gold" style="text-decoration:none">
+                    <div class="sec-card reveal reveal-delay-1" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.03);cursor:pointer;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(255,215,0,.5)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,215,0,.2)';this.style.transform='translateY(0)'">
+                        <div style="font-size:2rem;margin-bottom:.75rem">🥇</div>
+                        <div class="sec-title" style="color:var(--gold);font-size:.9rem">GEMINIX GOLD</div>
+                        <div class="sec-desc" style="font-size:.8rem">AI XAU/USD · +1000% verificado · Myfxbook</div>
+                        <div style="margin-top:.75rem;font-size:.65rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.15em;opacity:.7">Ver Producto →</div>
+                    </div>
+                </a>
+
+                <!-- BACCARAT AI -->
+                <a href="#geminix-baccarat" style="text-decoration:none">
+                    <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.05);cursor:pointer;text-align:center;transition:all .3s;position:relative;overflow:hidden" onmouseover="this.style.borderColor='rgba(245,158,11,.6)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(245,158,11,.3)';this.style.transform='translateY(0)'">
+                        <div style="position:absolute;top:8px;right:8px;background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.4);border-radius:20px;padding:.15rem .5rem;font-size:.55rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:.1em">NEW</div>
+                        <div style="font-size:2rem;margin-bottom:.75rem">🎴</div>
+                        <div class="sec-title" style="color:#f59e0b;font-size:.9rem">GEMINIX BACCARAT</div>
+                        <div class="sec-desc" style="font-size:.8rem">AI 98% · 70 mesas · ROI + Membresía</div>
+                        <div style="margin-top:.75rem;font-size:.65rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.15em;opacity:.7">Ver Software →</div>
+                    </div>
+                </a>
+
+                <!-- Predictions -->
+                <a href="#prediction-markets" style="text-decoration:none">
+                    <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(99,102,241,.2);background:rgba(99,102,241,.03);cursor:pointer;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(99,102,241,.5)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(99,102,241,.2)';this.style.transform='translateY(0)'">
+                        <div style="font-size:2rem;margin-bottom:.75rem">🔮</div>
+                        <div class="sec-title" style="color:#a5b4fc;font-size:.9rem">Mercados de Predicción</div>
+                        <div class="sec-desc" style="font-size:.8rem">Polymarket · Eventos globales · On-chain</div>
+                        <div style="margin-top:.75rem;font-size:.65rem;font-weight:700;color:#a5b4fc;text-transform:uppercase;letter-spacing:.15em;opacity:.7">Explorar →</div>
+                    </div>
+                </a>
+
+                <!-- Network -->
+                <a href="#commissions" style="text-decoration:none">
+                    <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(188,19,254,.2);background:rgba(188,19,254,.03);cursor:pointer;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(188,19,254,.5)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(188,19,254,.2)';this.style.transform='translateY(0)'">
+                        <div style="font-size:2rem;margin-bottom:.75rem">🔗</div>
+                        <div class="sec-title" style="color:var(--purple);font-size:.9rem">Red de Referidos</div>
+                        <div class="sec-desc" style="font-size:.8rem">30 niveles · Comisiones residuales pasivas</div>
+                        <div style="margin-top:.75rem;font-size:.65rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.15em;opacity:.7">Ver Red →</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- GEMINIX CARD SECTION -->
+    <section id="geminix-card" style="background:linear-gradient(180deg, #020617 0%, #0f172a 100%);padding:100px 0;overflow:hidden">
+        <div class="section-container" style="display:flex;align-items:center;gap:60px;flex-wrap:wrap">
+            <div class="card-visual reveal" style="flex:1;min-width:300px;position:relative">
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120%;height:120%;background:radial-gradient(circle, rgba(0,243,255,0.1) 0%, transparent 70%);z-index:0"></div>
+                <img src="public/geminix_card.png" alt="Geminix Card" style="width:100%;max-width:550px;position:relative;z-index:1;filter:drop-shadow(0 0 30px rgba(0,243,255,0.2));border-radius:20px;transform:perspective(1000px) rotateY(-10deg) rotateX(5deg)">
+                <div style="position:absolute;bottom:-20px;right:-20px;background:rgba(0,114,255,0.1);backdrop-filter:blur(10px);border:1px border rgba(0,243,255,0.3);padding:20px;border-radius:15px;z-index:2;box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+                    <div style="color:var(--cyan);font-family:var(--font-orbitron);font-weight:900;font-size:1.5rem">3% FEE</div>
+                    <div style="color:#94a3b8;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">Withdrawal Special</div>
+                </div>
+            </div>
+            <div class="card-content reveal reveal-delay-1" style="flex:1.2;min-width:300px">
+                <div class="section-tag" style="margin-left:0">💳 Financial Freedom</div>
+                <h2 class="section-title" style="text-align:left;font-size:2.5rem;line-height:1.1">Geminix Card: <span style="color:var(--cyan)">Tu Capital sin Límites</span></h2>
+                <p class="section-sub" style="text-align:left;margin-left:0;max-width:100%;font-size:1.1rem">Presentamos la herramienta definitiva para gestionar tus beneficios. Olvida las esperas y las altas comisiones.</p>
+                
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-top:40px">
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(0,243,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--cyan);font-size:1.5rem;margin-bottom:10px">📉</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">COMISIÓN REDUCIDA</h4>
+                        <p style="color:#64748b;font-size:0.8rem">Solo **3%** de comisión en retiros vía Geminix Card (en lugar del 10% estándar).</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(188,19,254,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--purple);font-size:1.5rem;margin-bottom:10px">⚡</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">PAGOS INSTANTÁNEOS</h4>
+                        <p style="color:#64748b;font-size:0.8rem">Tus comisiones de red y ROI disponibles para uso inmediato en todo el mundo.</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(0,243,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--cyan);font-size:1.5rem;margin-bottom:10px">🌎</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">ACEPTACIÓN VISA</h4>
+                        <p style="color:#64748b;font-size:0.8rem">Utilízala en cajeros, tiendas físicas y compras online globalmente.</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(188,19,254,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--purple);font-size:1.5rem;margin-bottom:10px">🛡️</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">BÓVEDA SEGURA</h4>
+                        <p style="color:#64748b;font-size:0.8rem">Vinculación inmutable con tu cuenta Geminix y protección 2FA.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top:40px">
+                    <a href="https://go.bancus.io/?ref=PETEXAM6" class="btn-primary" style="padding:15px 40px">SOLICITAR MI TARJETA →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INVESTMENT PLANS -->
+    <section id="plans">
+        <div class="section-container">
+            <div class="section-tag reveal">💎 Investment Protocol</div>
+            <h2 class="section-title reveal">Activate Your <span style="color:var(--cyan)">Node</span></h2>
+            <p class="section-sub reveal">Deploy capital into our automated arbitrage system. Each node generates
+                consistent daily returns with a transparent duplication cap.</p>
+            <div class="plans-grid">
+                <div class="plan-card reveal">
+                    <div class="plan-tag">Starter</div>
+                    <div class="plan-title">Micro Node</div>
+                    <div class="plan-rate">$10 <small>min</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 2.2% daily return</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 200% duplication cap</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Referral commissions</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Instant activation</li>
+                    </ul>
+                    <a href="https://geminixprotocol.com/?action=register" class="btn-secondary"
+                        style="width:100%;justify-content:center;padding:.8rem">Deploy Node →</a>
+                </div>
+                <div class="plan-card featured reveal reveal-delay-1">
+                    <div class="plan-tag">⚡ Popular</div>
+                    <div class="plan-title">Growth Node</div>
+                    <div class="plan-rate">$500 <small>rec.</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 2.2% daily = $11/day</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 200% cap = $1,000 total</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Multiple nodes stacking</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Weekly salary eligibility</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Priority support</li>
+                    </ul>
+                    <a href="https://geminixprotocol.com/?action=register" class="btn-primary"
+                        style="width:100%;justify-content:center;padding:.8rem">Deploy Node →</a>
+                </div>
+                <div class="plan-card reveal reveal-delay-2">
+                    <div class="plan-tag">🏆 Institutional</div>
+                    <div class="plan-title">Mega Node</div>
+                    <div class="plan-rate">$10K <small>max</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 2.2% daily = $220/day</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 200% cap = $20,000 total</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Full commission unlock</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> VIP salary tiers</li>
+                    </ul>
+                    <a href="https://geminixprotocol.com/?action=register" class="btn-secondary"
+                        style="width:100%;justify-content:center;padding:.8rem">Deploy Node →</a>
+                </div>
+
+                <!-- BACCARAT AI NODE -->
+                <div class="plan-card reveal reveal-delay-2" style="border-color:rgba(245,158,11,.4);background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(17,24,39,1));position:relative;overflow:hidden">
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#f59e0b,transparent)"></div>
+                    <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(245,158,11,.15),transparent 70%);pointer-events:none"></div>
+                    <div class="plan-tag" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)">🎴 AI Software</div>
+                    <div class="plan-title" style="color:#fbbf24">Baccarat AI Node</div>
+                    <div class="plan-rate" style="color:#f59e0b">$500–$10K <small>+ membresía</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check" style="background:rgba(245,158,11,.15);color:#f59e0b"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> <strong style="color:#fbbf24">ROI 2.2% diario incluido</strong></li>
+                        <li><span class="check" style="background:rgba(245,158,11,.15);color:#f59e0b"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> Software AI Baccarat 98%</li>
+                        <li><span class="check" style="background:rgba(245,158,11,.15);color:#f59e0b"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> 70 mesas automatizadas</li>
+                        <li><span class="check" style="background:rgba(245,158,11,.15);color:#f59e0b"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> Membresía 15 días a 12 meses</li>
+                        <li><span class="check" style="background:rgba(245,158,11,.15);color:#f59e0b"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> Evolution & Pragmatic Live</li>
+                    </ul>
+                    <a href="#geminix-baccarat" class="btn-primary" style="width:100%;justify-content:center;padding:.8rem;background:linear-gradient(135deg,#b45309,#f59e0b,#b45309);color:#000;border:none;box-shadow:0 4px 16px rgba(245,158,11,.3)">Ver Paquetes →</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- REFERRAL COMMISSIONS -->
+    <section id="commissions" style="background:linear-gradient(180deg,transparent,rgba(188,19,254,.02),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🔗 Network Protocol</div>
+            <h2 class="section-title reveal">30-Level <span style="color:var(--purple)">Referral Engine</span></h2>
+            <p class="section-sub reveal">Build your network and earn residual commissions across 30 levels of depth.
+                Every investment in your tree generates passive income for you.</p>
+            <div class="comm-grid">
+                <div class="comm-card c1 reveal">
+                    <div class="comm-level">Level 1 — Direct</div>
+                    <div class="comm-pct">10%<small> /inv</small></div>
+                    <div class="comm-desc">Your direct referrals</div>
+                </div>
+                <div class="comm-card c2 reveal reveal-delay-1">
+                    <div class="comm-level">Level 2</div>
+                    <div class="comm-pct">5%<small> /inv</small></div>
+                    <div class="comm-desc">Second generation</div>
+                </div>
+                <div class="comm-card c3 reveal reveal-delay-2">
+                    <div class="comm-level">Level 3</div>
+                    <div class="comm-pct">3%<small> /inv</small></div>
+                    <div class="comm-desc">Third generation</div>
+                </div>
+                <div class="comm-card c4 reveal reveal-delay-1">
+                    <div class="comm-level">Level 4 → 10</div>
+                    <div class="comm-pct">2%<small> /inv</small></div>
+                    <div class="comm-desc">Deep network growth</div>
+                </div>
+                <div class="comm-card c5 reveal reveal-delay-2">
+                    <div class="comm-level">Level 11 → 20</div>
+                    <div class="comm-pct">1%<small> /inv</small></div>
+                    <div class="comm-desc">Extended tree reach</div>
+                </div>
+                <div class="comm-card c6 reveal reveal-delay-3">
+                    <div class="comm-level">Level 21 → 30</div>
+                    <div class="comm-pct">0.8%<small> /inv</small></div>
+                    <div class="comm-desc">Maximum depth unlock</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WEEKLY SALARY -->
+    <section id="salary">
+        <div class="section-container">
+            <div class="section-tag reveal">💰 Weekly Salary Protocol</div>
+            <h2 class="section-title reveal">Leadership <span style="color:var(--gold)">Salary</span> Program</h2>
+            <p class="section-sub reveal">Earn weekly bonuses based on your team's total trade volume. Paid every Saturday — credited directly to your <strong style="color:var(--cyan)">Wallet Bank</strong>. The higher your team's volume, the bigger your salary.</p>
+            <div class="salary-table-wrap reveal">
+                <table class="salary-table">
+                    <thead>
+                        <tr>
+                            <th>Team Volume</th>
+                            <th>Weekly Salary</th>
+                            <th>Rank</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="vol">$10,000</td>
+                            <td class="bonus">$100</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--cyan);border-color:rgba(0,243,255,.3)">Bronze</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$25,000</td>
+                            <td class="bonus">$300</td>
+                            <td><span class="rank-badge"
+                                    style="color:#94a3b8;border-color:rgba(148,163,184,.3)">Silver</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$40,000</td>
+                            <td class="bonus">$500</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--gold);border-color:rgba(255,215,0,.3)">Gold</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$65,000</td>
+                            <td class="bonus">$800</td>
+                            <td><span class="rank-badge" style="color:var(--gold);border-color:rgba(255,215,0,.3)">Gold
+                                    II</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$100,000</td>
+                            <td class="bonus glow-gold">$1,500</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--cyan);border-color:rgba(0,243,255,.4);background:rgba(0,243,255,.05)">Platinum</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$200,000</td>
+                            <td class="bonus glow-gold">$4,000</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--purple);border-color:rgba(188,19,254,.3)">Diamond</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$400,000</td>
+                            <td class="bonus glow-gold">$7,500</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--purple);border-color:rgba(188,19,254,.4);background:rgba(188,19,254,.05)">Diamond
+                                    II</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$800,000</td>
+                            <td class="bonus glow-gold">$20,000</td>
+                            <td><span class="rank-badge" style="color:var(--pink);border-color:rgba(255,0,85,.3)">Black
+                                    Crown</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$1,000,000</td>
+                            <td class="bonus glow-gold" style="font-size:1.3rem">$30,000</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--gold);border-color:var(--gold);background:rgba(255,215,0,.08)">👑
+                                    Legend</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SALARY WITHDRAWAL SCHEDULE -->
+            <div class="reveal" style="margin-top:2rem;background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.15);border-radius:16px;padding:1.75rem 2rem">
+                <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    <span style="font-size:.7rem;font-weight:700;letter-spacing:.2em;color:#f59e0b;text-transform:uppercase">Ventana de Retiro — Salario Semanal</span>
+                </div>
+                <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;justify-content:space-between">
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+                        <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.6rem">
+                            <span style="font-size:1.1rem">📅</span>
+                            <div>
+                                <div style="font-size:.65rem;color:#64748b;text-transform:uppercase;letter-spacing:.15em">Día</div>
+                                <div style="font-size:.95rem;font-weight:700;color:#e2e8f0">Sábados</div>
+                            </div>
+                        </div>
+                        <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.6rem">
+                            <span style="font-size:1.1rem">🕗</span>
+                            <div>
+                                <div style="font-size:.65rem;color:#64748b;text-transform:uppercase;letter-spacing:.15em">Horario</div>
+                                <div style="font-size:.95rem;font-weight:700;color:#e2e8f0">8:00 AM – 11:59 PM</div>
+                            </div>
+                        </div>
+                        <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:.75rem 1.25rem;display:flex;align-items:center;gap:.6rem">
+                            <span style="font-size:1.1rem">🌎</span>
+                            <div>
+                                <div style="font-size:.65rem;color:#64748b;text-transform:uppercase;letter-spacing:.15em">Zona horaria</div>
+                                <div style="font-size:.95rem;font-weight:700;color:#e2e8f0">UTC−5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- COUNTDOWN -->
+                    <div style="text-align:center">
+                        <div style="font-size:.65rem;color:#64748b;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem">Próximo sábado en</div>
+                        <div id="salary-countdown" style="display:flex;gap:.5rem;justify-content:center">
+                            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:.5rem .75rem;min-width:52px;text-align:center">
+                                <div id="sal-cd-d" style="font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1">--</div>
+                                <div style="font-size:.55rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em">días</div>
+                            </div>
+                            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:.5rem .75rem;min-width:52px;text-align:center">
+                                <div id="sal-cd-h" style="font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1">--</div>
+                                <div style="font-size:.55rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em">hrs</div>
+                            </div>
+                            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:.5rem .75rem;min-width:52px;text-align:center">
+                                <div id="sal-cd-m" style="font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1">--</div>
+                                <div style="font-size:.55rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em">min</div>
+                            </div>
+                            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:.5rem .75rem;min-width:52px;text-align:center">
+                                <div id="sal-cd-s" style="font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1">--</div>
+                                <div style="font-size:.55rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em">seg</div>
+                            </div>
+                        </div>
+                        <div id="salary-open-badge" style="display:none;margin-top:.5rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:.3rem .8rem;font-size:.75rem;color:#22c55e;font-weight:700">
+                            ✓ VENTANA ABIERTA AHORA
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    (function() {
+        function getNextSaturdayUTC5() {
+            // UTC-5 offset in ms
+            const UTC5 = -5 * 60 * 60 * 1000;
+            const now = new Date(Date.now() + UTC5);
+            const day = now.getUTCDay(); // 0=Sun,6=Sat
+            const daysUntilSat = (6 - day + 7) % 7;
+            const open = new Date(now);
+            open.setUTCDate(open.getUTCDate() + daysUntilSat);
+            open.setUTCHours(8, 0, 0, 0);
+            const close = new Date(open);
+            close.setUTCHours(23, 59, 59, 0);
+            // If today is Saturday and window is still open
+            if (day === 6 && now >= open && now <= close) return null; // open now
+            // If today is Saturday but window not yet open or already passed
+            if (day === 6 && now < open) return open;
+            return new Date(open.getTime() + (daysUntilSat === 0 ? 7 : daysUntilSat) * 86400000);
+        }
+
+        function updateSalaryCD() {
+            const UTC5 = -5 * 60 * 60 * 1000;
+            const now = new Date(Date.now() + UTC5);
+            const day = now.getUTCDay();
+            // Check if window is open: Saturday 08:00–23:59 UTC-5
+            const todayOpen = new Date(now); todayOpen.setUTCHours(8,0,0,0);
+            const todayClose = new Date(now); todayClose.setUTCHours(23,59,59,0);
+            const isOpen = day === 6 && now >= todayOpen && now <= todayClose;
+
+            const badge = document.getElementById('salary-open-badge');
+            const cd = document.getElementById('salary-countdown');
+
+            if (isOpen) {
+                cd.style.display = 'none';
+                badge.style.display = 'block';
+                return;
+            }
+            cd.style.display = 'flex';
+            badge.style.display = 'none';
+
+            const daysUntilSat = day === 6 ? 7 : (6 - day + 7) % 7;
+            const nextOpen = new Date(now);
+            nextOpen.setUTCDate(nextOpen.getUTCDate() + daysUntilSat);
+            nextOpen.setUTCHours(8, 0, 0, 0);
+
+            const diff = nextOpen - now;
+            if (diff <= 0) return;
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+
+            document.getElementById('sal-cd-d').textContent = String(d).padStart(2,'0');
+            document.getElementById('sal-cd-h').textContent = String(h).padStart(2,'0');
+            document.getElementById('sal-cd-m').textContent = String(m).padStart(2,'0');
+            document.getElementById('sal-cd-s').textContent = String(s).padStart(2,'0');
+        }
+        updateSalaryCD();
+        setInterval(updateSalaryCD, 1000);
+    })();
+    </script>
+
+    <!-- SECURITY -->
+    <section id="security" style="background:linear-gradient(180deg,transparent,rgba(0,243,255,.02),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🛡️ Security Infrastructure</div>
+            <h2 class="section-title reveal">Enterprise-Grade <span style="color:var(--cyan)">Security</span></h2>
+            <p class="section-sub reveal">Your assets are protected by military-grade encryption and immutable
+                blockchain technology.</p>
+            <div class="sec-grid">
+                <div class="sec-card reveal">
+                    <div class="sec-icon"><svg viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg></div>
+                    <div class="sec-title">AES-256 Encryption</div>
+                    <div class="sec-desc">All data is encrypted with military-grade AES-256-GCM. Your transactions and
+                        personal data are protected at every layer.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-1">
+                    <div class="sec-icon"><svg viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0110 0v4" />
+                        </svg></div>
+                    <div class="sec-title">2FA Authentication</div>
+                    <div class="sec-desc">Time-based one-time passwords (TOTP) protect every withdrawal. Compatible with
+                        Google Authenticator and Authy.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-2">
+                    <div class="sec-icon"><svg viewBox="0 0 24 24">
+                            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                        </svg></div>
+                    <div class="sec-title">BSC Blockchain Native</div>
+                    <div class="sec-desc">All payouts processed through BEP-20 on Binance Smart Chain. Fast,
+                        transparent, and verifiable on-chain.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PREDICTION MARKETS SECTION -->
+    <section id="prediction-markets" style="background:linear-gradient(180deg,transparent,rgba(99,102,241,.04),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🔮 Live Markets</div>
+            <h2 class="section-title reveal">Mercados de <span style="color:#6366f1">Predicción</span></h2>
+            <p class="section-sub reveal">Participa en los mercados de predicción más líquidos del mundo. Datos en tiempo real impulsados por Polymarket — el exchange de predicciones #1 global.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:2.5rem">
+                <div class="sec-card reveal" style="border-color:rgba(99,102,241,.25);background:rgba(99,102,241,.06)">
+                    <div class="sec-icon" style="background:rgba(99,102,241,.15);color:#6366f1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <div class="sec-title" style="color:#a5b4fc">Datos en Tiempo Real</div>
+                    <div class="sec-desc">Precios y volúmenes actualizados al instante desde los mercados más líquidos del mundo. Información sin filtros ni intermediarios.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-1" style="border-color:rgba(99,102,241,.25);background:rgba(99,102,241,.06)">
+                    <div class="sec-icon" style="background:rgba(99,102,241,.15);color:#6366f1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                    </div>
+                    <div class="sec-title" style="color:#a5b4fc">Opera con Ventaja</div>
+                    <div class="sec-desc">Accede a mercados de eventos globales: elecciones, deportes, crypto, finanzas y más. Gana cuando tus predicciones son correctas.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(99,102,241,.25);background:rgba(99,102,241,.06)">
+                    <div class="sec-icon" style="background:rgba(99,102,241,.15);color:#6366f1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    </div>
+                    <div class="sec-title" style="color:#a5b4fc">Integrado en la Plataforma</div>
+                    <div class="sec-desc">Accede directamente desde tu dashboard GEMINIX. Sin salir de la plataforma, sin cuentas adicionales, sin complicaciones.</div>
+                </div>
+            </div>
+            <div style="margin-top:2.5rem;display:flex;justify-content:center">
+                <div class="reveal" style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);border-radius:16px;padding:1.25rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center;max-width:680px">
+                    <span style="display:flex;align-items:center;gap:.5rem;font-size:.9rem;color:#94a3b8"><span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;box-shadow:0 0 8px #22c55e"></span> Powered by Polymarket</span>
+                    <span style="color:#334155">|</span>
+                    <span style="font-size:.9rem;color:#94a3b8">+$1B en volumen operado mensualmente</span>
+                    <span style="color:#334155">|</span>
+                    <span style="font-size:.9rem;color:#94a3b8">100% On-chain · Sin custodia</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GEMINIX GOLD SECTION -->
+    <section id="geminix-gold" style="background:linear-gradient(180deg,transparent,rgba(255,215,0,.04),transparent);position:relative;overflow:hidden">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(255,215,0,.06) 0%,transparent 70%);pointer-events:none"></div>
+        <div class="section-container" style="position:relative">
+            <div class="section-tag reveal" style="background:rgba(255,215,0,.1);color:var(--gold);border-color:rgba(255,215,0,.3)">⚡ Premium Product · XAU/USD Forex</div>
+            <h2 class="section-title reveal">GEMINIX <span style="color:var(--gold);text-shadow:0 0 40px rgba(255,215,0,.4)">GOLD</span></h2>
+            <p class="section-sub reveal" style="max-width:750px">Ingeniería de Datos de Quinta Generación. Nuestro producto insignia especializado en el mercado del Oro XAU/USD — donde la estabilidad histórica del metal precioso se fusiona con la vanguardia de la computación neural.</p>
+
+            <!-- BIG STAT + MYFXBOOK BADGE -->
+            <div class="reveal" style="margin:2rem auto;text-align:center">
+                <div style="display:inline-block;background:linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,165,0,.06));border:1px solid rgba(255,215,0,.3);border-radius:24px;padding:2.5rem 3.5rem;position:relative;overflow:hidden">
+                    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,215,0,.05),transparent);pointer-events:none"></div>
+                    <div style="font-size:.75rem;font-weight:600;letter-spacing:.2em;color:#f59e0b;text-transform:uppercase;margin-bottom:.75rem">Rendimiento Verificado 2025</div>
+                    <div style="font-size:5rem;font-weight:900;line-height:1;background:linear-gradient(135deg,#ffd700,#ffa500,#ffec60);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none">+1000%</div>
+                    <div style="margin-top:1rem;display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap">
+                        <span style="display:flex;align-items:center;gap:.5rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:.4rem .9rem">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span style="font-size:.8rem;color:#22c55e;font-weight:700">Auditado en Myfxbook</span>
+                        </span>
+                        <span style="display:flex;align-items:center;gap:.5rem;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:.4rem .9rem">
+                            <span style="font-size:.8rem;color:#fbbf24;font-weight:600">XAU/USD · Forex</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5 AIs DESCRIPTION -->
+            <div class="reveal" style="margin:2rem auto;max-width:860px;background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.15);border-radius:16px;padding:2rem 2.5rem">
+                <div style="display:flex;align-items:flex-start;gap:1rem">
+                    <div style="flex-shrink:0;width:44px;height:44px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem">🧠</div>
+                    <div>
+                        <div style="font-size:.7rem;font-weight:700;letter-spacing:.2em;color:#f59e0b;text-transform:uppercase;margin-bottom:.5rem">Núcleo de 5 Inteligencias Artificiales Neuronales</div>
+                        <p style="font-size:.95rem;color:#94a3b8;line-height:1.8">Cinco IAs operando de forma simultánea: mientras unas <span style="color:#e2e8f0;font-weight:600">detectan patrones de liquidez</span>, otras ejecutan <span style="color:#e2e8f0;font-weight:600">análisis predictivo de tendencias</span> y <span style="color:#e2e8f0;font-weight:600">gestión de riesgo en microsegundos</span>. El resultado es una operativa institucional automatizada que ningún trader humano puede replicar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;margin-top:1.5rem">
+                <div class="sec-card reveal" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.04);text-align:center">
+                    <div style="font-size:1.8rem;margin-bottom:.5rem">🥇</div>
+                    <div class="sec-title" style="color:#fbbf24;font-size:.85rem">XAU/USD Especializado</div>
+                    <div class="sec-desc" style="font-size:.8rem">100% enfocado en el mercado del Oro — el activo de reserva más estable y líquido del mundo.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-1" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.04);text-align:center">
+                    <div style="font-size:1.8rem;margin-bottom:.5rem">⚡</div>
+                    <div class="sec-title" style="color:#fbbf24;font-size:.85rem">Ejecución en Microsegundos</div>
+                    <div class="sec-desc" style="font-size:.8rem">Gestión de riesgo y entrada/salida de posiciones a velocidades imposibles para el trading manual.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.04);text-align:center">
+                    <div style="font-size:1.8rem;margin-bottom:.5rem">📊</div>
+                    <div class="sec-title" style="color:#fbbf24;font-size:.85rem">Myfxbook Verificado</div>
+                    <div class="sec-desc" style="font-size:.8rem">Cada operación auditada de forma independiente. Transparencia total, historial inmutable.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(255,215,0,.2);background:rgba(255,215,0,.04);text-align:center">
+                    <div style="font-size:1.8rem;margin-bottom:.5rem">🔄</div>
+                    <div class="sec-title" style="color:#fbbf24;font-size:.85rem">24/7 Sin Interrupciones</div>
+                    <div class="sec-desc" style="font-size:.8rem">Sin emociones, sin fatiga, sin errores humanos. El sistema opera mientras tú duermes.</div>
+                </div>
+            </div>
+
+            <div class="reveal" style="margin-top:2.5rem;text-align:center">
+                <a href="./login" class="btn-primary" style="background:linear-gradient(135deg,#b8860b,#ffd700,#b8860b);color:#000;font-weight:700;border:none;box-shadow:0 4px 24px rgba(255,215,0,.3)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Acceder a GEMINIX GOLD
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- GEMINIX BACCARAT SECTION -->
+    <section id="geminix-baccarat" style="background:linear-gradient(180deg,transparent,rgba(245,158,11,.05),transparent);position:relative;overflow:hidden">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(245,158,11,.07) 0%,transparent 70%);pointer-events:none"></div>
+        <!-- Corner decorative elements -->
+        <div style="position:absolute;top:0;left:0;width:300px;height:300px;background:radial-gradient(circle,rgba(245,158,11,.04) 0%,transparent 70%);pointer-events:none"></div>
+        <div style="position:absolute;bottom:0;right:0;width:300px;height:300px;background:radial-gradient(circle,rgba(245,158,11,.04) 0%,transparent 70%);pointer-events:none"></div>
+
+        <div class="section-container" style="position:relative">
+
+            <!-- TAG -->
+            <div class="section-tag reveal" style="background:rgba(245,158,11,.1);color:#f59e0b;border-color:rgba(245,158,11,.3)">🎴 Software Product · AI Baccarat</div>
+
+            <!-- TITLE -->
+            <h2 class="section-title reveal">GEMINIX <span style="color:#f59e0b;text-shadow:0 0 40px rgba(245,158,11,.5)">BACCARAT</span></h2>
+            <p class="section-sub reveal" style="max-width:760px">El software de Baccarat más avanzado del mercado, impulsado por Inteligencia Artificial. Sistema de predicción con <strong style="color:#fbbf24">98% de precisión</strong> — automatiza tu juego, gestiona tu bankroll y opera en 70 mesas simultáneas.</p>
+
+            <!-- AI PREDICTION BADGE -->
+            <div class="reveal" style="margin:2rem auto;text-align:center">
+                <div style="display:inline-block;background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(234,88,12,.08));border:1px solid rgba(245,158,11,.35);border-radius:24px;padding:2.5rem 3.5rem;position:relative;overflow:hidden;min-width:320px">
+                    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,158,11,.06),transparent);pointer-events:none"></div>
+                    <div style="font-size:.75rem;font-weight:700;letter-spacing:.2em;color:#f59e0b;text-transform:uppercase;margin-bottom:.75rem">Precisión del Modo AI</div>
+                    <div style="font-size:5rem;font-weight:900;line-height:1;background:linear-gradient(135deg,#f59e0b,#fbbf24,#fcd34d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">98%</div>
+                    <div style="margin-top:1rem;display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap">
+                        <span style="display:flex;align-items:center;gap:.5rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:.4rem .9rem">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span style="font-size:.8rem;color:#22c55e;font-weight:700">70 Mesas Simultáneas</span>
+                        </span>
+                        <span style="display:flex;align-items:center;gap:.5rem;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:.4rem .9rem">
+                            <span style="font-size:.8rem;color:#fbbf24;font-weight:600">Evolution & Pragmatic</span>
+                        </span>
+                        <span style="display:flex;align-items:center;gap:.5rem;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:8px;padding:.4rem .9rem">
+                            <span style="font-size:.8rem;color:#a5b4fc;font-weight:600">Sin Descargas · Web</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEATURES GRID 12 cards -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-top:2rem">
+
+                <div class="sec-card reveal" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#2563eb);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">⚡</div>
+                    <div class="sec-title" style="color:#fbbf24">Modo AI</div>
+                    <div class="sec-desc">Sistema de predicción de inteligencia artificial con <strong style="color:#e2e8f0">98% de éxito</strong>. Analiza patrones en tiempo real y recomienda cada apuesta.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-1" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#06b6d4,#0891b2);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">📱</div>
+                    <div class="sec-title" style="color:#fbbf24">Notificaciones Telegram</div>
+                    <div class="sec-desc">Alertas instantáneas en tu Telegram para cada apuesta. <strong style="color:#e2e8f0">Nunca pierdas una señal</strong> aunque no estés frente a la pantalla.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">🎯</div>
+                    <div class="sec-title" style="color:#fbbf24">Simulación Sin Riesgo</div>
+                    <div class="sec-desc">Prueba y perfecciona tus estrategias en <strong style="color:#e2e8f0">modo simulación</strong> sin arriesgar dinero real. Aprende el sistema antes de activarlo en vivo.</div>
+                </div>
+
+                <div class="sec-card reveal" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">🎰</div>
+                    <div class="sec-title" style="color:#fbbf24">Automatización Multi-Mesa</div>
+                    <div class="sec-desc">Opera en <strong style="color:#e2e8f0">hasta 70 mesas simultáneas</strong> de forma completamente automatizada. Maximiza la rentabilidad sin esfuerzo manual.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-1" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#a855f7,#7c3aed);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">🛠️</div>
+                    <div class="sec-title" style="color:#fbbf24">Crea Tu Propio Sistema</div>
+                    <div class="sec-desc">Diseña y configura <strong style="color:#e2e8f0">estrategias de apuesta personalizadas</strong>. Define reglas, límites y condiciones a tu medida.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">📊</div>
+                    <div class="sec-title" style="color:#fbbf24">Informes Detallados</div>
+                    <div class="sec-desc">Análisis completo de cada sesión con <strong style="color:#e2e8f0">exportación a Excel</strong>. Estadísticas avanzadas para optimizar continuamente tu estrategia.</div>
+                </div>
+
+                <div class="sec-card reveal" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">🏦</div>
+                    <div class="sec-title" style="color:#fbbf24">Evolution & Pragmatic</div>
+                    <div class="sec-desc">Integración nativa con los dos <strong style="color:#e2e8f0">principales proveedores de casino en vivo</strong> del mundo. Operación fluida e ininterrumpida.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-1" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">🧠</div>
+                    <div class="sec-title" style="color:#fbbf24">Motor de Estrategia Avanzado</div>
+                    <div class="sec-desc">Sistemas profesionales de gestión de bankroll: <strong style="color:#e2e8f0">Labouchere, Oscar's Grind, D'Alembert, Flat Bet, Martingale y Parlay Bet</strong>.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#f43f5e,#e11d48);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">🛡️</div>
+                    <div class="sec-title" style="color:#fbbf24">Gestión Inteligente de Riesgos</div>
+                    <div class="sec-desc">Protege tu bankroll automáticamente con <strong style="color:#e2e8f0">límites de beneficio y pérdida máxima</strong>. El sistema para solo cuando tú lo decides.</div>
+                </div>
+
+                <div class="sec-card reveal" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#06b6d4,#0e7490);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">📲</div>
+                    <div class="sec-title" style="color:#fbbf24">Libertad de Dispositivo</div>
+                    <div class="sec-desc">Accede desde <strong style="color:#e2e8f0">teléfono, tablet o computadora</strong>. Conéctate en segundos desde el navegador — sin instalaciones ni descargas.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-1" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">📈</div>
+                    <div class="sec-title" style="color:#fbbf24">Análisis de Tendencias en Vivo</div>
+                    <div class="sec-desc">Lee el ritmo de la mesa al instante con <strong style="color:#e2e8f0">Bead Plate y estadísticas de manos pasadas</strong>. Anticipa la siguiente jugada con datos reales.</div>
+                </div>
+
+                <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+                    <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.3rem">🌍</div>
+                    <div class="sec-title" style="color:#fbbf24">Soporte de Idioma Universal</div>
+                    <div class="sec-desc">Plataforma disponible en <strong style="color:#e2e8f0">turco, inglés, español, coreano y tailandés</strong>. Soporte completo sin barreras de idioma.</div>
+                </div>
+
+            </div>
+
+            <!-- INVESTMENT PACKAGES -->
+            <div class="reveal" style="margin-top:3rem">
+                <div style="text-align:center;margin-bottom:1.5rem">
+                    <div style="font-size:.7rem;font-weight:700;letter-spacing:.25em;color:#f59e0b;text-transform:uppercase;margin-bottom:.5rem">Paquetes de Acceso · ROI 2.2% Diario Incluido</div>
+                    <p style="color:#64748b;font-size:.9rem">Invierte, obtén tu membresía y genera retorno diario simultáneamente.</p>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem">
+
+                    <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:1.5rem 1rem;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(245,158,11,.5)';this.style.background='rgba(245,158,11,.1)'" onmouseout="this.style.borderColor='rgba(245,158,11,.2)';this.style.background='rgba(245,158,11,.06)'">
+                        <div style="font-size:1.5rem;font-weight:900;color:#f59e0b;margin-bottom:.25rem">$500</div>
+                        <div style="font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem">Starter</div>
+                        <div style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:.3rem .8rem">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span style="font-size:.7rem;font-weight:700;color:#f59e0b">15 días</span>
+                        </div>
+                    </div>
+
+                    <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:1.5rem 1rem;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(245,158,11,.5)';this.style.background='rgba(245,158,11,.1)'" onmouseout="this.style.borderColor='rgba(245,158,11,.2)';this.style.background='rgba(245,158,11,.06)'">
+                        <div style="font-size:1.5rem;font-weight:900;color:#f59e0b;margin-bottom:.25rem">$1,000</div>
+                        <div style="font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem">Basic</div>
+                        <div style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:.3rem .8rem">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span style="font-size:.7rem;font-weight:700;color:#f59e0b">30 días</span>
+                        </div>
+                    </div>
+
+                    <div style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(234,88,12,.08));border:2px solid rgba(245,158,11,.45);border-radius:16px;padding:1.5rem 1rem;text-align:center;position:relative;transition:all .3s" onmouseover="this.style.borderColor='rgba(245,158,11,.8)'" onmouseout="this.style.borderColor='rgba(245,158,11,.45)'">
+                        <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:20px;padding:.2rem .7rem;font-size:.6rem;font-weight:800;color:#000;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap">Popular</div>
+                        <div style="font-size:1.5rem;font-weight:900;color:#f59e0b;margin-bottom:.25rem">$3,000</div>
+                        <div style="font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem">Advanced</div>
+                        <div style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.4);border-radius:20px;padding:.3rem .8rem">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span style="font-size:.7rem;font-weight:700;color:#f59e0b">3 meses</span>
+                        </div>
+                    </div>
+
+                    <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:1.5rem 1rem;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(245,158,11,.5)';this.style.background='rgba(245,158,11,.1)'" onmouseout="this.style.borderColor='rgba(245,158,11,.2)';this.style.background='rgba(245,158,11,.06)'">
+                        <div style="font-size:1.5rem;font-weight:900;color:#f59e0b;margin-bottom:.25rem">$5,000</div>
+                        <div style="font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem">Pro</div>
+                        <div style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:.3rem .8rem">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span style="font-size:.7rem;font-weight:700;color:#f59e0b">6 meses</span>
+                        </div>
+                    </div>
+
+                    <div style="background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(17,24,39,1));border:1px solid rgba(245,158,11,.3);border-radius:16px;padding:1.5rem 1rem;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(245,158,11,.6)'" onmouseout="this.style.borderColor='rgba(245,158,11,.3)'">
+                        <div style="font-size:.6rem;font-weight:700;color:#f59e0b;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.1rem">👑 Elite</div>
+                        <div style="font-size:1.5rem;font-weight:900;color:#f59e0b;margin-bottom:.25rem">$10,000</div>
+                        <div style="font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem">Full Access</div>
+                        <div style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.4);border-radius:20px;padding:.3rem .8rem">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span style="font-size:.7rem;font-weight:700;color:#f59e0b">12 meses</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ROI note -->
+                <div style="margin-top:1rem;padding:.75rem 1.25rem;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.15);border-radius:12px;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;justify-content:center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                    <span style="font-size:.8rem;color:#64748b">Todos los paquetes incluyen <strong style="color:#22c55e">ROI del 2.2% diario</strong> hasta alcanzar el 200% de retorno sobre tu inversión.</span>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="reveal" style="margin-top:2.5rem;text-align:center">
+                <a href="./login" class="btn-primary" style="background:linear-gradient(135deg,#b45309,#f59e0b,#b45309);color:#000;font-weight:700;border:none;box-shadow:0 4px 24px rgba(245,158,11,.3)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"/></svg>
+                    Activar GEMINIX BACCARAT
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section id="roadmap" style="background:linear-gradient(180deg,transparent,rgba(0,243,255,.02),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🗺️ Ecosystem Roadmap</div>
+            <h2 class="section-title reveal">Mapa de <span style="color:var(--cyan)">Ruta GEMINIX</span></h2>
+            <p class="section-sub reveal">Nuestro ecosistema crece con cada producto. Desde la inversión base hasta el software AI más avanzado del mercado — cada lanzamiento expande tus oportunidades de rentabilidad.</p>
+
+            <div style="position:relative;margin-top:3rem">
+                <!-- Vertical line -->
+                <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--cyan),#f59e0b,rgba(245,158,11,.1));transform:translateX(-50%);display:none" class="roadmap-line-desktop"></div>
+
+                <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+                    <!-- FASE 1 — ROI -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div style="background:rgba(0,243,255,.05);border:1px solid rgba(0,243,255,.2);border-radius:16px;padding:1.5rem;text-align:right">
+                            <div style="font-size:.6rem;font-weight:800;color:var(--cyan);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 1 · ACTIVO</div>
+                            <div style="font-size:1rem;font-weight:800;color:#e2e8f0;margin-bottom:.4rem">Nodos de Inversión ROI</div>
+                            <div style="font-size:.8rem;color:#64748b">2.2% diario · Cap 200% · Desde $10 USDT · Accesible para todos</div>
+                        </div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(0,243,255,.15);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(0,243,255,.3);font-size:1.2rem">⚡</div>
+                        <div></div>
+                    </div>
+
+                    <!-- FASE 2 — RED -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div></div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(188,19,254,.15);border:2px solid var(--purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(188,19,254,.3);font-size:1.2rem">🔗</div>
+                        <div style="background:rgba(188,19,254,.05);border:1px solid rgba(188,19,254,.2);border-radius:16px;padding:1.5rem">
+                            <div style="font-size:.6rem;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 2 · ACTIVO</div>
+                            <div style="font-size:1rem;font-weight:800;color:#e2e8f0;margin-bottom:.4rem">Red de Referidos 30 Niveles</div>
+                            <div style="font-size:.8rem;color:#64748b">Comisiones residuales automáticas · Salario semanal hasta $30K · Networking global</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 3 — GOLD -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div style="background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.2);border-radius:16px;padding:1.5rem;text-align:right">
+                            <div style="font-size:.6rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 3 · ACTIVO</div>
+                            <div style="font-size:1rem;font-weight:800;color:#e2e8f0;margin-bottom:.4rem">GEMINIX GOLD · XAU/USD AI</div>
+                            <div style="font-size:.8rem;color:#64748b">5 IAs neuronales · +1000% verificado Myfxbook · Operativa institucional 24/7</div>
+                        </div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,215,0,.15);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(255,215,0,.3);font-size:1.2rem">🥇</div>
+                        <div></div>
+                    </div>
+
+                    <!-- FASE 4 — PREDICCIONES -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div></div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(99,102,241,.15);border:2px solid #6366f1;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(99,102,241,.3);font-size:1.2rem">🔮</div>
+                        <div style="background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.2);border-radius:16px;padding:1.5rem">
+                            <div style="font-size:.6rem;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 4 · ACTIVO</div>
+                            <div style="font-size:1rem;font-weight:800;color:#e2e8f0;margin-bottom:.4rem">Mercados de Predicción</div>
+                            <div style="font-size:.8rem;color:#64748b">Powered by Polymarket · +$1B en volumen mensual · Eventos globales on-chain</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 5 — BACCARAT -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div style="background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(17,24,39,.8));border:2px solid rgba(245,158,11,.4);border-radius:16px;padding:1.5rem;text-align:right;position:relative;overflow:hidden">
+                            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#f59e0b,transparent)"></div>
+                            <div style="position:absolute;top:8px;right:8px;background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.4);border-radius:20px;padding:.15rem .5rem;font-size:.55rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:.1em">🔥 NUEVO</div>
+                            <div style="font-size:.6rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 5 · LANZAMIENTO</div>
+                            <div style="font-size:1rem;font-weight:800;color:#fbbf24;margin-bottom:.4rem">GEMINIX BACCARAT AI</div>
+                            <div style="font-size:.8rem;color:#94a3b8">AI 98% precisión · 70 mesas · ROI 2.2% + membresía de software · Evolution & Pragmatic · $500–$10K</div>
+                        </div>
+                        <div style="width:52px;height:52px;border-radius:50%;background:rgba(245,158,11,.2);border:2px solid #f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 30px rgba(245,158,11,.5),0 0 60px rgba(245,158,11,.2);font-size:1.4rem;animation:pulse-amber 2s infinite">🎴</div>
+                        <div></div>
+                    </div>
+
+                    <!-- FASE 6 — PRÓXIMO -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div></div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(100,116,139,.1);border:2px dashed rgba(100,116,139,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;opacity:.6">🚀</div>
+                        <div style="background:rgba(100,116,139,.05);border:1px dashed rgba(100,116,139,.2);border-radius:16px;padding:1.5rem;opacity:.6">
+                            <div style="font-size:.6rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 6 · PRÓXIMAMENTE</div>
+                            <div style="font-size:1rem;font-weight:800;color:#94a3b8;margin-bottom:.4rem">Próximo Producto GEMINIX</div>
+                            <div style="font-size:.8rem;color:#475569">Más innovación en camino. Mantente atento a los anuncios del equipo.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <style>
+                @keyframes pulse-amber {
+                    0%, 100% { box-shadow: 0 0 30px rgba(245,158,11,.5), 0 0 60px rgba(245,158,11,.2); }
+                    50% { box-shadow: 0 0 40px rgba(245,158,11,.8), 0 0 80px rgba(245,158,11,.4); }
+                }
+                @media (max-width: 640px) {
+                    #roadmap [style*="grid-template-columns:1fr auto 1fr"] {
+                        grid-template-columns: auto 1fr !important;
+                        gap: 1rem !important;
+                    }
+                    #roadmap [style*="grid-template-columns:1fr auto 1fr"] > div:empty {
+                        display: none !important;
+                    }
+                    #roadmap [style*="text-align:right"] {
+                        text-align: left !important;
+                    }
+                }
+            </style>
+
+            <div class="reveal" style="margin-top:3rem;text-align:center">
+                <a href="./login" class="btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Acceder al Ecosistema GEMINIX
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TELEGRAM CTA -->
+    <section class="tg-section" id="community">
+        <div class="section-container">
+            <div class="tg-box reveal">
+                <div class="scanline"></div>
+                <div class="section-tag" style="margin-bottom:1.5rem">📱 Community Protocol</div>
+                <h2 class="section-title" style="margin-bottom:.5rem">Join The GEMINIX <span
+                        style="color:#6366f1">Community</span></h2>
+                <p style="color:#64748b;max-width:500px;margin:0 auto 1rem;line-height:1.7">Connect with our growing
+                    global community. Get real-time updates, support, and insider access.</p>
+                <p style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-weight:800;font-size:1.5rem;color:#6366f1;margin-bottom:2rem">Earn a
+                    <span style="color:var(--gold)">$5 USDT</span> welcome bonus!
+                </p>
+                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+                    <a href="https://t.me/GeminixOfficial" target="_blank" class="btn-primary"
+                        style="background:#6366f1">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                        </svg>
+                        Join Community
+                    </a>
+                    <a href="https://t.me/GeminixNews" target="_blank" class="btn-secondary"
+                        style="border-color:rgba(99,102,241,.3);color:#6366f1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" />
+                        </svg>
+                        News Channel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="brand">GEMINI<span>X</span></div>
+        <p style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:.75rem;color:#475569;margin-bottom:.5rem">The Future of
+            Decentralized Finance</p>
+        <p class="legal">GEMINIX operates as a decentralized finance protocol. All investments carry risk. Past
+            performance does not guarantee future results. Users are responsible for compliance with local regulations.
+            © 2024-2026 GEMINIX. All rights reserved.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Scroll Reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target) }
+            })
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        reveals.forEach(el => observer.observe(el));
+
+        // Counter Animation
+        function animateCounter(el) {
+            const target = parseInt(el.getAttribute('data-target'));
+            const duration = 2000;
+            const start = performance.now();
+            function update(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(eased * target);
+                el.textContent = target >= 10000 ? current.toLocaleString() : current;
+                if (progress < 1) requestAnimationFrame(update);
+                else el.textContent = target >= 10000 ? target.toLocaleString() : target;
+            }
+            requestAnimationFrame(update);
+        }
+
+        function initCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const counterObs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { animateCounter(e.target); counterObs.unobserve(e.target) }
+                })
+            }, { threshold: 0.5 });
+            counters.forEach(el => counterObs.observe(el));
+        }
+
+        // Fetch landing stats from Supabase
+        (async function loadLandingStats() {
+            const SUPABASE_URL = 'https://fejzahnvcxyxnckphcuu.supabase.co';
+            const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlanphaG52Y3h5eG5ja3BoY3V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwMTQ2MzcsImV4cCI6MjA4NjU5MDYzN30.I5BfncDQiiP57DDeG6CxE8twijVnbxtx9qJEwMZul8M';
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/site_stats?limit=1`, {
+                    headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
+                });
+                if (res.ok) {
+                    const rows = await res.json();
+                    if (rows && rows.length > 0) {
+                        const d = rows[0];
+                        if (d.active_investors) document.getElementById('stat-investors').setAttribute('data-target', d.active_investors);
+                        if (d.countries) document.getElementById('stat-countries').setAttribute('data-target', d.countries);
+                        if (d.total_payouts) document.getElementById('stat-payouts').setAttribute('data-target', d.total_payouts);
+                        if (d.years_in_market) document.getElementById('stat-years').setAttribute('data-target', d.years_in_market);
+                    }
+                }
+            } catch (_) {}
+            initCounters();
+        })();
+
+        // Nav scroll effect
+        const nav = document.querySelector('.nav');
+        window.addEventListener('scroll', () => {
+            nav.style.background = window.scrollY > 80 ? 'rgba(3,7,18,.95)' : 'rgba(3,7,18,.85)';
+            nav.style.borderBottomColor = window.scrollY > 80 ? 'rgba(0,243,255,.15)' : 'rgba(0,243,255,.1)';
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // ✅ URL Referral Propagation
+        // Capture ?ref= from URL and add it to all links pointing to index.html
+        (function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            let ref = urlParams.get('ref');
+
+            // If not in URL, try localStorage (set by App.tsx during clean redirect)
+            if (!ref) {
+                ref = localStorage.getItem('geminix_referral');
+                if (ref) console.log("Referral found in storage:", ref);
+            }
+
+            if (ref) {
+                console.log("Applying referral to app links:", ref);
+                // Target both /login and potential root/index links
+                const appLinks = document.querySelectorAll('a[href*="/login"], a[href="./index.html"], a[href="./"]');
+                appLinks.forEach(link => {
+                    try {
+                        const url = new URL(link.href, window.location.origin);
+                        url.searchParams.set('ref', ref);
+                        link.href = url.pathname + url.search;
+                    } catch (e) {
+                        console.error("Error updating link:", link.href, e);
+                    }
+                });
+            }
+        })();
+    </script>
+    <script>
+        // --- Google Translate via cookie (más fiable que el widget) ---
+        function setGTranslateCookie(lang) {
+            var domain = location.hostname;
+            if (lang && lang !== 'en') {
+                var val = '/en/' + lang;
+                document.cookie = 'googtrans=' + val + '; path=/';
+                document.cookie = 'googtrans=' + val + '; path=/; domain=' + domain;
+                document.cookie = 'googtrans=' + val + '; path=/; domain=.' + domain;
+            } else {
+                // Borrar cookie para volver a inglés
+                document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+                document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + domain;
+                document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + domain;
+            }
+        }
+
+        function doGTranslate(lang) {
+            if (!lang) return;
+            localStorage.setItem('geminix_lang', lang);
+
+            // Intenta usar el combo de Google Translate directamente (sin reload)
+            var gtCombo = document.querySelector('.goog-te-combo');
+            if (gtCombo) {
+                gtCombo.value = lang;
+                gtCombo.dispatchEvent(new Event('change'));
+                return;
+            }
+
+            // Fallback: cookie + reload
+            setGTranslateCookie(lang);
+            location.reload();
+        }
+
+        // Al cargar: leer idioma guardado y marcar el selector
+        (function () {
+            var saved = localStorage.getItem('geminix_lang');
+
+            // Leer cookie actual para marcar selector correctamente
+            var cookieLang = '';
+            var match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
+            if (match) cookieLang = match[1];
+
+            var activeLang = saved || cookieLang || 'en';
+
+            // Sincronizar selector
+            document.addEventListener('DOMContentLoaded', function () {
+                var select = document.querySelector('.lang-selector');
+                if (select && activeLang) {
+                    select.value = activeLang;
+                }
+            });
+        })();
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', autoDisplay: false }, 'google_translate_element');
+        }
+    </script>
+    <!-- Google Translate element: oculto visualmente pero accesible al DOM -->
+    <div id="google_translate_element" style="position:fixed;bottom:-200px;left:0;opacity:0;pointer-events:none;height:0;overflow:hidden;"></div>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- ElevenLabs Voice Agent -->
+    <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
+    <elevenlabs-convai agent-id="agent_3901knyx13x2ezztqknkdy4v1qry" style="position:fixed;bottom:90px;right:16px;z-index:9999;"></elevenlabs-convai>
+    <style>
+      elevenlabs-convai { position: fixed !important; bottom: 90px !important; right: 16px !important; z-index: 9999 !important; }
+      @media (max-width: 768px) {
+        elevenlabs-convai { bottom: 80px !important; right: 10px !important; }
+      }
+    </style>
+</body>
+
+</html>

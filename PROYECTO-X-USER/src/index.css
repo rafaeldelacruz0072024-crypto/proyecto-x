@@ -1,0 +1,327 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #020617;
+    color: #e2e8f0;
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 0% 50%, rgba(188, 19, 254, 0.05) 0%, transparent 40%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+  }
+  
+  font {
+    font-family: inherit !important;
+    font-weight: inherit !important;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00f3ff;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bc13fe;
+  box-shadow: 0 0 10px #bc13fe;
+}
+
+/* Chrome Autofill — keep dark background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #020817 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@layer utilities {
+  /* Utility Classes */
+  .font-orbitron {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  .font-rajdhani {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  .font-mono-tech {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  /* Holographic Card (The Evolution of Blue Glass) */
+  .blue-glass,
+  .holo-card {
+    background: rgba(8, 14, 28, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 243, 255, 0.15);
+    border-top: 1px solid rgba(0, 243, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 243, 255, 0.02);
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (max-width: 480px) {
+    .holo-card:not(.p-0) {
+      padding: 0.75rem !important;
+    }
+
+    body {
+      padding-bottom: 80px;
+      /* Space for fixed bottom elements */
+    }
+  }
+
+  .holo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00f3ff, transparent);
+    opacity: 0.5;
+  }
+
+  /* Neon Gradients */
+  .blue-brand-gradient {
+    background: linear-gradient(135deg, #00f3ff 0%, #2563eb 100%);
+  }
+
+  .gold-gradient {
+    background: linear-gradient(135deg, #ffe600 0%, #ff9900 100%);
+  }
+
+  /* Text Glows */
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+  }
+
+  .text-glow-purple {
+    text-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
+  }
+
+  .text-glow-white {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+
+  .text-glow-green {
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+  }
+
+  .text-glow-red {
+    text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+  }
+
+  .text-glow-gold {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  .text-glow-indigo {
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+  }
+
+  .bg-scanline {
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(99, 102, 241, 0.1) 50%,
+        transparent 100%);
+  }
+
+  /* Cyberpunk Clipped Corners */
+  .clip-corner {
+    clip-path: polygon(10px 0, 100% 0,
+        100% calc(100% - 10px), calc(100% - 10px) 100%,
+        0 100%, 0 10px);
+  }
+
+  .clip-corner-sm {
+    clip-path: polygon(5px 0, 100% 0,
+        100% calc(100% - 5px), calc(100% - 5px) 100%,
+        0 100%, 0 5px);
+  }
+
+  /* Grid Background */
+  .bg-grid {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  /* ── Prediction Markets Animations ──────────────────────────────── */
+
+  /* Card entrance: slide up + fade */
+  .animate-slide-up {
+    animation: slideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Staggered card delays */
+  .animate-delay-1 { animation-delay: 0.06s; }
+  .animate-delay-2 { animation-delay: 0.12s; }
+  .animate-delay-3 { animation-delay: 0.18s; }
+  .animate-delay-4 { animation-delay: 0.24s; }
+  .animate-delay-5 { animation-delay: 0.30s; }
+  .animate-delay-6 { animation-delay: 0.36s; }
+
+  /* Progress bar grow from 0 */
+  .animate-bar-grow {
+    animation: barGrow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Shimmer sweep (bet button, etc.) */
+  .animate-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .animate-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255,255,255,0.18) 50%,
+      transparent 65%
+    );
+    background-size: 200% 100%;
+    animation: shimmerSweep 2.4s ease-in-out infinite;
+  }
+
+  /* Neon border pulse */
+  .animate-neon-pulse {
+    animation: neonPulse 2s ease-in-out infinite;
+  }
+
+  /* Bet success flash */
+  .animate-bet-success {
+    animation: betSuccess 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Price pop (crypto widget) */
+  .animate-price-pop {
+    animation: pricePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* Scan line sweep (charts) */
+  .animate-scan {
+    animation: scanLine 3s linear infinite;
+  }
+
+  /* Ring ping (LIVE dot) */
+  .animate-ring-ping {
+    animation: ringPing 1.6s ease-out infinite;
+  }
+
+  /* Number count-up flash */
+  .animate-count-flash {
+    animation: countFlash 0.4s ease-out both;
+  }
+
+  /* Glow border flash on bet result */
+  .animate-border-glow-green {
+    animation: borderGlowGreen 0.6s ease-out both;
+  }
+  .animate-border-glow-red {
+    animation: borderGlowRed 0.6s ease-out both;
+  }
+}
+
+/* ── Keyframes (outside @layer so Recharts/SVG can use them too) ─── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes barGrow {
+  from { width: 0 !important; opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmerSweep {
+  0%   { background-position: -200% 0; }
+  60%  { background-position: 200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(0,243,255,0.3), inset 0 0 6px rgba(0,243,255,0.05); }
+  50%       { box-shadow: 0 0 18px rgba(0,243,255,0.6), inset 0 0 12px rgba(0,243,255,0.1); }
+}
+
+@keyframes betSuccess {
+  0%   { opacity: 0; transform: scale(0.9) translateY(6px); }
+  60%  { transform: scale(1.02) translateY(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pricePop {
+  0%   { transform: scale(0.93); }
+  60%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+@keyframes scanLine {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes ringPing {
+  0%   { transform: scale(1); opacity: 1; }
+  70%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+@keyframes countFlash {
+  0%   { opacity: 0.3; transform: scale(0.92); }
+  60%  { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes borderGlowGreen {
+  0%   { box-shadow: 0 0 0 rgba(34,197,94,0); }
+  40%  { box-shadow: 0 0 24px rgba(34,197,94,0.5); }
+  100% { box-shadow: 0 0 8px rgba(34,197,94,0.2); }
+}
+
+@keyframes borderGlowRed {
+  0%   { box-shadow: 0 0 0 rgba(239,68,68,0); }
+  40%  { box-shadow: 0 0 24px rgba(239,68,68,0.5); }
+  100% { box-shadow: 0 0 8px rgba(239,68,68,0.1); }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GEMINIX – Plan de Compensación</title>
+  <style>
+    body { margin: 0; background: #020817; display: flex; flex-direction: column; align-items: center; padding: 20px; font-family: monospace; }
+    #btn {
+      margin-bottom: 16px;
+      padding: 12px 36px;
+      background: linear-gradient(90deg, #00f3ff, #0072ff);
+      color: #020817;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 4px;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    #btn:hover { opacity: 0.85; }
+    #preview { max-width: 100%; border: 1px solid #00f3ff33; }
+  </style>
+</head>
+<body>
+  <button id="btn" onclick="downloadPNG()">⬇ DESCARGAR PNG</button>
+  <img id="preview" src="compensation-plan.svg" width="1000"/>
+
+  <script>
+    function downloadPNG() {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1000;
+        canvas.height = 1320;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const a = document.createElement('a');
+        a.download = 'GEMINIX-Plan-Compensacion.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      };
+      img.src = 'compensation-plan.svg';
+    }
+  </script>
+</body>
+</html>

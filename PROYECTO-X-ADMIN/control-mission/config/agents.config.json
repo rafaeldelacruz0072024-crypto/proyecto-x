@@ -1,0 +1,125 @@
+{
+  "_comment": "Configuración avanzada de agentes - EDITAR ANTES DE INICIAR",
+  
+  "agents": {
+    "backend-agent": {
+      "enabled": true,
+      "maxConcurrentTasks": 2,
+      "timeout": 1800,
+      "retryOnFail": true,
+      "maxRetries": 3,
+      "preferences": {
+        "languages": ["javascript", "typescript", "python"],
+        "frameworks": ["express", "fastify", "nestjs"],
+        "databases": ["postgresql", "mongodb", "redis"]
+      }
+    },
+    "frontend-agent": {
+      "enabled": true,
+      "maxConcurrentTasks": 2,
+      "timeout": 1800,
+      "retryOnFail": true,
+      "maxRetries": 3,
+      "preferences": {
+        "frameworks": ["react", "vue", "angular"],
+        "styling": ["tailwind", "css-modules", "styled-components"],
+        "buildTools": ["vite", "webpack", "parcel"]
+      }
+    },
+    "design-agent": {
+      "enabled": true,
+      "maxConcurrentTasks": 3,
+      "timeout": 2400,
+      "retryOnFail": true,
+      "maxRetries": 2,
+      "preferences": {
+        "tools": ["figma", "sketch", "adobe-xd"],
+        "outputFormats": ["fig", "sketch", "xd"],
+        "focus": ["ui", "ux", "responsive", "accessibility"]
+      }
+    },
+    "database-agent": {
+      "enabled": true,
+      "maxConcurrentTasks": 1,
+      "timeout": 1200,
+      "retryOnFail": true,
+      "maxRetries": 3,
+      "preferences": {
+        "sql": ["postgresql", "mysql", "sqlite"],
+        "nosql": ["mongodb", "redis", "elasticsearch"],
+        "orm": ["prisma", "typeorm", "sequelize"]
+      }
+    },
+    "fullstack-agent": {
+      "enabled": true,
+      "maxConcurrentTasks": 1,
+      "timeout": 3600,
+      "retryOnFail": true,
+      "maxRetries": 2,
+      "preferences": {
+        "stacks": ["mern", "mean", "nextjs", "nuxt"],
+        "deployment": ["vercel", "netlify", "docker"],
+        "architecture": ["monolith", "microservices", "serverless"]
+      }
+    },
+    "testing-agent": {
+      "enabled": true,
+      "maxConcurrentTasks": 2,
+      "timeout": 1800,
+      "retryOnFail": false,
+      "maxRetries": 1,
+      "preferences": {
+        "unit": ["jest", "mocha", "pytest"],
+        "e2e": ["cypress", "playwright", "selenium"],
+        "integration": ["supertest", "jest", "pytest"]
+      }
+    }
+  },
+
+  "taskQueue": {
+    "maxQueueSize": 100,
+    "defaultPriority": "medium",
+    "autoAssign": true,
+    "loadBalancing": "round-robin",
+    "priorities": {
+      "critical": { weight: 4, skipQueue: false },
+      "high": { weight: 3, skipQueue: false },
+      "medium": { weight: 2, skipQueue: false },
+      "low": { weight: 1, skipQueue: false }
+    }
+  },
+
+  "notifications": {
+    "telegram": {
+      "enabled": true,
+      "notifyOnCreate": false,
+      "notifyOnComplete": true,
+      "notifyOnFail": true,
+      "notifyOnCancel": false,
+      "dailyReport": true,
+      "dailyReportTime": "18:00"
+    },
+    "dashboard": {
+      "enabled": true,
+      "soundEffects": true,
+      "desktopNotifications": true
+    }
+  },
+
+  "logging": {
+    "level": "info",
+    "file": "logs/control-mission.log",
+    "maxFileSize": "10MB",
+    "maxFiles": 5,
+    "format": "json",
+    "includeTimestamp": true
+  },
+
+  "performance": {
+    "cpuThreshold": 80,
+    "memoryThreshold": 80,
+    "slowTaskThreshold": 300,
+    "enableHealthChecks": true,
+    "healthCheckInterval": 60
+  }
+}

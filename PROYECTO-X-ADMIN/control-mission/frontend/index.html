@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 CONTROL MISSION - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Animaciones */
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+      }
+    }
+
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(100%);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    .agent-card {
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .agent-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .agent-card.active {
+      animation: pulse-glow 2s infinite;
+    }
+
+    .scanline::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.1), transparent);
+      animation: scanline 3s linear infinite;
+      pointer-events: none;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-dot.idle {
+      background-color: #10B981;
+    }
+
+    .status-dot.busy {
+      background-color: #F59E0B;
+      animation: blink 1s infinite;
+    }
+
+    .status-dot.offline {
+      background-color: #6B7280;
+    }
+
+    .progress-bar {
+      transition: width 0.5s ease;
+    }
+
+    .glass {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .neon-text {
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5),
+        0 0 20px rgba(59, 130, 246, 0.3),
+        0 0 30px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Coordinator Agent Styles */
+    .coordinator-card {
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .coordinator-card.active {
+      animation: coordinator-glow 3s infinite;
+    }
+
+    @keyframes coordinator-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3),
+          0 0 40px rgba(255, 215, 0, 0.1);
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.5),
+          0 0 80px rgba(255, 215, 0, 0.2);
+      }
+    }
+
+    /* Scrollbar personalizado */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.5);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.7);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+
+  <!-- Header -->
+  <header class="glass sticky top-0 z-50 border-b border-gray-800">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="text-4xl">🚀</div>
+          <div>
+            <h1 class="text-2xl font-black neon-text">CONTROL MISSION</h1>
+            <p class="text-gray-400 text-sm mono">AI Agent Management System</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-6">
+          <div class="text-right">
+            <div class="text-xs text-gray-400">SYSTEM STATUS</div>
+            <div class="flex items-center space-x-2">
+              <span class="status-dot idle"></span>
+              <span class="font-bold text-green-400" id="system-status">ONLINE</span>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <div class="text-xs text-gray-400">TELEGRAM</div>
+            <div class="flex items-center space-x-2">
+              <i class="fab fa-telegram text-blue-400 text-xl"></i>
+              <span class="font-bold mono" id="telegram-status">Connected</span>
+            </div>
+          </div>
+
+          <button onclick="toggleCreateModal()"
+            class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold transition-all transform hover:scale-105">
+            <i class="fas fa-plus mr-2"></i> Nueva Tarea
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-6 py-8">
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="glass rounded-xl p-6 scanline">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">Total Tareas</p>
+            <p class="text-4xl font-black mono" id="stat-total">0</p>
+          </div>
+          <div class="text-5xl text-blue-500">
+            <i class="fas fa-tasks"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-xl p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">En Progreso</p>
+            <p class="text-4xl font-black mono text-yellow-400" id="stat-progress">0</p>
+          </div>
+          <div class="text-5xl text-yellow-500">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-xl p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">Completadas</p>
+            <p class="text-4xl font-black mono text-green-400" id="stat-completed">0</p>
+          </div>
+          <div class="text-5xl text-green-500">
+            <i class="fas fa-check-circle"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-xl p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">Fallidas</p>
+            <p class="text-4xl font-black mono text-red-400" id="stat-failed">0</p>
+          </div>
+          <div class="text-5xl text-red-500">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agents Grid -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold flex items-center">
+          <i class="fas fa-robot mr-3 text-purple-400"></i>
+          AGENTES ACTIVOS
+        </h2>
+        <span class="text-gray-400 text-sm mono" id="agents-count">0 agentes</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="agents-grid">
+        <!-- Agent cards will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Tasks Table -->
+    <div class="glass rounded-xl overflow-hidden mb-8">
+      <div class="p-6 border-b border-gray-800">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold flex items-center">
+            <i class="fas fa-list mr-3 text-blue-400"></i>
+            TAREAS
+          </h2>
+          <div class="flex space-x-2">
+            <button onclick="filterTasks('all')"
+              class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm">Todas</button>
+            <button onclick="filterTasks('pending')"
+              class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm">Pendientes</button>
+            <button onclick="filterTasks('in_progress')"
+              class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm">Progreso</button>
+            <button onclick="filterTasks('completed')"
+              class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm">Completadas</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-800">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Estado</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Título</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Tipo</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Prioridad</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Agente</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Progreso</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800" id="tasks-table">
+            <!-- Tasks will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- JARVIS Command Console -->
+    <div class="glass rounded-xl overflow-hidden mb-8">
+      <div class="p-6 border-b border-gray-800">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold flex items-center">
+            <i class="fas fa-robot mr-3 text-yellow-400"></i>
+            🤖 JARVIS COMMAND CONSOLE
+          </h2>
+          <button onclick="toggleCommandHelp()"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-bold transition-all">
+            <i class="fas fa-question-circle mr-2"></i> Ayuda
+          </button>
+        </div>
+      </div>
+
+      <div class="p-6">
+        <!-- Command Input -->
+        <div class="flex space-x-4 mb-4">
+          <input type="text" id="jarvis-command-input"
+            placeholder="Escribe un comando para JARVIS... Ej: 'crear api llamada mi-api'"
+            class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-yellow-500 mono text-sm"
+            onkeypress="if(event.key === 'Enter') sendCommand()" />
+          <button onclick="sendCommand()"
+            class="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-lg font-bold transition-all transform hover:scale-105">
+            <i class="fas fa-paper-plane mr-2"></i> Enviar
+          </button>
+        </div>
+
+        <!-- Command Output -->
+        <div class="bg-gray-900 rounded-lg p-4 h-64 overflow-y-auto mono text-sm border border-gray-800"
+          id="command-output">
+          <div class="text-gray-400">
+            <div class="mb-2">🤖 <span class="text-yellow-400">JARVIS</span> Command Console v1.0</div>
+            <div class="mb-2">Escribe "help" para ver comandos disponibles</div>
+            <div class="mb-4">─────────────────────────────────────</div>
+          </div>
+        </div>
+
+        <!-- Quick Commands -->
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button onclick="setCommand('crear api llamada test-api')"
+            class="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs">
+            🚀 Crear API
+          </button>
+          <button onclick="setCommand('crear frontend con react llamado test-app')"
+            class="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs">
+            🎨 Crear Frontend
+          </button>
+          <button onclick="setCommand('instalar npm express cors dotenv')"
+            class="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs">
+            📦 Instalar Paquetes
+          </button>
+          <button onclick="setCommand('listar archivos')"
+            class="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded text-xs">
+            📁 Listar Archivos
+          </button>
+          <button onclick="setCommand('help')" class="px-3 py-1 bg-blue-900 hover:bg-blue-800 rounded text-xs">
+            ❓ Ayuda
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Logs -->
+    <div class="glass rounded-xl overflow-hidden">
+      <div class="p-6 border-b border-gray-800">
+        <h2 class="text-xl font-bold flex items-center">
+          <i class="fas fa-terminal mr-3 text-green-400"></i>
+          LOGS EN TIEMPO REAL
+        </h2>
+      </div>
+
+      <div class="p-6 h-64 overflow-y-auto mono text-sm" id="live-logs">
+        <!-- Logs will be inserted here -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Command Help Modal -->
+  <div id="command-help-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50">
+    <div class="glass rounded-xl p-8 max-w-2xl w-full mx-6 max-h-[80vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold">🤖 Comandos de JARVIS</h3>
+        <button onclick="toggleCommandHelp()" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-gray-800 rounded-lg p-4">
+          <h4 class="font-bold text-yellow-400 mb-2">🚀 Backend</h4>
+          <ul class="text-sm space-y-2 text-gray-300">
+            <li><code class="bg-gray-900 px-2 py-1 rounded">crear api llamada "nombre"</code> - Crear API REST</li>
+            <li><code class="bg-gray-900 px-2 py-1 rounded">instalar npm express, cors</code> - Instalar paquetes</li>
+            <li><code class="bg-gray-900 px-2 py-1 rounded">ejecutar script server.js</code> - Ejecutar script</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-4">
+          <h4 class="font-bold text-blue-400 mb-2">🎨 Frontend</h4>
+          <ul class="text-sm space-y-2 text-gray-300">
+            <li><code class="bg-gray-900 px-2 py-1 rounded">crear frontend con react llamado "app"</code> - Crear React
+            </li>
+            <li><code class="bg-gray-900 px-2 py-1 rounded">crear frontend con vue llamado "app"</code> - Crear Vue</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-4">
+          <h4 class="font-bold text-green-400 mb-2">🏗️ Proyectos</h4>
+          <ul class="text-sm space-y-2 text-gray-300">
+            <li><code class="bg-gray-900 px-2 py-1 rounded">crear proyecto llamado "nombre"</code> - Proyecto fullstack
+            </li>
+            <li><code class="bg-gray-900 px-2 py-1 rounded">listar archivos</code> - Ver archivos</li>
+            <li><code class="bg-gray-900 px-2 py-1 rounded">limpiar proyecto</code> - Limpiar todo</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-4">
+          <h4 class="font-bold text-purple-400 mb-2">🔧 Utilidades</h4>
+          <ul class="text-sm space-y-2 text-gray-300">
+            <li><code class="bg-gray-900 px-2 py-1 rounded">build</code> - Compilar proyecto</li>
+            <li><code class="bg-gray-900 px-2 py-1 rounded">ejecutar tests</code> - Ejecutar tests</li>
+            <li><code class="bg-gray-900 px-2 py-1 rounded">deploy</code> - Desplegar proyecto</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Task Modal -->
+  <div id="create-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50">
+    <div class="glass rounded-xl p-8 max-w-lg w-full mx-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold">Crear Nueva Tarea</h3>
+        <button onclick="toggleCreateModal()" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <form id="create-task-form" onsubmit="createTask(event)">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Título</label>
+            <input type="text" id="task-title" required
+              class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+              placeholder="Ej: Crear API REST">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Descripción</label>
+            <textarea id="task-description" rows="3"
+              class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+              placeholder="Describe la tarea..."></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-2">Tipo</label>
+              <select id="task-type"
+                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500">
+                <option value="backend">Backend</option>
+                <option value="frontend">Frontend</option>
+                <option value="design">Diseño</option>
+                <option value="database">Base de Datos</option>
+                <option value="fullstack">Fullstack</option>
+                <option value="testing">Testing</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-2">Prioridad</label>
+              <select id="task-priority"
+                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500">
+                <option value="low">Baja</option>
+                <option value="medium" selected>Media</option>
+                <option value="high">Alta</option>
+                <option value="critical">Crítica</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex space-x-4">
+          <button type="button" onclick="toggleCreateModal()"
+            class="flex-1 px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 font-bold transition-all">
+            Cancelar
+          </button>
+          <button type="submit"
+            class="flex-1 px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 font-bold transition-all transform hover:scale-105">
+            <i class="fas fa-rocket mr-2"></i> Lanzar Tarea
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="glass border-t border-gray-800 mt-12">
+    <div class="container mx-auto px-6 py-6">
+      <div class="flex items-center justify-between">
+        <div class="text-gray-400 text-sm">
+          © 2026 CONTROL MISSION - GEMINIX-ADMIN
+        </div>
+        <div class="flex items-center space-x-4 text-gray-400 text-sm">
+          <span class="mono">v1.0.0</span>
+          <span>|</span>
+          <span>Powered by AI Agents</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

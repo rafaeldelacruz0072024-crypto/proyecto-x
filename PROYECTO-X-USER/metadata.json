@@ -1,0 +1,7 @@
+{
+  "name": "GK MLM Platform",
+  "description": "A high-end multi-level marketing platform featuring an immutable ledger, 30-level commissions, daily 2.2% returns, and interactive network visualization.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

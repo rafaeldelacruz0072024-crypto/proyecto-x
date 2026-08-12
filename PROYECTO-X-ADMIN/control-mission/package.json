@@ -1,0 +1,37 @@
+{
+  "name": "control-mission",
+  "version": "1.0.0",
+  "description": "Sistema avanzado de agentes AI para desarrollo de software",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "agents": "node backend/agent-manager.js",
+    "dashboard": "npx serve frontend -p 3000",
+    "install-all": "npm install && cd frontend && npm install"
+  },
+  "keywords": [
+    "ai-agents",
+    "automation",
+    "development",
+    "telegram-bot"
+  ],
+  "author": "GEMINIX-ADMIN",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1",
+    "node-telegram-bot-api": "^0.61.0",
+    "uuid": "^9.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "winston": "^3.8.2",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^6.0.1",
+    "node-cron": "^3.0.0",
+    "lowdb": "^5.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
