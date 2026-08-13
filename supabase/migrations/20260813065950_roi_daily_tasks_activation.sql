@@ -14,6 +14,7 @@ create table if not exists public.roi_daily_task_completions (
 
 alter table public.roi_daily_task_completions enable row level security;
 
+drop policy if exists roi_daily_tasks_select_own on public.roi_daily_task_completions;
 create policy roi_daily_tasks_select_own
 on public.roi_daily_task_completions for select to authenticated
 using ((select auth.uid()) = user_id);
