@@ -95,7 +95,10 @@ end $$;
 -- Firma oficial de registro con posicion binaria explicita.
 revoke all on function public.find_binary_position(uuid,text) from public, anon, authenticated;
 
+-- Borra las firmas anterior (8) y actual (9) para que esta migracion sea reintentable
+-- incluso si una ejecucion previa se interrumpio justo despues de crear la funcion.
 drop function if exists public.complete_registration(uuid,text,text,text,text,text,text,text);
+drop function if exists public.complete_registration(uuid,text,text,text,text,text,text,text,text);
 create function public.complete_registration(
   p_user_id uuid, p_username text, p_full_name text, p_email text,
   p_country text default null, p_phone text default null, p_ref_code text default null,
