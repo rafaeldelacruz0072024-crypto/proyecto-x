@@ -1021,6 +1021,30 @@ const App: React.FC = () => {
                     <RoiDailyTasks userId={user?.id || ''} hasActiveContracts={activeInvestmentTotal > 0} onRoiActivated={handleRoiActivated} addNotification={addNotification} />
                   )}
 
+                  {/* PROMOS Y EVENTOS — acceso directo desde el dashboard */}
+                  <section className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-l-2 border-violet-400 bg-violet-500/[0.04] px-4 py-3">
+                      <div>
+                        <p className="text-[9px] font-mono-tech text-violet-300 uppercase tracking-[0.25em]">NOVA Digital</p>
+                        <h2 className="mt-1 text-base font-orbitron font-black text-white uppercase tracking-[0.18em]">Promos y Eventos</h2>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab('events')}
+                        className="w-fit px-4 py-2 border border-violet-400/40 bg-violet-500/10 text-[9px] font-orbitron font-black text-violet-200 uppercase tracking-widest hover:bg-violet-500/20 transition-all"
+                      >
+                        Ver módulo completo
+                      </button>
+                    </div>
+                    <EventsPanel
+                      onNavigateToDeposit={() => setActiveTab('finance')}
+                      onSelectPromo={(promo) => {
+                        setActivePromotion(promo);
+                        setActiveTab('finance');
+                      }}
+                      profile={profile}
+                    />
+                  </section>
+
                   {/* SECURITY WIDGET */}
                   <div className="holo-card p-6 rounded-none clip-corner border-slate-800">
                     <h4 className="text-[10px] font-orbitron text-slate-500 uppercase tracking-widest mb-4">{t('dashboard.security_protocol')}</h4>
