@@ -69,6 +69,7 @@ export function useUserData(userId: string | null) {
               p_phone:        authUser.user.user_metadata?.phone || null,
               p_ref_code:     newRefCode,
               p_sponsor_code: authUser.user.user_metadata?.sponsor_code || null,
+              p_binary_side:  authUser.user.user_metadata?.binary_side || localStorage.getItem('nova_digital_binary_side') || 'LEFT',
             });
 
             if (rpcResult?.success) {

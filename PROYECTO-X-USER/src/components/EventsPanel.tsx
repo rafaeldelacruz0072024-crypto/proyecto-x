@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Promotion, Profile } from '../types';
 import { getActivePromotions } from '../services/database';
 import { Gift, Percent, Zap, Clock, Info, ArrowRight } from 'lucide-react';
-import BootCampEvent from './BootCampEvent';
 
 interface Props {
     onNavigateToDeposit: () => void;
@@ -11,7 +10,7 @@ interface Props {
     profile?: Profile | null;
 }
 
-const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, profile }) => {
+const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo }) => {
     const { t } = useTranslation();
     const [promos, setPromos] = useState<Promotion[]>([]);
     const [loading, setLoading] = useState(true);
@@ -89,7 +88,6 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
     if (promos.length === 0) {
         return (
             <div className="space-y-6">
-                <BootCampEvent profile={profile ?? null} />
                 <div className="blue-glass rounded-xl p-12 text-center border border-slate-800/50 relative overflow-hidden">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-slate-800/20 blur-3xl rounded-full"></div>
                     <div className="relative z-10 flex flex-col items-center">
@@ -109,7 +107,6 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
     return (
         <div className="space-y-6">
             {/* ═══ BOOTCAMP PUNTA CANA 2026 ═══ */}
-            <BootCampEvent profile={profile ?? null} />
 
             <div className="flex items-center justify-between">
                 <div>

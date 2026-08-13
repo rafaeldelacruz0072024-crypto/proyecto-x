@@ -48,10 +48,10 @@ import FlashOfferModal from './components/FlashOfferModal';
 import TutorialsPanel from './components/TutorialsPanel';
 import PredictionMarketsPanel from './components/PredictionMarketsPanel';
 import RoadMapPanel from './components/RoadMapPanel';
-import NovaDigitalCardPanel from './components/NovaDigitalCardPanel';
 import PromoModal from './components/PromoModal';
 import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
+import BinaryBonusPanel from './components/BinaryBonusPanel';
 import UserSidebar from './components/UserSidebar';
 import SpecialEditionWidget from './components/SpecialEditionWidget';
 // Red vacía - se llenará con datos reales cuando se implemente backend de referidos
@@ -82,7 +82,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap' | 'nova_digital_card'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -213,14 +213,17 @@ const App: React.FC = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const refInUrl = urlParams.get('ref');
+    const binarySide = urlParams.get('side')?.toUpperCase();
 
     if (refInUrl) {
       const expires90 = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
       localStorage.setItem('nova_digital_referral', refInUrl.toUpperCase());
+      if (binarySide === 'LEFT' || binarySide === 'RIGHT') localStorage.setItem('nova_digital_binary_side', binarySide);
       document.cookie = `nova_digital_ref=${encodeURIComponent(refInUrl.toUpperCase())};expires=${expires90};path=/;SameSite=Lax`;
       setReferralFromUrl(refInUrl.toUpperCase());
       // Limpiar ?ref de la URL sin recargar
       urlParams.delete('ref');
+      urlParams.delete('side');
       const newSearch = urlParams.toString();
       window.history.replaceState({}, '', window.location.pathname + (newSearch ? `?${newSearch}` : ''));
     } else {
@@ -385,6 +388,7 @@ const App: React.FC = () => {
 
     // Limpiar todo rastro del referral (localStorage + cookies)
     localStorage.removeItem('nova_digital_referral');
+    localStorage.removeItem('nova_digital_binary_side');
     localStorage.removeItem('nova_digital_ref_token');
     document.cookie = 'nova_digital_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
     document.cookie = 'nova_digital_ref_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
@@ -621,6 +625,7 @@ const App: React.FC = () => {
       TransactionType.DAILY_RETURN,
       'DAILY_ROI',
       TransactionType.REFERRAL_COMMISSION,
+      TransactionType.BINARY_COMMISSION,
       TransactionType.WEEKLY_SALARY,
       TransactionType.WEEKLY_BONUS,
       TransactionType.BONUS_WEEKLY
@@ -642,6 +647,7 @@ const App: React.FC = () => {
       TransactionType.DAILY_RETURN,
       'DAILY_ROI',
       TransactionType.REFERRAL_COMMISSION,
+      TransactionType.BINARY_COMMISSION,
       TransactionType.WEEKLY_SALARY,
       TransactionType.WEEKLY_BONUS,
       TransactionType.BONUS_WEEKLY
@@ -850,6 +856,12 @@ const App: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              <BinaryBonusPanel
+                userId={user?.id || ''}
+                refCode={profile?.ref_code || null}
+                addNotification={addNotification}
+              />
 
 
               {/* REGLA DE ORO ROI: acceso principal de ancho completo */}
@@ -1230,12 +1242,6 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'nova_digital_card' && (
-            <div className="space-y-6 animate-slide-in">
-              <NovaDigitalCardPanel profile={profile} />
-            </div>
-          )}
-
           {activeTab === 'profile' && (
             <div className="space-y-6 animate-slide-in">
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-white/50">
@@ -1268,7 +1274,7 @@ const App: React.FC = () => {
             <div className="space-y-6 animate-slide-in">
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent mb-6">
                 <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">PREDICTION MARKETS</h2>
-                <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">AMM · POLYMARKET STYLE</span>
+                <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">DATOS PÚBLICOS · POLYMARKET LIVE</span>
               </div>
               {profile ? (
                 <PredictionMarketsPanel

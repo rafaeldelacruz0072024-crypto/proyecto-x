@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Globe, Users, Activity, Radio, Cpu } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Activity, BarChart3, BrainCircuit, Radio, TrendingUp } from 'lucide-react';
 import { SocketMessage } from '../services/websocket';
 
 interface Props {
@@ -8,247 +7,143 @@ interface Props {
   latestEvent: SocketMessage | null;
 }
 
-interface Coordinate {
+interface MarketPulse {
+  id: string;
+  title: string;
+  category: string;
+  region: string;
   x: number;
   y: number;
-  flag: string;
-  code: string;
+  probability: number;
+  volume: number;
+  change: number;
 }
 
-const COUNTRY_COORDINATES: Record<string, Coordinate> = {
-  'Estados Unidos': { x: 23, y: 37, flag: '🇺🇸', code: 'US' },
-  'United States': { x: 23, y: 37, flag: '🇺🇸', code: 'US' },
-  'US': { x: 23, y: 37, flag: '🇺🇸', code: 'US' },
-  'España': { x: 49, y: 36, flag: '🇪🇸', code: 'ES' },
-  'Spain': { x: 49, y: 36, flag: '🇪🇸', code: 'ES' },
-  'ES': { x: 49, y: 36, flag: '🇪🇸', code: 'ES' },
-  'México': { x: 20, y: 46, flag: '🇲🇽', code: 'MX' },
-  'Mexico': { x: 20, y: 46, flag: '🇲🇽', code: 'MX' },
-  'MX': { x: 20, y: 46, flag: '🇲🇽', code: 'MX' },
-  'Colombia': { x: 28, y: 56, flag: '🇨🇴', code: 'CO' },
-  'CO': { x: 28, y: 56, flag: '🇨🇴', code: 'CO' },
-  'Venezuela': { x: 32, y: 53, flag: '🇻🇪', code: 'VE' },
-  'VE': { x: 32, y: 53, flag: '🇻🇪', code: 'VE' },
-  'Alemania': { x: 51, y: 29, flag: '🇩🇪', code: 'DE' },
-  'Germany': { x: 51, y: 29, flag: '🇩🇪', code: 'DE' },
-  'DE': { x: 51, y: 29, flag: '🇩🇪', code: 'DE' },
-  'Francia': { x: 48, y: 32, flag: '🇫🇷', code: 'FR' },
-  'France': { x: 48, y: 32, flag: '🇫🇷', code: 'FR' },
-  'FR': { x: 48, y: 32, flag: '🇫🇷', code: 'FR' },
-  'Italia': { x: 51, y: 35, flag: '🇮🇹', code: 'IT' },
-  'Italy': { x: 51, y: 35, flag: '🇮🇹', code: 'IT' },
-  'IT': { x: 51, y: 35, flag: '🇮🇹', code: 'IT' },
-  'India': { x: 71, y: 47, flag: '🇮🇳', code: 'IN' },
-  'IN': { x: 71, y: 47, flag: '🇮🇳', code: 'IN' },
-  'Brasil': { x: 36, y: 65, flag: '🇧🇷', code: 'BR' },
-  'Brazil': { x: 36, y: 65, flag: '🇧🇷', code: 'BR' },
-  'BR': { x: 36, y: 65, flag: '🇧🇷', code: 'BR' },
-  'Perú': { x: 27, y: 61, flag: '🇵🇪', code: 'PE' },
-  'Peru': { x: 27, y: 61, flag: '🇵🇪', code: 'PE' },
-  'PE': { x: 27, y: 61, flag: '🇵🇪', code: 'PE' },
-  'República Dominicana': { x: 31, y: 47, flag: '🇩🇴', code: 'DO' },
-  'Dominican Republic': { x: 31, y: 47, flag: '🇩🇴', code: 'DO' },
-  'DO': { x: 31, y: 47, flag: '🇩🇴', code: 'DO' }
-};
+const INITIAL_MARKETS: MarketPulse[] = [
+  { id: 'us-rate', title: 'Decisión de tasas en EE. UU.', category: 'Economía', region: 'Norteamérica', x: 23, y: 38, probability: 64, volume: 2.4, change: 1.8 },
+  { id: 'latam-election', title: 'Resultado electoral regional', category: 'Política', region: 'Latinoamérica', x: 31, y: 61, probability: 52, volume: 1.1, change: -0.7 },
+  { id: 'eu-inflation', title: 'Inflación europea bajo objetivo', category: 'Economía', region: 'Europa', x: 51, y: 35, probability: 71, volume: 1.8, change: 2.1 },
+  { id: 'asia-tech', title: 'Índice tecnológico cierra al alza', category: 'Tecnología', region: 'Asia', x: 77, y: 43, probability: 58, volume: 3.2, change: 0.9 },
+  { id: 'global-crypto', title: 'Mercado cripto supera resistencia', category: 'Cripto', region: 'Global', x: 61, y: 58, probability: 46, volume: 4.6, change: -1.3 },
+];
+
+const clamp = (value: number) => Math.min(99, Math.max(1, value));
 
 export default function WorldMapWidget({ settings, latestEvent }: Props) {
-  const { t } = useTranslation();
-  const [activePulses, setActivePulses] = useState<Record<string, boolean>>({});
-  const [usersOnline, setUsersOnline] = useState(500);
+  const [markets, setMarkets] = useState(INITIAL_MARKETS);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [updatedAt, setUpdatedAt] = useState(new Date());
+  const refreshSeconds = Math.max(3, Number(settings?.speed) || 5);
 
-  // Dynamic Online Users animation (Base users +/- variance)
   useEffect(() => {
-    const base = settings?.base_users || 500;
-    const variance = settings?.variance || 80;
-    setUsersOnline(base);
+    const interval = window.setInterval(() => {
+      setMarkets((current) => current.map((market, index) => {
+        const movement = Number(((Math.random() - 0.5) * 2.4).toFixed(1));
+        return index === activeIndex
+          ? { ...market, probability: clamp(Number((market.probability + movement).toFixed(1))), change: movement, volume: Number((market.volume + Math.random() * 0.08).toFixed(2)) }
+          : market;
+      }));
+      setActiveIndex((current) => (current + 1) % INITIAL_MARKETS.length);
+      setUpdatedAt(new Date());
+    }, refreshSeconds * 1000);
 
-    const interval = setInterval(() => {
-      const offset = Math.floor((Math.random() - 0.5) * variance);
-      setUsersOnline(Math.max(10, base + offset));
-    }, 4000);
+    return () => window.clearInterval(interval);
+  }, [activeIndex, refreshSeconds]);
 
-    return () => clearInterval(interval);
-  }, [settings]);
-
-  // Listen to new events and trigger pulse rings on coordinates
-  useEffect(() => {
-    if (!latestEvent?.payload?.country) return;
-
-    const countryName = latestEvent.payload.country;
-    if (COUNTRY_COORDINATES[countryName]) {
-      setActivePulses((prev) => ({ ...prev, [countryName]: true }));
-
-      // Clear pulse after animation ends (2s)
-      const timer = setTimeout(() => {
-        setActivePulses((prev) => ({ ...prev, [countryName]: false }));
-      }, 2500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [latestEvent]);
-
-  // Extract list of active countries from settings
-  const activeCountriesList = settings?.active_countries || [];
+  const activeMarket = markets[activeIndex];
+  const totalVolume = useMemo(() => markets.reduce((sum, market) => sum + market.volume, 0), [markets]);
+  const averageProbability = useMemo(() => markets.reduce((sum, market) => sum + market.probability, 0) / markets.length, [markets]);
 
   return (
-    <div className="holo-card p-6 bg-black/50 border-slate-800 rounded-3xl overflow-hidden backdrop-blur-2xl flex flex-col md:grid md:grid-cols-4 gap-6 min-h-[450px] relative group">
-      {/* Glow Effects */}
-      <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-3xl opacity-10 bg-proyecto-accent group-hover:opacity-20 transition-all pointer-events-none" />
-      <div className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full blur-3xl opacity-10 bg-proyecto-brand group-hover:opacity-20 transition-all pointer-events-none" />
+    <section className="holo-card rounded-3xl overflow-hidden border border-cyan-400/20 bg-[#030a18]/90 p-5 md:p-7 relative">
+      <div className="absolute inset-0 bg-grid opacity-[0.035] pointer-events-none" />
+      <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-violet-600/10 blur-3xl pointer-events-none" />
 
-      {/* Cyber Grid Pattern */}
-      <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none z-0"></div>
-
-      {/* Left panel: Telemetry stats */}
-      <div className="md:col-span-1 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800/60 pb-4 md:pb-0 md:pr-6 z-10">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Radio className="w-4 h-4 text-proyecto-accent animate-pulse" />
-            <span className="font-orbitron text-xs font-black tracking-[0.2em] text-white">TELEMETRÍA GLOBAL</span>
+      <div className="relative z-10 flex flex-col gap-6">
+        <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="mb-2 flex items-center gap-2 text-cyan-300">
+              <Radio className="h-4 w-4 animate-pulse" />
+              <span className="font-orbitron text-[10px] font-black uppercase tracking-[0.32em]">Radar predictivo global</span>
+            </div>
+            <h2 className="font-orbitron text-2xl font-black text-white md:text-3xl">Telemetría de mercados</h2>
+            <p className="mt-2 max-w-2xl font-mono-tech text-xs leading-relaxed text-slate-400">
+              Monitoreo simulado de probabilidades, liquidez y variaciones en mercados de predicción globales.
+            </p>
           </div>
-          <p className="text-[10px] text-slate-500 font-mono-tech uppercase tracking-wider mb-6">Red de Nodos y Arbitraje de IA</p>
-
-          <div className="space-y-5">
-            {/* Stat: Online Users */}
-            <div className="bg-white/5 border border-white/5 rounded-xl p-3 backdrop-blur-md">
-              <div className="flex items-center gap-2 text-slate-500 mb-1">
-                <Users className="w-3.5 h-3.5" />
-                <span className="text-[9px] font-mono-tech font-bold uppercase tracking-wider">{t('network.active_node', 'Nodos Activos')}</span>
-              </div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-xl font-orbitron font-bold text-white tabular-nums">{usersOnline.toLocaleString()}</span>
-                <span className="text-[8px] font-mono-tech text-proyecto-green font-bold uppercase tracking-wider animate-pulse">ONLINE</span>
-              </div>
-            </div>
-
-            {/* Stat: Network Status */}
-            <div className="bg-white/5 border border-white/5 rounded-xl p-3 backdrop-blur-md">
-              <div className="flex items-center gap-2 text-slate-500 mb-1">
-                <Activity className="w-3.5 h-3.5" />
-                <span className="text-[9px] font-mono-tech font-bold uppercase tracking-wider">Estado de Simulación</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${settings?.is_active ? 'bg-proyecto-green animate-pulse shadow-[0_0_8px_#10b981]' : 'bg-red-500'}`} />
-                <span className={`text-[10px] font-orbitron font-black uppercase tracking-widest ${settings?.is_active ? 'text-proyecto-green' : 'text-red-400'}`}>
-                  {settings?.is_active ? 'ACTIVO' : 'PAUSADO'}
-                </span>
-              </div>
-            </div>
-
-            {/* Stat: Average Yield speed */}
-            <div className="bg-white/5 border border-white/5 rounded-xl p-3 backdrop-blur-md">
-              <div className="flex items-center gap-2 text-slate-500 mb-1">
-                <Cpu className="w-3.5 h-3.5" />
-                <span className="text-[9px] font-mono-tech font-bold uppercase tracking-wider">Intervalo IA Feed</span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-xl font-orbitron font-bold text-proyecto-accent tabular-nums">{settings?.speed || 5}</span>
-                <span className="text-[8px] font-mono-tech text-slate-500 font-bold uppercase tracking-wider">segundos</span>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 self-start rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-2 text-[10px] font-orbitron font-bold uppercase tracking-widest text-emerald-300">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_12px_#34d399]" />
+            Señal en vivo · {updatedAt.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
           </div>
+        </header>
+
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <Metric icon={<Activity />} label="Mercados vigilados" value={String(markets.length)} accent="text-cyan-300" />
+          <Metric icon={<BarChart3 />} label="Volumen observado" value={`$${totalVolume.toFixed(1)}M`} accent="text-blue-300" />
+          <Metric icon={<BrainCircuit />} label="Probabilidad media" value={`${averageProbability.toFixed(1)}%`} accent="text-violet-300" />
+          <Metric icon={<TrendingUp />} label="Frecuencia de análisis" value={`${refreshSeconds}s`} accent="text-emerald-300" />
         </div>
 
-        {/* Sync telemetry text footer */}
-        <div className="text-[9px] font-mono-tech text-slate-500 uppercase tracking-widest mt-6">
-          <span>LATENCY: </span>
-          <span className="text-proyecto-green font-bold">12ms</span>
-          <span className="mx-2">|</span>
-          <span>THROUGHPUT: </span>
-          <span className="text-white">1.04 Gb/s</span>
-        </div>
-      </div>
-
-      {/* Right panel: Map Display */}
-      <div className="md:col-span-3 flex flex-col justify-center relative select-none z-10">
-        <div className="relative w-full aspect-[2/1] bg-slate-950/40 rounded-2xl overflow-hidden border border-slate-900 shadow-inner">
-          {/* Grid Background Effect */}
-          <div className="absolute inset-0 bg-grid opacity-10 pointer-events-none z-0" />
-
-          {/* Dark World Map Image Background */}
-          <img
-            src="/world-map-dark.png"
-            alt="World Map"
-            className="w-full h-full object-cover opacity-60 filter brightness-[0.7] contrast-[1.1] z-0"
-            draggable="false"
-          />
-
-          {/* Active Overlay Pulse Points */}
-          {activeCountriesList.map((countryName: string) => {
-            const coord = COUNTRY_COORDINATES[countryName];
-            if (!coord) return null;
-
-            const isPulsing = activePulses[countryName];
-
-            return (
-              <div
-                key={countryName}
-                className="absolute z-20 -translate-x-1/2 -translate-y-1/2 group/marker"
-                style={{ left: `${coord.x}%`, top: `${coord.y}%` }}
+        <div className="grid gap-5 lg:grid-cols-[1.55fr_1fr]">
+          <div className="relative min-h-[320px] overflow-hidden rounded-2xl border border-cyan-400/10 bg-slate-950/70">
+            <img src="/world-map-dark.png" alt="Mapa de actividad de mercados de predicción" className="absolute inset-0 h-full w-full object-cover opacity-55 brightness-75 contrast-125" draggable="false" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-950/25 via-transparent to-violet-950/30" />
+            {markets.map((market, index) => (
+              <button
+                key={market.id}
+                type="button"
+                aria-label={`Ver señal: ${market.title}`}
+                onClick={() => setActiveIndex(index)}
+                className="group absolute z-10 -translate-x-1/2 -translate-y-1/2"
+                style={{ left: `${market.x}%`, top: `${market.y}%` }}
               >
-                {/* Active pulse ripple ring */}
-                {isPulsing && (
-                  <>
-                    <div className="absolute w-12 h-12 -left-6 -top-6 rounded-full border border-proyecto-accent/50 animate-ping opacity-75" />
-                    <div className="absolute w-8 h-8 -left-4 -top-4 rounded-full border-2 border-proyecto-brand/60 animate-ping opacity-50 animation-delay-500" />
-                    <div className="absolute w-4 h-4 -left-2 -top-2 rounded-full bg-white animate-pulse" />
-                  </>
-                )}
-
-                {/* Constant small marker dot */}
-                <div className={`w-2 h-2 rounded-full transition-all duration-300 border border-black shadow-lg ${
-                  isPulsing
-                    ? 'bg-white scale-125 shadow-[0_0_15px_#00f3ff]'
-                    : 'bg-proyecto-accent/80 hover:bg-white hover:scale-125'
-                }`} />
-
-                {/* Country Tooltip Hover */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/90 border border-slate-800 px-2.5 py-1 rounded-lg text-[9px] font-mono-tech text-white flex items-center gap-1.5 opacity-0 group-hover/marker:opacity-100 transition-opacity whitespace-nowrap shadow-xl z-30 pointer-events-none">
-                  <span>{coord.flag}</span>
-                  <span className="font-bold tracking-wider">{coord.code}</span>
-                  <span className="text-slate-500">•</span>
-                  <span>{countryName}</span>
-                </div>
+                {index === activeIndex && <span className="absolute -left-5 -top-5 h-10 w-10 animate-ping rounded-full border border-cyan-300/70" />}
+                <span className={`block h-3 w-3 rounded-full border-2 border-slate-950 transition ${index === activeIndex ? 'scale-125 bg-cyan-200 shadow-[0_0_18px_#22d3ee]' : 'bg-violet-400 shadow-[0_0_10px_#8b5cf6]'}`} />
+                <span className="pointer-events-none absolute bottom-5 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg border border-cyan-400/20 bg-slate-950/95 px-3 py-2 text-[9px] font-mono-tech text-white group-hover:block">
+                  {market.region} · {market.probability}%
+                </span>
+              </button>
+            ))}
+            <div className="absolute bottom-4 left-4 right-4 z-10 rounded-xl border border-cyan-300/15 bg-[#020817]/90 p-4 backdrop-blur-xl">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-orbitron text-[9px] uppercase tracking-[0.25em] text-cyan-300">Señal destacada · {activeMarket.region}</span>
+                <span className={`font-mono-tech text-xs font-bold ${activeMarket.change >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>{activeMarket.change >= 0 ? '+' : ''}{activeMarket.change}%</span>
               </div>
-            );
-          })}
-
-          {/* Floating Event Overlay Display */}
-          {latestEvent && latestEvent.payload?.country && (
-            <div className="absolute bottom-4 right-4 max-w-xs bg-slate-950/90 border border-proyecto-accent/30 rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-md animate-fade-in z-30 flex items-start gap-3">
-              {/* Event Badge Glow */}
-              <div className={`w-1.5 h-10 rounded-full flex-shrink-0 ${
-                latestEvent.type === 'PROFIT_TICK' ? 'bg-proyecto-green shadow-[0_0_8px_#10b981]' : 'bg-proyecto-accent shadow-[0_0_8px_cyan]'
-              }`} />
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                  {COUNTRY_COORDINATES[latestEvent.payload.country] && (
-                    <span className="text-xs">{COUNTRY_COORDINATES[latestEvent.payload.country].flag}</span>
-                  )}
-                  <span className="text-[8px] font-black font-orbitron text-proyecto-accent uppercase tracking-wider">
-                    {latestEvent.payload.country}
-                  </span>
-                  <span className="text-[8px] text-slate-500 font-mono">•</span>
-                  <span className="text-[8px] text-slate-400 font-mono uppercase tracking-widest">
-                    {latestEvent.type.replace('_', ' ')}
-                  </span>
-                </div>
-
-                <p className="text-[10px] text-slate-300 font-medium font-rajdhani line-clamp-2 leading-tight">
-                  {latestEvent.payload.description}
-                </p>
-
-                {latestEvent.payload.amount && (
-                  <p className="text-xs font-orbitron font-black text-proyecto-green mt-1">
-                    +${latestEvent.payload.amount.toFixed(2)} USD
-                  </p>
-                )}
-              </div>
+              <p className="mt-2 font-rajdhani text-lg font-bold text-white">{activeMarket.title}</p>
             </div>
-          )}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {markets.map((market, index) => (
+              <button key={market.id} type="button" onClick={() => setActiveIndex(index)} className={`rounded-xl border p-3 text-left transition ${index === activeIndex ? 'border-cyan-300/40 bg-cyan-300/10 shadow-[0_0_24px_rgba(34,211,238,0.08)]' : 'border-white/5 bg-white/[0.025] hover:border-violet-400/30'}`}>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-rajdhani text-sm font-bold text-white">{market.title}</p>
+                    <p className="font-mono-tech text-[8px] uppercase tracking-widest text-slate-500">{market.category} · Vol. ${market.volume.toFixed(2)}M</p>
+                  </div>
+                  <span className="font-orbitron text-lg font-black text-cyan-300">{market.probability}%</span>
+                </div>
+                <div className="mt-2 h-1 overflow-hidden rounded-full bg-slate-800"><div className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 transition-all duration-700" style={{ width: `${market.probability}%` }} /></div>
+              </button>
+            ))}
+          </div>
         </div>
+
+        <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-white/5 pt-4 font-mono-tech text-[9px] uppercase tracking-wider text-slate-500">
+          <span>Simulación visual informativa · No ejecuta apuestas ni operaciones reales</span>
+          <span>{latestEvent ? `Canal conectado · ${latestEvent.type.replaceAll('_', ' ')}` : 'Canal de datos simulado activo'}</span>
+        </footer>
       </div>
+    </section>
+  );
+}
+
+function Metric({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent: string }) {
+  return (
+    <div className="rounded-xl border border-white/5 bg-white/[0.035] p-4">
+      <div className={`mb-2 flex h-5 w-5 items-center ${accent}`}>{icon}</div>
+      <p className="font-mono-tech text-[8px] uppercase tracking-widest text-slate-500">{label}</p>
+      <p className={`mt-1 font-orbitron text-xl font-black ${accent}`}>{value}</p>
     </div>
   );
 }

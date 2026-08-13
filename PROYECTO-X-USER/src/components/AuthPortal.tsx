@@ -37,6 +37,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
   type FieldStatus = 'idle' | 'checking' | 'available' | 'taken';
   const [usernameStatus, setUsernameStatus] = useState<FieldStatus>('idle');
   const [emailStatus, setEmailStatus] = useState<FieldStatus>('idle');
+  const binarySide = (localStorage.getItem('nova_digital_binary_side') || 'LEFT').toUpperCase() === 'RIGHT' ? 'RIGHT' : 'LEFT';
 
   useEffect(() => {
     if (initialReferralCode) {
@@ -145,6 +146,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
             full_name: formData.name,
             username: formData.username,
             sponsor_code: sponsorCode,
+            binary_side: binarySide,
             country: formData.country,
             phone: formData.phone
           }
@@ -170,7 +172,8 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
         p_country:      formData.country,
         p_phone:        formData.phone,
         p_ref_code:     null,
-        p_sponsor_code: sponsorCode.toUpperCase()
+        p_sponsor_code: sponsorCode.toUpperCase(),
+        p_binary_side:  binarySide
       });
 
       if (updateError || !rpcData?.success) {
@@ -184,7 +187,8 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
           p_country:      formData.country,
           p_phone:        formData.phone,
           p_ref_code:     null,
-          p_sponsor_code: sponsorCode.toUpperCase()
+          p_sponsor_code: sponsorCode.toUpperCase(),
+          p_binary_side:  binarySide
         });
         if (retryError || !retryData?.success) {
           throw new Error(retryData?.error || retryError?.message || 'No se pudo completar el registro.');
@@ -193,6 +197,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
       // Limpiar referral del localStorage después del registro exitoso
       localStorage.removeItem('nova_digital_referral');
+      localStorage.removeItem('nova_digital_binary_side');
       document.cookie = 'nova_digital_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
 
       // Login automático

@@ -18,6 +18,8 @@ interface PolyMarket {
     image: string;
     slug: string;
     tags: { label: string }[];
+    priceHistory?: { t: number; p: number }[];
+    dayChangePct?: number;
 }
 
 interface NovaDigitalMarket {
@@ -186,9 +188,19 @@ function LiveActivityFeed() {
 }
 
 // ─── Sparkline card SVG ──────────────────────────────────────────────────────
-function SparklineChart({ yesProb, color, marketId }: { yesProb: number; color: string; marketId: string }) {
+function SparklineChart({ yesProb, color, marketId, history = [] }: { yesProb: number; color: string; marketId: string; history?: { t: number; p: number }[] }) {
     const svgId = `spark-${marketId.replace(/[^a-z0-9]/gi, '')}`;
-    const { path, areaPath } = buildSparkPath(yesProb, marketId, 280, 44);
+    const livePoints = history.map(point => Math.max(0, Math.min(100, point.p * 100)));
+    const values = livePoints.length > 1 ? livePoints : null;
+    const livePath = values?.map((value, index) => {
+        const x = (index / (values.length - 1)) * 280;
+        const y = 44 - (value / 100) * 44;
+        return `${index === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const fallback = buildSparkPath(yesProb, marketId, 280, 44);
+    const path = livePath || fallback.path;
+    const areaPath = livePath ? `${livePath} L280,44 L0,44 Z` : fallback.areaPath;
+    const lastPct = values?.[values.length - 1] ?? yesProb;
     return (
         <svg width="100%" height="44" viewBox="0 0 280 44" style={{ overflow: 'visible', display: 'block', margin: '10px 0' }}>
             <defs>
@@ -200,7 +212,7 @@ function SparklineChart({ yesProb, color, marketId }: { yesProb: number; color: 
             <path d={areaPath} fill={`url(#${svgId})`} />
             <path d={path} fill="none" stroke={color} strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
             {/* Last point dot */}
-            <circle cx="280" cy={44 - (yesProb / 100) * 44} r="3" fill={color} style={{ filter: `drop-shadow(0 0 5px ${color})` }} />
+            <circle cx="280" cy={44 - (lastPct / 100) * 44} r="3" fill={color} style={{ filter: `drop-shadow(0 0 5px ${color})` }} />
         </svg>
     );
 }
@@ -341,7 +353,13 @@ function MarketCard({ market, pcts, outcomes, catCfg, novaDigitalMkt, vol, tl, f
             )}
 
             {/* Sparkline */}
-            <SparklineChart yesProb={yesPct} color={isYesLeading ? '#4ade80' : '#f87171'} marketId={market.id} />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
+                <span style={{ fontSize: 8, color: '#475569', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>Movimiento de hoy</span>
+                <span style={{ fontSize: 11, fontWeight: 900, color: (market.dayChangePct || 0) >= 0 ? '#4ade80' : '#f87171' }}>
+                    {(market.dayChangePct || 0) >= 0 ? '+' : ''}{(market.dayChangePct || 0).toFixed(2)}%
+                </span>
+            </div>
+            <SparklineChart yesProb={yesPct} color={isYesLeading ? '#4ade80' : '#f87171'} marketId={market.id} history={market.priceHistory} />
 
             {/* Footer: time + status */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>

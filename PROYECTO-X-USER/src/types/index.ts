@@ -7,6 +7,8 @@ export interface Profile {
     status: 'active' | 'inactive' | 'suspended';
     ref_code: string | null;
     referred_by: string | null;
+    binary_parent_id?: string | null;
+    binary_side?: 'LEFT' | 'RIGHT' | null;
     credit_balance: number;
     wallet_balance: number;
     referral_commission_balance?: number;
@@ -33,6 +35,7 @@ export enum TransactionType {
     WITHDRAWAL_REJECTED = 'WITHDRAWAL_REJECTED',
     DAILY_RETURN = 'DAILY_RETURN',
     REFERRAL_COMMISSION = 'REFERRAL_COMMISSION',
+    BINARY_COMMISSION = 'BINARY_COMMISSION',
     WEEKLY_SALARY = 'WEEKLY_SALARY',
     WEEKLY_BONUS = 'WEEKLY_BONUS',
     BONUS_WEEKLY = 'bonus_weekly',
