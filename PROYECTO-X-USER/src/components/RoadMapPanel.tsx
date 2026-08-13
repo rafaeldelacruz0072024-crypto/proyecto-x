@@ -22,7 +22,7 @@ interface Countdown {
 const PHASE2_DURATION_DAYS = 60;
 
 const PHASE1_ITEMS = [
-  { icon: '📊', title: 'Pasivo NOVA DIGITAL GOLD', desc: '+1000% auditado Myfxbook 2025 · 5 IAs XAU/USD' },
+  { icon: '📊', title: 'Pasivo Nova Digital Gold', desc: '+1000% auditado Myfxbook 2025 · 5 IAs XAU/USD' },
   { icon: '🌐', title: '30 Niveles de Referidos', desc: 'Comisiones residuales según Regla de Oro oficial' },
   { icon: '💰', title: 'Salario Semanal', desc: 'Pago cada Sábado a miembros activos calificados' },
   { icon: '🎯', title: 'Predicciones V1', desc: 'Módulo de mercados de predicción activo' },
@@ -104,7 +104,7 @@ export default function RoadMapPanel() {
       <div className="flex items-center gap-4 bg-black/30 p-4 border-l-2 border-proyecto-accent">
         <div>
           <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">ROAD MAP</h2>
-          <p className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-widest mt-0.5">PLAN DE EVOLUCIÓN · PROTOCOLO NOVA DIGITAL</p>
+          <p className="text-[9px] font-mono-tech text-proyecto-accent tracking-widest mt-0.5">Plan de evolución · Protocolo Nova Digital</p>
         </div>
       </div>
 
@@ -296,7 +296,7 @@ export default function RoadMapPanel() {
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
             <p className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-[0.3em] mb-1">Visión del Protocolo</p>
-            <h3 className="text-lg font-orbitron font-black text-white uppercase tracking-widest">NOVA DIGITAL ECOSYSTEM</h3>
+            <h3 className="text-lg font-orbitron font-black text-white tracking-widest">Nova Digital Ecosystem</h3>
             <p className="text-[10px] text-slate-400 font-bold mt-1">
               3 fases · {PHASE2_DURATION_DAYS} días de transición · Evolución continua
             </p>

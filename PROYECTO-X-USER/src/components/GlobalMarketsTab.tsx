@@ -355,7 +355,7 @@ function MarketCard({ market, pcts, outcomes, catCfg, novaDigitalMkt, vol, tl, f
                         background: 'rgba(0,243,255,0.1)', color: '#00f3ff', border: '1px solid rgba(0,243,255,0.2)',
                         borderRadius: 100, display: 'flex', alignItems: 'center', gap: 4,
                     }}>
-                        <Zap size={8} /> NOVA DIGITAL
+                        <Zap size={8} /> Nova Digital
                     </div>
                 ) : (
                     <div style={{
@@ -420,7 +420,7 @@ function MarketCard({ market, pcts, outcomes, catCfg, novaDigitalMkt, vol, tl, f
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                     transition: 'all 0.2s',
                 }}>
-                    <Zap size={11} /> APOSTAR EN NOVA DIGITAL <ChevronRight size={11} />
+                    <Zap size={11} /> Apostar en Nova Digital <ChevronRight size={11} />
                 </button>
             )}
 

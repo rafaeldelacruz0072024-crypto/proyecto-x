@@ -479,7 +479,7 @@ const App: React.FC = () => {
         subject: "Depósito Enviado - Esperando Aprobación Admin",
         amount,
         method: "USDT (BEP-20)",
-        address: "NOVA Digital Wallet Bank",
+        address: "Nova Digital Wallet",
         txId: result.deposit.id,
         date: new Date(),
         isConfirmed: false
@@ -812,7 +812,7 @@ const App: React.FC = () => {
             </svg>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-500 mb-3">NOVA DIGITAL</p>
+            <p className="text-[10px] font-black tracking-[0.4em] text-rose-500 mb-3">Nova Digital</p>
             <h1 className="text-3xl font-black text-white uppercase tracking-tight">Cuenta Suspendida</h1>
             <p className="text-slate-500 font-medium mt-4 leading-relaxed text-sm">
               Tu cuenta ha sido temporalmente suspendida por el equipo administrativo.
@@ -1418,7 +1418,7 @@ const App: React.FC = () => {
           {activeTab === 'credit' && (
             <div className="space-y-6 animate-slide-in">
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-neon-purple">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-purple">◈ TOKEN GMX — NOVA DIGITAL Protocol</h2>
+                <h2 className="text-xl font-orbitron font-bold text-white tracking-[0.3em] text-glow-purple">◈ TOKEN GMX — Nova Digital Protocol</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-neon-purple bg-proyecto-neon-purple/10 px-3 py-1 border border-proyecto-neon-purple/20">{t('common.internal_network')}</span>
               </div>
               <CreditPanel
@@ -1532,7 +1532,7 @@ const App: React.FC = () => {
         </a>
       )}
       <footer className="mt-20 py-8 border-t border-slate-900/50 bg-black/40 text-center backdrop-blur-sm relative z-10">
-        <p className="text-slate-600 text-[10px] font-rajdhani font-bold uppercase tracking-[0.5em]">NOVA DIGITAL SYSTEMS • VERIFIED NODE ARCHITECTURE • V2.5.5</p>
+        <p className="text-slate-600 text-[10px] font-rajdhani font-bold tracking-[0.5em]">Nova Digital Systems • Verified Node Architecture • V2.5.5</p>
       </footer>
 
       <NotificationToast notifications={notifications} removeNotification={removeNotification} />

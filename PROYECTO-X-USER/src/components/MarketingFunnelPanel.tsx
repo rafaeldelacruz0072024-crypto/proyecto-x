@@ -21,8 +21,8 @@ const STAGES = [
     emoji: '💡',
     color: '#6366f1',
     glow: 'rgba(99,102,241,0.3)',
-    desc: 'Educa sobre la oportunidad de NOVA DIGITAL. Muestra el potencial.',
-    tip: 'Explica qué es NOVA DIGITAL sin presionar. Deja que la oportunidad hable sola.',
+    desc: 'Educa sobre la oportunidad de Nova Digital. Muestra el potencial.',
+    tip: 'Explica qué es Nova Digital sin presionar. Deja que la oportunidad hable sola.',
   },
   {
     id: 'deseo',

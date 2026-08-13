@@ -69,7 +69,7 @@ const DepositConfirmationModal: React.FC<Props> = ({ isOpen, onClose, amount, tx
         </div>
 
         <div className="bg-slate-950/50 py-3 text-center border-t border-slate-900/50">
-          <span className="text-[7px] font-black text-slate-800 uppercase tracking-[0.5em]">NOVA Digital Network Infrastructure • Security Verified</span>
+          <span className="text-[7px] font-black text-slate-800 tracking-[0.5em]">Nova Digital Network Infrastructure • Security Verified</span>
         </div>
       </div>
     </div>

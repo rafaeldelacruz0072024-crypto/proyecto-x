@@ -49,7 +49,7 @@ export default function NovaDigitalCardPanel({ profile }: NovaDigitalCardPanelPr
                             <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.4em]">SISTEMA DE LIQUIDEZ EXTERNA</span>
                         </div>
                         <h2 className="text-4xl font-black text-white font-orbitron tracking-tighter uppercase italic leading-none mb-3">
-                            NOVA DIGITAL <span className="text-blue-500">VISA</span> CARD
+                            Nova Digital <span className="text-blue-500">VISA</span> Card
                         </h2>
                         <p className="text-slate-500 text-xs font-bold uppercase tracking-widest max-w-xl">
                             {t('nova_digital_card.subtitle')}

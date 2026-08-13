@@ -116,7 +116,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
     // REGLA DE ORO: código de patrocinador obligatorio
     const sponsorCode = (localStorage.getItem('nova_digital_referral') || formData.referralCode?.trim() || '').toUpperCase();
     if (!sponsorCode || !sponsorCode.startsWith('GK-')) {
-      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a NOVA DIGITAL.');
+      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a Nova Digital.');
       return;
     }
 
@@ -336,7 +336,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
           <Logo size="lg" variant="blue" className="transition-all hover:scale-105 duration-1000 ease-in-out drop-shadow-[0_0_30px_rgba(0,243,255,0.4)]" />
           <div className="flex flex-col items-center mt-4">
             <p className="text-[10px] uppercase text-proyecto-accent font-black tracking-[0.6em] text-glow-cyan text-center opacity-90 animate-pulse">
-              NOVA DIGITAL FINANCIAL NETWORK
+              Nova Digital Financial Network
             </p>
             <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-proyecto-accent/50 to-transparent mt-2"></div>
           </div>

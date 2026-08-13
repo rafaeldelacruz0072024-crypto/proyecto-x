@@ -76,7 +76,7 @@ const InvestmentPanel: React.FC<Props> = ({
       <section className="rounded-2xl border border-white/10 bg-[#080c17]/90 p-5 shadow-2xl">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-mono-tech uppercase tracking-[0.3em] text-blue-400">NOVA Digital</p>
+            <p className="text-[10px] font-mono-tech tracking-[0.3em] text-blue-400">Nova Digital</p>
             <h2 className="mt-1 text-2xl font-black text-white">Mis nodos</h2>
           </div>
           <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-2 text-right">

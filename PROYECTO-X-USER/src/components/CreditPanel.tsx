@@ -672,7 +672,7 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
               <h3 className="text-5xl font-black text-white uppercase tracking-tighter font-orbitron">
                 TOKEN <span className="text-proyecto-accent text-glow-cyan">GMX</span>
               </h3>
-              <p className="text-slate-500 font-black text-[10px] uppercase tracking-[0.3em]">NOVA DIGITAL Protocol Native Token · BEP-20</p>
+              <p className="text-slate-500 font-black text-[10px] tracking-[0.3em]">Nova Digital Protocol Native Token · BEP-20</p>
             </div>
 
             {/* Total Supply */}
@@ -693,7 +693,7 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                 <div className="flex justify-between items-center mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full bg-proyecto-accent shadow-[0_0_8px_rgba(0,243,255,0.6)]"></div>
-                    <span className="text-sm font-black text-white uppercase tracking-wide">NOVA DIGITAL Reserva</span>
+                    <span className="text-sm font-black text-white tracking-wide">Nova Digital Reserva</span>
                   </div>
                   <div className="text-right">
                     <span className="text-proyecto-accent font-black text-lg">25%</span>
