@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVA DIGITAL | The Future of Decentralized Finance</title>
+    <title>NOVA Digital | Inteligencia algorítmica para mercados de predicción</title>
     <meta name="description"
         content="NOVA DIGITAL - Plataforma de nodos con ciclos ROI variables y activación diaria de lunes a viernes.">
     <link rel="icon" type="image/png" sizes="32x32" href="/logo-white.png">
@@ -12,9 +12,7 @@
     <link rel="apple-touch-icon" href="/logo-white.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *,
         *::before,
@@ -33,6 +31,20 @@
             --gold: #ffd700;
             --green: #00ff9d;
             --pink: #ff0055;
+            --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-body: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        /* NOVA type system: algorithmic and institutional, not generic SaaS. */
+        .nav, .nav-links a, .nav-cta, .hero-badge, .hero-rate-item .lbl,
+        .btn-primary, .btn-secondary, .section-tag, .plan-tag {
+            font-family: var(--font-body) !important;
+        }
+
+        .hero h1, .section-title, .hero-rate-item .val, .stat-val,
+        .plan-title, .sec-title, .footer-brand {
+            font-family: var(--font-display) !important;
+            letter-spacing: -.035em;
         }
 
         html {
@@ -40,7 +52,7 @@
         }
 
         body {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-body);
             background: var(--space);
             color: #e2e8f0;
             overflow-x: hidden;
@@ -50,7 +62,7 @@
         }
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-display);
             font-weight: 900;
         }
 
@@ -74,11 +86,11 @@
         }
 
         .font-outfit {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-display);
         }
 
         .font-chakra {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-body);
         }
 
         .glow-cyan {
@@ -1194,8 +1206,8 @@
         <div class="scanline"></div>
         <div class="hero-content">
             <div class="hero-badge reveal"><span class="dot"></span> NOVA DIGITAL · MERCADOS DE PREDICCIÓN</div>
-            <h1 class="reveal reveal-delay-1">Anticipa los eventos.<br><span class="accent">Decide con claridad.</span></h1>
-            <p class="reveal reveal-delay-2">NOVA Digital conecta a su comunidad con mercados de predicción, información verificable y una experiencia clara para seguir escenarios globales.</p>
+            <h1 class="reveal reveal-delay-1">Inteligencia algorítmica<br>para <span class="accent">anticipar los mercados</span> de predicción.</h1>
+            <p class="reveal reveal-delay-2">Modelos de datos y señales algorítmicas para interpretar probabilidades, seguir escenarios globales y tomar decisiones informadas.</p>
             <div class="hero-ctas reveal reveal-delay-3">
                 <a href="https://proyecto-x-user.vercel.app/?action=register" class="btn-primary">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
