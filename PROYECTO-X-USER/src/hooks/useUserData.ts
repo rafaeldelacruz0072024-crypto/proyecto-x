@@ -105,12 +105,14 @@ export function useUserData(userId: string | null) {
           setCreditBalance(data.credit_balance || 0);
           setReferralCommissionBalance(data.referral_commission_balance || 0);
 
-          // Fix missing ref_code
+          // El código se genera en el servidor para no depender de permisos RLS
+          // del navegador ni dejar el enlace de referido en estado pendiente.
           if (!data.ref_code) {
-            const generatedCode = await generateUniqueRefCode();
-            const res = await updateUserProfile(userId, { ref_code: generatedCode });
-            if (res.success) {
-              setProfile(prev => prev ? { ...prev, ref_code: generatedCode } : null);
+            const { data: ensuredCode, error: ensureError } = await supabase.rpc('ensure_my_ref_code');
+            if (!ensureError && typeof ensuredCode === 'string' && ensuredCode) {
+              setProfile(prev => prev ? { ...prev, ref_code: ensuredCode } : null);
+            } else {
+              console.error('Could not synchronize referral code:', ensureError);
             }
           }
         }

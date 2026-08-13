@@ -474,7 +474,8 @@ const App: React.FC = () => {
   const handleInvestment = useCallback(async (amount: number, planId?: string) => {
     if (!user || processingInvestment) return;
 
-    if (walletBalance < amount) {
+    const isDirectCommission = method === 'Comisión Directa';
+    if (!isDirectCommission && walletBalance < amount) {
       addNotification('No tienes saldo suficiente en Wallet Bank para activar este nodo.', "error");
       return;
     }

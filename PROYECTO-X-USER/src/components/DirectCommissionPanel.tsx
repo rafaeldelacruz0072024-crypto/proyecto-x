@@ -18,7 +18,7 @@ interface CommissionStats {
 
 const EMPTY_STATS: CommissionStats = { totalLifetime: 0, thisWeek: 0, todayEarned: 0, directCount: 0 };
 
-export default function DirectCommissionPanel({ profile, walletBalance, referralCommissionBalance, handleWithdrawal }: Props) {
+export default function DirectCommissionPanel({ profile, walletBalance: _walletBalance, referralCommissionBalance, handleWithdrawal }: Props) {
   const [stats, setStats] = useState<CommissionStats>(EMPTY_STATS);
   const [loading, setLoading]   = useState(true);
   const [amount, setAmount]     = useState('');
@@ -79,12 +79,11 @@ export default function DirectCommissionPanel({ profile, walletBalance, referral
 
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
-  const maxWithdrawable = Math.min(walletBalance, referralCommissionBalance);
+  const maxWithdrawable = referralCommissionBalance;
 
   const handleSubmit = async () => {
     const num = parseFloat(amount);
     if (isNaN(num) || num <= 0) { setErrMsg('Ingresa un monto válido.'); return; }
-    if (num > walletBalance)    { setErrMsg(`Saldo insuficiente en cartera. Disponible: $${walletBalance.toFixed(2)}`); return; }
     if (num > referralCommissionBalance) { setErrMsg(`Saldo de comisión directa insuficiente. Disponible: $${referralCommissionBalance.toFixed(2)}`); return; }
     if (!withdrawalAddress)     { setErrMsg('No tienes billetera configurada. Ve a Perfil → Configurar billetera.'); return; }
 

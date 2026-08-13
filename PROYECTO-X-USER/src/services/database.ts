@@ -191,7 +191,7 @@ export async function withdrawReglaDeOro(
   walletAddress: string
 ) {
   try {
-    const { data, error } = await supabase.rpc('withdraw_regla_de_oro', {
+    const { data, error } = await supabase.rpc('withdraw_direct_commission', {
       p_user_id:        userId,
       p_amount:         amount,
       p_method:         method,
