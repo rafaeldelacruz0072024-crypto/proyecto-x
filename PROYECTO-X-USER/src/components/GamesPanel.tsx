@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 import { Game } from '../types';
 import PlinkoGame from "./PlinkoGame";
-import ProyectoXCrash from "./ProyectoXCrash";
+import NovaDigitalCrash from "./NovaDigitalCrash";
 import LiveWallet from './LiveWallet';
 import CreditPanel from './CreditPanel';
 
@@ -159,8 +159,8 @@ export default function GamesPanel({ user, walletBalance, onUpdateBalance }: { u
                     onUpdateBalance={onUpdateBalance}
                     maxBet={selectedGame.max_bet || 100}
                 />
-            ) : selectedGame.title?.trim().toLowerCase() === 'proyecto-x crash' ? (
-                <ProyectoXCrash
+            ) : selectedGame.title?.trim().toLowerCase() === 'nova-digital crash' ? (
+                <NovaDigitalCrash
                     user={user}
                     walletBalance={walletBalance}
                     onUpdateBalance={onUpdateBalance}

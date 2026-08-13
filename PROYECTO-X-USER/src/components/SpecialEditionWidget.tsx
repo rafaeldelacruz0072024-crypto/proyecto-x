@@ -14,7 +14,6 @@ interface Props {
 }
 
 const PLAN_ID = 'c5b33040-bafa-4ec5-9d10-087a3d7a94b9';
-const DAILY_ROI_RATE = 0.022; // 2.2%
 const MIN_INVESTMENT = 2000;
 
 export default function SpecialEditionWidget({
@@ -43,7 +42,10 @@ export default function SpecialEditionWidget({
     0
   );
 
-  const dailyRoiAmount = totalSpecialActiveAmount * DAILY_ROI_RATE;
+  const dailyRoiAmount = activeSpecialInvestments.reduce(
+    (sum, investment) => sum + Number(investment.amount) * Number(investment.assigned_roi_percentage || 0) / 100,
+    0
+  );
   const withdrawableAmount = Math.min(dailyRoiAmount, walletBalance);
   const feeAmount = withdrawableAmount * 0.05; // 5% fee
   const netAmount = withdrawableAmount - feeAmount;
@@ -237,10 +239,10 @@ export default function SpecialEditionWidget({
         <div className="space-y-4">
           <div className="bg-amber-500/5 border border-amber-500/10 rounded p-3 text-center">
             <p className="text-[10px] font-mono-tech text-slate-400 uppercase tracking-wider">
-              Rentabilidad Exclusiva GK
+              Rentabilidad según ciclo asignado
             </p>
             <p className="text-2xl font-orbitron font-black text-amber-300 mt-1">
-              2.2% ROI Diario
+              ROI variable · activación diaria
             </p>
             <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">
               Bypass de ventana de retiros · Retiro diario de Pasivo (Fee 5%)
@@ -317,7 +319,7 @@ export default function SpecialEditionWidget({
               </span>
             </div>
             <div className="bg-black/40 border border-amber-500/10 rounded p-3 space-y-1">
-              <span className="text-[7px] font-mono-tech text-slate-500 uppercase tracking-widest block">Retorno Diario (2.2%)</span>
+              <span className="text-[7px] font-mono-tech text-slate-500 uppercase tracking-widest block">Retorno diario asignado</span>
               <span className="text-base font-orbitron font-black text-amber-300">
                 +${dailyRoiAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </span>

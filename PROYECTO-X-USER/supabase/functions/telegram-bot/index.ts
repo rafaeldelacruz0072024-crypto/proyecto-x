@@ -50,7 +50,7 @@ serve(async (req) => {
         // 3. Handle /start command
         if (messageText.startsWith('/start')) {
             // Choose the right welcome message based on language
-            let welcomeMessage = settings.telegram_welcome_en || "Welcome to PROYECTO X!"
+            let welcomeMessage = settings.telegram_welcome_en || "Welcome to NOVA DIGITAL!"
 
             if (userLanguage.startsWith('es')) {
                 welcomeMessage = settings.telegram_welcome_es || welcomeMessage

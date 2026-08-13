@@ -255,7 +255,7 @@ export default function ProductsPanel({ profile, onPurchaseSuccess }: ProductsPa
                                 <div className="relative h-72 overflow-hidden bg-slate-900 border-b border-slate-800">
                                     {product.is_flagship || product.name.includes('GOLD') ? (
                                         <img
-                                            src="/proyecto_x_gold_thumb.png"
+                                            src="/nova_digital_gold_thumb.png"
                                             alt={product.name}
                                             className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-[2000ms] opacity-70 group-hover:opacity-100"
                                         />
@@ -372,7 +372,7 @@ export default function ProductsPanel({ profile, onPurchaseSuccess }: ProductsPa
                                     <div className="flex items-start gap-4 mb-6">
                                         <div className="w-16 h-16 bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
                                             {purchase.is_flagship || purchase.name.includes('GOLD') ? (
-                                                <img src="/proyecto_x_gold_thumb.png" alt={purchase.name} className="w-full h-full object-cover opacity-60" />
+                                                <img src="/nova_digital_gold_thumb.png" alt={purchase.name} className="w-full h-full object-cover opacity-60" />
                                             ) : purchase.image_url ? (
                                                 <img src={purchase.image_url} alt={purchase.name} className="w-full h-full object-cover opacity-60" />
                                             ) : (
@@ -434,7 +434,7 @@ export default function ProductsPanel({ profile, onPurchaseSuccess }: ProductsPa
                             <div className="bg-slate-900/50 border border-slate-800 p-6 flex items-center gap-6 relative overflow-hidden">
                                 <div className="w-24 h-24 bg-slate-950 border border-slate-800 flex items-center justify-center z-10 shrink-0 overflow-hidden">
                                     {selectedProduct.is_flagship || selectedProduct.name.includes('GOLD') ? (
-                                        <img src="/proyecto_x_gold_thumb.png" alt={selectedProduct.name} className="w-full h-full object-cover opacity-80" />
+                                        <img src="/nova_digital_gold_thumb.png" alt={selectedProduct.name} className="w-full h-full object-cover opacity-80" />
                                     ) : selectedProduct.image_url ? (
                                         <img src={selectedProduct.image_url} alt={selectedProduct.name} className="w-full h-full object-cover opacity-80" />
                                     ) : (

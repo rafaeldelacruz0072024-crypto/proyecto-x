@@ -41,7 +41,7 @@ const statusLabels: Record<string, string> = {
 
 // ── Phase 1 hardcoded items (current state)
 const PHASE1_ITEMS = [
-  { icon: '📊', title: 'Pasivo PROYECTO X GOLD', desc: '+1000% auditado Myfxbook 2025 · 5 IAs XAU/USD' },
+  { icon: '📊', title: 'Pasivo NOVA DIGITAL GOLD', desc: '+1000% auditado Myfxbook 2025 · 5 IAs XAU/USD' },
   { icon: '🌐', title: '30 Niveles de Referidos', desc: 'Comisiones residuales según Regla de Oro oficial' },
   { icon: '💰', title: 'Salario Semanal', desc: 'Pago cada Sábado a miembros activos calificados' },
   { icon: '🎯', title: 'Predicciones V1', desc: 'Módulo de mercados de predicción activo' },
@@ -200,7 +200,7 @@ export default function RoadMap() {
           </div>
           <div>
             <h1 className="text-2xl font-black text-white uppercase tracking-widest">Road Map</h1>
-            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Plan de evolución del protocolo PROYECTO X</p>
+            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Plan de evolución del protocolo NOVA DIGITAL</p>
           </div>
         </div>
         <button onClick={openCreate} className="flex items-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95">
@@ -474,7 +474,7 @@ export default function RoadMap() {
                     <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-2xl scale-150 animate-pulse" />
                     <div className="relative w-36 h-36 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 border-2 border-blue-400/50 flex flex-col items-center justify-center shadow-2xl shadow-blue-500/30">
                       <span className="text-2xl mb-1">💎</span>
-                      <span className="text-white font-black text-xs uppercase tracking-widest leading-tight text-center">PROYECTO X<br/>PROTOCOL</span>
+                      <span className="text-white font-black text-xs uppercase tracking-widest leading-tight text-center">NOVA DIGITAL<br/>PROTOCOL</span>
                     </div>
                   </div>
                 </div>

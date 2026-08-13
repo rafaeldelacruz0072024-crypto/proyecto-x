@@ -277,7 +277,7 @@ const Communications: React.FC = () => {
               <input
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                placeholder="Ej: 🚀 Novedades importantes de PROYECTO X"
+                placeholder="Ej: 🚀 Novedades importantes de NOVA DIGITAL"
                 className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-medium placeholder-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors"
               />
             </div>
@@ -291,7 +291,7 @@ const Communications: React.FC = () => {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 rows={10}
-                placeholder={`Hola {{nombre}},\n\nTenemos novedades emocionantes para ti...\n\nEl Equipo PROYECTO X`}
+                placeholder={`Hola {{nombre}},\n\nTenemos novedades emocionantes para ti...\n\nEl Equipo NOVA DIGITAL`}
                 className="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-medium placeholder-slate-600 focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
               />
             </div>
@@ -317,13 +317,13 @@ const Communications: React.FC = () => {
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Vista Previa</p>
               <div className="bg-[#0a0a0f] rounded-xl p-6 max-w-2xl mx-auto">
                 <div className="text-center mb-6 pb-4 border-b border-slate-800">
-                  <div className="text-2xl font-black text-blue-400 tracking-widest">PROYECTO X</div>
+                  <div className="text-2xl font-black text-blue-400 tracking-widest">NOVA DIGITAL</div>
                   <div className="text-[9px] text-slate-600 tracking-widest mt-1">PLATAFORMA FINANCIERA DIGITAL</div>
                 </div>
                 <p className="text-slate-400 text-sm mb-3">Hola, <strong className="text-white">{'{{nombre}}'}</strong> 👋</p>
                 <pre className="text-slate-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">{body.replace(/\{\{nombre\}\}/g, 'Juan')}</pre>
                 <div className="mt-6 text-center">
-                  <div className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-bold">ABRIR PROYECTO X →</div>
+                  <div className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-bold">ABRIR NOVA DIGITAL →</div>
                 </div>
               </div>
             </div>

@@ -22,7 +22,7 @@ async function fixSettings() {
     }
     console.log("Settings is empty, inserting defaults...");
 
-    // Default values based on PROYECTO X setup
+    // Default values based on NOVA DIGITAL setup
     const defaultSettings = {
         withdrawal_fee: 10,
         credit_transfer_fee: 3,

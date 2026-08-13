@@ -26,13 +26,13 @@ export default function ReglaDeOroWidget({
   const [method, setMethod] = useState('USDT');
   const [loading, setLoading] = useState(false);
 
-  const hasCard = !!profile?.proyecto_x_card_address;
-  const address = method === 'PROYECTO X CARD'
-    ? (profile?.proyecto_x_card_address || '')
+  const hasCard = !!profile?.nova_digital_card_address;
+  const address = method === 'NOVA DIGITAL CARD'
+    ? (profile?.nova_digital_card_address || '')
     : (profile?.withdrawal_wallet || '');
 
   const parsed = parseFloat(amount) || 0;
-  const feeRate = method === 'PROYECTO X CARD' ? FEE_CARD : FEE_USDT;
+  const feeRate = method === 'NOVA DIGITAL CARD' ? FEE_CARD : FEE_USDT;
   const fee = parsed * feeRate;
   const net = parsed - fee;
 
@@ -115,9 +115,9 @@ export default function ReglaDeOroWidget({
               {hasCard && (
                 <button
                   type="button"
-                  onClick={() => setMethod('PROYECTO X CARD')}
+                  onClick={() => setMethod('NOVA DIGITAL CARD')}
                   className={`flex-1 py-2 text-[10px] font-orbitron font-black uppercase tracking-widest clip-corner-sm border transition-all ${
-                    method === 'PROYECTO X CARD'
+                    method === 'NOVA DIGITAL CARD'
                       ? 'bg-amber-500/15 border-amber-500/50 text-amber-300'
                       : 'bg-black/30 border-slate-700/40 text-slate-500 hover:border-slate-600'
                   }`}

@@ -57,7 +57,7 @@ const Plans: React.FC = () => {
       <header className="flex flex-wrap items-center justify-between gap-5">
         <div>
           <h1 className="flex items-center gap-3 text-4xl font-black text-white"><ShieldCheck className="text-indigo-400" /> Planes ROI</h1>
-          <p className="mt-2 text-slate-400">Tres contratos oficiales. La tasa se asigna una vez al activar cada nodo.</p>
+          <p className="mt-2 text-slate-400">Cuatro ciclos oficiales. Cada nodo requiere activación diaria de lunes a viernes.</p>
         </div>
         <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/10 px-5 py-3 text-sm font-black text-indigo-300">{plans.length} planes configurados</div>
       </header>
@@ -67,7 +67,7 @@ const Plans: React.FC = () => {
       {loading ? (
         <div className="py-28 text-center"><Loader2 className="mx-auto animate-spin text-indigo-400" size={42} /></div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4">
           {plans.map(plan => (
             <article key={plan.id} className="flex min-h-[410px] flex-col rounded-[2rem] border border-slate-800 bg-slate-900 p-8 shadow-2xl">
               <div className="flex items-start justify-between gap-3">
@@ -78,7 +78,7 @@ const Plans: React.FC = () => {
                 <span className={`rounded-xl px-3 py-1 text-[10px] font-black uppercase ${plan.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-500'}`}>{plan.status}</span>
               </div>
               <div className="mt-8 text-5xl font-black tracking-tight text-indigo-400">{plan.roi_min_percentage}%–{plan.roi_max_percentage}%</div>
-              <p className="mt-2 text-sm text-slate-500">ROI diario fijo por contrato</p>
+              <p className="mt-2 text-sm text-slate-500">Rango diario asignado al activar el contrato</p>
               <p className="mt-6 text-sm leading-relaxed text-slate-300">{plan.description}</p>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
@@ -117,7 +117,7 @@ const Plans: React.FC = () => {
               <label className="text-sm text-slate-400">Monto mínimo<input type="number" min="10" step="0.01" value={editing.min_amount} onChange={e => setEditing({ ...editing, min_amount: Number(e.target.value) })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 p-4 text-white" /></label>
               <label className="text-sm text-slate-400">Estado<select value={editing.status} onChange={e => setEditing({ ...editing, status: e.target.value as Plan['status'] })} className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 p-4 text-white"><option value="active">Activo</option><option value="inactive">Inactivo</option></select></label>
             </div>
-            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-amber-200"><TrendingUp className="mr-2 inline" size={17} />El plazo y modo de pago están protegidos como parte del producto.</div>
+            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-amber-200"><TrendingUp className="mr-2 inline" size={17} />Regla de Oro: si se omite un día hábil, el contador y el ROI pendiente del ciclo se reinician.</div>
             <button disabled={saving} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 py-5 text-sm font-black uppercase tracking-widest text-white disabled:opacity-50">{saving ? <Loader2 className="animate-spin" /> : <Save />} Guardar cambios</button>
           </form>
         </div>

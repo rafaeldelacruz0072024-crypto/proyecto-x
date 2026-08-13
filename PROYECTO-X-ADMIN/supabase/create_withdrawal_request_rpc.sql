@@ -148,7 +148,7 @@ BEGIN
   END IF;
 
   -- 6. Calcular comisión y neto
-  IF p_method = 'PROYECTO X CARD' THEN
+  IF p_method = 'NOVA DIGITAL CARD' THEN
     v_fee_percent := 3;
   END IF;
 

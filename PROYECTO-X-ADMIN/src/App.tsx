@@ -26,7 +26,7 @@ import RoadMap from './pages/RoadMap';
 import Marketing from './pages/Marketing';
 import Communications from './pages/Communications';
 import Payroll from './pages/Payroll';
-import ProyectoXCards from './pages/ProyectoXCards';
+import NovaDigitalCards from './pages/NovaDigitalCards';
 import BalanceManager from './pages/BalanceManager';
 
 // Protected Route Component
@@ -118,11 +118,11 @@ const App: React.FC = () => {
         />
 
         <Route
-          path="/proyecto-x-cards"
+          path="/nova-digital-cards"
           element={
             <ProtectedRoute>
               <Layout>
-                <ProyectoXCards />
+                <NovaDigitalCards />
               </Layout>
             </ProtectedRoute>
           }

@@ -56,7 +56,7 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
 
         <div className="hidden md:flex flex-col border-l border-white/10 pl-4">
           <p className="text-[10px] uppercase text-proyecto-accent font-orbitron font-bold tracking-[0.3em] text-glow-cyan">
-            PROYECTO X OS V1.1 (PATCHED)
+            NOVA DIGITAL OS V1.1 (PATCHED)
           </p>
           <div className="flex items-center gap-1.5 mt-1">
             <span className={`h-1.5 w-1.5 rounded-full ${isLive ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-slate-600'} transition-all duration-500`}></span>

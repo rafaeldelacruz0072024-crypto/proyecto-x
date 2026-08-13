@@ -296,7 +296,7 @@ crear design:Mockup dashboard priority:low
 
 ## 📜 Licencia
 
-MIT License - PROYECTO X-ADMIN © 2026
+MIT License - NOVA DIGITAL-ADMIN © 2026
 
 ---
 
@@ -320,4 +320,4 @@ MIT License - PROYECTO X-ADMIN © 2026
 
 *Documento creado: 2026-03-16*
 *Versión: 1.0.0*
-*Autor: PROYECTO X-ADMIN*
+*Autor: NOVA DIGITAL-ADMIN*

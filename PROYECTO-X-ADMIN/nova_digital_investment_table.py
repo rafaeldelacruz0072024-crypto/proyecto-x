@@ -4,7 +4,7 @@ from reportlab.lib.colors import HexColor, Color
 from reportlab.lib.units import mm
 import os
 
-OUT = os.path.join(os.path.dirname(__file__), "PROYECTO-X_Tabla_Inversiones.pdf")
+OUT = os.path.join(os.path.dirname(__file__), "NOVA-Digital_Tabla_Inversiones.pdf")
 
 W, H = landscape(A4)  # 842 x 595
 
@@ -26,7 +26,7 @@ TEXT2   = HexColor("#94a3b8")
 RED     = HexColor("#f87171")
 
 c = canvas.Canvas(OUT, pagesize=landscape(A4))
-c.setTitle("PROYECTO X | Tabla de Inversiones")
+c.setTitle("NOVA DIGITAL | Tabla de Inversiones")
 
 # ── Background ─────────────────────────────────────────
 c.setFillColor(BG)
@@ -60,7 +60,7 @@ c.roundRect(14, H - 72, W - 28, 60, 10, fill=1, stroke=0)
 
 c.setFillColor(CYAN)
 c.setFont("Helvetica-Bold", 22)
-c.drawString(30, H - 42, "PROYECTO X")
+c.drawString(30, H - 42, "NOVA DIGITAL")
 
 c.setFillColor(MUTED)
 c.setFont("Helvetica", 7.5)

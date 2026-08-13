@@ -16,7 +16,7 @@ export interface SocketMessage {
 
 type MessageCallback = (msg: SocketMessage) => void;
 
-class ProyectoXSocketService {
+class NovaDigitalSocketService {
   private listeners: MessageCallback[] = [];
   private interval: any = null;
 
@@ -72,4 +72,4 @@ class ProyectoXSocketService {
   }
 }
 
-export const ProyectoXSocket = new ProyectoXSocketService();
+export const NovaDigitalSocket = new NovaDigitalSocketService();

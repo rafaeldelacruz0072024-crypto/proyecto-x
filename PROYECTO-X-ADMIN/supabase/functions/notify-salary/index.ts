@@ -40,7 +40,7 @@ serve(async (req) => {
 
         const email = profile.email
         const name = profile.full_name || profile.username || 'Usuario'
-        const description = record.description || 'Salario Semanal PROYECTO X'
+        const description = record.description || 'Salario Semanal NOVA DIGITAL'
         const paidAt = new Date(record.created_at).toLocaleDateString('es-ES', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         })
@@ -86,7 +86,7 @@ serve(async (req) => {
         </div>
 
         <p style="color: #475569; font-size: 13px; text-align: center; margin-top: 30px; border-top: 1px solid #1f2937; padding-top: 20px;">
-            Gracias por confiar en PROYECTO X Protocol.<br/>
+            Gracias por confiar en NOVA DIGITAL Protocol.<br/>
             Ventana de retiro: Sábados 8:00 AM – 11:59 PM UTC-5
         </p>
     </div>
@@ -100,9 +100,9 @@ serve(async (req) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                from: "PROYECTO X Protocol <soporte@proyecto-x-user.vercel.app>",
+                from: "NOVA DIGITAL Protocol <soporte@proyecto-x-user.vercel.app>",
                 to: [email],
-                subject: `PROYECTO X: ¡Tu salario semanal de $${amount} USDT fue acreditado!`,
+                subject: `NOVA DIGITAL: ¡Tu salario semanal de $${amount} USDT fue acreditado!`,
                 html
             })
         })

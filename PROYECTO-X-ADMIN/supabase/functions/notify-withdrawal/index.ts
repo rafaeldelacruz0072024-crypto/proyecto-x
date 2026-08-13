@@ -11,7 +11,7 @@ const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!)
 // Traducciones básicas
 const translations = {
     es: {
-        subject: "PROYECTO X: Tu retiro ha sido procesado exitosamente",
+        subject: "NOVA DIGITAL: Tu retiro ha sido procesado exitosamente",
         title: "Retiro Procesado con Éxito",
         hello: "Hola",
         body: "Tu solicitud de retiro ha sido aprobada y procesada a través de nuestra red.",
@@ -19,10 +19,10 @@ const translations = {
         status: "Estado",
         wallet: "Billetera de Destino",
         network: "Red / Método",
-        footer: "Gracias por confiar en PROYECTO X Protocol."
+        footer: "Gracias por confiar en NOVA DIGITAL Protocol."
     },
     en: {
-        subject: "PROYECTO X: Your withdrawal has been successfully processed",
+        subject: "NOVA DIGITAL: Your withdrawal has been successfully processed",
         title: "Withdrawal Processed Successfully",
         hello: "Hello",
         body: "Your withdrawal request has been approved and processed through our network.",
@@ -30,7 +30,7 @@ const translations = {
         status: "Status",
         wallet: "Destination Wallet",
         network: "Network / Method",
-        footer: "Thank you for trusting PROYECTO X Protocol."
+        footer: "Thank you for trusting NOVA DIGITAL Protocol."
     }
 }
 
@@ -101,7 +101,7 @@ serve(async (req) => {
         `
             } else {
                 // REJECTED
-                subject = "PROYECTO X: Tu solicitud de retiro fue rechazada"
+                subject = "NOVA DIGITAL: Tu solicitud de retiro fue rechazada"
                 html = `
         <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; background-color: #030712; color: #ffffff; border: 1px solid #1f2937; border-radius: 8px; overflow: hidden;">
             <div style="background-color: #0f172a; padding: 20px; text-align: center; border-bottom: 2px solid #00f3ff;">
@@ -147,7 +147,7 @@ serve(async (req) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    from: "PROYECTO X Protocol <soporte@proyecto-x-user.vercel.app>",
+                    from: "NOVA DIGITAL Protocol <soporte@proyecto-x-user.vercel.app>",
                     to: [email],
                     subject,
                     html

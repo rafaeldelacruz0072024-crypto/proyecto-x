@@ -23,7 +23,7 @@ import {
   PieChart
 } from 'lucide-react';
 
-const ProyectoXCards: React.FC = () => {
+const NovaDigitalCards: React.FC = () => {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [registeredUsers, setRegisteredUsers] = useState<any[]>([]);
   const [viewTab, setViewTab] = useState<'terminal' | 'registry'>('terminal');
@@ -46,7 +46,7 @@ const ProyectoXCards: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      // Filtrar por método 'PROYECTO X CARD'
+      // Filtrar por método 'NOVA DIGITAL CARD'
       const { data, error } = await supabase
         .from('withdrawals')
         .select(`
@@ -59,7 +59,7 @@ const ProyectoXCards: React.FC = () => {
             user_tag
           )
         `)
-        .eq('method', 'PROYECTO X CARD')
+        .eq('method', 'NOVA DIGITAL CARD')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -68,7 +68,7 @@ const ProyectoXCards: React.FC = () => {
       const { data: usersData, error: usersError } = await supabase
         .from('profiles')
         .select('*')
-        .not('proyecto_x_card_address', 'is', null)
+        .not('nova_digital_card_address', 'is', null)
         .order('created_at', { ascending: false });
         
       if (usersError) throw usersError;
@@ -179,9 +179,9 @@ const ProyectoXCards: React.FC = () => {
             <div className="p-3 bg-proyecto-accent/10 rounded-2xl border border-proyecto-accent/20 shadow-[0_0_20px_rgba(0,243,255,0.1)]">
               <CreditCard className="text-proyecto-accent" size={32} />
             </div>
-            PROYECTO X CARD Terminal
+            NOVA DIGITAL CARD Terminal
           </h1>
-          <p className="text-slate-500 font-medium mt-2">Gestión exclusiva de desembolsos a tarjetas corporativas Proyecto X.</p>
+          <p className="text-slate-500 font-medium mt-2">Gestión exclusiva de desembolsos a tarjetas corporativas NOVA Digital.</p>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -383,7 +383,7 @@ const ProyectoXCards: React.FC = () => {
         <div className="p-8 border-b border-slate-800/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-black text-white">Directorio de Usuarios</h2>
-            <p className="text-slate-500 font-medium text-sm mt-1">Usuarios que han vinculado la Proyecto X Card.</p>
+            <p className="text-slate-500 font-medium text-sm mt-1">Usuarios que han vinculado la NOVA Digital Card.</p>
           </div>
           <div className="bg-slate-900/50 px-6 py-3 rounded-2xl border border-slate-800 flex items-center gap-3">
             <UserIcon size={18} className="text-proyecto-accent" />
@@ -398,7 +398,7 @@ const ProyectoXCards: React.FC = () => {
             <thead>
               <tr className="bg-slate-900/60 text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] border-b border-slate-800/50">
                 <th className="px-10 py-6">Identidad</th>
-                <th className="px-10 py-6 text-left">Proyecto X Card (Bancus)</th>
+                <th className="px-10 py-6 text-left">NOVA Digital Card (Bancus)</th>
                 <th className="px-10 py-6 text-center">Registro</th>
                 <th className="px-10 py-6 text-right">Estatus</th>
               </tr>
@@ -439,13 +439,13 @@ const ProyectoXCards: React.FC = () => {
                       <div className="flex items-center gap-2 px-4 py-3 bg-proyecto-accent/5 rounded-xl border border-proyecto-accent/10 w-max">
                         <CreditCard size={14} className="text-proyecto-accent" />
                         <span className="text-xs font-mono text-proyecto-accent">
-                          {user.proyecto_x_card_user || 'Sin Bancus ID'}
+                          {user.nova_digital_card_user || 'Sin Bancus ID'}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50 w-max">
                         <ArrowUpRight size={14} className="text-slate-500" />
                         <span className="text-[10px] font-mono text-slate-400">
-                          {user.proyecto_x_card_address || 'Sin Dirección BSC'}
+                          {user.nova_digital_card_address || 'Sin Dirección BSC'}
                         </span>
                       </div>
                     </div>
@@ -479,7 +479,7 @@ const ProyectoXCards: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-xl font-black text-white">Rechazar Operación</h3>
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Informar al usuario Proyecto X</p>
+                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Informar al usuario NOVA Digital</p>
               </div>
             </div>
 
@@ -565,4 +565,4 @@ const ProyectoXCards: React.FC = () => {
   );
 };
 
-export default ProyectoXCards;
+export default NovaDigitalCards;

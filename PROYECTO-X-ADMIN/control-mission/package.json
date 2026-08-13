@@ -16,7 +16,7 @@
     "development",
     "telegram-bot"
   ],
-  "author": "PROYECTO X-ADMIN",
+  "author": "NOVA DIGITAL-ADMIN",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

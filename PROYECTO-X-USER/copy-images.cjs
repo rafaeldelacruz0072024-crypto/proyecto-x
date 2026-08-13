@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const srcDir = 'C:\\Users\\USER\\.gemini\\antigravity\\brain\\473a9516-afb6-4330-a003-78928b2cf523';
-const destUser = 'c:\\Users\\USER\\Documents\\GitHub\\PROYECTO X-USER\\public';
-const destAdmin = 'c:\\Users\\USER\\Documents\\GitHub\\PROYECTO X-ADMIN\\public';
+const destUser = 'c:\\Users\\USER\\Documents\\GitHub\\NOVA DIGITAL-USER\\public';
+const destAdmin = 'c:\\Users\\USER\\Documents\\GitHub\\NOVA DIGITAL-ADMIN\\public';
 
 const filesToCopy = [
     { src: 'media__1772637305500.jpg', destList: [{ dir: destUser, name: 'brand-1.jpg' }, { dir: destAdmin, name: 'brand-1.jpg' }] },

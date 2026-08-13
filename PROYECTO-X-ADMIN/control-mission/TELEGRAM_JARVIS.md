@@ -424,4 +424,4 @@ Ahora tienes control total desde Telegram:
 
 *Documento creado: 2026-03-17*
 *Versión: 3.0.0 (Telegram + Voz)*
-*Autor: PROYECTO X-ADMIN*
+*Autor: NOVA DIGITAL-ADMIN*

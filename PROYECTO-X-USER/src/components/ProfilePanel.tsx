@@ -16,8 +16,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [is2faLoading, setIs2faLoading] = useState(false);
   const [isChangingPass, setIsChangingPass] = useState(false);
   const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.withdrawalWallet || '');
-  const [cardAddress, setCardAddress] = useState(user?.proyecto_x_card_address || '');
-  const [cardUser, setCardUser] = useState(user?.proyecto_x_card_user || '');
+  const [cardAddress, setCardAddress] = useState(user?.nova_digital_card_address || '');
+  const [cardUser, setCardUser] = useState(user?.nova_digital_card_user || '');
 
   // Derivados de seguridad
   const kycVerified = user?.kycVerified || user?.kyc_verified || false;
@@ -122,8 +122,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     } else {
       onUpdateUser({ 
         withdrawal_wallet: wallet,
-        proyecto_x_card_address: cardAddress,
-        proyecto_x_card_user: cardUser
+        nova_digital_card_address: cardAddress,
+        nova_digital_card_user: cardUser
       });
       addNotification(t('profile.notifications.wallet_saved'), "success");
     }
@@ -148,8 +148,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
 
       if (isLinkingWalletWith2FA) {
         updates.withdrawal_wallet = wallet;
-        updates.proyecto_x_card_address = cardAddress;
-        updates.proyecto_x_card_user = cardUser;
+        updates.nova_digital_card_address = cardAddress;
+        updates.nova_digital_card_user = cardUser;
       }
 
       onUpdateUser(updates);
@@ -362,7 +362,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                   </div>
                 </div>
 
-                {/* PROYECTO X CARD FIELDS */}
+                {/* NOVA DIGITAL CARD FIELDS */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800/30">
                   <div className="space-y-2">
                     <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest ml-1">{t('profile.vault.card_address_label')}</label>
@@ -481,7 +481,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-[0_0_20px_white]">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/PROYECTO X:${userEmail}?secret=JBSWY3DPEHPK3PXP&issuer=PROYECTO X`}
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/NOVA DIGITAL:${userEmail}?secret=JBSWY3DPEHPK3PXP&issuer=NOVA DIGITAL`}
                         alt="2FA QR Code"
                         className="w-40 h-40 mix-blend-multiply"
                       />
@@ -549,7 +549,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
             <div className="space-y-4">
               {[
                 { ip: '192.168.1.45', device: 'Web Terminal (Chrome/macOS)', location: 'London, UK', status: 'ACTIVE' },
-                { ip: '172.24.5.12', device: 'Proyecto X Mobile Node (iOS)', location: 'Current Position', status: 'PAST' }
+                { ip: '172.24.5.12', device: 'NOVA Digital Mobile Node (iOS)', location: 'Current Position', status: 'PAST' }
               ].map((session, i) => (
                 <div key={i} className="flex items-center justify-between p-5 bg-black/40 clip-corner-sm border border-slate-800 hover:border-proyecto-accent/30 transition-colors group">
                   <div className="flex items-center gap-4">

@@ -53,7 +53,7 @@ import GamesPanel from './components/GamesPanel';
 import PredictionMarketsPanel from './components/PredictionMarketsPanel';
 import RoadMapPanel from './components/RoadMapPanel';
 import MarketingFunnelPanel from './components/MarketingFunnelPanel';
-import ProyectoXCardPanel from './components/ProyectoXCardPanel';
+import NovaDigitalCardPanel from './components/NovaDigitalCardPanel';
 import PromoModal from './components/PromoModal';
 import BaccaratPanel from './components/BaccaratPanel';
 import DirectCommissionPanel from './components/DirectCommissionPanel';
@@ -89,7 +89,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'products' | 'tutorials' | 'games' | 'predictions' | 'credit' | 'profile' | 'roadmap' | 'marketing' | 'proyecto_x_card' | 'baccarat'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'products' | 'tutorials' | 'games' | 'predictions' | 'credit' | 'profile' | 'roadmap' | 'marketing' | 'nova_digital_card' | 'baccarat'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -232,8 +232,8 @@ const App: React.FC = () => {
 
     if (refInUrl) {
       const expires90 = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
-      localStorage.setItem('proyecto_x_referral', refInUrl.toUpperCase());
-      document.cookie = `proyecto_x_ref=${encodeURIComponent(refInUrl.toUpperCase())};expires=${expires90};path=/;SameSite=Lax`;
+      localStorage.setItem('nova_digital_referral', refInUrl.toUpperCase());
+      document.cookie = `nova_digital_ref=${encodeURIComponent(refInUrl.toUpperCase())};expires=${expires90};path=/;SameSite=Lax`;
       setReferralFromUrl(refInUrl.toUpperCase());
       // Limpiar ?ref de la URL sin recargar
       urlParams.delete('ref');
@@ -241,8 +241,8 @@ const App: React.FC = () => {
       window.history.replaceState({}, '', window.location.pathname + (newSearch ? `?${newSearch}` : ''));
     } else {
       // Recuperar ref guardado de visitas anteriores
-      const stored = localStorage.getItem('proyecto_x_referral')
-        || decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('proyecto_x_ref='))?.split('=')[1] || '');
+      const stored = localStorage.getItem('nova_digital_referral')
+        || decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('nova_digital_ref='))?.split('=')[1] || '');
       if (stored) setReferralFromUrl(stored);
     }
   }, []);
@@ -254,7 +254,7 @@ const App: React.FC = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const hasAuthTokensInHash = window.location.hash.includes('access_token');
     const hasRegisterAction = urlParams.get('action') === 'register';
-    if (!user && (path === '/' || path === '/index.html') && !referralFromUrl && !localStorage.getItem('proyecto_x_referral') && !hasAuthTokensInHash && !hasRegisterAction) {
+    if (!user && (path === '/' || path === '/index.html') && !referralFromUrl && !localStorage.getItem('nova_digital_referral') && !hasAuthTokensInHash && !hasRegisterAction) {
       window.location.href = '/landing';
     }
   }, [user, authLoading, referralFromUrl]);
@@ -300,7 +300,7 @@ const App: React.FC = () => {
 
         if (flashPromos && flashPromos.length > 0) {
           const promo = flashPromos[0];
-          const dismissedPromoId = localStorage.getItem('proyecto_x_dismissed_flash_promo');
+          const dismissedPromoId = localStorage.getItem('nova_digital_dismissed_flash_promo');
 
           if (dismissedPromoId !== promo.id) {
             setActivePromotion(promo);
@@ -400,10 +400,10 @@ const App: React.FC = () => {
     );
 
     // Limpiar todo rastro del referral (localStorage + cookies)
-    localStorage.removeItem('proyecto_x_referral');
-    localStorage.removeItem('proyecto_x_ref_token');
-    document.cookie = 'proyecto_x_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
-    document.cookie = 'proyecto_x_ref_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+    localStorage.removeItem('nova_digital_referral');
+    localStorage.removeItem('nova_digital_ref_token');
+    document.cookie = 'nova_digital_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+    document.cookie = 'nova_digital_ref_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
 
     // Refrescar datos desde Supabase
     refetch();
@@ -479,7 +479,7 @@ const App: React.FC = () => {
         subject: "Depósito Enviado - Esperando Aprobación Admin",
         amount,
         method: "USDT (BEP-20)",
-        address: "Proyecto X Wallet Bank",
+        address: "NOVA Digital Wallet Bank",
         txId: result.deposit.id,
         date: new Date(),
         isConfirmed: false
@@ -645,18 +645,24 @@ const App: React.FC = () => {
     if (!user || collectingPassive) return;
     setCollectingPassive(true);
     try {
-      const { data, error } = await supabase.rpc('collect_daily_passive', { p_user_id: user.id });
+      const { data, error } = await supabase.rpc('activate_daily_roi', { p_user_id: user.id });
       if (error) throw error;
       if (data?.success) {
         setPassivePaidToday(true);
-        addNotification(
-          `✅ Pasivo acreditado: +$${Number(data.total_paid).toFixed(2)} USDT`,
-          'success'
-        );
+        const resets = Number(data.reset_contracts || 0);
+        const activated = Number(data.activated_contracts || 0);
+        const paid = Number(data.total_paid || 0);
+        if (data.already_activated_today) {
+          addNotification('Los nodos ya fueron activados hoy.', 'info');
+        } else {
+          addNotification(
+            `Activación completada en ${activated} nodo(s).${resets ? ` ${resets} ciclo(s) reiniciado(s).` : ''}${paid ? ` +$${paid.toFixed(2)} al wallet.` : ''}`,
+            resets ? 'info' : 'success'
+          );
+        }
         refetch();
       } else {
-        if (data?.already_paid_today) setPassivePaidToday(true);
-        addNotification(data?.error || 'No se pudo cobrar el pasivo.', 'error');
+        addNotification(data?.error || 'No se pudieron activar los nodos.', 'error');
       }
     } catch (err: any) {
       addNotification(err.message || 'Error al cobrar pasivo.', 'error');
@@ -706,6 +712,12 @@ const App: React.FC = () => {
     return (investments || [])
       .filter(i => i.status === 'ACTIVE')
       .reduce((acc, inv) => acc + inv.amount, 0);
+  }, [investments]);
+
+  const estimatedDailyRoi = useMemo(() => {
+    return (investments || [])
+      .filter(i => i.status === 'ACTIVE')
+      .reduce((total, investment) => total + Number(investment.amount) * Number(investment.assigned_roi_percentage || 0) / 100, 0);
   }, [investments]);
 
   const totalEarnings = useMemo(() => {
@@ -800,7 +812,7 @@ const App: React.FC = () => {
             </svg>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-500 mb-3">PROYECTO X</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-500 mb-3">NOVA DIGITAL</p>
             <h1 className="text-3xl font-black text-white uppercase tracking-tight">Cuenta Suspendida</h1>
             <p className="text-slate-500 font-medium mt-4 leading-relaxed text-sm">
               Tu cuenta ha sido temporalmente suspendida por el equipo administrativo.
@@ -1113,8 +1125,8 @@ const App: React.FC = () => {
                     </div>
                   )}
 
-                  {/* ── PASIVO DIARIO — visible solo con > $2,000 activos ── */}
-                  {activeInvestmentTotal > 2000 && (
+                  {/* REGLA DE ORO ROI — visible con cualquier nodo activo */}
+                  {activeInvestmentTotal > 0 && (
                     <div className="holo-card p-5 rounded-none clip-corner border-proyecto-gold/30 bg-proyecto-gold/5">
                       {/* Header */}
                       <div className="flex items-center gap-2 mb-4">
@@ -1124,8 +1136,8 @@ const App: React.FC = () => {
                           </svg>
                         </div>
                         <div>
-                          <p className="text-[10px] font-orbitron font-bold text-proyecto-gold uppercase tracking-widest">Pasivo Diario</p>
-                          <p className="text-[8px] font-mono-tech text-slate-400 uppercase tracking-wider">Cobro automático al wallet</p>
+                          <p className="text-[10px] font-orbitron font-bold text-proyecto-gold uppercase tracking-widest">Activación diaria ROI</p>
+                          <p className="text-[8px] font-mono-tech text-slate-400 uppercase tracking-wider">Regla de Oro · lunes a viernes</p>
                         </div>
                       </div>
 
@@ -1136,7 +1148,7 @@ const App: React.FC = () => {
                           ${activeInvestmentTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </p>
                         <p className="text-[8px] text-proyecto-gold font-mono-tech mt-1">
-                          ≈ +${(activeInvestmentTotal * 0.022).toFixed(2)} USD estimado hoy (2.2%)
+                          ≈ ${estimatedDailyRoi.toFixed(2)} USD de ROI asignado para hoy
                         </p>
                       </div>
 
@@ -1161,14 +1173,14 @@ const App: React.FC = () => {
                             Procesando...
                           </>
                         ) : passivePaidToday ? (
-                          '✓ Cobrado hoy — Vuelve mañana'
+                          '✓ Nodos activados hoy'
                         ) : (
-                          'Cobrar Pasivo Diario'
+                          'Activar nodos de hoy'
                         )}
                       </button>
 
                       <p className="text-[8px] text-slate-600 font-mono-tech text-center mt-2 uppercase tracking-wider">
-                        Disponible 1 vez por día · Se acredita al Wallet
+                        Si omites un día hábil, pierdes el ROI pendiente y el ciclo vuelve a cero
                       </p>
                     </div>
                   )}
@@ -1406,7 +1418,7 @@ const App: React.FC = () => {
           {activeTab === 'credit' && (
             <div className="space-y-6 animate-slide-in">
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-neon-purple">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-purple">◈ TOKEN GMX — PROYECTO X Protocol</h2>
+                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-purple">◈ TOKEN GMX — NOVA DIGITAL Protocol</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-neon-purple bg-proyecto-neon-purple/10 px-3 py-1 border border-proyecto-neon-purple/20">{t('common.internal_network')}</span>
               </div>
               <CreditPanel
@@ -1420,9 +1432,9 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'proyecto_x_card' && (
+          {activeTab === 'nova_digital_card' && (
             <div className="space-y-6 animate-slide-in">
-              <ProyectoXCardPanel profile={profile} />
+              <NovaDigitalCardPanel profile={profile} />
             </div>
           )}
 
@@ -1520,7 +1532,7 @@ const App: React.FC = () => {
         </a>
       )}
       <footer className="mt-20 py-8 border-t border-slate-900/50 bg-black/40 text-center backdrop-blur-sm relative z-10">
-        <p className="text-slate-600 text-[10px] font-rajdhani font-bold uppercase tracking-[0.5em]">PROYECTO X SYSTEMS • VERIFIED NODE ARCHITECTURE • V2.5.5</p>
+        <p className="text-slate-600 text-[10px] font-rajdhani font-bold uppercase tracking-[0.5em]">NOVA DIGITAL SYSTEMS • VERIFIED NODE ARCHITECTURE • V2.5.5</p>
       </footer>
 
       <NotificationToast notifications={notifications} removeNotification={removeNotification} />
@@ -1559,7 +1571,7 @@ const App: React.FC = () => {
           promotion={activePromotion}
           onClose={() => {
             setShowFlashOffer(false);
-            localStorage.setItem('proyecto_x_dismissed_flash_promo', activePromotion.id);
+            localStorage.setItem('nova_digital_dismissed_flash_promo', activePromotion.id);
           }}
         />
       )}

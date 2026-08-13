@@ -9,8 +9,8 @@ export interface SocketMessage {
     };
 }
 
-export class ProyectoXSocket {
-    private static instance: ProyectoXSocket;
+export class NovaDigitalSocket {
+    private static instance: NovaDigitalSocket;
     private subscribers: ((msg: SocketMessage) => void)[] = [];
     private interval: any;
 
@@ -18,11 +18,11 @@ export class ProyectoXSocket {
         this.startMockFeed();
     }
 
-    public static getInstance(): ProyectoXSocket {
-        if (!ProyectoXSocket.instance) {
-            ProyectoXSocket.instance = new ProyectoXSocket();
+    public static getInstance(): NovaDigitalSocket {
+        if (!NovaDigitalSocket.instance) {
+            NovaDigitalSocket.instance = new NovaDigitalSocket();
         }
-        return ProyectoXSocket.instance;
+        return NovaDigitalSocket.instance;
     }
 
     public subscribe(callback: (msg: SocketMessage) => void): () => void {

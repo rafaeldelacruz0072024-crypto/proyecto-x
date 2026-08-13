@@ -14,7 +14,7 @@ DECLARE
     v_is_flagship BOOLEAN;
     v_purchase_id UUID;
 BEGIN
-    -- 0. Verificar si el producto es PROYECTO X GOLD (flagship)
+    -- 0. Verificar si el producto es NOVA DIGITAL GOLD (flagship)
     SELECT is_flagship INTO v_is_flagship
     FROM public.products
     WHERE id = p_product_id;

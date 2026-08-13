@@ -294,13 +294,13 @@ El dashboard muestra:
 
 ## 📝 Licencia
 
-MIT License - PROYECTO X-ADMIN © 2026
+MIT License - NOVA DIGITAL-ADMIN © 2026
 
 ---
 
 ## 🤝 Soporte
 
-Para soporte, reporta de bugs o sugerencias, contacta al equipo de PROYECTO X-ADMIN.
+Para soporte, reporta de bugs o sugerencias, contacta al equipo de NOVA DIGITAL-ADMIN.
 
 ---
 

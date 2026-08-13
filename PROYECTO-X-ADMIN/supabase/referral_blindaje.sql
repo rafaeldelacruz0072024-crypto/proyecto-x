@@ -1,5 +1,5 @@
 -- ============================================================
--- BLINDAJE DEL SISTEMA DE REFERIDOS — PROYECTO X
+-- BLINDAJE DEL SISTEMA DE REFERIDOS — NOVA DIGITAL
 -- Ejecutar en Supabase SQL Editor
 -- ============================================================
 

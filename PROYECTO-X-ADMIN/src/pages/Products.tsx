@@ -391,7 +391,7 @@ export default function Products() {
                                                 value={formData.name}
                                                 onChange={handleInputChange}
                                                 className="w-full bg-slate-950 border border-slate-800 rounded-none p-4 text-sm font-bold text-white uppercase focus:outline-none focus:border-blue-500 transition-all"
-                                                placeholder="EJ: PROYECTO X GOLD v5.0"
+                                                placeholder="EJ: NOVA DIGITAL GOLD v5.0"
                                             />
                                         </div>
 

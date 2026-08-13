@@ -171,7 +171,7 @@ function drawFlyer(
     diamond(100, 910, 16, t.ring2 + '60');
     diamond(W * 0.5, 980, 8, t.glow + '40');
 
-    // — PROYECTO X Logo (top right, drawn via Canvas) ————————————
+    // — NOVA DIGITAL Logo (top right, drawn via Canvas) ————————————
     ctx.save();
     const lx = W - 30;
     // "GK" large
@@ -181,7 +181,7 @@ function drawFlyer(
     ctx.shadowBlur = 22;
     ctx.fillStyle = '#ffffff';
     ctx.fillText('GK', lx, 88);
-    // "PROYECTO X" smaller, spaced
+    // "NOVA DIGITAL" smaller, spaced
     ctx.shadowBlur = 10;
     ctx.font = `800 18px 'Arial Black', Arial, sans-serif`;
     ctx.fillStyle = t.logo;
@@ -323,7 +323,7 @@ function drawFlyer(
     ctx.stroke();
 
     const stats = [
-        { value: '2.2%',  label: 'DAILY RETURNS',     color: t.glow },
+        { value: '0.2–2%',  label: 'ROI SEGÚN CICLO',     color: t.glow },
         { value: '200%',  label: 'MAX CAP',            color: t.ring },
         { value: '30',    label: 'REFERRAL LEVELS',    color: t.accent },
         { value: '$30K',  label: 'MAX WEEKLY SALARY',  color: t.badge },
@@ -391,7 +391,7 @@ export default function FlyerEditor() {
         setDownloading(true);
         setTimeout(() => {
             const link = document.createElement('a');
-            link.download = `Bienvenido_${name.trim() || 'Proyecto X'}.png`;
+            link.download = `Bienvenido_${name.trim() || 'NOVA Digital'}.png`;
             link.href = canvasRef.current!.toDataURL('image/png', 1.0);
             link.click();
             setDownloading(false);
@@ -557,7 +557,7 @@ export default function FlyerEditor() {
                             <li>· Usa fotos con el socio centrado y con buena luz</li>
                             <li>· Funciona mejor con fotos de perfil o retrato</li>
                             <li>· El flyer es 1080×1080 px — perfecto para Instagram y WhatsApp</li>
-                            <li>· Comparte con el hashtag <span className="text-proyecto-accent">#ProyectoXTeam</span></li>
+                            <li>· Comparte con el hashtag <span className="text-proyecto-accent">#NovaDigitalTeam</span></li>
                         </ul>
                     </div>
                 </div>

@@ -3,7 +3,6 @@ import { SalaryRange } from './types';
 
 // ⚠️ DEFAULTS de respaldo: Estos valores se usan SOLO si system_settings no está disponible.
 // La fuente de verdad es SIEMPRE la tabla system_settings en Supabase.
-export const DAILY_RETURN_RATE = 0.022; // 2.2% — respaldo de daily_roi en system_settings
 export const MIN_INVESTMENT = 10.00;    // Sincronizado con min_investment en system_settings
 export const MAX_INVESTMENT = 10000.00; // Sincronizado con max_investment en system_settings
 export const WITHDRAWAL_FEE = 0.10;     // 10% — respaldo de withdrawal_fee en system_settings

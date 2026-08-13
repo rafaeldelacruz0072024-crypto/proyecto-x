@@ -1,6 +1,6 @@
-# Proyecto X
+# NOVA Digital
 
-Repositorio principal y exclusivo de Proyecto X.
+Repositorio principal y exclusivo de NOVA Digital.
 
 ## Aplicaciones
 

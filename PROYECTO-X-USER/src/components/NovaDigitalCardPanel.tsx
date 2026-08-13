@@ -6,11 +6,11 @@ import {
 } from 'lucide-react';
 import { Profile } from '../types';
 
-interface ProyectoXCardPanelProps {
+interface NovaDigitalCardPanelProps {
     profile: Profile | null;
 }
 
-export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps) {
+export default function NovaDigitalCardPanel({ profile }: NovaDigitalCardPanelProps) {
     const { t } = useTranslation();
 
     // Enlace oficial de la empresa
@@ -19,27 +19,27 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
     const features = [
         {
             icon: <Shield className="text-blue-500" size={24} />,
-            title: t('proyecto_x_card.benefit1_title'),
-            desc: t('proyecto_x_card.benefit1_desc'),
+            title: t('nova_digital_card.benefit1_title'),
+            desc: t('nova_digital_card.benefit1_desc'),
             detail: "3% FEE"
         },
         {
             icon: <Globe className="text-cyan-500" size={24} />,
-            title: t('proyecto_x_card.benefit2_title'),
-            desc: t('proyecto_x_card.benefit2_desc'),
+            title: t('nova_digital_card.benefit2_title'),
+            desc: t('nova_digital_card.benefit2_desc'),
             detail: "VISA NETWORK"
         },
         {
             icon: <Zap className="text-amber-500" size={24} />,
-            title: t('proyecto_x_card.benefit3_title'),
-            desc: t('proyecto_x_card.benefit3_desc'),
+            title: t('nova_digital_card.benefit3_title'),
+            desc: t('nova_digital_card.benefit3_desc'),
             detail: "INSTANT LOAD"
         }
     ];
 
     return (
         <div className="space-y-10 animate-fade-in relative pb-10">
-            {/* HUD HEADER - Estilo PROYECTO X */}
+            {/* HUD HEADER - Estilo NOVA DIGITAL */}
             <div className="relative group overflow-hidden">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 rounded-none blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
                 <div className="relative bg-[#0c0f18] border border-slate-800 p-8 rounded-none backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-8">
@@ -49,10 +49,10 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
                             <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.4em]">SISTEMA DE LIQUIDEZ EXTERNA</span>
                         </div>
                         <h2 className="text-4xl font-black text-white font-orbitron tracking-tighter uppercase italic leading-none mb-3">
-                            PROYECTO X <span className="text-blue-500">VISA</span> CARD
+                            NOVA DIGITAL <span className="text-blue-500">VISA</span> CARD
                         </h2>
                         <p className="text-slate-500 text-xs font-bold uppercase tracking-widest max-w-xl">
-                            {t('proyecto_x_card.subtitle')}
+                            {t('nova_digital_card.subtitle')}
                         </p>
                     </div>
 
@@ -77,8 +77,8 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
                     <div className="relative aspect-[1.58/1] perspective-1000">
                         <div className="w-full h-full relative transform-gpu transition-all duration-700 hover:rotate-y-6 hover:rotate-x-6">
                             <img 
-                                src="/proyecto_x_card.png"
-                                alt="Proyecto X Card Official"
+                                src="/nova_digital_card.png"
+                                alt="NOVA Digital Card Official"
                                 className="w-full h-full object-contain filter drop-shadow-[0_20px_50px_rgba(37,99,235,0.3)]"
                             />
                             
@@ -95,10 +95,10 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
                         </div>
                         
                         <h3 className="text-2xl font-black text-white mb-4 uppercase italic font-orbitron">
-                            {t('proyecto_x_card.title')}
+                            {t('nova_digital_card.title')}
                         </h3>
                         <p className="text-slate-400 text-sm leading-relaxed mb-8">
-                            {t('proyecto_x_card.description')}
+                            {t('nova_digital_card.description')}
                         </p>
 
                         <div className="space-y-4">
@@ -129,7 +129,7 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em]">OFERTA INSTITUCIONAL</p>
-                                    <p className="text-xs font-bold text-white uppercase">{t('proyecto_x_card.referral_note')}</p>
+                                    <p className="text-xs font-bold text-white uppercase">{t('nova_digital_card.referral_note')}</p>
                                 </div>
                             </div>
                             
@@ -139,7 +139,7 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
                                 rel="noopener noreferrer"
                                 className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-black text-sm uppercase tracking-[0.4em] flex items-center justify-center gap-3 transition-all transform hover:scale-[1.02] active:scale-95 shadow-[0_0_30px_rgba(37,99,235,0.4)] clip-corner italic"
                             >
-                                {t('proyecto_x_card.cta')}
+                                {t('nova_digital_card.cta')}
                                 <ArrowRight size={20} />
                             </a>
                         </div>
@@ -151,7 +151,7 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
             <div className="space-y-8 mt-20 pb-10">
                 <div className="flex items-center gap-4 mb-8">
                     <h3 className="text-xl font-black text-white font-orbitron uppercase tracking-[0.2em] text-glow-cyan">
-                        {t('proyecto_x_card.guide_title')}
+                        {t('nova_digital_card.guide_title')}
                     </h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-blue-500/50 via-blue-500/10 to-transparent"></div>
                 </div>
@@ -165,10 +165,10 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
                                     0{step}
                                 </div>
                                 <h4 className="text-xs font-black text-white uppercase tracking-widest mb-3 border-l-2 border-blue-500 pl-3">
-                                    {t(`proyecto_x_card.step${step}_title`)}
+                                    {t(`nova_digital_card.step${step}_title`)}
                                 </h4>
                                 <p className="text-[10px] text-slate-500 leading-relaxed font-bold uppercase tracking-tight flex-1">
-                                    {t(`proyecto_x_card.step${step}_desc`)}
+                                    {t(`nova_digital_card.step${step}_desc`)}
                                 </p>
                                 
                                 <div className="mt-6 flex justify-end">

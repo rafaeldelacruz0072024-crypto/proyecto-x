@@ -1,4 +1,4 @@
--- Proyecto X: esquema financiero inicial sin usuarios ni datos historicos.
+-- NOVA Digital: esquema financiero inicial sin usuarios ni datos historicos.
 -- Los tres registros de plans son configuracion operativa del producto.
 
 create extension if not exists pgcrypto;

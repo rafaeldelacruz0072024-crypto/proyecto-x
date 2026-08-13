@@ -26,7 +26,7 @@ ON public.promotions FOR SELECT
 USING (true);
 
 -- 2. Escritura/Modificación: Solo administradores (A nivel de Supabase Auth/Role si aplica, 
--- por ahora lo simplificamos a authenticated o restrictivo según el entorno de PROYECTO X)
+-- por ahora lo simplificamos a authenticated o restrictivo según el entorno de NOVA DIGITAL)
 -- Nota: En tu estructura actual, el dashboard de admin usa una key de servicio o valida roles.
 CREATE POLICY "Allow admin full access to promotions"
 ON public.promotions FOR ALL

@@ -16,7 +16,7 @@ SELECT
     p.ref_code,
     p.referred_by,
     CASE
-        WHEN u.email ILIKE '%proyecto-x-root%' OR p.username ILIKE '%proyecto-x-root%' THEN '*** CONSERVAR (ROOT) ***'
+        WHEN u.email ILIKE '%nova-digital-root%' OR p.username ILIKE '%nova-digital-root%' THEN '*** CONSERVAR (ROOT) ***'
         WHEN u.email = 'gentecash@gmail.com' THEN '*** CONSERVAR (ADMIN) ***'
         ELSE 'ELIMINAR'
     END AS accion
@@ -38,17 +38,17 @@ DECLARE
     v_deleted_tx  INT;
     v_deleted_inv INT;
 BEGIN
-    -- Identificar ROOT (proyecto-x-root)
+    -- Identificar ROOT (nova-digital-root)
     SELECT id INTO v_root_id
     FROM auth.users
-    WHERE email ILIKE '%proyecto-x-root%'
+    WHERE email ILIKE '%nova-digital-root%'
     LIMIT 1;
 
     -- Si no encontró por email, buscar por username en profiles
     IF v_root_id IS NULL THEN
         SELECT id INTO v_root_id
         FROM public.profiles
-        WHERE username ILIKE '%proyecto-x-root%'
+        WHERE username ILIKE '%nova-digital-root%'
         LIMIT 1;
     END IF;
 
@@ -60,7 +60,7 @@ BEGIN
 
     -- Validar que ambos existan antes de borrar nada
     IF v_root_id IS NULL THEN
-        RAISE EXCEPTION 'Usuario ROOT (proyecto-x-root) no encontrado. Abortando.';
+        RAISE EXCEPTION 'Usuario ROOT (nova-digital-root) no encontrado. Abortando.';
     END IF;
     IF v_admin_id IS NULL THEN
         RAISE EXCEPTION 'Usuario admin (gentecash@gmail.com) no encontrado. Abortando.';

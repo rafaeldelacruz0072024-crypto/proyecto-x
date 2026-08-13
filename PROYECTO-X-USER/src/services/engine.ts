@@ -6,7 +6,6 @@ import {
   NetworkNode
 } from '../types';
 import {
-  DAILY_RETURN_RATE,
   COMMISSION_LEVELS,
   SALARY_TABLE
 } from '../constants';

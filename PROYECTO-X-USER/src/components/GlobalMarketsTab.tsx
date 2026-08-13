@@ -20,7 +20,7 @@ interface PolyMarket {
     tags: { label: string }[];
 }
 
-interface ProyectoXMarket {
+interface NovaDigitalMarket {
     id: string;
     polymarket_id: string;
     title: string;
@@ -206,12 +206,12 @@ function SparklineChart({ yesProb, color, marketId }: { yesProb: number; color: 
 }
 
 // ─── Market Card ─────────────────────────────────────────────────────────────
-function MarketCard({ market, pcts, outcomes, catCfg, proyectoXMkt, vol, tl, featured, onBetClick }: {
+function MarketCard({ market, pcts, outcomes, catCfg, novaDigitalMkt, vol, tl, featured, onBetClick }: {
     market: PolyMarket;
     pcts: number[];
     outcomes: string[];
     catCfg: ReturnType<typeof getCatConfig>;
-    proyectoXMkt?: ProyectoXMarket;
+    novaDigitalMkt?: NovaDigitalMarket;
     vol: string;
     tl: string;
     featured?: boolean;
@@ -349,13 +349,13 @@ function MarketCard({ market, pcts, outcomes, catCfg, proyectoXMkt, vol, tl, fea
                     <Clock size={10} style={{ color: tl === 'Cerrado' ? '#475569' : '#94a3b8' }} />
                     <span style={{ fontSize: 10, fontWeight: 700, color: tl === 'Cerrado' ? '#475569' : '#94a3b8', fontFamily: 'monospace' }}>{tl}</span>
                 </div>
-                {proyectoXMkt ? (
+                {novaDigitalMkt ? (
                     <div style={{
                         fontSize: 8, fontWeight: 900, letterSpacing: '0.2em', padding: '3px 9px',
                         background: 'rgba(0,243,255,0.1)', color: '#00f3ff', border: '1px solid rgba(0,243,255,0.2)',
                         borderRadius: 100, display: 'flex', alignItems: 'center', gap: 4,
                     }}>
-                        <Zap size={8} /> PROYECTO X
+                        <Zap size={8} /> NOVA DIGITAL
                     </div>
                 ) : (
                     <div style={{
@@ -374,14 +374,14 @@ function MarketCard({ market, pcts, outcomes, catCfg, proyectoXMkt, vol, tl, fea
                 <button
                     onMouseEnter={() => setBetHover('yes')}
                     onMouseLeave={() => setBetHover(null)}
-                    onClick={proyectoXMkt && onBetClick ? onBetClick : undefined}
+                    onClick={novaDigitalMkt && onBetClick ? onBetClick : undefined}
                     style={{
                         flex: 1, padding: '11px 8px',
                         background: betHover === 'yes' ? 'rgba(34,197,94,0.2)' : 'rgba(34,197,94,0.08)',
                         border: `1px solid ${betHover === 'yes' ? 'rgba(34,197,94,0.5)' : 'rgba(34,197,94,0.2)'}`,
                         borderRadius: 12, color: '#4ade80',
                         fontSize: 11, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase',
-                        cursor: proyectoXMkt ? 'pointer' : 'default',
+                        cursor: novaDigitalMkt ? 'pointer' : 'default',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                         boxShadow: betHover === 'yes' ? '0 0 20px rgba(34,197,94,0.15)' : 'none',
                         transition: 'all 0.2s',
@@ -392,14 +392,14 @@ function MarketCard({ market, pcts, outcomes, catCfg, proyectoXMkt, vol, tl, fea
                 <button
                     onMouseEnter={() => setBetHover('no')}
                     onMouseLeave={() => setBetHover(null)}
-                    onClick={proyectoXMkt && onBetClick ? onBetClick : undefined}
+                    onClick={novaDigitalMkt && onBetClick ? onBetClick : undefined}
                     style={{
                         flex: 1, padding: '11px 8px',
                         background: betHover === 'no' ? 'rgba(239,68,68,0.2)' : 'rgba(239,68,68,0.08)',
                         border: `1px solid ${betHover === 'no' ? 'rgba(239,68,68,0.5)' : 'rgba(239,68,68,0.2)'}`,
                         borderRadius: 12, color: '#f87171',
                         fontSize: 11, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase',
-                        cursor: proyectoXMkt ? 'pointer' : 'default',
+                        cursor: novaDigitalMkt ? 'pointer' : 'default',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                         boxShadow: betHover === 'no' ? '0 0 20px rgba(239,68,68,0.15)' : 'none',
                         transition: 'all 0.2s',
@@ -409,8 +409,8 @@ function MarketCard({ market, pcts, outcomes, catCfg, proyectoXMkt, vol, tl, fea
                 </button>
             </div>
 
-            {/* Proyecto X CTA overlay */}
-            {proyectoXMkt && onBetClick && (
+            {/* NOVA Digital CTA overlay */}
+            {novaDigitalMkt && onBetClick && (
                 <button onClick={onBetClick} style={{
                     width: '100%', marginTop: 8, padding: '10px',
                     background: 'linear-gradient(135deg, rgba(0,243,255,0.1), rgba(99,102,241,0.1))',
@@ -420,11 +420,11 @@ function MarketCard({ market, pcts, outcomes, catCfg, proyectoXMkt, vol, tl, fea
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                     transition: 'all 0.2s',
                 }}>
-                    <Zap size={11} /> APOSTAR EN PROYECTO X <ChevronRight size={11} />
+                    <Zap size={11} /> APOSTAR EN NOVA DIGITAL <ChevronRight size={11} />
                 </button>
             )}
 
-            {!proyectoXMkt && (
+            {!novaDigitalMkt && (
                 <div style={{
                     marginTop: 8, fontSize: 9, color: '#1e293b', fontWeight: 600, textAlign: 'center',
                     padding: '6px 0', borderTop: '1px solid rgba(255,255,255,0.03)',
@@ -489,14 +489,14 @@ function TopMarketsPanel({ markets }: { markets: PolyMarket[] }) {
 }
 
 // ─── Main component ──────────────────────────────────────────────────────────
-export default function GlobalMarketsTab({ user, walletBalance, onUpdateBalance, onSelectProyectoXMarket }: {
+export default function GlobalMarketsTab({ user, walletBalance, onUpdateBalance, onSelectNovaDigitalMarket }: {
     user: any;
     walletBalance: number;
     onUpdateBalance: () => void;
-    onSelectProyectoXMarket: (market: ProyectoXMarket) => void;
+    onSelectNovaDigitalMarket: (market: NovaDigitalMarket) => void;
 }) {
     const [markets, setMarkets] = useState<PolyMarket[]>([]);
-    const [proyectoXMarkets, setProyectoXMarkets] = useState<ProyectoXMarket[]>([]);
+    const [novaDigitalMarkets, setNovaDigitalMarkets] = useState<NovaDigitalMarket[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
@@ -525,19 +525,19 @@ export default function GlobalMarketsTab({ user, walletBalance, onUpdateBalance,
         }
     }, []);
 
-    const fetchProyectoXMarkets = useCallback(async () => {
+    const fetchNovaDigitalMarkets = useCallback(async () => {
         const { data } = await supabase
             .from('prediction_markets')
             .select('id, polymarket_id, title, status, total_pool, options')
             .not('polymarket_id', 'is', null)
             .in('status', ['OPEN', 'CLOSED']);
-        setProyectoXMarkets(data || []);
+        setNovaDigitalMarkets(data || []);
     }, []);
 
     useEffect(() => {
         fetchPolymarket();
-        fetchProyectoXMarkets();
-        const interval = setInterval(() => { fetchPolymarket(); fetchProyectoXMarkets(); }, 120000);
+        fetchNovaDigitalMarkets();
+        const interval = setInterval(() => { fetchPolymarket(); fetchNovaDigitalMarkets(); }, 120000);
         return () => clearInterval(interval);
     }, []);
 
@@ -547,8 +547,8 @@ export default function GlobalMarketsTab({ user, walletBalance, onUpdateBalance,
         return matchSearch && matchCat;
     });
 
-    function getProyectoXMarket(polyId: string) {
-        return proyectoXMarkets.find(g => g.polymarket_id === polyId);
+    function getNovaDigitalMarket(polyId: string) {
+        return novaDigitalMarkets.find(g => g.polymarket_id === polyId);
     }
 
     const totalVol = markets.reduce((s, m) => s + (m.volumeNum || 0), 0);
@@ -634,7 +634,7 @@ export default function GlobalMarketsTab({ user, walletBalance, onUpdateBalance,
                     {[
                         { icon: <BarChart2 size={18} />, val: activeCount.toString(), label: 'Mercados Activos', color: '#4ade80', grad: '#4ade80' },
                         { icon: <TrendingUp size={18} />, val: `$${(totalVol / 1e6).toFixed(1)}M`, label: 'Volumen Total', color: '#fbbf24', grad: '#f59e0b' },
-                        { icon: <Zap size={18} />, val: proyectoXMarkets.length.toString(), label: 'En Proyecto X', color: '#00f3ff', grad: '#0ea5e9' },
+                        { icon: <Zap size={18} />, val: novaDigitalMarkets.length.toString(), label: 'En NOVA Digital', color: '#00f3ff', grad: '#0ea5e9' },
                         { icon: <Users size={18} />, val: categories.length.toString(), label: 'Categorías', color: '#c084fc', grad: '#a855f7' },
                     ].map((m, i) => (
                         <div key={i} style={{
@@ -728,7 +728,7 @@ export default function GlobalMarketsTab({ user, walletBalance, onUpdateBalance,
                                     const prices: string[] = parseJSON(market.outcomePrices, ['0.5', '0.5']);
                                     const pcts = prices.map(p => parseFloat(p) * 100);
                                     const catCfg = getCatConfig(market.category);
-                                    const proyectoXMkt = getProyectoXMarket(market.id);
+                                    const novaDigitalMkt = getNovaDigitalMarket(market.id);
                                     const tl = timeLeft(market.endDate);
                                     const vol = fmtVol(market.volumeNum);
 
@@ -739,11 +739,11 @@ export default function GlobalMarketsTab({ user, walletBalance, onUpdateBalance,
                                                 pcts={pcts}
                                                 outcomes={outcomes}
                                                 catCfg={catCfg}
-                                                proyectoXMkt={proyectoXMkt}
+                                                novaDigitalMkt={novaDigitalMkt}
                                                 vol={vol}
                                                 tl={tl}
                                                 featured={idx === 0}
-                                                onBetClick={proyectoXMkt ? () => onSelectProyectoXMarket(proyectoXMkt) : undefined}
+                                                onBetClick={novaDigitalMkt ? () => onSelectNovaDigitalMarket(novaDigitalMkt) : undefined}
                                             />
                                         </div>
                                     );

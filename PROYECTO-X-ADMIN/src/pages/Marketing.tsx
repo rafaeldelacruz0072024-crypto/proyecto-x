@@ -27,7 +27,7 @@ const PLATFORMS: { id: Platform; label: string; icon: React.ReactNode; color: st
 
 const STAGES: { id: Stage; label: string; emoji: string; desc: string; color: string; icon: React.ReactNode }[] = [
   { id: 'atraccion', label: 'Atracción', emoji: '🎯', desc: 'Despertar curiosidad sin revelar el negocio', color: 'border-violet-500/40 bg-violet-500/5 text-violet-400', icon: <Star size={14} /> },
-  { id: 'interes', label: 'Interés', emoji: '💡', desc: 'Educar sobre la oportunidad PROYECTO X', color: 'border-blue-500/40 bg-blue-500/5 text-blue-400', icon: <TrendingUp size={14} /> },
+  { id: 'interes', label: 'Interés', emoji: '💡', desc: 'Educar sobre la oportunidad NOVA DIGITAL', color: 'border-blue-500/40 bg-blue-500/5 text-blue-400', icon: <TrendingUp size={14} /> },
   { id: 'deseo', label: 'Deseo', emoji: '🔥', desc: 'Prueba social + crear FOMO', color: 'border-orange-500/40 bg-orange-500/5 text-orange-400', icon: <Heart size={14} /> },
   { id: 'accion', label: 'Acción', emoji: '⚡', desc: 'CTA directo para registro con referido', color: 'border-green-500/40 bg-green-500/5 text-green-400', icon: <Zap size={14} /> },
   { id: 'fidelizacion', label: 'Fidelización', emoji: '🤝', desc: 'Retener y activar nuevos miembros', color: 'border-cyan-500/40 bg-cyan-500/5 text-cyan-400', icon: <Users size={14} /> },
@@ -99,7 +99,7 @@ const Marketing: React.FC = () => {
         </div>
         <div>
           <h1 className="text-xl font-black text-white uppercase tracking-widest">Marketing Hub</h1>
-          <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Generador de Contenido con IA · Embudo PROYECTO X</p>
+          <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Generador de Contenido con IA · Embudo NOVA DIGITAL</p>
         </div>
       </div>
 
@@ -356,8 +356,8 @@ const Marketing: React.FC = () => {
               💡 Tip — Etapa {currentStage.label}
             </p>
             <p className="text-[10px] leading-relaxed">
-              {stage === 'atraccion' && 'No menciones PROYECTO X todavía. Habla de cambio de vida, libertad financiera y el estilo de vida que quieres mostrar. La curiosidad es tu herramienta.'}
-              {stage === 'interes' && 'Explica brevemente qué es PROYECTO X: predicciones, cripto, referidos. No presiones. El objetivo es informar y despertar interés genuino.'}
+              {stage === 'atraccion' && 'No menciones NOVA DIGITAL todavía. Habla de cambio de vida, libertad financiera y el estilo de vida que quieres mostrar. La curiosidad es tu herramienta.'}
+              {stage === 'interes' && 'Explica brevemente qué es NOVA DIGITAL: predicciones, cripto, referidos. No presiones. El objetivo es informar y despertar interés genuino.'}
               {stage === 'deseo' && 'Usa tu testimonio real o el de tu equipo. Muestra capturas, resultados, momentos. El FOMO se crea con prueba social auténtica.'}
               {stage === 'accion' && 'CTA claro y directo. Incluye tu link de referido. Crea urgencia legítima (plazas, tiempo limitado). El CTA debe estar en el cuerpo y al final.'}
               {stage === 'fidelizacion' && 'Celebra victorias del equipo, comparte tips de la plataforma y motiva a tus referidos a invitar a su red. La comunidad retiene.'}

@@ -28,7 +28,7 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                             Términos del Protocolo
                         </h2>
                         <p className="text-[10px] text-slate-400 font-mono mt-1 ml-3.5 uppercase tracking-wide">
-                            Documento Vinculante - PROYECTO X
+                            Documento Vinculante - NOVA DIGITAL
                         </p>
                     </div>
                     <button
@@ -52,7 +52,7 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                             Acuerdo Integro
                         </h3>
                         <p className="leading-relaxed opacity-90 text-[11px] sm:text-xs">
-                            Al crear una cuenta en PROYECTO X, usted acepta que ha leído, comprendido y está de acuerdo con todas las estipulaciones legales de este documento. La plataforma opera de manera descentralizada a través de tecnología blockchain.
+                            Al crear una cuenta en NOVA DIGITAL, usted acepta que ha leído, comprendido y está de acuerdo con todas las estipulaciones legales de este documento. La plataforma opera de manera descentralizada a través de tecnología blockchain.
                         </p>
                     </div>
 
@@ -61,10 +61,10 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                             <span className="text-proyecto-accent">1.</span> Naturaleza de los Criptoactivos y Riesgo Tecnológico
                         </h4>
                         <p className="leading-relaxed opacity-80 pl-5 mb-3">
-                            Los criptoactivos (incluyendo USDT, BNB, BTC y otros tokens del ecosistema BEP-20) no constituyen moneda de curso legal (fiat) en la mayoría de las jurisdicciones y no están respaldados por bancos centrales, gobiernos o mecanismos de garantía estatal. El Usuario reconoce que la tecnología Blockchain es experimental y está sujeta a riesgos intrínsecos de seguridad, errores de código (bugs) y cambios en los protocolos de red que están fuera del control de PROYECTO X.
+                            Los criptoactivos (incluyendo USDT, BNB, BTC y otros tokens del ecosistema BEP-20) no constituyen moneda de curso legal (fiat) en la mayoría de las jurisdicciones y no están respaldados por bancos centrales, gobiernos o mecanismos de garantía estatal. El Usuario reconoce que la tecnología Blockchain es experimental y está sujeta a riesgos intrínsecos de seguridad, errores de código (bugs) y cambios en los protocolos de red que están fuera del control de NOVA DIGITAL.
                         </p>
                         <p className="leading-relaxed opacity-80 pl-5">
-                            La volatilidad de los criptoactivos es extrema. El valor de sus tenencias puede fluctuar drásticamente en periodos cortos de tiempo, e incluso llegar a cero. PROYECTO X no asume responsabilidad alguna por la pérdida de valor de mercado de los activos depositados o generados.
+                            La volatilidad de los criptoactivos es extrema. El valor de sus tenencias puede fluctuar drásticamente en periodos cortos de tiempo, e incluso llegar a cero. NOVA DIGITAL no asume responsabilidad alguna por la pérdida de valor de mercado de los activos depositados o generados.
                         </p>
                     </section>
 
@@ -83,7 +83,7 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                         </h4>
                         <div className="pl-5 space-y-3">
                             <p className="leading-relaxed opacity-80">
-                                PROYECTO X se rige por un motor de sostenibilidad algorítmica. Al activar cualquier Nodo, el Usuario acepta el "Límite de Duplicación" (CAP) inamovible:
+                                NOVA DIGITAL se rige por un motor de sostenibilidad algorítmica. Al activar cualquier Nodo, el Usuario acepta el "Límite de Duplicación" (CAP) inamovible:
                             </p>
                             <ul className="list-disc pl-5 opacity-80 space-y-2 text-[11px] sm:text-xs italic bg-slate-950/50 p-4 rounded-xl border border-white/5">
                                 <li><strong>Límite de Retorno:</strong> Ninguna cuenta podrá generar más del <strong>200%</strong> de retorno total sobre su capital activo.</li>
@@ -98,7 +98,7 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                             <span className="text-proyecto-accent">4.</span> Responsabilidad en la Custodia y Seguridad del Usuario
                         </h4>
                         <p className="leading-relaxed opacity-80 pl-5 mb-3">
-                            El Usuario es el único responsable de mantener la confidencialidad de sus credenciales de acceso, códigos de verificación de dos factores (2FA) y el acceso a su correo electrónico vinculado. PROYECTO X **nunca** solicitará sus contraseñas ni frases semilla.
+                            El Usuario es el único responsable de mantener la confidencialidad de sus credenciales de acceso, códigos de verificación de dos factores (2FA) y el acceso a su correo electrónico vinculado. NOVA DIGITAL **nunca** solicitará sus contraseñas ni frases semilla.
                         </p>
                         <p className="leading-relaxed opacity-80 pl-5">
                             Cualquier transacción realizada desde la cuenta del Usuario, ya sea autorizada o no por el mismo, se considerará válida y final. El Protocolo no cuenta con mecanismos para revertir transacciones blockchain exitosas derivadas de accesos no autorizados por descuido del Usuario.
@@ -110,7 +110,7 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                             <span className="text-proyecto-accent">5.</span> Política de "Finalidad de Fondos" (No Reembolso)
                         </h4>
                         <p className="leading-relaxed opacity-80 pl-5 border-l-2 border-proyecto-brand/30">
-                            Debido a que los fondos depositados se inyectan inmediatamente en los pools de liquidez y algoritmos de arbitraje automatizado, todos los depósitos en PROYECTO X son **irrevocables**. No existe periodo de retracto ni posibilidad de reembolso parcial o total una vez que los fondos han sido activados en el Protocolo.
+                            Debido a que los fondos depositados se inyectan inmediatamente en los pools de liquidez y algoritmos de arbitraje automatizado, todos los depósitos en NOVA DIGITAL son **irrevocables**. No existe periodo de retracto ni posibilidad de reembolso parcial o total una vez que los fondos han sido activados en el Protocolo.
                         </p>
                     </section>
 
@@ -123,7 +123,7 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                                 El Usuario declara y garantiza que todos los criptoactivos depositados tienen un origen lícito y no están vinculados con actividades criminales bajo ninguna jurisdicción internacional.
                             </p>
                             <p className="leading-relaxed opacity-80 font-bold text-red-400">
-                                PROYECTO X se reserva el derecho de auditar el comportamiento transaccional y bloquear cualquier cuenta sospechosa de lavado de dinero, financiamiento del terrorismo o fraude sin previo aviso, en cumplimiento con estándares internacionales.
+                                NOVA DIGITAL se reserva el derecho de auditar el comportamiento transaccional y bloquear cualquier cuenta sospechosa de lavado de dinero, financiamiento del terrorismo o fraude sin previo aviso, en cumplimiento con estándares internacionales.
                             </p>
                         </div>
                     </section>
@@ -133,7 +133,7 @@ const ProtocolTermsModal: React.FC<ProtocolTermsModalProps> = ({ isOpen, onClose
                             <span className="text-proyecto-accent">7.</span> Privacidad y Tratamiento de Información Bancaria
                         </h4>
                         <p className="leading-relaxed opacity-80 pl-5">
-                            PROYECTO X no almacena información de tarjetas de crédito o cuentas bancarias tradicionales. Toda la interacción financiera se realiza a través de billeteras de criptoactivos personales. Los datos proporcionados durante el registro se utilizan estrictamente para la gestión operativa y de comunicación interna del Protocolo, y no serán vendidos a terceros.
+                            NOVA DIGITAL no almacena información de tarjetas de crédito o cuentas bancarias tradicionales. Toda la interacción financiera se realiza a través de billeteras de criptoactivos personales. Los datos proporcionados durante el registro se utilizan estrictamente para la gestión operativa y de comunicación interna del Protocolo, y no serán vendidos a terceros.
                         </p>
                     </section>
 

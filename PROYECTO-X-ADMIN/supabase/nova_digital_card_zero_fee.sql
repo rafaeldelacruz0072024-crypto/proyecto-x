@@ -1,7 +1,7 @@
 -- ============================================================
--- PROYECTO X CARD: Fee 0% en retiros con método PROYECTO X CARD
+-- NOVA DIGITAL CARD: Fee 0% en retiros con método NOVA DIGITAL CARD
 -- Actualiza create_withdrawal_request para eximir de comisión
--- a los retiros procesados vía tarjeta corporativa Proyecto X.
+-- a los retiros procesados vía tarjeta corporativa NOVA Digital.
 -- ============================================================
 
 CREATE OR REPLACE FUNCTION public.create_withdrawal_request(
@@ -120,8 +120,8 @@ BEGIN
     RETURN jsonb_build_object('success', false, 'error', 'Saldo insuficiente en el wallet.');
   END IF;
 
-  -- 10. Calcular fee — PROYECTO X CARD tiene 0% durante 30 días (hasta 2026-05-22)
-  IF p_method = 'PROYECTO X CARD' AND NOW() <= TIMESTAMPTZ '2026-05-22 23:59:59-04:00' THEN
+  -- 10. Calcular fee — NOVA DIGITAL CARD tiene 0% durante 30 días (hasta 2026-05-22)
+  IF p_method = 'NOVA DIGITAL CARD' AND NOW() <= TIMESTAMPTZ '2026-05-22 23:59:59-04:00' THEN
     v_fee_amount := 0;
     v_net_amount := p_amount;
   ELSE
@@ -153,7 +153,7 @@ BEGIN
     'net_amount', v_net_amount,
     'fee_amount', v_fee_amount,
     'override_active', v_is_override_active,
-    'card_withdrawal', (p_method = 'PROYECTO X CARD')
+    'card_withdrawal', (p_method = 'NOVA DIGITAL CARD')
   );
 END;
 $$;

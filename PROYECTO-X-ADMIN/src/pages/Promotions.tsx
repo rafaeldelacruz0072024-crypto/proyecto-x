@@ -413,7 +413,7 @@ export default function Promotions() {
                                                 value={formData.coupon_code}
                                                 onChange={handleInputChange}
                                                 className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors font-mono"
-                                                placeholder="EJ: PROYECTO X10"
+                                                placeholder="EJ: NOVA DIGITAL10"
                                             />
                                         </div>
                                         <div className="flex items-center gap-3">

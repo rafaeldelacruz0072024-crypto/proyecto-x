@@ -14,7 +14,7 @@ const buildHtml = (subject: string, body: string, name: string) => `
 <tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="background:#111118;border-radius:16px;overflow:hidden;border:1px solid #1e293b;">
 <tr><td style="background:linear-gradient(135deg,#1e3a5f,#0f172a);padding:32px;text-align:center;">
-  <div style="font-size:28px;font-weight:900;color:#3b82f6;letter-spacing:4px;">PROYECTO X</div>
+  <div style="font-size:28px;font-weight:900;color:#3b82f6;letter-spacing:4px;">NOVA DIGITAL</div>
   <div style="font-size:11px;color:#64748b;letter-spacing:3px;margin-top:4px;">PLATAFORMA FINANCIERA DIGITAL</div>
 </td></tr>
 <tr><td style="padding:40px 32px;">
@@ -22,13 +22,13 @@ const buildHtml = (subject: string, body: string, name: string) => `
   <div style="color:#cbd5e1;font-size:15px;line-height:1.8;white-space:pre-wrap;">${body}</div>
 </td></tr>
 <tr><td style="padding:0 32px 32px;text-align:center;">
-  <a href="https://proyecto-x.app" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:14px;letter-spacing:1px;">
-    ABRIR PROYECTO X →
+  <a href="https://nova-digital.app" style="display:inline-block;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:14px;letter-spacing:1px;">
+    ABRIR NOVA DIGITAL →
   </a>
 </td></tr>
 <tr><td style="background:#0d0d14;padding:24px 32px;text-align:center;border-top:1px solid #1e293b;">
-  <p style="color:#475569;font-size:11px;margin:0;">© 2025 PROYECTO X · Plataforma Financiera Digital</p>
-  <p style="color:#374151;font-size:10px;margin:8px 0 0;">Recibiste este correo porque eres miembro de PROYECTO X.</p>
+  <p style="color:#475569;font-size:11px;margin:0;">© 2025 NOVA DIGITAL · Plataforma Financiera Digital</p>
+  <p style="color:#374151;font-size:10px;margin:8px 0 0;">Recibiste este correo porque eres miembro de NOVA DIGITAL.</p>
 </td></tr>
 </table></td></tr></table>
 </body></html>`;
@@ -90,8 +90,8 @@ serve(async (req) => {
       exportUsers = users || [];
     }
 
-    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'noreply@proyecto-x.app';
-    const FROM_NAME = 'Equipo PROYECTO X';
+    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'noreply@nova-digital.app';
+    const FROM_NAME = 'Equipo NOVA DIGITAL';
 
     let sentCount = 0;
     let failedCount = 0;

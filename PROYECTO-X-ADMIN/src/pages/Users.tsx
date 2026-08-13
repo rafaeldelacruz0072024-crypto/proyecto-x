@@ -576,7 +576,7 @@ const Users: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Rango Elite (PROYECTO X Elite)</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Rango Elite (NOVA DIGITAL Elite)</label>
                     <select
                       value={selectedUser.rank || 'Starter'}
                       onChange={(e) => setSelectedUser({ ...selectedUser, rank: e.target.value as any })}

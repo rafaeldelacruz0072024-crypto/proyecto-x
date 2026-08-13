@@ -6,7 +6,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import os
 
-OUT = os.path.join(os.path.dirname(__file__), "PROYECTO-X_Plan_Compensacion.pdf")
+OUT = os.path.join(os.path.dirname(__file__), "NOVA-Digital_Plan_Compensacion.pdf")
 
 W, H = A4  # 595 x 842
 
@@ -26,7 +26,7 @@ TEXT      = HexColor("#f1f5f9")
 TEXT2     = HexColor("#94a3b8")
 
 c = canvas.Canvas(OUT, pagesize=A4)
-c.setTitle("PROYECTO X | Plan de Compensación")
+c.setTitle("NOVA DIGITAL | Plan de Compensación")
 
 # ══════════════════════════════════════════════════════
 # BACKGROUND
@@ -68,10 +68,10 @@ for i in range(steps):
 c.setFillColor(SURFACE)
 c.roundRect(14, H - 74, W - 28, 62, 10, fill=1, stroke=0)
 
-# PROYECTO X wordmark
+# NOVA DIGITAL wordmark
 c.setFillColor(CYAN)
 c.setFont("Helvetica-Bold", 22)
-c.drawString(28, H - 44, "PROYECTO X")
+c.drawString(28, H - 44, "NOVA DIGITAL")
 
 # Tagline
 c.setFillColor(MUTED)
@@ -370,7 +370,7 @@ for i, (txt, bg, fg) in enumerate(pill_items):
 # ── Bottom credit line ──────────────────────────────
 c.setFillColor(MUTED)
 c.setFont("Helvetica", 6)
-c.drawCentredString(W/2, FT_Y - 36, "proyecto-x-user.vercel.app  ·  Los porcentajes son referenciales y pueden variar según los parámetros del sistema  ·  © 2025 PROYECTO X")
+c.drawCentredString(W/2, FT_Y - 36, "proyecto-x-user.vercel.app  ·  Los porcentajes son referenciales y pueden variar según los parámetros del sistema  ·  © 2025 NOVA DIGITAL")
 
 c.save()
 print("PDF generado:", OUT)

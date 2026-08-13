@@ -26,7 +26,7 @@ interface RoundHistory {
     nonce: number;
 }
 
-interface ProyectoXCrashProps {
+interface NovaDigitalCrashProps {
     user: any;
     walletBalance: number;
     onUpdateBalance: () => void;
@@ -38,7 +38,7 @@ const HOUSE_EDGE = 0.07; // 7% house edge (93% RTP)
 const GROWTH_RATE = 0.0693; // Takes ~10s to reach 2x
 const CRASH_GAME_ID = '578b5122-2f02-431e-9986-5d81688cd3bc';
 
-const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, onUpdateBalance, maxBet }) => {
+const NovaDigitalCrash: React.FC<NovaDigitalCrashProps> = ({ user, walletBalance, onUpdateBalance, maxBet }) => {
     // --- Game Logic State ---
     const [gameState, setGameState] = useState<GameState>('idle');
     const [currentMultiplier, setCurrentMultiplier] = useState(1.0);
@@ -221,7 +221,7 @@ const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, on
             const { data, error } = await supabase.rpc('process_game_bet', {
                 p_user_id: user.id,
                 p_amount: Number(betAmount),
-                p_game_name: 'Proyecto X Crash'
+                p_game_name: 'NOVA Digital Crash'
             });
 
             if (error) {
@@ -250,7 +250,7 @@ const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, on
             const { data, error } = await supabase.rpc('process_game_result', {
                 p_user_id: user.id,
                 p_amount: Number(betAmount),
-                p_game_name: 'Proyecto X Crash'
+                p_game_name: 'NOVA Digital Crash'
             });
             if (error) console.error('Cancel bet DB error:', error);
             onUpdateBalance();
@@ -273,7 +273,7 @@ const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, on
             const { data, error } = await supabase.rpc('process_game_result', {
                 p_user_id: user.id,
                 p_amount: Number(winAmount),
-                p_game_name: 'Proyecto X Crash'
+                p_game_name: 'NOVA Digital Crash'
             });
 
             if (error) console.error('Cashout DB error:', error);
@@ -299,7 +299,7 @@ const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, on
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
                                 <Rocket className="w-4 h-4 text-purple-500" />
-                                <span className="text-xs font-black uppercase tracking-widest italic">PROYECTO X CRASH</span>
+                                <span className="text-xs font-black uppercase tracking-widest italic">NOVA DIGITAL CRASH</span>
                             </div>
                             {/* Round History Chips */}
                             <div className="hidden md:flex items-center gap-2 overflow-hidden">
@@ -560,7 +560,7 @@ const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, on
                                     <input type="text" value={clientSeedRef.current} readOnly className="w-full bg-black p-4 rounded-xl border border-white/5 font-mono text-xs text-white outline-none" />
                                 </div>
                                 <p className="text-[10px] text-slate-500 font-bold leading-relaxed">
-                                    PROYECTO X utiliza un sistema de justicia demostrable. El resultado de cada ronda se genera combinando el Server Seed (oculto) y tu Client Seed mediante HMAC-SHA256. Esto garantiza que ni la casa ni el jugador puedan manipular el punto de explosión.
+                                    NOVA DIGITAL utiliza un sistema de justicia demostrable. El resultado de cada ronda se genera combinando el Server Seed (oculto) y tu Client Seed mediante HMAC-SHA256. Esto garantiza que ni la casa ni el jugador puedan manipular el punto de explosión.
                                 </p>
                             </div>
                         </motion.div>
@@ -576,4 +576,4 @@ function cn(...inputs: any[]) {
     return inputs.filter(Boolean).join(' ');
 }
 
-export default ProyectoXCrash;
+export default NovaDigitalCrash;

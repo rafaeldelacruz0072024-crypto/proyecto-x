@@ -15,8 +15,9 @@ interface Props {
 
 const planAccent: Record<string, string> = {
   DAILY: 'from-cyan-500 to-blue-600',
-  D17: 'from-blue-500 to-indigo-600',
-  D33: 'from-indigo-500 to-violet-600',
+  D10: 'from-blue-500 to-indigo-600',
+  D15: 'from-indigo-500 to-violet-600',
+  D30: 'from-violet-500 to-fuchsia-600',
 };
 
 const InvestmentPanel: React.FC<Props> = ({
@@ -75,7 +76,7 @@ const InvestmentPanel: React.FC<Props> = ({
       <section className="rounded-2xl border border-white/10 bg-[#080c17]/90 p-5 shadow-2xl">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-mono-tech uppercase tracking-[0.3em] text-blue-400">Proyecto X</p>
+            <p className="text-[10px] font-mono-tech uppercase tracking-[0.3em] text-blue-400">NOVA Digital</p>
             <h2 className="mt-1 text-2xl font-black text-white">Mis nodos</h2>
           </div>
           <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-2 text-right">
@@ -86,7 +87,7 @@ const InvestmentPanel: React.FC<Props> = ({
 
         {loadError && <p className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">{loadError}</p>}
 
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 2xl:grid-cols-4">
           {plans.map(plan => {
             const amount = Number(amounts[plan.id] || 0);
             const minDaily = amount * plan.roi_min_percentage / 100;
@@ -151,11 +152,12 @@ const InvestmentPanel: React.FC<Props> = ({
           </div>
           <div className="space-y-3">
             {activeInvestments.map(investment => (
-              <div key={investment.id} className="grid gap-3 rounded-xl border border-white/5 bg-black/20 p-4 text-sm sm:grid-cols-5">
+              <div key={investment.id} className="grid gap-3 rounded-xl border border-white/5 bg-black/20 p-4 text-sm sm:grid-cols-3 xl:grid-cols-6">
                 <div><p className="text-slate-500">Capital</p><p className="font-bold text-white">${Number(investment.amount).toFixed(2)}</p></div>
                 <div><p className="text-slate-500">Tasa asignada</p><p className="font-bold text-blue-300">{Number(investment.assigned_roi_percentage).toFixed(3)}%</p></div>
                 <div><p className="text-slate-500">Ganancia acumulada</p><p className="font-bold text-emerald-400">${Number(investment.accumulated_earnings).toFixed(2)}</p></div>
                 <div><p className="text-slate-500">Días procesados</p><p className="font-bold text-white">{investment.business_days_elapsed}</p></div>
+                <div><p className="text-slate-500">Última activación</p><p className="font-bold text-cyan-300">{investment.last_cycle_activation_on || 'Pendiente'}</p></div>
                 <div><p className="text-slate-500">Vencimiento</p><p className="font-bold text-white">{investment.matures_on || 'Sin plazo'}</p></div>
               </div>
             ))}

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.products (
     myfxbook_url TEXT,
     category TEXT DEFAULT 'SOFTWARE',
     is_active BOOLEAN DEFAULT true,
-    is_flagship BOOLEAN DEFAULT false, -- Para identificar PROYECTO X GOLD
+    is_flagship BOOLEAN DEFAULT false, -- Para identificar NOVA DIGITAL GOLD
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );

@@ -374,4 +374,4 @@ Ahora tienes un asistente que puede:
 
 *Documento creado: 2026-03-17*
 *Versión: 2.0.0 (Con Super Poderes)*
-*Autor: PROYECTO X-ADMIN*
+*Autor: NOVA DIGITAL-ADMIN*

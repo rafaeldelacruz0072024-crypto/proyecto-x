@@ -24,7 +24,7 @@ const Logo: React.FC<Props> = ({ size = 'md', className = '', glow = false }) =>
 
       <img
         src="/logo-new.png.png"
-        alt="PROYECTO X"
+        alt="NOVA DIGITAL"
         className={`${dimensions[size].img} object-contain relative z-10 transition-transform duration-700 group-hover:scale-105 drop-shadow-[0_0_18px_rgba(255,255,255,0.25)]`}
       />
     </div>

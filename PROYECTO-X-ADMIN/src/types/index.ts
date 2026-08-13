@@ -17,8 +17,8 @@ export interface Profile {
   transfer_blocked?: boolean;
   withdrawals_blocked?: boolean;
   roi_blocked?: boolean;
-  proyecto_x_card_address?: string;
-  proyecto_x_card_user?: string;
+  nova_digital_card_address?: string;
+  nova_digital_card_user?: string;
 
   created_at?: string;
 }
@@ -70,6 +70,9 @@ export interface Investment {
   assigned_roi_percentage?: number;
   business_days_elapsed?: number;
   last_accrual_on?: string;
+  last_cycle_activation_on?: string | null;
+  cycle_started_on?: string | null;
+  cycle_reset_count?: number;
   matures_on?: string | null;
   capital_returned?: boolean;
   is_referral_commission_paid?: boolean;
@@ -81,7 +84,7 @@ export interface Investment {
 export interface Plan {
   id: string;
   name: string;
-  code: 'DAILY' | 'D17' | 'D33' | string;
+  code: 'DAILY' | 'D10' | 'D15' | 'D30' | string;
   description: string;
   roi_min_percentage: number;
   roi_max_percentage: number;

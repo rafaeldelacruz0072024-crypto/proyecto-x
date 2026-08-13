@@ -114,9 +114,9 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
     }
 
     // REGLA DE ORO: código de patrocinador obligatorio
-    const sponsorCode = (localStorage.getItem('proyecto_x_referral') || formData.referralCode?.trim() || '').toUpperCase();
+    const sponsorCode = (localStorage.getItem('nova_digital_referral') || formData.referralCode?.trim() || '').toUpperCase();
     if (!sponsorCode || !sponsorCode.startsWith('GK-')) {
-      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a PROYECTO X.');
+      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a NOVA DIGITAL.');
       return;
     }
 
@@ -210,8 +210,8 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       }
 
       // Limpiar referral del localStorage después del registro exitoso
-      localStorage.removeItem('proyecto_x_referral');
-      document.cookie = 'proyecto_x_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+      localStorage.removeItem('nova_digital_referral');
+      document.cookie = 'nova_digital_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
 
       // Login automático
       onLogin(authData.user);
@@ -336,7 +336,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
           <Logo size="lg" variant="blue" className="transition-all hover:scale-105 duration-1000 ease-in-out drop-shadow-[0_0_30px_rgba(0,243,255,0.4)]" />
           <div className="flex flex-col items-center mt-4">
             <p className="text-[10px] uppercase text-proyecto-accent font-black tracking-[0.6em] text-glow-cyan text-center opacity-90 animate-pulse">
-              PROYECTO X FINANCIAL NETWORK
+              NOVA DIGITAL FINANCIAL NETWORK
             </p>
             <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-proyecto-accent/50 to-transparent mt-2"></div>
           </div>
