@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { path: '/users', label: 'User Management', icon: Users },
     { path: '/deposits', label: 'Deposit Terminal', icon: Wallet },
     { path: '/withdrawals', label: 'Withdrawal Center', icon: ArrowUpRight },
-    { path: '/nova-digital-cards', label: 'NOVA DIGITAL CARD Control', icon: CreditCard },
+    { path: '/nova-digital-cards', label: 'Nova Digital Card Control', icon: CreditCard },
     { path: '/investments', label: 'Investment Audit', icon: TrendingUp },
     { path: '/balance-manager', label: 'Balance Manager', icon: TrendingDown },
     { path: '/plans', label: 'ROI Plans', icon: ClipboardList },
@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         <div className="flex flex-col items-center gap-2">
           <Logo variant="blue" size="sm" glow={true} className="mb-1" />
           <div className="text-center">
-            <h1 className="text-sm font-black text-white uppercase tracking-widest leading-none mb-1">NOVA DIGITAL</h1>
+            <h1 className="text-sm font-black text-white tracking-widest leading-none mb-1">Nova Digital</h1>
             <p className="text-[8px] text-violet-400/70 font-bold uppercase tracking-[0.2em] leading-none">Super-Admin Panel</p>
           </div>
         </div>
