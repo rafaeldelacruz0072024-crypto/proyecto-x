@@ -316,33 +316,34 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 sm:p-6 lg:p-8 font-rajdhani relative overflow-hidden bg-grid">
+    <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4 sm:p-6 lg:p-8 font-rajdhani relative overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-[center_right] bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: "url('/nova-login-background.png')" }}
+        aria-hidden="true"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,7,18,.94)_0%,rgba(3,7,18,.82)_38%,rgba(3,7,18,.24)_68%,rgba(3,7,18,.1)_100%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
       {/* Language Switcher Overlay */}
       <div className="absolute top-4 right-4 z-[60] pointer-events-auto">
         <LanguageSwitcher />
       </div>
 
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
 
-      {/* Massive Holographic Watermark behind the portal */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.08] mix-blend-screen">
-        <img src="/brand-2.jpg" alt="" className="w-full md:w-auto md:h-[120%] object-cover animate-float" />
-      </div>
-
-      <div className="w-full max-w-md relative z-10 animate-fade-in">
+      <div className="w-full max-w-md relative z-10 animate-fade-in lg:mr-auto lg:ml-[8vw]">
         <div className="flex flex-col items-center mb-10 relative">
           <div className="absolute -top-10 w-40 h-40 bg-proyecto-accent/10 rounded-full blur-[80px] animate-pulse"></div>
-          <Logo size="lg" variant="blue" className="transition-all hover:scale-105 duration-1000 ease-in-out drop-shadow-[0_0_30px_rgba(0,243,255,0.4)]" />
+          <Logo size="lg" variant="blue" glow className="transition-all hover:scale-105 duration-1000 ease-in-out" />
           <div className="flex flex-col items-center mt-4">
             <p className="text-[10px] uppercase text-proyecto-accent font-black tracking-[0.6em] text-glow-cyan text-center opacity-90 animate-pulse">
-              Nova Digital Financial Network
+              NOVA Digital · Mercados de predicción
             </p>
             <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-proyecto-accent/50 to-transparent mt-2"></div>
           </div>
         </div>
 
-        <div className="holo-card p-8 rounded-[2.5rem] border border-proyecto-accent/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-20 group isolation-auto">
+        <div className="holo-card bg-slate-950/80 backdrop-blur-xl p-8 rounded-[2.5rem] border border-proyecto-accent/25 shadow-[0_0_50px_rgba(0,0,0,0.55)] relative z-20 group isolation-auto">
           <div className="absolute inset-0 bg-gradient-to-br from-proyecto-accent/5 via-transparent to-proyecto-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 -z-10"></div>
           {mode === 'forgot' ? (
             <div className="mb-6 py-2 animate-fade-in">
