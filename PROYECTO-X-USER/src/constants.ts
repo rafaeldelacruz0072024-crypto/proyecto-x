@@ -5,8 +5,8 @@ import { SalaryRange } from './types';
 // La fuente de verdad es SIEMPRE la tabla system_settings en Supabase.
 export const MIN_INVESTMENT = 10.00;    // Sincronizado con min_investment en system_settings
 export const MAX_INVESTMENT = 10000.00; // Sincronizado con max_investment en system_settings
-export const WITHDRAWAL_FEE = 0.10;     // 10% — respaldo de withdrawal_fee en system_settings
-export const MIN_WITHDRAWAL = 25.00;    // Sincronizado con min_withdrawal en system_settings
+export const WITHDRAWAL_FEE = 0.00;     // 0% — respaldo de withdrawal_fee en system_settings
+export const MIN_WITHDRAWAL = 10.00;    // Sincronizado con min_withdrawal en system_settings
 
 export const COMMISSION_LEVELS = [
   { start: 1, end: 1, percentage: 0.10 },

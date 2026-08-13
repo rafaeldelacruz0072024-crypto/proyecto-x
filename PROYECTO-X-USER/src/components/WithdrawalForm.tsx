@@ -38,8 +38,12 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
     async function loadSettings() {
       const settings = await getSystemSettings();
       if (!settings) return;
-      if (settings.withdrawal_fee)      setWithdrawalFeePercent(settings.withdrawal_fee);
-      if (settings.min_withdrawal)      setMinWithdrawal(settings.min_withdrawal);
+      if (settings.withdrawal_fee !== null && settings.withdrawal_fee !== undefined) {
+        setWithdrawalFeePercent(settings.withdrawal_fee);
+      }
+      if (settings.min_withdrawal !== null && settings.min_withdrawal !== undefined) {
+        setMinWithdrawal(settings.min_withdrawal);
+      }
       setWindowConfig({
         globalBlocked: settings.withdrawal_global_blocked  ?? false,
         windowEnabled: settings.withdrawal_window_enabled  ?? true,
