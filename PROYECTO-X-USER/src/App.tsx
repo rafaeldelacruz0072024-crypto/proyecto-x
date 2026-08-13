@@ -852,6 +852,14 @@ const App: React.FC = () => {
               </div>
 
 
+              {/* REGLA DE ORO ROI: acceso principal de ancho completo */}
+              <RoiDailyTasks
+                userId={user?.id || ''}
+                hasActiveContracts={activeInvestmentTotal > 0}
+                onRoiActivated={handleRoiActivated}
+                addNotification={addNotification}
+              />
+
               {/* STATS GRID */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
@@ -996,7 +1004,6 @@ const App: React.FC = () => {
                   )}
 
                   {/* REGLA DE ORO ROI — las tareas diarias son el único disparador */}
-                  <RoiDailyTasks userId={user?.id || ''} hasActiveContracts={activeInvestmentTotal > 0} onRoiActivated={handleRoiActivated} addNotification={addNotification} />
 
                   {/* PROMOS Y EVENTOS — acceso directo desde el dashboard */}
                   <section className="space-y-4">
