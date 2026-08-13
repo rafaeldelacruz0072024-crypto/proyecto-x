@@ -318,12 +318,12 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
   return (
     <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4 sm:p-6 lg:p-8 font-rajdhani relative overflow-hidden">
       <div
-        className="absolute inset-0 bg-cover bg-[center_right] bg-no-repeat pointer-events-none"
+        className="fixed inset-0 bg-[length:auto_100%] bg-[center_right] bg-no-repeat pointer-events-none"
         style={{ backgroundImage: "url('/nova-login-background.png')" }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,7,18,.94)_0%,rgba(3,7,18,.82)_38%,rgba(3,7,18,.24)_68%,rgba(3,7,18,.1)_100%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
+      <div className="fixed inset-0 bg-[linear-gradient(90deg,rgba(3,7,18,.94)_0%,rgba(3,7,18,.82)_38%,rgba(3,7,18,.24)_68%,rgba(3,7,18,.1)_100%)] pointer-events-none" />
+      <div className="fixed inset-0 bg-grid opacity-40 pointer-events-none" />
       {/* Language Switcher Overlay */}
       <div className="absolute top-4 right-4 z-[60] pointer-events-auto">
         <LanguageSwitcher />
