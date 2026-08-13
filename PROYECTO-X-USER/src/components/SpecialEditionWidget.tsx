@@ -7,7 +7,6 @@ interface Props {
   user: Profile;
   investments: Investment[];
   walletBalance: number;
-  creditBalance: number;
   onInvest: (amount: number, planId?: string) => void;
   addNotification: (msg: string, type?: string) => void;
   refetch: () => void;
@@ -20,7 +19,6 @@ export default function SpecialEditionWidget({
   user,
   investments,
   walletBalance,
-  creditBalance,
   onInvest,
   addNotification,
   refetch,
@@ -109,7 +107,7 @@ export default function SpecialEditionWidget({
   }, [user?.id, totalSpecialActiveAmount]);
 
   const numAmount = parseFloat(amount) || 0;
-  const isOverBalance = numAmount > creditBalance;
+  const isOverBalance = numAmount > walletBalance;
   const isBelowMin = numAmount < MIN_INVESTMENT;
 
   const handleActivate = () => {
@@ -255,7 +253,7 @@ export default function SpecialEditionWidget({
                 Monto de Inversión (Min. $2,000)
               </label>
               <span className="text-[8px] font-mono-tech text-amber-400 uppercase">
-                Crédito: ${creditBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                Wallet Bank: ${walletBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </span>
             </div>
 
@@ -275,7 +273,7 @@ export default function SpecialEditionWidget({
               />
               <button
                 type="button"
-                onClick={() => setAmount(Math.max(MIN_INVESTMENT, creditBalance).toString())}
+                onClick={() => setAmount(Math.max(MIN_INVESTMENT, walletBalance).toString())}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] font-orbitron font-bold text-amber-500 hover:text-amber-300 uppercase tracking-widest"
               >
                 MAX

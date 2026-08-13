@@ -6,9 +6,7 @@ interface Props {
   onInvest: (amount: number, planId?: string) => void;
   investments: Investment[];
   addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
-  balance: number;
   walletBalance: number;
-  onGoToConvert: () => void;
   isLoading?: boolean;
   dynamicSettings?: unknown;
 }
@@ -24,9 +22,7 @@ const InvestmentPanel: React.FC<Props> = ({
   onInvest,
   investments,
   addNotification,
-  balance,
   walletBalance,
-  onGoToConvert,
   isLoading = false,
 }) => {
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -63,9 +59,8 @@ const InvestmentPanel: React.FC<Props> = ({
       addNotification(`El monto máximo es $${plan.max_amount.toFixed(2)}.`, 'error');
       return;
     }
-    if (amount > balance) {
-      addNotification('Debes convertir fondos a tu balance de crédito.', 'error');
-      onGoToConvert();
+    if (amount > walletBalance) {
+      addNotification('No tienes saldo suficiente en Wallet Bank para activar este nodo.', 'error');
       return;
     }
     onInvest(amount, plan.id);
@@ -80,8 +75,8 @@ const InvestmentPanel: React.FC<Props> = ({
             <h2 className="mt-1 text-2xl font-black text-white">Mis nodos</h2>
           </div>
           <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-2 text-right">
-            <p className="text-[9px] uppercase tracking-widest text-slate-500">Balance de crédito</p>
-            <p className="font-mono text-lg font-black text-emerald-400">${balance.toFixed(2)}</p>
+            <p className="text-[9px] uppercase tracking-widest text-slate-500">Wallet Bank</p>
+            <p className="font-mono text-lg font-black text-emerald-400">${walletBalance.toFixed(2)}</p>
           </div>
         </div>
 
@@ -132,7 +127,7 @@ const InvestmentPanel: React.FC<Props> = ({
                   <button
                     type="button"
                     onClick={() => activate(plan)}
-                    disabled={isLoading || amount <= 0 || amount > balance}
+                    disabled={isLoading || amount <= 0 || amount > walletBalance}
                     className="mt-5 w-full rounded-xl bg-blue-600 px-4 py-4 text-base font-black text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {isLoading ? 'Procesando…' : 'Activar contrato'}

@@ -35,7 +35,6 @@ import MockEmailInbox from './components/MockEmailInbox';
 import AuthPortal from './components/AuthPortal';
 import ProfilePanel from './components/ProfilePanel';
 import ResetPasswordForm from './components/ResetPasswordForm';
-import CreditPanel from './components/CreditPanel';
 import TwoFactorVerificationModal from './components/TwoFactorVerificationModal';
 import RankWidget from './components/RankWidget';
 import LiveTerminal from './components/LiveTerminal';
@@ -45,16 +44,12 @@ import WorldMapWidget from './components/WorldMapWidget';
 import LivePredictionMarketSimulation from './components/LivePredictionMarketSimulation';
 import { SocketMessage } from './services/websocket';
 import EventsPanel from './components/EventsPanel';
-import ProductsPanel from './components/ProductsPanel';
 import FlashOfferModal from './components/FlashOfferModal';
 import TutorialsPanel from './components/TutorialsPanel';
-import GamesPanel from './components/GamesPanel';
 import PredictionMarketsPanel from './components/PredictionMarketsPanel';
 import RoadMapPanel from './components/RoadMapPanel';
-import MarketingFunnelPanel from './components/MarketingFunnelPanel';
 import NovaDigitalCardPanel from './components/NovaDigitalCardPanel';
 import PromoModal from './components/PromoModal';
-import BaccaratPanel from './components/BaccaratPanel';
 import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import UserSidebar from './components/UserSidebar';
@@ -87,7 +82,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'products' | 'tutorials' | 'games' | 'predictions' | 'credit' | 'profile' | 'roadmap' | 'marketing' | 'nova_digital_card' | 'baccarat'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap' | 'nova_digital_card'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -485,9 +480,8 @@ const App: React.FC = () => {
   const handleInvestment = useCallback(async (amount: number, planId?: string) => {
     if (!user || processingInvestment) return;
 
-    if (creditBalance < amount) {
-      addNotification(t('investment.protocol.desc'), "error");
-      setActiveTab('credit');
+    if (walletBalance < amount) {
+      addNotification('No tienes saldo suficiente en Wallet Bank para activar este nodo.', "error");
       return;
     }
 
@@ -501,7 +495,7 @@ const App: React.FC = () => {
       addNotification(t('investment.notify_error', { error: result.error }), 'error');
     }
     setProcessingInvestment(false);
-  }, [creditBalance, user, addNotification, refetch, processingInvestment]);
+  }, [walletBalance, user, addNotification, refetch, processingInvestment]);
 
   // ✅ WITHDRAWAL - CONECTADO A SUPABASE
   const handleWithdrawal = useCallback((amount: number, method: string, address: string) => {
@@ -767,7 +761,6 @@ const App: React.FC = () => {
           onClose={() => setIsSidebarOpen(false)}
           profile={profile}
           walletBalance={walletBalance || 0}
-          creditBalance={creditBalance || 0}
         />
 
         <div className={`flex-1 min-w-0 transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : ''}`}>
@@ -829,7 +822,10 @@ const App: React.FC = () => {
                       {window.location.origin}/?ref={profile.ref_code}
                     </span>
                   ) : (
-                    <span className="text-xs font-mono-tech truncate flex-1 text-slate-600 animate-pulse">Generando enlace...</span>
+                    <div className="flex flex-1 items-center justify-between gap-3">
+                      <span className="text-xs font-mono-tech text-amber-300">Enlace pendiente de sincronizar</span>
+                      <button onClick={refetch} className="text-[9px] font-orbitron font-bold text-proyecto-accent uppercase tracking-wider hover:text-white">Sincronizar</button>
+                    </div>
                   )}
                   <div className="flex gap-2 shrink-0">
                     <button
@@ -859,7 +855,7 @@ const App: React.FC = () => {
               {/* STATS GRID */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                     {/* WALLET BANK CARD */}
                     <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-proyecto-green/50 transition-colors">
                       <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-60 transition-opacity">
@@ -875,24 +871,6 @@ const App: React.FC = () => {
                       <div className="flex items-center gap-1.5 mt-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-proyecto-green animate-pulse shadow-[0_0_8px_#10b981]"></div>
                         <span className="text-[9px] font-mono-tech text-proyecto-green uppercase tracking-widest">{t('dashboard.liquidity_available')}</span>
-                      </div>
-                    </div>
-
-                    {/* CREDIT WALLET CARD */}
-                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-proyecto-neon-purple/50 transition-colors border-proyecto-neon-purple/20">
-                      <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-60 transition-opacity">
-                        <svg className="w-10 h-10 text-proyecto-neon-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                      </div>
-                      <p className="text-slate-400 text-[10px] font-orbitron uppercase tracking-widest mb-2 opacity-80">{t('credit.labels.credit_balance')}</p>
-                      <div className="flex items-baseline gap-1 mb-2">
-                        <span className="text-proyecto-neon-purple font-orbitron text-xl">$</span>
-                        <p className="text-3xl font-orbitron font-bold text-white text-glow-purple">
-                          {creditBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-proyecto-neon-purple animate-pulse shadow-[0_0_8px_purple]"></div>
-                        <span className="text-[9px] font-mono-tech text-proyecto-neon-purple uppercase tracking-widest">{t('credit.status_ready')}</span>
                       </div>
                     </div>
 
@@ -974,7 +952,6 @@ const App: React.FC = () => {
                       user={profile}
                       investments={investments || []}
                       walletBalance={walletBalance}
-                      creditBalance={creditBalance}
                       onInvest={handleInvestment}
                       addNotification={addNotification}
                       refetch={refetch}
@@ -985,9 +962,7 @@ const App: React.FC = () => {
                     onInvest={handleInvestment}
                     investments={investments || []}
                     addNotification={addNotification}
-                    balance={creditBalance}
                     walletBalance={walletBalance}
-                    onGoToConvert={() => setActiveTab('credit')}
                     residualConfig={residualConfig}
                     isLoading={processingInvestment}
                     dynamicSettings={systemSettings}
@@ -1021,9 +996,7 @@ const App: React.FC = () => {
                   )}
 
                   {/* REGLA DE ORO ROI — las tareas diarias son el único disparador */}
-                  {activeInvestmentTotal > 0 && (
-                    <RoiDailyTasks userId={user?.id || ''} hasActiveContracts={activeInvestmentTotal > 0} onRoiActivated={handleRoiActivated} addNotification={addNotification} />
-                  )}
+                  <RoiDailyTasks userId={user?.id || ''} hasActiveContracts={activeInvestmentTotal > 0} onRoiActivated={handleRoiActivated} addNotification={addNotification} />
 
                   {/* PROMOS Y EVENTOS — acceso directo desde el dashboard */}
                   <section className="space-y-4">
@@ -1115,7 +1088,7 @@ const App: React.FC = () => {
                       {window.location.origin}/?ref={profile.ref_code}
                     </span>
                   ) : (
-                    <span className="text-[10px] font-mono-tech text-slate-600 animate-pulse">Generando enlace...</span>
+                    <span className="text-[10px] font-mono-tech text-amber-300">Enlace pendiente de sincronizar</span>
                   )}
                 </div>
                 <div className="flex gap-2 w-full">
@@ -1173,9 +1146,7 @@ const App: React.FC = () => {
                     onInvest={handleInvestment}
                     investments={investments || []}
                     addNotification={addNotification}
-                    balance={creditBalance}
                     walletBalance={walletBalance}
-                    onGoToConvert={() => setActiveTab('credit')}
                     softwarePlans={softwarePlans}
                   />
                 </div>
@@ -1225,27 +1196,6 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'games' && (
-            <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-brand mb-6">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">{t('games.title')}</h2>
-                <span className="text-[9px] font-mono-tech text-proyecto-brand bg-proyecto-brand/10 px-3 py-1 border border-proyecto-brand/20">ENTERTAINMENT</span>
-              </div>
-              {profile ? (
-                <GamesPanel
-                  user={profile}
-                  walletBalance={walletBalance}
-                  onUpdateBalance={refetch}
-                />
-              ) : (
-                <div className="p-10 text-center border border-dashed border-slate-800 rounded-2xl">
-                  <div className="w-8 h-8 border-2 border-proyecto-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{t('common.loading')} Gaming Node...</p>
-                </div>
-              )}
-            </div>
-          )}
-
           {activeTab === 'events' && (
             <div className="space-y-6 animate-slide-in">
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent mb-6">
@@ -1263,36 +1213,13 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'products' && (
-            <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-blue-500 mb-6">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">Digital Marketplace</h2>
-                <span className="text-[9px] font-mono-tech text-blue-500 bg-blue-500/10 px-3 py-1 border border-blue-500/20">ELITE SHOP</span>
-              </div>
-              <ProductsPanel
-                profile={profile}
-                onPurchaseSuccess={() => {
-                  refetch();
-                  addNotification('Compra procesada correctamente', 'success');
-                }}
-              />
-            </div>
-          )}
-
-          {activeTab === 'credit' && (
+          {false && (
             <div className="space-y-6 animate-slide-in">
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-neon-purple">
                 <h2 className="text-xl font-orbitron font-bold text-white tracking-[0.3em] text-glow-purple">◈ TOKEN GMX — Nova Digital Protocol</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-neon-purple bg-proyecto-neon-purple/10 px-3 py-1 border border-proyecto-neon-purple/20">{t('common.internal_network')}</span>
               </div>
-              <CreditPanel
-                userId={user?.id || ''}
-                creditBalance={creditBalance}
-                mainBalance={walletBalance}
-                transferBlocked={profile?.transfer_blocked || false}
-                onRefresh={refetch}
-                addNotification={addNotification}
-              />
+              <p className="text-sm text-slate-400">Este módulo fue retirado de NOVA Digital.</p>
             </div>
           )}
 
@@ -1353,12 +1280,6 @@ const App: React.FC = () => {
 
           {activeTab === 'roadmap' && (
             <RoadMapPanel />
-          )}
-          {activeTab === 'marketing' && (
-            <MarketingFunnelPanel user={user} />
-          )}
-          {activeTab === 'baccarat' && (
-            <BaccaratPanel />
           )}
         </main>
         </div>{/* end flex-1 md:ml-64 */}
