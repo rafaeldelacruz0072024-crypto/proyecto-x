@@ -48,7 +48,6 @@ import FlashOfferModal from './components/FlashOfferModal';
 import TutorialsPanel from './components/TutorialsPanel';
 import PredictionMarketsPanel from './components/PredictionMarketsPanel';
 import RoadMapPanel from './components/RoadMapPanel';
-import PromoModal from './components/PromoModal';
 import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import BinaryBonusPanel from './components/BinaryBonusPanel';
@@ -116,16 +115,7 @@ const App: React.FC = () => {
   const [softwarePlans, setSoftwarePlans] = useState<any[]>([]);
   const [activePromotion, setActivePromotion] = useState<any>(null);
   const [showFlashOffer, setShowFlashOffer] = useState(false);
-  const [showPromoModal, setShowPromoModal] = useState(() => {
-    return sessionStorage.getItem('promo_seen') !== 'true';
-  });
-
   const [passivePaidToday, setPassivePaidToday] = useState(false);
-
-  const handleClosePromo = useCallback(() => {
-    sessionStorage.setItem('promo_seen', 'true');
-    setShowPromoModal(false);
-  }, []);
 
   const addNotification = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = Date.now().toString();
@@ -1374,13 +1364,6 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* Promo Modal */}
-      {user && (
-        <PromoModal 
-          isOpen={showPromoModal} 
-          onClose={handleClosePromo} 
-        />
-      )}
     </div>
   );
 };
