@@ -127,20 +127,6 @@ export interface SystemSettings {
   daily_roi: number;
   roi_cap: number;
   residual_config: any;
-  // Telegram Settings
-  telegram_reward_amount?: number;
-  telegram_link_connect?: string;
-  telegram_link_bot?: string;
-  telegram_link_channel?: string;
-  telegram_enabled?: boolean;
-  telegram_bot_token?: string;
-  telegram_welcome_en?: string;
-  telegram_welcome_es?: string;
-  telegram_welcome_fr?: string;
-  telegram_welcome_it?: string;
-  telegram_welcome_ja?: string;
-  telegram_welcome_pt?: string;
-  telegram_welcome_zh?: string;
   updated_at: string;
 }
 

@@ -133,11 +133,6 @@ export interface Plan {
     fixed_amount?: number;
 }
 
-export interface SalaryRange {
-    teamVolume: number;
-    bonus: number;
-}
-
 export interface CreditLog {
     id: string;
     user_id: string;
@@ -208,12 +203,6 @@ export interface SystemSettings {
     daily_roi: number;
     roi_cap: number;
     residual_config: any;
-    // Telegram Settings
-    telegram_reward_amount?: number;
-    telegram_link_connect?: string;
-    telegram_link_bot?: string;
-    telegram_link_channel?: string;
-    telegram_enabled?: boolean;
     updated_at: string;
 }
 

@@ -148,21 +148,8 @@ const Settings: React.FC = () => {
     withdrawal_fee: 5,
     credit_transfer_fee: 5,
     support_whatsapp: '',
-    telegram_reward_amount: 5,
-    telegram_link_connect: 'https://t.me/NovaDigitalOfficial',
-    telegram_link_bot: 'https://t.me/nova_digital_bot',
-    telegram_link_channel: 'https://t.me/NovaDigitalNews',
     instagram_link: '',
     youtube_link: '',
-    telegram_enabled: true,
-    telegram_bot_token: '',
-    telegram_welcome_en: '',
-    telegram_welcome_es: '',
-    telegram_welcome_fr: '',
-    telegram_welcome_it: '',
-    telegram_welcome_ja: '',
-    telegram_welcome_pt: '',
-    telegram_welcome_zh: '',
     // Ventana de retiros
     withdrawal_global_blocked: false,
     withdrawal_window_enabled: true,
@@ -255,21 +242,8 @@ const Settings: React.FC = () => {
           withdrawal_fee: data.withdrawal_fee,
           credit_transfer_fee: data.credit_transfer_fee,
           support_whatsapp: data.support_whatsapp || '',
-          telegram_reward_amount: data.telegram_reward_amount ?? 5,
-          telegram_link_connect: data.telegram_link_connect || 'https://t.me/NovaDigitalOfficial',
-          telegram_link_bot: data.telegram_link_bot || 'https://t.me/nova_digital_bot',
-          telegram_link_channel: data.telegram_link_channel || 'https://t.me/NovaDigitalNews',
           instagram_link: data.instagram_link || '',
           youtube_link: data.youtube_link || '',
-          telegram_enabled: data.telegram_enabled ?? true,
-          telegram_bot_token: data.telegram_bot_token || '',
-          telegram_welcome_en: data.telegram_welcome_en || '',
-          telegram_welcome_es: data.telegram_welcome_es || '',
-          telegram_welcome_fr: data.telegram_welcome_fr || '',
-          telegram_welcome_it: data.telegram_welcome_it || '',
-          telegram_welcome_ja: data.telegram_welcome_ja || '',
-          telegram_welcome_pt: data.telegram_welcome_pt || '',
-          telegram_welcome_zh: data.telegram_welcome_zh || '',
           // Ventana de retiros
           withdrawal_global_blocked: data.withdrawal_global_blocked ?? false,
           withdrawal_window_enabled: data.withdrawal_window_enabled ?? true,
@@ -465,19 +439,6 @@ const Settings: React.FC = () => {
       withdrawal_fee: settings.withdrawal_fee,
       credit_transfer_fee: settings.credit_transfer_fee,
       support_whatsapp: settings.support_whatsapp,
-      telegram_reward_amount: settings.telegram_reward_amount,
-      telegram_link_connect: settings.telegram_link_connect,
-      telegram_link_bot: settings.telegram_link_bot,
-      telegram_link_channel: settings.telegram_link_channel,
-      telegram_enabled: settings.telegram_enabled,
-      telegram_bot_token: settings.telegram_bot_token,
-      telegram_welcome_en: settings.telegram_welcome_en,
-      telegram_welcome_es: settings.telegram_welcome_es,
-      telegram_welcome_fr: settings.telegram_welcome_fr,
-      telegram_welcome_it: settings.telegram_welcome_it,
-      telegram_welcome_ja: settings.telegram_welcome_ja,
-      telegram_welcome_pt: settings.telegram_welcome_pt,
-      telegram_welcome_zh: settings.telegram_welcome_zh,
       withdrawal_global_blocked: settings.withdrawal_global_blocked,
       withdrawal_window_enabled: settings.withdrawal_window_enabled,
       withdrawal_open_day: settings.withdrawal_open_day,
@@ -619,13 +580,6 @@ const Settings: React.FC = () => {
             >
               <Target size={18} />
               <span>Salary Semanal</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('telegram' as any)}
-              className={`w-full flex items-center space-x-3 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all ${activeTab === ('telegram' as any) ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-900'}`}
-            >
-              <Zap size={18} />
-              <span>Canales & Bots</span>
             </button>
             <button
               onClick={() => setActiveTab('landing')}
@@ -1094,165 +1048,6 @@ const Settings: React.FC = () => {
                     </p>
                   </div>
                 )}
-              </div>
-            )}
-
-            {activeTab === ('telegram' as any) && (
-              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 space-y-8 shadow-2xl animate-in fade-in duration-300">
-                <div className="flex items-center justify-between pb-6 border-b border-slate-800">
-                  <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-indigo-600/10 rounded-2xl text-indigo-400">
-                      <Zap size={24} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-black text-slate-100 tracking-tight">Ecosistema Telegram</h3>
-                      <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Recompensas y Enlaces de Comunidad</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className={`text-[9px] font-black uppercase tracking-widest ${settings.telegram_enabled ? 'text-emerald-500' : 'text-rose-500'}`}>
-                      {settings.telegram_enabled ? 'Activado' : 'Desactivado'}
-                    </span>
-                    <button
-                      onClick={() => setSettings({ ...settings, telegram_enabled: !settings.telegram_enabled })}
-                      className={`w-12 h-6 rounded-full transition-colors relative ${settings.telegram_enabled ? 'bg-emerald-500' : 'bg-slate-700'}`}
-                    >
-                      <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.telegram_enabled ? 'left-7' : 'left-1'}`}></div>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Monto de Recompensa (US$)</label>
-                    <div className="relative">
-                      <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        value={settings.telegram_reward_amount}
-                        onChange={(e) => setSettings({ ...settings, telegram_reward_amount: parseFloat(e.target.value) || 0 })}
-                        className="w-full bg-black/40 border-2 border-slate-800 focus:border-indigo-500/50 rounded-2xl py-5 pl-10 pr-6 text-white font-black text-xl outline-none transition-all shadow-inner"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Enlace Comunidad (Connect)</label>
-                      <input
-                        type="text"
-                        value={settings.telegram_link_connect}
-                        onChange={(e) => setSettings({ ...settings, telegram_link_connect: e.target.value })}
-                        className="w-full bg-black/40 border-2 border-slate-800 focus:border-indigo-500/50 rounded-2xl py-5 px-6 text-slate-300 font-bold text-sm outline-none transition-all shadow-inner"
-                        placeholder="https://t.me/..."
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Enlace Bot de Soporte</label>
-                      <input
-                        type="text"
-                        value={settings.telegram_link_bot}
-                        onChange={(e) => setSettings({ ...settings, telegram_link_bot: e.target.value })}
-                        className="w-full bg-black/40 border-2 border-slate-800 focus:border-indigo-500/50 rounded-2xl py-5 px-6 text-slate-300 font-bold text-sm outline-none transition-all shadow-inner"
-                        placeholder="https://t.me/..."
-                      />
-                    </div>
-                    <div className="space-y-3 md:col-span-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Enlace Canal de Noticias (Telegram)</label>
-                      <input
-                        type="text"
-                        value={settings.telegram_link_channel}
-                        onChange={(e) => setSettings({ ...settings, telegram_link_channel: e.target.value })}
-                        className="w-full bg-black/40 border-2 border-slate-800 focus:border-indigo-500/50 rounded-2xl py-5 px-6 text-slate-300 font-bold text-sm outline-none transition-all shadow-inner"
-                        placeholder="https://t.me/..."
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                        <span style={{ fontSize: 14 }}>📸</span> Instagram
-                      </label>
-                      <input
-                        type="text"
-                        value={(settings as any).instagram_link}
-                        onChange={(e) => setSettings({ ...settings, instagram_link: e.target.value } as any)}
-                        className="w-full bg-black/40 border-2 border-slate-800 focus:border-pink-500/50 rounded-2xl py-5 px-6 text-slate-300 font-bold text-sm outline-none transition-all shadow-inner"
-                        placeholder="https://instagram.com/nova-digital"
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                        <span style={{ fontSize: 14 }}>▶️</span> YouTube
-                      </label>
-                      <input
-                        type="text"
-                        value={(settings as any).youtube_link}
-                        onChange={(e) => setSettings({ ...settings, youtube_link: e.target.value } as any)}
-                        className="w-full bg-black/40 border-2 border-slate-800 focus:border-red-500/50 rounded-2xl py-5 px-6 text-slate-300 font-bold text-sm outline-none transition-all shadow-inner"
-                        placeholder="https://youtube.com/@nova-digital"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-8 border-t border-slate-800">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <ShieldCheck className="text-indigo-400" size={20} />
-                    <h4 className="text-sm font-black text-slate-200 uppercase tracking-widest">Configuración del Bot</h4>
-                  </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Bot API Token</label>
-                    <div className="relative group/token">
-                      <input
-                        type="password"
-                        value={settings.telegram_bot_token}
-                        onChange={(e) => setSettings({ ...settings, telegram_bot_token: e.target.value })}
-                        className="w-full bg-black/40 border-2 border-slate-800 focus:border-indigo-500/50 rounded-2xl py-5 px-6 text-indigo-400 font-mono text-sm outline-none transition-all shadow-inner tracking-widest"
-                        placeholder="7123456789:AAEq..."
-                      />
-                      <div className="absolute right-5 top-1/2 -translate-y-1/2 opacity-0 group-hover/token:opacity-100 transition-opacity">
-                        <LockKeyhole size={14} className="text-slate-600" />
-                      </div>
-                    </div>
-                    <p className="text-[8px] text-slate-600 font-bold uppercase ml-1 italic">Token de autenticación del BotFather. No compartas este token.</p>
-                  </div>
-                </div>
-
-                <div className="pt-8 border-t border-slate-800">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <Globe className="text-indigo-400" size={20} />
-                    <h4 className="text-sm font-black text-slate-200 uppercase tracking-widest">Mensajes de Bienvenida (Localización)</h4>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {[
-                      { key: 'telegram_welcome_en', label: 'English (EN)', lang: '🇺🇸' },
-                      { key: 'telegram_welcome_es', label: 'Español (ES)', lang: '🇪🇸' },
-                      { key: 'telegram_welcome_pt', label: 'Português (PT)', lang: '🇧🇷' },
-                      { key: 'telegram_welcome_fr', label: 'Français (FR)', lang: '🇫🇷' },
-                      { key: 'telegram_welcome_it', label: 'Italiano (IT)', lang: '🇮🇹' },
-                      { key: 'telegram_welcome_zh', label: 'Chinese (ZH)', lang: '🇨🇳' },
-                      { key: 'telegram_welcome_ja', label: 'Japanese (JA)', lang: '🇯🇵' },
-                    ].map((lang) => (
-                      <div key={lang.key} className="space-y-3">
-                        <div className="flex items-center justify-between ml-1">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{lang.label}</label>
-                          <span className="text-lg">{lang.lang}</span>
-                        </div>
-                        <textarea
-                          value={(settings as any)[lang.key]}
-                          onChange={(e) => setSettings({ ...settings, [lang.key]: e.target.value })}
-                          className="w-full bg-black/40 border-2 border-slate-800 focus:border-indigo-500/50 rounded-2xl py-4 px-6 text-slate-300 font-medium text-sm outline-none transition-all shadow-inner min-h-[100px] resize-none"
-                          placeholder={`Escribe el mensaje de bienvenida en ${lang.label}...`}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-indigo-500/5 border border-indigo-500/10 p-6 rounded-2xl flex items-start space-x-4">
-                  <Info size={24} className="text-indigo-500 shrink-0" />
-                  <p className="text-sm text-slate-400 font-medium">Este panel de control sincroniza los parámetros del bono de bienvenida en la App de Usuario. Asegúrate de que los enlaces sean válidos.</p>
-                </div>
               </div>
             )}
 

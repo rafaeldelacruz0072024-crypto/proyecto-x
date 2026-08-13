@@ -40,7 +40,6 @@ import TwoFactorVerificationModal from './components/TwoFactorVerificationModal'
 import RankWidget from './components/RankWidget';
 import LiveTerminal from './components/LiveTerminal';
 import WeeklyYieldChart from './components/WeeklyYieldChart';
-import TelegramRewardPanel from './components/TelegramRewardPanel';
 import SponsorWidget from './components/SponsorWidget';
 import WorldMapWidget from './components/WorldMapWidget';
 import { SocketMessage } from './services/websocket';
@@ -950,11 +949,6 @@ const App: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                    <div className="md:col-span-5">
-                      <TelegramRewardPanel userId={user?.id} onRewardClaimed={refetch} />
-                    </div>
-                  </div>
                 </div>
 
                 {/* RIGHT SIDEBAR */}

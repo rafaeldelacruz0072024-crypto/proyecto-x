@@ -513,24 +513,6 @@
         "footer_note": "Encrypted message via GK PHYZER Sentry protocol. Do not reply to this email.",
         "footer_encryption": "GK PHYZER Secure Messaging • AES-256 Encrypted"
     },
-    "telegram_reward": {
-        "title": "Telegram Subscription",
-        "description": "Join our Telegram community and get an instant bonus!",
-        "success_claim": "You have successfully claimed your {{amount}} USD bonus!",
-        "already_claimed": "YOU HAVE ALREADY CLAIMED THIS BONUS.",
-        "claim_bonus": "CLAIM CREDITS",
-        "processing": "Processing...",
-        "connect": "Connect",
-        "start": "START",
-        "join": "VERIFY",
-        "task1_name": "LINK ACCOUNT",
-        "task1_desc": "Step 1: Link your Telegram account to the GK PHYZER ecosystem.",
-        "task2_name": "ACTIVATE BOT",
-        "task2_desc": "Step 2: Start our Official Bot to receive notifications and access.",
-        "task3_name": "ACCESS VIA BOT",
-        "task3_desc": "Step 3: The Bot will send you the exclusive link to join our Community Channel.",
-        "complete_all": "You must complete all tasks first."
-    },
     "reset_password": {
         "title": "Reset Password",
         "subtitle": "Enter your email to receive a recovery link",

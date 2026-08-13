@@ -524,24 +524,6 @@
         "footer_note": "Mensaje encriptado vía protocolo GK PHYZER Sentry. No responda a este correo.",
         "footer_encryption": "Mensajería Segura GK PHYZER • Encriptación AES-256"
     },
-    "telegram_reward": {
-        "title": "Suscripción a Telegram",
-        "description": "¡Únete a nuestra comunidad de Telegram y obtén un bono adicional al instante!",
-        "success_claim": "¡Has reclamado con éxito tu bono de {{amount}} USD!",
-        "already_claimed": "YA HAS RECLAMADO ESTE BONO.",
-        "claim_bonus": "RECLAMAR CRÉDITOS",
-        "processing": "Procesando...",
-        "connect": "Conectar",
-        "start": "INICIAR",
-        "join": "VERIFICAR",
-        "task1_name": "VINCULAR CUENTA",
-        "task1_desc": "Paso 1: Vincula tu cuenta de Telegram al ecosistema GK PHYZER.",
-        "task2_name": "ACTIVAR BOT",
-        "task2_desc": "Paso 2: Inicia nuestro Bot Oficial para recibir notificaciones y accesos.",
-        "task3_name": "ACCESO VÍA BOT",
-        "task3_desc": "Paso 3: El Bot te enviará el enlace exclusivo para unirte a nuestro Canal de Comunidad.",
-        "complete_all": "Debes completar todas las tareas primero."
-    },
     "reset_password": {
         "title": "Restablecer Contraseña",
         "subtitle": "Ingrese su email para recibir un enlace de recuperación",
