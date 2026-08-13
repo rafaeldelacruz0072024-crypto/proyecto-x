@@ -60,8 +60,6 @@ import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import UserSidebar from './components/UserSidebar';
 import SpecialEditionWidget from './components/SpecialEditionWidget';
-// ElevenLabsWidget is loaded globally via index.html to cover all pages (including login/register)
-
 // Red vacía - se llenará con datos reales cuando se implemente backend de referidos
 const EMPTY_NETWORK: NetworkNode = {
   id: 'root',
