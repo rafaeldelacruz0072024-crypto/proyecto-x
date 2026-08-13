@@ -42,6 +42,7 @@ import LiveTerminal from './components/LiveTerminal';
 import WeeklyYieldChart from './components/WeeklyYieldChart';
 import SponsorWidget from './components/SponsorWidget';
 import WorldMapWidget from './components/WorldMapWidget';
+import LivePredictionMarketSimulation from './components/LivePredictionMarketSimulation';
 import { SocketMessage } from './services/websocket';
 import EventsPanel from './components/EventsPanel';
 import ProductsPanel from './components/ProductsPanel';
@@ -930,6 +931,9 @@ const App: React.FC = () => {
 
                   {/* WORLD MAP WIDGET */}
                   <WorldMapWidget settings={simulationSettings} latestEvent={latestEvent} />
+
+                  {/* MERCADOS DE PREDICCIÃ“N: visualizaciÃ³n local sin operaciones reales */}
+                  <LivePredictionMarketSimulation />
 
                   {/* CHARTS & TERMINAL */}
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
