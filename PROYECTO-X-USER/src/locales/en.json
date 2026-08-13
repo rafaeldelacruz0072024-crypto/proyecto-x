@@ -2,6 +2,7 @@
     "nav": {
         "dashboard": "DASHBOARD",
         "network": "NETWORK",
+        "binary": "BINARY 8%",
         "finance": "FINANCE",
         "events": "PROMO/EVENT",
         "products": "PRODUCTS",

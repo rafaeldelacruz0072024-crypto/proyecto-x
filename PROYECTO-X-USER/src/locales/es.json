@@ -2,6 +2,7 @@
     "nav": {
         "dashboard": "PANEL",
         "network": "RED",
+        "binary": "BINARIO 8%",
         "finance": "FINANCIAR",
         "events": "PROMO/EVENT",
         "products": "PRODUCTOS",

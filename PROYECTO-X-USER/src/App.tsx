@@ -81,7 +81,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -847,13 +847,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <BinaryBonusPanel
-                userId={user?.id || ''}
-                refCode={profile?.ref_code || null}
-                addNotification={addNotification}
-              />
-
-
               {/* REGLA DE ORO ROI: acceso principal de ancho completo */}
               <RoiDailyTasks
                 userId={user?.id || ''}
@@ -1125,6 +1118,16 @@ const App: React.FC = () => {
                 totalVolume={networkStats.teamVolume}
                 totalEarnings={networkStats.totalEarnings}
                 totalUsers={networkStats.activeNodes || 0}
+              />
+            </div>
+          )}
+
+          {activeTab === 'binary' && (
+            <div className="space-y-6 animate-slide-in">
+              <BinaryBonusPanel
+                userId={user?.id || ''}
+                refCode={profile?.ref_code || null}
+                addNotification={addNotification}
               />
             </div>
           )}
