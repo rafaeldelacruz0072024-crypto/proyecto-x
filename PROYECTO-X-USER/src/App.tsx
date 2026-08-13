@@ -1028,7 +1028,7 @@ const App: React.FC = () => {
                           <span className="text-[8px] font-mono-tech text-geminix-accent uppercase tracking-widest">{t('dashboard.arbitrage_live')}</span>
                         </div>
                       </div>
-                      <WeeklyYieldChart activeInvestment={activeInvestmentTotal} />
+                      <WeeklyYieldChart investments={investments || []} />
                     </div>
 
                     <div className="md:col-span-2 h-80 holo-card p-0 clip-corner overflow-hidden bg-black/80">

@@ -67,6 +67,11 @@ export interface Investment {
   amount: number;
   status: InvestmentStatus;
   accumulated_earnings: number;
+  assigned_roi_percentage?: number;
+  business_days_elapsed?: number;
+  last_accrual_on?: string;
+  matures_on?: string | null;
+  capital_returned?: boolean;
   is_referral_commission_paid?: boolean;
   created_at: string;
   completed_at?: string;
@@ -76,9 +81,18 @@ export interface Investment {
 export interface Plan {
   id: string;
   name: string;
-  roi_percentage: number;
-  duration_days: number;
+  code: 'DAILY' | 'D17' | 'D33' | string;
+  description: string;
+  roi_min_percentage: number;
+  roi_max_percentage: number;
+  duration_business_days: number | null;
+  payout_mode: 'daily' | 'maturity';
+  capital_release_mode: 'on_close' | 'maturity';
   min_amount: number;
+  max_amount?: number | null;
+  display_order: number;
+  roi_percentage?: number;
+  duration_days?: number;
   daily_roi_percent?: number;
   max_return_percent?: number;
   max_units?: number | null;
