@@ -439,7 +439,7 @@ const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, on
                                 className={cn(
                                     "flex-1 py-2.5 text-[9px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300",
                                     activeTab === tab 
-                                        ? "bg-proyecto-brand text-white shadow-[0_0_15px_rgba(0,243,255,0.3)] border border-white/10 scale-[1.02]" 
+                                        ? "bg-proyecto-brand text-white shadow-[0_0_15px_rgba(0,243,255,0.3)] border border-white/10 scale-[1.02]"
                                         : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
                                 )}
                             >

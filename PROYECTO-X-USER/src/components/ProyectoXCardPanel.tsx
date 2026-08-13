@@ -77,8 +77,8 @@ export default function ProyectoXCardPanel({ profile }: ProyectoXCardPanelProps)
                     <div className="relative aspect-[1.58/1] perspective-1000">
                         <div className="w-full h-full relative transform-gpu transition-all duration-700 hover:rotate-y-6 hover:rotate-x-6">
                             <img 
-                                src="/proyecto_x_card.png" 
-                                alt="Proyecto X Card Official" 
+                                src="/proyecto_x_card.png"
+                                alt="Proyecto X Card Official"
                                 className="w-full h-full object-contain filter drop-shadow-[0_20px_50px_rgba(37,99,235,0.3)]"
                             />
                             
