@@ -13,6 +13,7 @@ type Summary = {
   right_member: { username?: string; email?: string } | null;
   recent_cuts: Array<{ cut_date: string; matched_volume: number; commission: number; left_carry: number; right_carry: number }>;
 };
+type TreeNode = { id: string; parent_id: string | null; side: 'LEFT' | 'RIGHT' | null; username: string; depth: number };
 
 interface Props {
   userId: string;
@@ -27,16 +28,25 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
   const [summary, setSummary] = useState<Summary>(EMPTY);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState<'LEFT' | 'RIGHT' | null>(null);
+  const [tree, setTree] = useState<TreeNode[]>([]);
 
   const load = useCallback(async () => {
     if (!userId) return;
     setLoading(true);
-    const { data, error } = await supabase.rpc('get_my_binary_summary');
+    const [{ data, error }, { data: treeData, error: treeError }] = await Promise.all([
+      supabase.rpc('get_my_binary_summary'),
+      supabase.rpc('get_my_binary_tree', { p_max_depth: 6 }),
+    ]);
     if (!error && data) setSummary({ ...EMPTY, ...data, recent_cuts: data.recent_cuts || [] });
+    if (!treeError && Array.isArray(treeData)) setTree(treeData as TreeNode[]);
     setLoading(false);
   }, [userId]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+    const refreshInterval = window.setInterval(() => void load(), 15_000);
+    return () => window.clearInterval(refreshInterval);
+  }, [load]);
 
   const links = useMemo(() => {
     if (!refCode) return null;
@@ -75,6 +85,11 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
         </div>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-3"><div className="border border-white/10 bg-black/20 p-4"><p className="text-[9px] uppercase tracking-widest text-slate-500">Total ganado</p><p className="mt-2 font-orbitron text-lg font-black text-emerald-300">${money(summary.total_earned)}</p></div><div className="border border-white/10 bg-black/20 p-4"><p className="text-[9px] uppercase tracking-widest text-slate-500">Último corte</p><p className="mt-2 text-sm font-bold text-white">{summary.last_cut_at ? new Date(summary.last_cut_at).toLocaleString('es-DO') : 'Pendiente'}</p></div><div className="border border-white/10 bg-black/20 p-4"><p className="text-[9px] uppercase tracking-widest text-slate-500">Estado</p><p className="mt-2 flex items-center gap-2 text-sm font-bold text-cyan-200"><ArrowDownToLine size={16} />{loading ? 'Sincronizando…' : 'Corte diario 00:00'}</p></div></div>
+
+        <section className="mt-5 border border-white/10 bg-black/20 p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4"><div><p className="text-[10px] font-orbitron font-black uppercase tracking-[.2em] text-cyan-200">Árbol binario</p><p className="mt-1 text-xs text-slate-500">Sincronizado con los registros de tus dos piernas.</p></div><span className="border border-cyan-400/20 px-3 py-1 text-[9px] font-mono-tech text-cyan-200">{tree.length} nodos visibles</span></div>
+          {tree.length ? <div className="mt-5 space-y-3 overflow-x-auto">{[...new Set(tree.map(node => node.depth))].map(depth => <div key={depth} className="flex min-w-max justify-center gap-3">{tree.filter(node => node.depth === depth).map(node => <article key={node.id} className={`w-40 border p-3 text-center ${node.depth === 0 ? 'border-cyan-400/40 bg-cyan-400/10' : node.side === 'RIGHT' ? 'border-violet-400/35 bg-violet-400/[.06]' : 'border-cyan-400/30 bg-cyan-400/[.05]'}`}><p className="truncate font-orbitron text-xs font-black text-white">{node.username}</p><p className="mt-1 text-[9px] font-mono-tech uppercase tracking-wider text-slate-400">{node.depth === 0 ? 'Tu nodo' : `Nivel ${node.depth} · ${node.side === 'RIGHT' ? 'Derecha' : 'Izquierda'}`}</p></article>)}</div>)}</div> : <p className="py-8 text-center text-sm text-slate-500">Aún no hay registros binarios. Comparte los enlaces de izquierda y derecha para construir tu árbol.</p>}
+        </section>
 
         {!!summary.recent_cuts.length && <div className="mt-5 overflow-x-auto border border-white/10"><table className="w-full min-w-[620px] text-left text-xs"><thead className="bg-white/[.03] text-[9px] uppercase tracking-widest text-slate-500"><tr><th className="p-3">Fecha</th><th>Volumen menor</th><th>Bono 8%</th><th>Arrastre izquierdo</th><th>Arrastre derecho</th></tr></thead><tbody className="divide-y divide-white/5 text-slate-300">{summary.recent_cuts.map(cut => <tr key={cut.cut_date}><td className="p-3">{cut.cut_date}</td><td>${money(cut.matched_volume)}</td><td className="text-emerald-300">${money(cut.commission)}</td><td>${money(cut.left_carry)}</td><td>${money(cut.right_carry)}</td></tr>)}</tbody></table></div>}
       </div>
