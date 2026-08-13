@@ -43,7 +43,7 @@ const statusLabels: Record<string, string> = {
 const PHASE1_ITEMS = [
   { icon: '📊', title: 'Pasivo NOVA DIGITAL GOLD', desc: '+1000% auditado Myfxbook 2025 · 5 IAs XAU/USD' },
   { icon: '🌐', title: '30 Niveles de Referidos', desc: 'Comisiones residuales según Regla de Oro oficial' },
-  { icon: '💰', title: 'Salario Semanal', desc: 'Pago cada Sábado a miembros activos calificados' },
+  { icon: '🏆', title: 'Plan de Carrera', desc: 'Premios no monetarios: tecnología y viajes a eventos NOVA' },
   { icon: '🎯', title: 'Predicciones V1', desc: 'Módulo de mercados de predicción activo' },
   { icon: '💎', title: 'Sistema de Créditos', desc: 'Créditos internos para operaciones dentro del ecosistema' },
 ];
@@ -506,7 +506,7 @@ export default function RoadMap() {
                 {[
                   { icon: '📈', label: '1.1%\nDiario', color: 'emerald' },
                   { icon: '🌐', label: '15 Niv.\nReferidos', color: 'blue' },
-                  { icon: '💰', label: 'Salario\nQuincenal', color: 'amber' },
+                  { icon: '🏆', label: 'Plan de\nCarrera', color: 'amber' },
                   { icon: '🔄', label: 'Fee 10%\nCrédito', color: 'rose' },
                   { icon: '🎯', label: 'Predict.\nV2', color: 'purple' },
                 ].map((node, i) => (

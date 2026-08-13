@@ -326,7 +326,7 @@ function drawFlyer(
         { value: '0.2–2%',  label: 'ROI SEGÚN CICLO',     color: t.glow },
         { value: '200%',  label: 'MAX CAP',            color: t.ring },
         { value: '30',    label: 'REFERRAL LEVELS',    color: t.accent },
-        { value: '$30K',  label: 'MAX WEEKLY SALARY',  color: t.badge },
+        { value: 'VIAJES',  label: 'PLAN DE CARRERA',  color: t.badge },
     ];
     const colW = W / 4;
     stats.forEach((stat, i) => {

@@ -5,10 +5,7 @@ import {
   Investment,
   NetworkNode
 } from '../types';
-import {
-  COMMISSION_LEVELS,
-  SALARY_TABLE
-} from '../constants';
+import { COMMISSION_LEVELS } from '../constants';
 
 export const DUPLICATION_LIMIT_FACTOR = 2.0; // 200%
 

@@ -7,7 +7,6 @@ import {
   createInvestment,
   createWithdrawal,
   withdrawReglaDeOro,
-  claimWeeklyBonus,
   createOrUpdateProfile,
   updateUserProfile
 } from './services/database';
@@ -27,7 +26,7 @@ import InvestmentPanel from './components/InvestmentPanel';
 import WithdrawalForm from './components/WithdrawalForm';
 import ReglaDeOroWidget from './components/ReglaDeOroWidget';
 import DepositForm from './components/DepositForm';
-import SalaryPanel from './components/SalaryPanel';
+import CareerPlanPanel from './components/CareerPlanPanel';
 import TransactionHistory from './components/TransactionHistory';
 import NotificationToast from './components/NotificationToast';
 import WithdrawalConfirmationModal from './components/WithdrawalConfirmationModal';
@@ -106,13 +105,6 @@ const App: React.FC = () => {
   const [lastWithdrawal, setLastWithdrawal] = useState<{ id: string; amount: number } | null>(null);
   const [lastDeposit, setLastDeposit] = useState<{ id: string; amount: number } | null>(null);
   const [lastDepositHash, setLastDepositHash] = useState<string>('');
-
-  // Salary state
-  const [canClaimSalary, setCanClaimSalary] = useState(() => {
-    const now = new Date();
-    const utc4 = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) - (4 * 60 * 60 * 1000));
-    return utc4.getDay() === 0 && utc4.getHours() >= 9 && utc4.getHours() < 14;
-  });
 
   // 2FA Flow State
   const [show2FAModal, setShow2FAModal] = useState(false);
@@ -576,68 +568,6 @@ const App: React.FC = () => {
     }, 1500);
   }, [pendingWithdrawal, executeFinalWithdrawal, addNotification]);
 
-  // ✅ SALARY - CONECTADO A SUPABASE
-  const checkWeeklyClaimStatus = useCallback(async () => {
-    if (!user) { setCanClaimSalary(false); return; }
-    // Use UTC-4 to match SalaryPanel window logic
-    const _n = new Date();
-    const _u4 = new Date(_n.getTime() + _n.getTimezoneOffset() * 60000 - 4 * 60 * 60 * 1000);
-    if (_u4.getDay() !== 0 || _u4.getHours() < 9 || _u4.getHours() >= 14) {
-      setCanClaimSalary(false);
-      return;
-    }
-
-    const sixDaysAgo = new Date();
-    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-
-    // Check transactions
-    const { data: existingTx } = await supabase
-      .from('transactions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('type', 'bonus_weekly')
-      .gte('created_at', sixDaysAgo.toISOString())
-      .limit(1);
-
-    if (existingTx && existingTx.length > 0) {
-      setCanClaimSalary(false);
-      return;
-    }
-
-    // Check pending withdrawals (The "Lock")
-    const { data: existingWithdrawal } = await supabase
-      .from('withdrawals')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('status', 'PENDING')
-      .ilike('method', 'Weekly Bonus')
-      .gte('created_at', sixDaysAgo.toISOString())
-      .limit(1);
-
-    setCanClaimSalary(!existingWithdrawal || existingWithdrawal.length === 0);
-  }, [user]);
-
-  useEffect(() => {
-    checkWeeklyClaimStatus();
-    // Re-check every minute so the button activates when the Sunday window opens
-    const _salaryTimer = setInterval(checkWeeklyClaimStatus, 60_000);
-    return () => clearInterval(_salaryTimer);
-  }, [checkWeeklyClaimStatus, transactions]);
-
-  const handleClaimSalary = useCallback(async (amount: number) => {
-    if (!user || amount <= 0) return;
-
-    const result = await claimWeeklyBonus(user.id, amount);
-
-    if (result.success) {
-      setCanClaimSalary(false);
-      addNotification(t('salary.notify_success', { amount: amount.toFixed(2) }), "success");
-      refetch(); // Recargar datos
-    } else {
-      addNotification(result.message || "Error al reclamar bono", "error");
-    }
-  }, [user, addNotification, refetch]);
-
   const handleRoiActivated = useCallback((result: any) => {
     if (!result?.already_activated_today) setPassivePaidToday(true);
     refetch();
@@ -1065,12 +995,7 @@ const App: React.FC = () => {
                     dynamicSettings={systemSettings}
                   />
 
-                  <SalaryPanel
-                    teamVolume={networkStats.teamVolume}
-                    onClaim={handleClaimSalary}
-                    canClaim={canClaimSalary}
-                    dynamicSettings={systemSettings}
-                  />
+                  <CareerPlanPanel teamVolume={networkStats.teamVolume} />
 
                   {/* ── DIRECT COMMISSION SECTION ── */}
                   {profile && (

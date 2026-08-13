@@ -639,125 +639,21 @@ export async function calculateBalance(userId: string): Promise<number> {
 // ==========================================
 // LEGACY / PLACEHOLDER FUNCTIONS
 // ==========================================
-// ==========================================
-// WEEKLY SALARY CLAIMS
-// ==========================================
-export async function claimWeeklyBonus(userId: string, amount: number) {
-  try {
-    // 1. Sunday + hour window check in UTC-4
-    const _now = new Date();
-    const _utc4 = new Date(_now.getTime() + _now.getTimezoneOffset() * 60000 - 4 * 60 * 60 * 1000);
-    const _day  = _utc4.getDay();   // 0 = Sunday
-    const _hour = _utc4.getHours();
-    if (_day !== 0 || _hour < 9 || _hour >= 14) {
-      throw new Error("Claims are only available on Sundays 9:00 AM – 2:00 PM (UTC-4)");
-    }
-
-    // 2. Prevent Double Claims (Check within the last 6 days)
-    const sixDaysAgo = new Date();
-    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-
-    const { data: existingTx } = await supabase
-      .from('transactions')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('type', 'bonus_weekly')
-      .gte('created_at', sixDaysAgo.toISOString())
-      .limit(1);
-
-    if (existingTx && existingTx.length > 0) {
-      throw new Error("Weekly bonus already claimed for this cycle.");
-    }
-
-    // Check for pending withdrawal lock
-    const { data: existingWithdrawal } = await supabase
-      .from('withdrawals')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('status', 'PENDING')
-      .ilike('method', 'Weekly Bonus')
-      .gte('created_at', sixDaysAgo.toISOString())
-      .limit(1);
-
-    if (existingWithdrawal && existingWithdrawal.length > 0) {
-      throw new Error("A withdrawal request for this bonus is already pending.");
-    }
-
-    // 3. Get ALL Active Investments ordered from oldest to newest
-    const { data: activeInvestments, error: invError } = await supabase
-      .from('investments')
-      .select('id, amount, accumulated_earnings, status, created_at')
-      .eq('user_id', userId)
-      .eq('status', 'ACTIVE')
-      .order('created_at', { ascending: true });
-
-    if (invError || !activeInvestments || activeInvestments.length === 0) {
-      throw new Error("Active investment required to claim bonuses.");
-    }
-
-    // Calcular el CAP restante sumado de todos los nodos activos
-    let totalRemainingCap = 0;
-    activeInvestments.forEach(inv => {
-      const capLimit = Number(inv.amount) * 2;
-      const currentEarnings = Number(inv.accumulated_earnings) || 0;
-      totalRemainingCap += Math.max(0, capLimit - currentEarnings);
-    });
-
-    if (totalRemainingCap <= 0) {
-      throw new Error("Investment limit (200%) reached across all nodes. Activate a new node to continue earning.");
-    }
-
-    // Calcular pago real permitido
-    const actualPay = Math.min(amount, totalRemainingCap);
-    const willSaturateTotal = actualPay >= totalRemainingCap;
-
-    // 4. Create Withdrawal Request (Lock)
-    const { error: withdrawError } = await supabase.from('withdrawals').insert([{
-      user_id: userId,
-      amount: actualPay,
-      status: 'PENDING',
-      wallet_address: 'INTERNAL_BONUS_CLAIM',
-      method: 'Weekly Bonus',
-      created_at: new Date().toISOString()
-    }]);
-
-    // 5. Update Investments using Atomic RPC (Spillover Logic / Cascada)
-    const { error: rpcError, data: absorbedAmount } = await supabase.rpc('atomic_progressive_spillover', {
-      p_user_id: userId,
-      p_amount: actualPay
-    });
-
-    if (rpcError) {
-      console.error("Atomic spillover error:", rpcError);
-      throw new Error("Error procesando los fondos. Por favor contacte soporte.");
-    }
-
-    // 6. Log Transaction
-    const { error: txError } = await supabase.from('transactions').insert([{
-      user_id: userId,
-      amount: actualPay,
-      type: 'bonus_weekly',
-      status: 'PENDING',
-      description: `Bono Semanal (SOLICITUD PENDIENTE)${willSaturateTotal ? ' (CAP 200% ALCANZADO GLOBALMENTE)' : ''}${amount > actualPay ? ' (EXCESO DESCARTADO)' : ''}`,
-      reference_id: activeInvestments[0].id, // Vinculado visualmente al nodo más antiguo
-      created_at: new Date().toISOString()
-    }]);
-
-    if (txError) throw txError;
-
-    // 7. FLASH RESET: Reiniciar Rango y Volumen a 0 como se exige semanalmente tras el cobro
-    await supabase.rpc('reset_weekly_volume', { p_user_id: userId });
-
-    return { success: true, amount: actualPay };
-  } catch (error: any) {
-    console.error('Error claiming weekly bonus:', error);
-    return { success: false, message: error.message };
-  }
+// The legacy weekly cash-salary flow is intentionally retired. Career rewards are
+// non-monetary and must be validated by the NOVA team; this client never creates
+// a withdrawal, transaction, or investment update for them.
+export async function claimWeeklyBonus(_userId: string, _amount: number) {
+  return {
+    success: false,
+    message: 'El salario monetario fue reemplazado por el Plan de Carrera NOVA.'
+  };
 }
 
-export async function recordDailyROI(userId: string, amount: number) {
-  // Client-side recordDailyROI is deprecated, use claimWeeklyBonus for salary.
-  return claimWeeklyBonus(userId, amount);
+export async function recordDailyROI(_userId: string, _amount: number) {
+  return {
+    success: false,
+    message: 'El ROI se acredita únicamente al completar las tareas diarias del ciclo.'
+  };
 }
 
 // ==========================================
