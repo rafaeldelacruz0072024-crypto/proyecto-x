@@ -23,11 +23,11 @@
         }
 
         :root {
-            --space: #030712;
-            --dark: #020617;
-            --brand: #2563eb;
-            --cyan: #00f3ff;
-            --purple: #bc13fe;
+            --space: #02051a;
+            --dark: #050a2a;
+            --brand: #1769e8;
+            --cyan: #14d8ff;
+            --purple: #7c4dff;
             --gold: #ffd700;
             --green: #00ff9d;
             --pink: #ff0055;
@@ -53,11 +53,14 @@
 
         body {
             font-family: var(--font-body);
-            background: var(--space);
+            background: #02051a;
             color: #e2e8f0;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, rgba(0, 243, 255, .08) 0%, transparent 50%),
-                radial-gradient(circle at 0% 50%, rgba(188, 19, 254, .04) 0%, transparent 40%);
+            background-image: linear-gradient(180deg, rgba(2, 5, 26, .84) 0%, rgba(3, 10, 40, .9) 40%, #02051a 100%),
+                url('/nova-global-market-background.png');
+            background-size: auto, cover;
+            background-position: center, center top;
+            background-repeat: no-repeat, repeat-y;
             background-attachment: fixed;
         }
 
@@ -120,7 +123,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(3, 7, 18, .85);
+            background: rgba(2, 7, 30, .86);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(0, 243, 255, .1);
             transition: all .3s
@@ -200,7 +203,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, #020617 0%, rgba(2, 6, 23, .94) 38%, rgba(2, 6, 23, .18) 72%, rgba(2, 6, 23, .48) 100%), url('public/nova-prediction-hero-v2.png') center right / cover no-repeat;
+            background: linear-gradient(90deg, rgba(2, 5, 26, .96) 0%, rgba(3, 9, 38, .9) 36%, rgba(3, 11, 53, .26) 67%, rgba(2, 5, 26, .52) 100%), url('/nova-global-market-background.png') center / cover no-repeat;
         }
 
         .hero-grid {
@@ -216,7 +219,7 @@
             width: 500px;
             height: 500px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(37, 99, 235, .3), rgba(188, 19, 254, .15), transparent 70%);
+            background: radial-gradient(circle, rgba(20, 216, 255, .24), rgba(124, 77, 255, .16), transparent 70%);
             filter: blur(60px);
             animation: float 8s ease-in-out infinite;
             pointer-events: none
@@ -227,7 +230,7 @@
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 243, 255, .2), transparent 70%);
+            background: radial-gradient(circle, rgba(20, 216, 255, .16), transparent 70%);
             filter: blur(40px);
             animation: float 6s ease-in-out infinite reverse;
             top: 20%;
@@ -402,7 +405,7 @@
 
         @media(max-width: 700px) {
             .hero { padding: 8rem 1.5rem 4rem; }
-            .hero::before { background: linear-gradient(180deg, rgba(2,6,23,.72), #020617 74%), url('public/nova-prediction-hero-v2.png') 68% top / auto 72% no-repeat; }
+            .hero::before { background: linear-gradient(180deg, rgba(2,5,26,.58), #02051a 78%), url('/nova-global-market-background.png') 64% top / auto 72% no-repeat; }
             .hero-content { margin-left: 0; padding-top: 15rem; }
             .hero-rate { gap: 1.35rem; }
         }
@@ -430,7 +433,9 @@
         /* SECTIONS */
         section {
             padding: 6rem 2rem;
-            position: relative
+            position: relative;
+            background: linear-gradient(180deg, rgba(2, 7, 31, .58), rgba(3, 10, 44, .74));
+            border-top: 1px solid rgba(20, 216, 255, .07)
         }
 
         .section-container {
@@ -472,7 +477,7 @@
 
         /* STATS */
         .stats {
-            background: linear-gradient(180deg, transparent, rgba(37, 99, 235, .03), transparent);
+            background: linear-gradient(180deg, rgba(4, 14, 55, .62), rgba(8, 24, 83, .42), rgba(3, 10, 44, .62));
             border-top: 1px solid rgba(0, 243, 255, .06);
             border-bottom: 1px solid rgba(0, 243, 255, .06)
         }
