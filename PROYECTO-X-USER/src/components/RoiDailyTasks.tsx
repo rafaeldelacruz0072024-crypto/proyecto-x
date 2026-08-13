@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, ClipboardCheck, FileCheck2, Loader2, LockKeyhole, RefreshCw, Sparkles, CalendarDays, WalletCards } from 'lucide-react';
+import { Activity, BarChart3, CheckCircle2, FileCheck2, Gauge, Loader2, ScanSearch, Sparkles, CalendarDays, WalletCards } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 type TaskCode = 'SYNC_NODE' | 'VALIDATE_BLOCK' | 'AUDIT_MEMPOOL' | 'SIGN_CHECKPOINT';
 
-const TASKS: Array<{ code: TaskCode; title: string; action: string; description: string; Icon: typeof RefreshCw }> = [
-  { code: 'SYNC_NODE', title: 'Sincronizar nodo', action: 'Sincronizar ahora', description: 'Actualiza la conexión de tu nodo con la red NOVA.', Icon: RefreshCw },
-  { code: 'VALIDATE_BLOCK', title: 'Validar bloque', action: 'Validar ahora', description: 'Verifica las señales activas del mercado de predicción.', Icon: CheckCircle2 },
-  { code: 'AUDIT_MEMPOOL', title: 'Auditar mercado', action: 'Auditar ahora', description: 'Confirma consistencia de probabilidades y liquidez.', Icon: ClipboardCheck },
-  { code: 'SIGN_CHECKPOINT', title: 'Firmar checkpoint', action: 'Firmar ahora', description: 'Confirma tu participación operativa del día.', Icon: LockKeyhole },
+const TASKS: Array<{ code: TaskCode; title: string; action: string; description: string; Icon: typeof ScanSearch }> = [
+  { code: 'SYNC_NODE', title: 'Escanear señales', action: 'Escanear mercado', description: 'Procesa tendencias, eventos y señales activas del mercado de predicción.', Icon: ScanSearch },
+  { code: 'VALIDATE_BLOCK', title: 'Calibrar probabilidades', action: 'Calibrar escenario', description: 'Contrasta las probabilidades implícitas y valida la fuerza de cada resultado.', Icon: Gauge },
+  { code: 'AUDIT_MEMPOOL', title: 'Verificar liquidez', action: 'Verificar liquidez', description: 'Analiza volumen, profundidad y estabilidad antes del cierre diario.', Icon: BarChart3 },
+  { code: 'SIGN_CHECKPOINT', title: 'Confirmar pronóstico', action: 'Confirmar análisis', description: 'Registra tu participación y confirma la lectura algorítmica del día.', Icon: Activity },
 ];
 
 interface Props {
@@ -78,13 +78,13 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
       const activated = Number(activation?.activated_contracts || 0);
       const paid = Number(activation?.total_paid || 0);
       addNotification(
-        `Tareas completadas hoy. ROI activado en ${activated} nodo(s).${resets ? ` ${resets} ciclo(s) reiniciado(s).` : ''}${paid ? ` +$${paid.toFixed(2)} acreditados.` : ''}`,
+        `Análisis diario completado. ROI activado en ${activated} contrato(s).${resets ? ` ${resets} ciclo(s) reiniciado(s).` : ''}${paid ? ` +$${paid.toFixed(2)} acreditados.` : ''}`,
         resets ? 'info' : 'success',
       );
       onRoiActivated(activation);
       void load();
     } else {
-      addNotification(`Actividad registrada. ${data.completed_tasks}/4 tareas listas para activar el ROI.`, 'success');
+      addNotification(`Señal procesada. ${data.completed_tasks}/4 análisis listos para activar el ROI.`, 'success');
     }
   };
 
@@ -94,17 +94,17 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
       <div className="relative">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-2 text-proyecto-accent"><Sparkles size={17} /><span className="text-[10px] font-orbitron font-black uppercase tracking-[0.22em]">Impulso diario de nodos</span></div>
-            <h2 className="mt-3 text-2xl font-orbitron font-black text-white sm:text-3xl">Completa las 4 tareas y refleja tu ROI</h2>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">Tu paquete activo acredita el ROI solamente al finalizar estos cuatro pasos. Si no los completas, el día no acredita y el ciclo interrumpido reinicia contador y ROI pendiente.</p>
+            <div className="flex items-center gap-2 text-proyecto-accent"><Sparkles size={17} /><span className="text-[10px] font-orbitron font-black uppercase tracking-[0.22em]">Calibración diaria del mercado</span></div>
+            <h2 className="mt-3 text-2xl font-orbitron font-black text-white sm:text-3xl">Analiza 4 señales y habilita el ROI del día</h2>
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">Tu contrato activo acredita el rendimiento únicamente al completar el análisis diario. Si el proceso queda incompleto, el día no acredita y el ciclo interrumpido reinicia el contador y el ROI pendiente.</p>
           </div>
           <div className={`min-w-[235px] border p-4 ${progress === 4 ? 'border-emerald-400/40 bg-emerald-400/10' : 'border-proyecto-accent/35 bg-proyecto-accent/5'}`}>
-            <div className="flex items-center gap-3"><div className={`flex h-11 w-11 items-center justify-center border ${progress === 4 ? 'border-emerald-300 text-emerald-300' : 'border-proyecto-accent text-proyecto-accent'}`}>{progress === 4 ? <CheckCircle2 size={26} /> : <FileCheck2 size={24} />}</div><div><p className="font-orbitron text-2xl font-black text-white">{progress}/4</p><p className="text-[10px] font-mono-tech uppercase tracking-wider text-slate-400">Tareas completadas</p></div></div>
-            <p className={`mt-3 text-xs ${progress === 4 ? 'text-emerald-300' : 'text-slate-400'}`}>{progress === 4 ? `Tareas realizadas el ${localDate()}. ROI solicitado para este ciclo.` : hasActiveContracts ? 'Completa los pasos para reflejar el ROI de hoy.' : 'Activa un paquete para habilitar las tareas.'}</p>
+            <div className="flex items-center gap-3"><div className={`flex h-11 w-11 items-center justify-center border ${progress === 4 ? 'border-emerald-300 text-emerald-300' : 'border-proyecto-accent text-proyecto-accent'}`}>{progress === 4 ? <CheckCircle2 size={26} /> : <FileCheck2 size={24} />}</div><div><p className="font-orbitron text-2xl font-black text-white">{progress}/4</p><p className="text-[10px] font-mono-tech uppercase tracking-wider text-slate-400">Señales analizadas</p></div></div>
+            <p className={`mt-3 text-xs ${progress === 4 ? 'text-emerald-300' : 'text-slate-400'}`}>{progress === 4 ? `Análisis confirmado el ${localDate()}. ROI solicitado para este ciclo.` : hasActiveContracts ? 'Completa la lectura del mercado para habilitar el ROI de hoy.' : 'Activa un contrato para habilitar el análisis.'}</p>
           </div>
         </div>
 
-        {progress === 4 && <div className="mt-5 flex items-center gap-2 border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200"><CheckCircle2 size={18} /> Las cuatro tareas fueron realizadas hoy. Tu actividad quedó registrada.</div>}
+        {progress === 4 && <div className="mt-5 flex items-center gap-2 border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200"><CheckCircle2 size={18} /> Análisis diario confirmado. Tu participación y el procesamiento del ROI quedaron registrados.</div>}
 
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
           {TASKS.map(({ code, title, action, description, Icon }) => {
@@ -117,7 +117,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
                   <div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><h3 className="text-lg font-orbitron font-black text-white">{title}</h3><span className={`shrink-0 px-2 py-1 text-[9px] font-mono-tech uppercase ${done ? 'bg-emerald-500/10 text-emerald-300' : 'bg-slate-800 text-blue-200'}`}>{done ? 'Completada' : 'Pendiente'}</span></div><p className="mt-2 text-sm leading-relaxed text-slate-400">{description}</p></div>
                 </div>
                 <button type="button" onClick={() => void complete(code)} disabled={!hasActiveContracts || done || !!working || loading} className={`mt-5 w-full border px-4 py-3 text-sm font-orbitron font-black transition disabled:cursor-not-allowed ${done ? 'border-emerald-400/25 bg-emerald-500/15 text-emerald-300' : hasActiveContracts ? 'border-proyecto-accent/60 bg-gradient-to-r from-cyan-500 to-violet-600 text-white shadow-[0_8px_24px_rgba(53,100,255,0.25)] hover:brightness-110' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
-                  {busy || simulation === code ? <span className="flex items-center justify-center gap-2"><Loader2 size={18} className="animate-spin" /> Simulando actividad…</span> : done ? '✓ Tarea completada' : hasActiveContracts ? action : 'Requiere contrato activo'}
+                  {busy || simulation === code ? <span className="flex items-center justify-center gap-2"><Loader2 size={18} className="animate-spin" /> Procesando señal…</span> : done ? '✓ Análisis completado' : hasActiveContracts ? action : 'Requiere contrato activo'}
                 </button>
               </article>
             );
@@ -125,10 +125,10 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
         </div>
 
         <section className="mt-6 border border-white/10 bg-black/20 p-4 sm:p-5">
-          <div className="flex items-center gap-2"><CalendarDays size={18} className="text-proyecto-accent" /><h3 className="font-orbitron text-sm font-black text-white">Historial de actividad y ROI</h3></div>
-          <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[560px] text-left text-xs"><thead className="border-b border-white/10 text-[9px] font-mono-tech uppercase tracking-wider text-slate-500"><tr><th className="pb-3">Fecha</th><th className="pb-3">Tareas</th><th className="pb-3">Estado</th><th className="pb-3">ROI</th><th className="pb-3">Acumulado</th></tr></thead><tbody className="divide-y divide-white/5 text-slate-300">{history.map(day => <tr key={day.task_day}><td className="py-3 font-mono">{day.task_day}</td><td>{day.completed_tasks}/4</td><td className={day.completed_tasks === 4 ? 'text-emerald-300' : 'text-amber-300'}>{day.completed_tasks === 4 ? 'Completado' : 'Incompleto'}</td><td>{day.completed_tasks === 4 ? 'Procesado por ciclo' : 'No acreditado'}</td><td className="text-proyecto-accent">${accumulatedRoi.toFixed(2)}</td></tr>)}</tbody></table></div>
-          {!history.length && <p className="py-4 text-xs text-slate-500">Aún no hay actividad diaria registrada.</p>}
-          <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-slate-500"><WalletCards size={15} className="mt-0.5 shrink-0 text-proyecto-accent" />El acumulado refleja el total actual de ROI en tus contratos. El motor de ciclos calcula el importe diario al completar las cuatro tareas.</p>
+          <div className="flex items-center gap-2"><CalendarDays size={18} className="text-proyecto-accent" /><h3 className="font-orbitron text-sm font-black text-white">Bitácora de análisis y rendimiento</h3></div>
+          <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[560px] text-left text-xs"><thead className="border-b border-white/10 text-[9px] font-mono-tech uppercase tracking-wider text-slate-500"><tr><th className="pb-3">Fecha</th><th className="pb-3">Señales</th><th className="pb-3">Lectura</th><th className="pb-3">Rendimiento</th><th className="pb-3">Acumulado</th></tr></thead><tbody className="divide-y divide-white/5 text-slate-300">{history.map(day => <tr key={day.task_day}><td className="py-3 font-mono">{day.task_day}</td><td>{day.completed_tasks}/4</td><td className={day.completed_tasks === 4 ? 'text-emerald-300' : 'text-amber-300'}>{day.completed_tasks === 4 ? 'Confirmada' : 'Incompleta'}</td><td>{day.completed_tasks === 4 ? 'ROI procesado por ciclo' : 'Sin acreditación'}</td><td className="text-proyecto-accent">${accumulatedRoi.toFixed(2)}</td></tr>)}</tbody></table></div>
+          {!history.length && <p className="py-4 text-xs text-slate-500">Aún no hay análisis diarios registrados.</p>}
+          <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-slate-500"><WalletCards size={15} className="mt-0.5 shrink-0 text-proyecto-accent" />El acumulado refleja el ROI actual de tus contratos. El motor de ciclos calcula el rendimiento cuando confirmas las cuatro lecturas del mercado.</p>
         </section>
       </div>
     </section>
