@@ -5,6 +5,24 @@
 
 create extension if not exists pg_cron;
 
+create table if not exists public.system_settings (
+  id integer primary key default 1 check (id = 1),
+  min_investment numeric(18,2) not null default 10,
+  max_investment numeric(18,2) not null default 10000,
+  min_withdrawal numeric(18,2) not null default 10,
+  withdrawal_fee numeric(6,3) not null default 0,
+  withdrawal_window_enabled boolean not null default false,
+  default_sponsor_id uuid references public.profiles(id) on delete set null,
+  salary_config jsonb not null default '[]'::jsonb,
+  telegram_enabled boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+insert into public.system_settings (id)
+values (1)
+on conflict (id) do nothing;
+
 -- Normal withdrawals: US$10 minimum, 0% fee and no time window by default.
 update public.system_settings
 set

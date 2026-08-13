@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
-import { generateUniqueRefCode } from '../lib/refCode';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 import ProtocolTermsModal from './ProtocolTermsModal';
@@ -59,8 +58,8 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
     }
     setUsernameStatus('checking');
     const timer = setTimeout(async () => {
-      const { data } = await supabase.from('profiles').select('id').eq('username', username).maybeSingle();
-      setUsernameStatus(data ? 'taken' : 'available');
+      const { data, error } = await supabase.rpc('check_username_available', { p_username: username });
+      setUsernameStatus(!error && data ? 'available' : 'taken');
     }, 600);
     return () => clearTimeout(timer);
   }, [formData.username, mode]);
@@ -77,9 +76,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       // Check auth.users via RPC (more reliable than profiles table)
       const { data: existsInAuth } = await supabase.rpc('check_email_in_auth', { p_email: email });
       if (existsInAuth) { setEmailStatus('taken'); return; }
-      // Also check profiles table as fallback
-      const { data: profileData } = await supabase.from('profiles').select('id').eq('email', email).maybeSingle();
-      setEmailStatus(profileData ? 'taken' : 'available');
+      setEmailStatus('available');
     }, 600);
     return () => clearTimeout(timer);
   }, [formData.email, mode]);
@@ -125,13 +122,14 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
     try {
       // Verificar que el código de sponsor existe en la BD
-      const { data: sponsorProfile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('ref_code', sponsorCode)
-        .maybeSingle();
+      const { data: sponsorValid, error: sponsorValidationError } = await supabase.rpc('validate_sponsor_code', {
+        p_code: sponsorCode
+      });
 
-      if (!sponsorProfile) {
+      if (sponsorValidationError) {
+        throw new Error('No se pudo validar el patrocinador. Intenta nuevamente.');
+      }
+      if (!sponsorValid) {
         setError('El código de patrocinador no es válido. Verifica e intenta nuevamente.');
         setLoading(false);
         return;
@@ -160,7 +158,6 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Generar ref_code único (verificado contra BD)
-      const newRefCode = await generateUniqueRefCode();
 
       // 4. Actualizar el profile via RPC (resolución de sponsor 100% server-side)
       // IMPORTANTE: complete_registration NUNCA lanza errores SQL (captura con EXCEPTION),
@@ -172,7 +169,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
         p_email:        formData.email,
         p_country:      formData.country,
         p_phone:        formData.phone,
-        p_ref_code:     newRefCode,
+        p_ref_code:     null,
         p_sponsor_code: sponsorCode.toUpperCase()
       });
 
@@ -186,26 +183,11 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
           p_email:        formData.email,
           p_country:      formData.country,
           p_phone:        formData.phone,
-          p_ref_code:     newRefCode,
+          p_ref_code:     null,
           p_sponsor_code: sponsorCode.toUpperCase()
         });
         if (retryError || !retryData?.success) {
-          console.error('Retry also failed, using direct upsert:', retryError || retryData);
-          await supabase.from('profiles').upsert({
-            id:            authData.user.id,
-            username:      formData.username,
-            full_name:     formData.name,
-            email:         formData.email,
-            country:       formData.country,
-            phone:         formData.phone,
-            ref_code:      newRefCode,
-            referred_by:   sponsorProfile?.id || null,
-            role:          'user',
-            status:        'active',
-            user_tag:      'REAL_CRYPTO',
-            credit_balance: 0,
-            wallet_balance: 0,
-          }, { onConflict: 'id' });
+          throw new Error(retryData?.error || retryError?.message || 'No se pudo completar el registro.');
         }
       }
 
