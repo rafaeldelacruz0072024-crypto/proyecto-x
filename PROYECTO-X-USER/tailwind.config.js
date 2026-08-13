@@ -16,20 +16,18 @@ export default {
       },
       colors: {
         proyecto: {
-          // Legacy support
+          // NOVA Digital — blue base with refined violet accents
           blue: '#0a192f',
           gold: '#ffd700',
-          green: '#00ff9d', // More neon green
+          green: '#00ff9d',
           dark: '#020617',
-          accent: '#00f3ff', // Cyan Neon
+          accent: '#00f3ff',
           brand: '#2563eb',
-
-          // New Palette
-          space: '#030712', // Darker background
+          space: '#030712',
           neon: {
             cyan: '#00f3ff',
-            purple: '#bc13fe',
-            pink: '#ff0055',
+            purple: '#8b5cf6',
+            pink: '#c084fc',
             gold: '#ffb700'
           }
         }
@@ -37,7 +35,7 @@ export default {
       boxShadow: {
         'neon-cyan': '0 0 5px theme("colors.proyecto.neon.cyan"), 0 0 20px theme("colors.proyecto.neon.cyan")',
         'neon-purple': '0 0 5px theme("colors.proyecto.neon.purple"), 0 0 20px theme("colors.proyecto.neon.purple")',
-        'holo': '0 0 30px rgba(0, 243, 255, 0.1), inset 0 0 20px rgba(0, 243, 255, 0.05)',
+        'holo': '0 0 30px rgba(0, 243, 255, 0.1), inset 0 0 20px rgba(139, 92, 246, 0.06)',
       },
       animation: {
         'slide-in': 'slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',

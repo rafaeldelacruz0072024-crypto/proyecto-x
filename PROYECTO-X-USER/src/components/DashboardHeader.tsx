@@ -31,7 +31,7 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
   };
 
   return (
-    <header className="flex flex-col md:flex-row justify-between items-center p-3.5 sm:p-6 bg-black/60 backdrop-blur-xl border-b border-proyecto-accent/30 sticky top-0 z-50 shadow-[0_4px_30px_rgba(0,243,255,0.1)]">
+    <header className="flex flex-col md:flex-row justify-between items-center p-3.5 sm:p-6 bg-black/60 backdrop-blur-xl border-b border-proyecto-accent/30 sticky top-0 z-50 shadow-[0_4px_30px_rgba(139,92,246,0.14)]">
 
       <div className="flex items-center space-x-4 relative z-10">
         {/* HAMBURGER — mobile only */}
@@ -56,7 +56,7 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
 
         <div className="hidden md:flex flex-col border-l border-white/10 pl-4">
           <p className="text-[10px] uppercase text-proyecto-accent font-orbitron font-bold tracking-[0.3em] text-glow-cyan">
-            NOVA DIGITAL OS V1.1 (PATCHED)
+            NOVA DIGITAL · SECURE NETWORK
           </p>
           <div className="flex items-center gap-1.5 mt-1">
             <span className={`h-1.5 w-1.5 rounded-full ${isLive ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-slate-600'} transition-all duration-500`}></span>

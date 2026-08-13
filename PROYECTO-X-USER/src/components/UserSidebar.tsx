@@ -105,7 +105,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
       <aside className={`
         fixed top-0 left-0 h-full w-64 z-50 flex flex-col
         bg-[#020408] border-r border-proyecto-accent/20
-        shadow-[4px_0_30px_rgba(0,243,255,0.08)]
+        shadow-[4px_0_30px_rgba(139,92,246,0.14)]
         transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>

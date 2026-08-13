@@ -11,6 +11,7 @@
     color: #e2e8f0;
     background-image:
       radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 92% 18%, rgba(139, 92, 246, 0.16) 0%, transparent 38%),
       radial-gradient(circle at 0% 50%, rgba(188, 19, 254, 0.05) 0%, transparent 40%);
     background-attachment: fixed;
     overflow-x: hidden;
@@ -42,8 +43,8 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #bc13fe;
-  box-shadow: 0 0 10px #bc13fe;
+  background: #8b5cf6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
 }
 
 /* Chrome Autofill — keep dark background */
@@ -80,8 +81,8 @@ input:-webkit-autofill:active {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 243, 255, 0.15);
-    border-top: 1px solid rgba(0, 243, 255, 0.3);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 243, 255, 0.02);
+    border-top: 1px solid rgba(139, 92, 246, 0.42);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(139, 92, 246, 0.04);
     position: relative;
     overflow: hidden;
   }
@@ -104,13 +105,13 @@ input:-webkit-autofill:active {
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #00f3ff, transparent);
-    opacity: 0.5;
+    background: linear-gradient(90deg, transparent, #00f3ff 42%, #8b5cf6 58%, transparent);
+    opacity: 0.6;
   }
 
   /* Neon Gradients */
   .blue-brand-gradient {
-    background: linear-gradient(135deg, #00f3ff 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #00f3ff 0%, #2563eb 50%, #8b5cf6 100%);
   }
 
   .gold-gradient {
@@ -170,7 +171,7 @@ input:-webkit-autofill:active {
   .bg-grid {
     background-size: 40px 40px;
     background-image: linear-gradient(to right, rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+      linear-gradient(to bottom, rgba(139, 92, 246, 0.06) 1px, transparent 1px);
   }
 
   .animate-fade-in {

@@ -72,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           <Logo variant="blue" size="sm" glow={true} className="mb-1" />
           <div className="text-center">
             <h1 className="text-sm font-black text-white uppercase tracking-widest leading-none mb-1">NOVA DIGITAL</h1>
-            <p className="text-[8px] text-slate-500 font-bold uppercase tracking-[0.2em] leading-none">Super-Admin Panel</p>
+            <p className="text-[8px] text-violet-400/70 font-bold uppercase tracking-[0.2em] leading-none">Super-Admin Panel</p>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             onClick={() => setIsOpen(false)}
             className={({ isActive }) =>
               `flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all group ${isActive
-                ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5'
+                ? 'bg-violet-500/10 text-violet-400 border border-violet-500/25 shadow-lg shadow-violet-500/10'
                 : 'text-slate-500 hover:bg-white/[0.02] hover:text-slate-200'
               }`
             }
@@ -98,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                   <item.icon
                     size={18}
                     strokeWidth={isActive ? 2.5 : 2}
-                    className={isActive ? 'text-blue-400 drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]' : 'group-hover:text-slate-300'}
+                    className={isActive ? 'text-violet-400 drop-shadow-[0_0_8px_rgba(139,92,246,0.45)]' : 'group-hover:text-slate-300'}
                   />
                   <span className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-white' : 'font-bold'}`}>
                     {item.label}
