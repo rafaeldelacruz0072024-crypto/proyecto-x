@@ -48,7 +48,7 @@ serve(async (req) => {
         let html: string
 
         if (isNowApproved) {
-            subject = "GEMINIX: ¡Tu depósito ha sido aprobado!"
+            subject = "PROYECTO X: ¡Tu depósito ha sido aprobado!"
             html = `
 <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; background-color: #030712; color: #ffffff; border: 1px solid #1f2937; border-radius: 8px; overflow: hidden;">
     <div style="background-color: #0f172a; padding: 20px; text-align: center; border-bottom: 2px solid #00f3ff;">
@@ -62,7 +62,7 @@ serve(async (req) => {
         <h2 style="color: #22c55e; margin-top: 0; text-align: center;">Depósito Aprobado</h2>
         <p style="color: #94a3b8; font-size: 16px; line-height: 1.7;">
             Hola <strong style="color: #ffffff;">${name}</strong>,<br/><br/>
-            Tu depósito ha sido verificado y acreditado exitosamente en tu cuenta GEMINIX.
+            Tu depósito ha sido verificado y acreditado exitosamente en tu cuenta PROYECTO X.
         </p>
 
         <div style="background-color: #1e293b; padding: 25px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #22c55e;">
@@ -76,20 +76,20 @@ serve(async (req) => {
         </p>
 
         <div style="text-align: center; margin: 35px 0 20px;">
-            <a href="https://geminixprotocol.com" style="background-color: #22c55e; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
+            <a href="https://proyecto-x-user.vercel.app" style="background-color: #22c55e; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
                 IR A MI PANEL →
             </a>
         </div>
 
         <p style="color: #475569; font-size: 13px; text-align: center; margin-top: 30px; border-top: 1px solid #1f2937; padding-top: 20px;">
-            Gracias por confiar en GEMINIX Protocol.
+            Gracias por confiar en PROYECTO X Protocol.
         </p>
     </div>
 </div>
 `
         } else {
             // REJECTED
-            subject = "GEMINIX: Tu solicitud de depósito fue rechazada"
+            subject = "PROYECTO X: Tu solicitud de depósito fue rechazada"
             html = `
 <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; background-color: #030712; color: #ffffff; border: 1px solid #1f2937; border-radius: 8px; overflow: hidden;">
     <div style="background-color: #0f172a; padding: 20px; text-align: center; border-bottom: 2px solid #00f3ff;">
@@ -112,19 +112,19 @@ serve(async (req) => {
             <p style="color: #fbbf24; margin: 0; font-size: 14px;"><strong>¿Qué hacer ahora?</strong></p>
             <ul style="color: #94a3b8; font-size: 14px; line-height: 1.9; margin: 10px 0 0; padding-left: 20px;">
                 <li>Verifica que el comprobante de pago sea legible y correcto</li>
-                <li>Asegúrate de haber enviado al wallet correcto de GEMINIX</li>
+                <li>Asegúrate de haber enviado al wallet correcto de PROYECTO X</li>
                 <li>Contacta a soporte si crees que es un error</li>
             </ul>
         </div>
 
         <div style="text-align: center; margin: 35px 0 20px;">
-            <a href="https://geminixprotocol.com" style="background-color: #00f3ff; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
+            <a href="https://proyecto-x-user.vercel.app" style="background-color: #00f3ff; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
                 CONTACTAR SOPORTE →
             </a>
         </div>
 
         <p style="color: #475569; font-size: 13px; text-align: center; margin-top: 30px; border-top: 1px solid #1f2937; padding-top: 20px;">
-            Gracias por confiar en GEMINIX Protocol.
+            Gracias por confiar en PROYECTO X Protocol.
         </p>
     </div>
 </div>
@@ -138,7 +138,7 @@ serve(async (req) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                from: "GEMINIX Protocol <soporte@geminixprotocol.com>",
+                from: "PROYECTO X Protocol <soporte@proyecto-x-user.vercel.app>",
                 to: [email],
                 subject,
                 html

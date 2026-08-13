@@ -1,5 +1,5 @@
 -- ============================================================
--- BLINDAJE DEL SISTEMA DE REFERIDOS — GEMINIX
+-- BLINDAJE DEL SISTEMA DE REFERIDOS — PROYECTO X
 -- Ejecutar en Supabase SQL Editor
 -- ============================================================
 

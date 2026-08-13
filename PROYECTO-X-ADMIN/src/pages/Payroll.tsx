@@ -335,7 +335,7 @@ const Payroll: React.FC = () => {
                 <p className="text-lg font-black text-slate-300">${totalGross.toFixed(2)}</p>
               </div>
               <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-                <p className="text-[9px] text-amber-500 uppercase tracking-widest mb-1">Fee GEMINIX (10%)</p>
+                <p className="text-[9px] text-amber-500 uppercase tracking-widest mb-1">Fee PROYECTO X (10%)</p>
                 <p className="text-lg font-black text-amber-400">+${(totalGross - totalNet).toFixed(2)}</p>
               </div>
               <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3">

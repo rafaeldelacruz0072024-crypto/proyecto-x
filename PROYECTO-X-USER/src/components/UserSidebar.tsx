@@ -54,7 +54,7 @@ const NAV_ITEMS = [
     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>,
   },
   {
-    id: 'geminix_card',
+    id: 'proyecto_x_card',
     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>,
   },
   {
@@ -104,18 +104,18 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
       {/* Sidebar */}
       <aside className={`
         fixed top-0 left-0 h-full w-64 z-50 flex flex-col
-        bg-[#020408] border-r border-geminix-accent/20
+        bg-[#020408] border-r border-proyecto-accent/20
         shadow-[4px_0_30px_rgba(0,243,255,0.08)]
         transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
 
         {/* Header + close */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-geminix-accent/10">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-proyecto-accent/10">
           <p className="text-[9px] font-orbitron font-black text-slate-600 uppercase tracking-[0.3em]">MENÚ</p>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-geminix-accent hover:bg-geminix-accent/10 border border-transparent hover:border-geminix-accent/30 transition-all"
+            className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-proyecto-accent hover:bg-proyecto-accent/10 border border-transparent hover:border-proyecto-accent/30 transition-all"
             aria-label="Cerrar menú"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,15 +125,15 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
         </div>
 
         {/* User info */}
-        <div className="px-4 py-3 border-b border-white/5 mx-3 mt-3 rounded-xl bg-geminix-accent/5 border border-geminix-accent/10">
+        <div className="px-4 py-3 border-b border-white/5 mx-3 mt-3 rounded-xl bg-proyecto-accent/5 border border-proyecto-accent/10">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 clip-corner-sm bg-geminix-brand/20 border border-geminix-accent/30 flex items-center justify-center text-geminix-accent font-orbitron font-black text-sm">
+            <div className="w-9 h-9 clip-corner-sm bg-proyecto-brand/20 border border-proyecto-accent/30 flex items-center justify-center text-proyecto-accent font-orbitron font-black text-sm">
               {userInitial}
             </div>
             <div className="min-w-0">
               <p className="text-[10px] font-orbitron font-black text-white uppercase truncate">{userName}</p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-geminix-green animate-pulse"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-proyecto-green animate-pulse"></span>
                 <p className="text-[8px] font-mono-tech text-slate-500 uppercase tracking-widest">ONLINE</p>
               </div>
             </div>
@@ -141,11 +141,11 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
           <div className="grid grid-cols-2 gap-2 mt-3">
             <div className="text-center">
               <p className="text-[8px] text-slate-600 uppercase tracking-widest font-mono">Wallet</p>
-              <p className="text-[10px] font-black text-geminix-green font-orbitron">${walletBalance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+              <p className="text-[10px] font-black text-proyecto-green font-orbitron">${walletBalance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
             </div>
             <div className="text-center border-l border-white/5">
               <p className="text-[8px] text-slate-600 uppercase tracking-widest font-mono">GMX</p>
-              <p className="text-[10px] font-black text-geminix-accent font-orbitron">◈ {creditBalance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+              <p className="text-[10px] font-black text-proyecto-accent font-orbitron">◈ {creditBalance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
             </div>
           </div>
         </div>
@@ -162,21 +162,21 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
                 className={`
                   w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group relative
                   ${isActive
-                    ? 'bg-geminix-accent/10 border border-geminix-accent/30 text-geminix-accent shadow-[0_0_12px_rgba(0,243,255,0.08)]'
+                    ? 'bg-proyecto-accent/10 border border-proyecto-accent/30 text-proyecto-accent shadow-[0_0_12px_rgba(0,243,255,0.08)]'
                     : 'text-slate-500 hover:text-white hover:bg-white/[0.03] border border-transparent'}
                 `}
               >
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-geminix-accent rounded-r-full shadow-[0_0_8px_rgba(0,243,255,0.6)]" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-proyecto-accent rounded-r-full shadow-[0_0_8px_rgba(0,243,255,0.6)]" />
                 )}
-                <span className={`transition-colors duration-200 ${isActive ? 'text-geminix-accent' : 'text-slate-600 group-hover:text-slate-300'}`}>
+                <span className={`transition-colors duration-200 ${isActive ? 'text-proyecto-accent' : 'text-slate-600 group-hover:text-slate-300'}`}>
                   {item.icon}
                 </span>
-                <span className={`text-[10px] font-orbitron font-black uppercase tracking-[0.15em] transition-colors duration-200 ${isActive ? 'text-geminix-accent' : ''}`}>
+                <span className={`text-[10px] font-orbitron font-black uppercase tracking-[0.15em] transition-colors duration-200 ${isActive ? 'text-proyecto-accent' : ''}`}>
                   {t(`nav.${item.id}`)}
                 </span>
                 {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-geminix-accent animate-pulse shadow-[0_0_6px_rgba(0,243,255,0.8)]" />
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse shadow-[0_0_6px_rgba(0,243,255,0.8)]" />
                 )}
               </button>
             );

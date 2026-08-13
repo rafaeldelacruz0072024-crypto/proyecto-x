@@ -183,7 +183,7 @@ export default function Promotions() {
                 </div>
                 <button
                     onClick={openAddModal}
-                    className="flex items-center gap-2 px-4 py-2 bg-geminix-accent text-white rounded-lg hover:bg-geminix-accent-hover transition-all"
+                    className="flex items-center gap-2 px-4 py-2 bg-proyecto-accent text-white rounded-lg hover:bg-proyecto-accent-hover transition-all"
                 >
                     <Plus size={18} />
                     Nueva Promoción
@@ -199,7 +199,7 @@ export default function Promotions() {
                             placeholder="Buscar promoción por título o tipo..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-geminix-accent transition-colors"
+                            className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-proyecto-accent transition-colors"
                         />
                     </div>
                 </div>
@@ -236,7 +236,7 @@ export default function Promotions() {
                                                     </div>
                                                 ) : (
                                                     <div className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
-                                                        {promo.type === 'CASHBACK' ? <Percent className="w-5 h-5 text-geminix-accent" /> : <Tag className="w-5 h-5 text-geminix-gold" />}
+                                                        {promo.type === 'CASHBACK' ? <Percent className="w-5 h-5 text-proyecto-accent" /> : <Tag className="w-5 h-5 text-proyecto-gold" />}
                                                     </div>
                                                 )}
                                                 <div>
@@ -323,7 +323,7 @@ export default function Promotions() {
                                             required
                                             value={formData.title}
                                             onChange={handleInputChange}
-                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors"
+                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors"
                                             placeholder="Ej: Promo Flash Fin de Semana"
                                         />
                                     </div>
@@ -336,7 +336,7 @@ export default function Promotions() {
                                             rows={3}
                                             value={formData.description}
                                             onChange={handleInputChange}
-                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors resize-none"
+                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors resize-none"
                                             placeholder="Explica a tus usuarios qué deben hacer para obtener la recompensa."
                                         />
                                     </div>
@@ -348,7 +348,7 @@ export default function Promotions() {
                                             required
                                             value={formData.type}
                                             onChange={handleInputChange}
-                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors"
+                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors"
                                         >
                                             <option value="CASHBACK">Cashback (%)</option>
                                             <option value="BONUS">Bono Fijo (USDT)</option>
@@ -367,7 +367,7 @@ export default function Promotions() {
                                             step="0.01"
                                             value={formData.reward_value}
                                             onChange={handleInputChange}
-                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors"
+                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors"
                                         />
                                     </div>
 
@@ -380,7 +380,7 @@ export default function Promotions() {
                                             step="1"
                                             value={formData.min_investment}
                                             onChange={handleInputChange}
-                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors"
+                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors"
                                             placeholder="0 = Aplica a todo"
                                         />
                                     </div>
@@ -394,12 +394,12 @@ export default function Promotions() {
                                                 name="image_url"
                                                 value={formData.image_url}
                                                 onChange={handleInputChange}
-                                                className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-3 py-3 text-white focus:outline-none focus:border-geminix-accent transition-colors"
+                                                className="w-full bg-slate-800/50 border border-slate-700 rounded-lg pl-10 pr-3 py-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors"
                                                 placeholder="https://imgur.com/tu-promo.png"
                                             />
                                         </div>
                                         <p className="mt-2 text-[10px] text-slate-500 flex items-center gap-1">
-                                            <Info size={12} className="text-geminix-accent" />
+                                            <Info size={12} className="text-proyecto-accent" />
                                             Recomendado: <b>1200x600px</b> (Relación 2:1). Las imágenes se ajustarán automáticamente.
                                         </p>
                                     </div>
@@ -412,8 +412,8 @@ export default function Promotions() {
                                                 name="coupon_code"
                                                 value={formData.coupon_code}
                                                 onChange={handleInputChange}
-                                                className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors font-mono"
-                                                placeholder="EJ: GEMINIX10"
+                                                className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors font-mono"
+                                                placeholder="EJ: PROYECTO X10"
                                             />
                                         </div>
                                         <div className="flex items-center gap-3">
@@ -425,7 +425,7 @@ export default function Promotions() {
                                                     onChange={handleInputChange}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-geminix-accent"></div>
+                                                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-proyecto-accent"></div>
                                                 <span className="ml-3 text-xs font-medium text-slate-400 uppercase tracking-widest">¿Oferta Flash Semanal?</span>
                                             </label>
                                         </div>
@@ -439,7 +439,7 @@ export default function Promotions() {
                                             required
                                             value={formData.start_date}
                                             onChange={handleInputChange}
-                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors [color-scheme:dark]"
+                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors [color-scheme:dark]"
                                         />
                                     </div>
 
@@ -451,7 +451,7 @@ export default function Promotions() {
                                             required
                                             value={formData.end_date}
                                             onChange={handleInputChange}
-                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-geminix-accent transition-colors [color-scheme:dark]"
+                                            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-proyecto-accent transition-colors [color-scheme:dark]"
                                         />
                                     </div>
                                 </div>
@@ -469,7 +469,7 @@ export default function Promotions() {
                             <button
                                 type="submit"
                                 form="promoForm"
-                                className="px-6 py-2.5 bg-geminix-accent hover:bg-geminix-accent-hover text-white font-bold rounded-lg transition-colors flex items-center gap-2"
+                                className="px-6 py-2.5 bg-proyecto-accent hover:bg-proyecto-accent-hover text-white font-bold rounded-lg transition-colors flex items-center gap-2"
                             >
                                 <CheckCircle size={18} />
                                 {editingPromo ? 'Guardar Cambios' : 'Lanzar Promoción'}

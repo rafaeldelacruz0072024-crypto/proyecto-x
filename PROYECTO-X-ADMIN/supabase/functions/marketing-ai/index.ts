@@ -17,9 +17,9 @@ const PLATFORM_SPECS: Record<string, string> = {
 
 const STAGE_CONTEXT: Record<string, string> = {
   atraccion: 'ETAPA DE ATRACCIÓN: El objetivo es despertar CURIOSIDAD sin revelar el negocio todavía. Habla de cambios de vida, libertad financiera, estilo de vida. NO menciones el nombre de la empresa directamente. Crea intriga.',
-  interes: 'ETAPA DE INTERÉS: El objetivo es EDUCAR sobre la oportunidad. Explica brevemente qué es GEMINIX (plataforma de finanzas digitales, mercados de predicción, inversiones cripto y red de afiliados). Muestra el potencial sin presionar.',
+  interes: 'ETAPA DE INTERÉS: El objetivo es EDUCAR sobre la oportunidad. Explica brevemente qué es PROYECTO X (plataforma de finanzas digitales, mercados de predicción, inversiones cripto y red de afiliados). Muestra el potencial sin presionar.',
   deseo: 'ETAPA DE DESEO: El objetivo es crear PRUEBA SOCIAL y aspiración. Usa el testimonio personal del usuario, muestra resultados reales, estilo de vida mejorado, ingresos generados. Genera FOMO (miedo a perderse la oportunidad).',
-  accion: 'ETAPA DE ACCIÓN: El objetivo es generar CONVERSIÓN. CTA directo y urgente para registrarse en GEMINIX usando el link de referido del usuario. Crea urgencia legítima (plazas limitadas, oferta de tiempo).',
+  accion: 'ETAPA DE ACCIÓN: El objetivo es generar CONVERSIÓN. CTA directo y urgente para registrarse en PROYECTO X usando el link de referido del usuario. Crea urgencia legítima (plazas limitadas, oferta de tiempo).',
   fidelizacion: 'ETAPA DE FIDELIZACIÓN: El objetivo es RETENER y activar a nuevos miembros. Contenido de comunidad, celebrar victorias del equipo, tips para crecer en la plataforma, motivar a que inviten a su red.',
 };
 
@@ -58,14 +58,14 @@ serve(async (req) => {
     const stageCtx = STAGE_CONTEXT[stage] || STAGE_CONTEXT.atraccion;
     const toneStyle = TONE_STYLE[tone] || TONE_STYLE.casual;
 
-    const systemPrompt = `Eres un experto en marketing digital y network marketing para GEMINIX, una plataforma de finanzas digitales que incluye:
+    const systemPrompt = `Eres un experto en marketing digital y network marketing para PROYECTO X, una plataforma de finanzas digitales que incluye:
 - Mercados de predicción (estilo Polymarket)
 - Inversiones en criptomonedas
 - Sistema de referidos multinivel (hasta 30 niveles de profundidad)
 - Bono salarial semanal para equipos activos
 - Juegos de predicción y crash
 
-Tu misión: crear contenido de marketing VIRAL y AUTÉNTICO que ayude a los miembros de GEMINIX a crecer su red de referidos en redes sociales.
+Tu misión: crear contenido de marketing VIRAL y AUTÉNTICO que ayude a los miembros de PROYECTO X a crecer su red de referidos en redes sociales.
 
 REGLAS CRÍTICAS:
 1. NUNCA hagas promesas de ingresos específicos o garantías

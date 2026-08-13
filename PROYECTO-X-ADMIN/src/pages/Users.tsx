@@ -125,7 +125,7 @@ const Users: React.FC = () => {
       const refreshToken = tokenData.refresh_token;
 
       // URL de la app del usuario - Forced domain update
-      const userAppBaseUrl = 'https://geminixprotocol.com/login';
+      const userAppBaseUrl = 'https://proyecto-x-user.vercel.app/login';
       const userAppUrl = `${userAppBaseUrl}#access_token=${accessToken}&refresh_token=${refreshToken}&token_type=bearer&type=magiclink`;
 
       window.open(userAppUrl, '_blank');
@@ -576,7 +576,7 @@ const Users: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Rango Elite (GK GEMINIX Elite)</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Rango Elite (PROYECTO X Elite)</label>
                     <select
                       value={selectedUser.rank || 'Starter'}
                       onChange={(e) => setSelectedUser({ ...selectedUser, rank: e.target.value as any })}

@@ -26,7 +26,7 @@ interface RoundHistory {
     nonce: number;
 }
 
-interface GeminixCrashProps {
+interface ProyectoXCrashProps {
     user: any;
     walletBalance: number;
     onUpdateBalance: () => void;
@@ -38,7 +38,7 @@ const HOUSE_EDGE = 0.07; // 7% house edge (93% RTP)
 const GROWTH_RATE = 0.0693; // Takes ~10s to reach 2x
 const CRASH_GAME_ID = '578b5122-2f02-431e-9986-5d81688cd3bc';
 
-const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpdateBalance, maxBet }) => {
+const ProyectoXCrash: React.FC<ProyectoXCrashProps> = ({ user, walletBalance, onUpdateBalance, maxBet }) => {
     // --- Game Logic State ---
     const [gameState, setGameState] = useState<GameState>('idle');
     const [currentMultiplier, setCurrentMultiplier] = useState(1.0);
@@ -221,7 +221,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
             const { data, error } = await supabase.rpc('process_game_bet', {
                 p_user_id: user.id,
                 p_amount: Number(betAmount),
-                p_game_name: 'Geminix Crash'
+                p_game_name: 'Proyecto X Crash'
             });
 
             if (error) {
@@ -250,7 +250,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
             const { data, error } = await supabase.rpc('process_game_result', {
                 p_user_id: user.id,
                 p_amount: Number(betAmount),
-                p_game_name: 'Geminix Crash'
+                p_game_name: 'Proyecto X Crash'
             });
             if (error) console.error('Cancel bet DB error:', error);
             onUpdateBalance();
@@ -273,7 +273,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
             const { data, error } = await supabase.rpc('process_game_result', {
                 p_user_id: user.id,
                 p_amount: Number(winAmount),
-                p_game_name: 'Geminix Crash'
+                p_game_name: 'Proyecto X Crash'
             });
 
             if (error) console.error('Cashout DB error:', error);
@@ -299,12 +299,12 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
                                 <Rocket className="w-4 h-4 text-purple-500" />
-                                <span className="text-xs font-black uppercase tracking-widest italic">GEMINIX CRASH</span>
+                                <span className="text-xs font-black uppercase tracking-widest italic">PROYECTO X CRASH</span>
                             </div>
                             {/* Round History Chips */}
                             <div className="hidden md:flex items-center gap-2 overflow-hidden">
                                 {history.slice(0, 5).map((h, i) => (
-                                    <div key={i} className={`px-2 py-0.5 rounded text-[10px] font-bold ${h.crashPoint >= 2 ? 'text-geminix-green bg-geminix-green/10' : 'text-red-400 bg-red-400/10'}`}>
+                                    <div key={i} className={`px-2 py-0.5 rounded text-[10px] font-bold ${h.crashPoint >= 2 ? 'text-proyecto-green bg-proyecto-green/10' : 'text-red-400 bg-red-400/10'}`}>
                                         {h.crashPoint.toFixed(2)}x
                                     </div>
                                 ))}
@@ -312,12 +312,12 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                         </div>
                         <div className="flex items-center gap-3">
                             <button onClick={() => setShowProvablyFair(true)} className="p-2 hover:bg-white/5 rounded-full transition-colors">
-                                <ShieldCheck className="w-4 h-4 text-geminix-green" />
+                                <ShieldCheck className="w-4 h-4 text-proyecto-green" />
                             </button>
-                            <div className="px-4 py-2 bg-geminix-brand/20 border border-geminix-brand/30 rounded-xl flex items-center gap-2 shadow-[0_0_15px_rgba(var(--geminix-brand-rgb),0.1)]">
-                                <Wallet className="w-4 h-4 text-geminix-brand" />
+                            <div className="px-4 py-2 bg-proyecto-brand/20 border border-proyecto-brand/30 rounded-xl flex items-center gap-2 shadow-[0_0_15px_rgba(var(--proyecto-brand-rgb),0.1)]">
+                                <Wallet className="w-4 h-4 text-proyecto-brand" />
                                 <span className="font-black font-mono text-sm tracking-tighter text-white">{formatCurrency(walletBalance)}</span>
-                                <Plus className="w-3 h-3 text-geminix-brand cursor-pointer hover:scale-125 transition-transform" onClick={() => setIsWalletOpen(true)} />
+                                <Plus className="w-3 h-3 text-proyecto-brand cursor-pointer hover:scale-125 transition-transform" onClick={() => setIsWalletOpen(true)} />
                             </div>
                         </div>
                     </div>
@@ -336,10 +336,10 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                 exit={{ opacity: 0, scale: 0.8 }}
                                 className="absolute inset-0 z-[100] flex items-center justify-center pointer-events-none"
                             >
-                                <div className="p-10 rounded-[2.5rem] bg-black/80 backdrop-blur-xl border-2 border-geminix-green/50 shadow-neon-green text-center">
-                                    <Trophy className="mx-auto mb-4 text-geminix-green" size={64} />
+                                <div className="p-10 rounded-[2.5rem] bg-black/80 backdrop-blur-xl border-2 border-proyecto-green/50 shadow-neon-green text-center">
+                                    <Trophy className="mx-auto mb-4 text-proyecto-green" size={64} />
                                     <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white mb-2">¡HAS GANADO!</h2>
-                                    <p className="text-6xl font-black text-geminix-green drop-shadow-[0_0_20px_rgba(16,185,129,0.5)] animate-pulse">
+                                    <p className="text-6xl font-black text-proyecto-green drop-shadow-[0_0_20px_rgba(16,185,129,0.5)] animate-pulse">
                                         {lastWinAmount ? formatCurrency(lastWinAmount) : '$0.00'}
                                     </p>
                                 </div>
@@ -354,9 +354,9 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                             <div className="flex-1 space-y-2">
                                 <div className="flex justify-between px-1">
                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cantidad</span>
-                                    <span className="text-[10px] font-black text-geminix-brand uppercase tracking-widest italic">Max Bet: $100</span>
+                                    <span className="text-[10px] font-black text-proyecto-brand uppercase tracking-widest italic">Max Bet: $100</span>
                                 </div>
-                                <div className="flex items-center bg-black/60 border border-white/10 rounded-2xl p-1 group focus-within:border-geminix-brand/50 transition-all shadow-inner">
+                                <div className="flex items-center bg-black/60 border border-white/10 rounded-2xl p-1 group focus-within:border-proyecto-brand/50 transition-all shadow-inner">
                                     <DollarSign className="w-4 h-4 text-slate-500 ml-3" />
                                     <input
                                         type="number"
@@ -365,8 +365,8 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                         className="flex-1 bg-transparent border-none outline-none font-black font-mono text-xl p-3 tracking-tighter text-white"
                                     />
                                     <div className="flex gap-1 mr-1">
-                                        <button onClick={() => setBetAmount(prev => Math.max(0.1, prev / 2))} className="px-3 py-2 bg-white/5 rounded-xl text-[10px] font-black hover:bg-geminix-brand/20 hover:text-geminix-brand transition-all border border-transparent hover:border-geminix-brand/30">1/2</button>
-                                        <button onClick={() => setBetAmount(prev => Math.min(maxBet, prev * 2))} className="px-3 py-2 bg-white/5 rounded-xl text-[10px] font-black hover:bg-geminix-brand/20 hover:text-geminix-brand transition-all border border-transparent hover:border-geminix-brand/30">x2</button>
+                                        <button onClick={() => setBetAmount(prev => Math.max(0.1, prev / 2))} className="px-3 py-2 bg-white/5 rounded-xl text-[10px] font-black hover:bg-proyecto-brand/20 hover:text-proyecto-brand transition-all border border-transparent hover:border-proyecto-brand/30">1/2</button>
+                                        <button onClick={() => setBetAmount(prev => Math.min(maxBet, prev * 2))} className="px-3 py-2 bg-white/5 rounded-xl text-[10px] font-black hover:bg-proyecto-brand/20 hover:text-proyecto-brand transition-all border border-transparent hover:border-proyecto-brand/30">x2</button>
                                     </div>
                                 </div>
                             </div>
@@ -374,7 +374,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                             {/* Auto Cashout */}
                             <div className="flex-1 space-y-2">
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Retiro Automático</span>
-                                <div className="flex items-center bg-black/60 border border-white/10 rounded-2xl p-1 group focus-within:border-geminix-green/50 transition-all shadow-inner">
+                                <div className="flex items-center bg-black/60 border border-white/10 rounded-2xl p-1 group focus-within:border-proyecto-green/50 transition-all shadow-inner">
                                     <TrendingUp className="w-4 h-4 text-slate-500 ml-3" />
                                     <input
                                         type="number"
@@ -384,7 +384,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                         className="flex-1 bg-transparent border-none outline-none font-black font-mono text-xl p-3 tracking-tighter text-white"
                                         placeholder="Min 1.1x"
                                     />
-                                    <div className="mr-3 text-geminix-green font-black tracking-widest italic drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]">X</div>
+                                    <div className="mr-3 text-proyecto-green font-black tracking-widest italic drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]">X</div>
                                 </div>
                             </div>
 
@@ -394,7 +394,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                     <button
                                         onClick={handlePlaceBet}
                                         disabled={gameState === 'playing' || walletBalance < betAmount}
-                                        className="w-full h-16 bg-gradient-to-r from-geminix-brand to-[#00b4d8] text-white font-black italic uppercase tracking-[0.2em] rounded-2xl shadow-[0_0_20px_rgba(0,243,255,0.3)] hover:shadow-[0_0_30px_rgba(0,243,255,0.5)] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all flex items-center justify-center gap-3 group border border-white/10"
+                                        className="w-full h-16 bg-gradient-to-r from-proyecto-brand to-[#00b4d8] text-white font-black italic uppercase tracking-[0.2em] rounded-2xl shadow-[0_0_20px_rgba(0,243,255,0.3)] hover:shadow-[0_0_30px_rgba(0,243,255,0.5)] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all flex items-center justify-center gap-3 group border border-white/10"
                                     >
                                         <Zap className="w-5 h-5 fill-white group-hover:animate-pulse" />
                                         APOSTAR
@@ -411,14 +411,14 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                         <button
                                             onClick={() => handleCashOut()}
                                             disabled={gameState === 'crashed'}
-                                            className="w-full h-16 bg-gradient-to-r from-geminix-green to-[#059669] text-black font-black italic uppercase tracking-widest rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all flex flex-col items-center justify-center leading-none border border-white/10"
+                                            className="w-full h-16 bg-gradient-to-r from-proyecto-green to-[#059669] text-black font-black italic uppercase tracking-widest rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all flex flex-col items-center justify-center leading-none border border-white/10"
                                         >
                                             <span className="text-[10px] mb-1 font-bold">RETIRAR</span>
                                             <span className="text-xl tracking-tighter font-mono">{formatCurrency(betAmount * currentMultiplier)}</span>
                                         </button>
                                     )
                                 ) : (
-                                    <div className="w-full h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-geminix-green font-black italic uppercase tracking-widest opacity-80 backdrop-blur-sm shadow-inner">
+                                    <div className="w-full h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-proyecto-green font-black italic uppercase tracking-widest opacity-80 backdrop-blur-sm shadow-inner">
                                         RETIRADO ✅
                                     </div>
                                 )}
@@ -439,7 +439,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                 className={cn(
                                     "flex-1 py-2.5 text-[9px] font-black uppercase tracking-[0.2em] rounded-xl transition-all duration-300",
                                     activeTab === tab 
-                                        ? "bg-geminix-brand text-white shadow-[0_0_15px_rgba(0,243,255,0.3)] border border-white/10 scale-[1.02]" 
+                                        ? "bg-proyecto-brand text-white shadow-[0_0_15px_rgba(0,243,255,0.3)] border border-white/10 scale-[1.02]" 
                                         : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
                                 )}
                             >
@@ -461,15 +461,15 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                     className="flex justify-between items-center bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-white/10 transition-all group"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-geminix-brand/20 to-purple-500/10 flex items-center justify-center border border-white/10 group-hover:border-geminix-brand/50 transition-colors">
-                                            <Users className="w-4 h-4 text-geminix-brand" />
+                                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-proyecto-brand/20 to-purple-500/10 flex items-center justify-center border border-white/10 group-hover:border-proyecto-brand/50 transition-colors">
+                                            <Users className="w-4 h-4 text-proyecto-brand" />
                                         </div>
                                         <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">{p.name}</span>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-xs font-black font-mono leading-none tracking-tighter mb-1 text-white">{formatCurrency(p.bet)}</p>
                                         {p.cashedOutAt && (
-                                            <p className="text-[9px] font-black text-geminix-green italic drop-shadow-[0_0_5px_rgba(16,185,129,0.3)]">+{p.cashedOutAt.toFixed(2)}x</p>
+                                            <p className="text-[9px] font-black text-proyecto-green italic drop-shadow-[0_0_5px_rgba(16,185,129,0.3)]">+{p.cashedOutAt.toFixed(2)}x</p>
                                         )}
                                     </div>
                                 </motion.div>
@@ -480,12 +480,12 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                             {dbHistory.length > 0 ? dbHistory.map((tx) => (
                                 <div key={tx.id} className="p-3 bg-white/5 border border-white/5 rounded-xl flex justify-between items-center">
                                     <div className="flex flex-col gap-1">
-                                        <span className={`text-[8px] font-bold p-1 rounded w-fit ${tx.amount > 0 ? 'bg-geminix-green/20 text-geminix-green' : 'bg-red-500/20 text-red-500'}`}>
+                                        <span className={`text-[8px] font-bold p-1 rounded w-fit ${tx.amount > 0 ? 'bg-proyecto-green/20 text-proyecto-green' : 'bg-red-500/20 text-red-500'}`}>
                                             {tx.amount > 0 ? 'WIN' : 'BET'}
                                         </span>
                                         <span className="text-[8px] text-slate-500">{new Date(tx.created_at).toLocaleTimeString()}</span>
                                     </div>
-                                    <span className={tx.amount > 0 ? 'text-geminix-green font-bold font-mono' : 'text-slate-300 font-bold font-mono'}>
+                                    <span className={tx.amount > 0 ? 'text-proyecto-green font-bold font-mono' : 'text-slate-300 font-bold font-mono'}>
                                         {tx.amount > 0 ? `+$${tx.amount.toFixed(2)}` : `-$${Math.abs(tx.amount).toFixed(2)}`}
                                     </span>
                                 </div>
@@ -518,7 +518,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                             className="w-full max-w-lg bg-[#111114] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl z-10"
                         >
                             <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
-                                <h3 className="text-lg font-black italic tracking-tighter uppercase text-geminix-brand">Gestion de Cartera</h3>
+                                <h3 className="text-lg font-black italic tracking-tighter uppercase text-proyecto-brand">Gestion de Cartera</h3>
                                 <X className="w-6 h-6 text-slate-500 cursor-pointer" onClick={() => setIsWalletOpen(false)} />
                             </div>
                             <div className="p-8">
@@ -543,7 +543,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                             className="w-full max-w-2xl bg-[#111114] border border-white/10 rounded-[2rem] overflow-hidden z-10"
                         >
                             <div className="p-6 border-b border-white/10 flex justify-between items-center">
-                                <h3 className="text-sm font-black italic tracking-tighter uppercase text-geminix-green flex items-center gap-2">
+                                <h3 className="text-sm font-black italic tracking-tighter uppercase text-proyecto-green flex items-center gap-2">
                                     <ShieldCheck className="w-4 h-4" /> PROVABLY FAIR
                                 </h3>
                                 <X className="w-5 h-5 text-slate-500 cursor-pointer" onClick={() => setShowProvablyFair(false)} />
@@ -551,7 +551,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                             <div className="p-8 space-y-6">
                                 <div>
                                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">Server Seed Hash</label>
-                                    <div className="bg-black p-4 rounded-xl border border-white/5 font-mono text-xs break-all text-geminix-green/80">
+                                    <div className="bg-black p-4 rounded-xl border border-white/5 font-mono text-xs break-all text-proyecto-green/80">
                                         {CryptoJS.SHA256(serverSeedRef.current).toString(CryptoJS.enc.Hex)}
                                     </div>
                                 </div>
@@ -560,7 +560,7 @@ const GeminixCrash: React.FC<GeminixCrashProps> = ({ user, walletBalance, onUpda
                                     <input type="text" value={clientSeedRef.current} readOnly className="w-full bg-black p-4 rounded-xl border border-white/5 font-mono text-xs text-white outline-none" />
                                 </div>
                                 <p className="text-[10px] text-slate-500 font-bold leading-relaxed">
-                                    GEMINIX utiliza un sistema de justicia demostrable. El resultado de cada ronda se genera combinando el Server Seed (oculto) y tu Client Seed mediante HMAC-SHA256. Esto garantiza que ni la casa ni el jugador puedan manipular el punto de explosión.
+                                    PROYECTO X utiliza un sistema de justicia demostrable. El resultado de cada ronda se genera combinando el Server Seed (oculto) y tu Client Seed mediante HMAC-SHA256. Esto garantiza que ni la casa ni el jugador puedan manipular el punto de explosión.
                                 </p>
                             </div>
                         </motion.div>
@@ -576,4 +576,4 @@ function cn(...inputs: any[]) {
     return inputs.filter(Boolean).join(' ');
 }
 
-export default GeminixCrash;
+export default ProyectoXCrash;

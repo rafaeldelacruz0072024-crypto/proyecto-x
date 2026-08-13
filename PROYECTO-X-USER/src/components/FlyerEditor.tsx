@@ -171,7 +171,7 @@ function drawFlyer(
     diamond(100, 910, 16, t.ring2 + '60');
     diamond(W * 0.5, 980, 8, t.glow + '40');
 
-    // — GK GEMINIX Logo (top right, drawn via Canvas) ————————————
+    // — PROYECTO X Logo (top right, drawn via Canvas) ————————————
     ctx.save();
     const lx = W - 30;
     // "GK" large
@@ -181,7 +181,7 @@ function drawFlyer(
     ctx.shadowBlur = 22;
     ctx.fillStyle = '#ffffff';
     ctx.fillText('GK', lx, 88);
-    // "GEMINIX" smaller, spaced
+    // "PROYECTO X" smaller, spaced
     ctx.shadowBlur = 10;
     ctx.font = `800 18px 'Arial Black', Arial, sans-serif`;
     ctx.fillStyle = t.logo;
@@ -391,7 +391,7 @@ export default function FlyerEditor() {
         setDownloading(true);
         setTimeout(() => {
             const link = document.createElement('a');
-            link.download = `Bienvenido_${name.trim() || 'Geminix'}.png`;
+            link.download = `Bienvenido_${name.trim() || 'Proyecto X'}.png`;
             link.href = canvasRef.current!.toDataURL('image/png', 1.0);
             link.click();
             setDownloading(false);
@@ -409,8 +409,8 @@ export default function FlyerEditor() {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center gap-3 pb-2 border-b border-white/5">
-                <div className="w-10 h-10 rounded-xl bg-geminix-accent/10 border border-geminix-accent/20 flex items-center justify-center">
-                    <Sparkles size={18} className="text-geminix-accent" />
+                <div className="w-10 h-10 rounded-xl bg-proyecto-accent/10 border border-proyecto-accent/20 flex items-center justify-center">
+                    <Sparkles size={18} className="text-proyecto-accent" />
                 </div>
                 <div>
                     <h2 className="text-sm font-orbitron font-black text-white uppercase tracking-widest">
@@ -431,18 +431,18 @@ export default function FlyerEditor() {
                         <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">
                             1. Foto del Socio
                         </label>
-                        <label className="flex flex-col items-center justify-center gap-3 p-6 border-2 border-dashed border-white/10 hover:border-geminix-accent/40 clip-corner cursor-pointer transition-all group bg-black/20 min-h-[140px]">
+                        <label className="flex flex-col items-center justify-center gap-3 p-6 border-2 border-dashed border-white/10 hover:border-proyecto-accent/40 clip-corner cursor-pointer transition-all group bg-black/20 min-h-[140px]">
                             {photoUrl ? (
                                 <>
-                                    <img src={photoUrl} alt="" className="w-24 h-24 object-cover rounded-full border-2 border-geminix-accent shadow-[0_0_16px_rgba(0,243,255,0.3)]" />
-                                    <span className="text-[9px] text-geminix-accent font-black uppercase tracking-widest">
+                                    <img src={photoUrl} alt="" className="w-24 h-24 object-cover rounded-full border-2 border-proyecto-accent shadow-[0_0_16px_rgba(0,243,255,0.3)]" />
+                                    <span className="text-[9px] text-proyecto-accent font-black uppercase tracking-widest">
                                         ✅ Foto cargada · Click para cambiar
                                     </span>
                                 </>
                             ) : (
                                 <>
-                                    <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-geminix-accent/30 transition-all">
-                                        <Upload size={22} className="text-slate-600 group-hover:text-geminix-accent transition-colors" />
+                                    <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-proyecto-accent/30 transition-all">
+                                        <Upload size={22} className="text-slate-600 group-hover:text-proyecto-accent transition-colors" />
                                     </div>
                                     <div className="text-center">
                                         <p className="text-[10px] text-slate-400 font-bold">Click para subir foto</p>
@@ -463,7 +463,7 @@ export default function FlyerEditor() {
                             <button
                                 onClick={() => setCountry('')}
                                 className={`flex items-center gap-2 px-3 py-2 clip-corner-sm border text-[9px] font-black uppercase transition-all ${
-                                    country === '' ? 'border-geminix-accent bg-geminix-accent/10 text-white' : 'border-white/8 bg-black/20 text-slate-500 hover:text-white'
+                                    country === '' ? 'border-proyecto-accent bg-proyecto-accent/10 text-white' : 'border-white/8 bg-black/20 text-slate-500 hover:text-white'
                                 }`}
                             >
                                 <span className="text-base">🌐</span> Sin bandera
@@ -473,7 +473,7 @@ export default function FlyerEditor() {
                                     key={f.code}
                                     onClick={() => setCountry(f.code)}
                                     className={`flex items-center gap-2 px-3 py-2 clip-corner-sm border text-[9px] font-black transition-all ${
-                                        country === f.code ? 'border-geminix-accent bg-geminix-accent/10 text-white' : 'border-white/8 bg-black/20 text-slate-500 hover:text-white'
+                                        country === f.code ? 'border-proyecto-accent bg-proyecto-accent/10 text-white' : 'border-white/8 bg-black/20 text-slate-500 hover:text-white'
                                     }`}
                                 >
                                     <span className="text-base">{f.code}</span>
@@ -494,7 +494,7 @@ export default function FlyerEditor() {
                             onChange={e => setName(e.target.value)}
                             placeholder="Ej: Cristian Marmolejos"
                             maxLength={36}
-                            className="w-full bg-black/40 border border-white/10 clip-corner-sm px-4 py-4 text-white text-sm font-bold outline-none focus:border-geminix-accent/50 transition-all placeholder:text-slate-700 font-mono"
+                            className="w-full bg-black/40 border border-white/10 clip-corner-sm px-4 py-4 text-white text-sm font-bold outline-none focus:border-proyecto-accent/50 transition-all placeholder:text-slate-700 font-mono"
                         />
                         <p className="text-[8px] text-slate-700 font-mono text-right">{name.length}/36</p>
                     </div>
@@ -511,7 +511,7 @@ export default function FlyerEditor() {
                                     onClick={() => setThemeIdx(i)}
                                     className={`p-3 text-center clip-corner-sm border transition-all ${
                                         themeIdx === i
-                                            ? 'border-geminix-accent bg-geminix-accent/10'
+                                            ? 'border-proyecto-accent bg-proyecto-accent/10'
                                             : 'border-white/8 bg-black/20 hover:border-white/20'
                                     }`}
                                 >
@@ -552,12 +552,12 @@ export default function FlyerEditor() {
 
                     {/* Tips */}
                     <div className="p-4 bg-black/30 border border-white/5 clip-corner-sm">
-                        <p className="text-[9px] font-black text-geminix-accent uppercase tracking-widest mb-2">💡 Consejos</p>
+                        <p className="text-[9px] font-black text-proyecto-accent uppercase tracking-widest mb-2">💡 Consejos</p>
                         <ul className="space-y-1 text-[9px] text-slate-500 leading-relaxed font-mono">
                             <li>· Usa fotos con el socio centrado y con buena luz</li>
                             <li>· Funciona mejor con fotos de perfil o retrato</li>
                             <li>· El flyer es 1080×1080 px — perfecto para Instagram y WhatsApp</li>
-                            <li>· Comparte con el hashtag <span className="text-geminix-accent">#GeminixTeam</span></li>
+                            <li>· Comparte con el hashtag <span className="text-proyecto-accent">#ProyectoXTeam</span></li>
                         </ul>
                     </div>
                 </div>

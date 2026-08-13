@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
         </button>
         <div>
           <h2 className="text-sm md:text-lg font-black text-white truncate max-w-[150px] md:max-w-none">Panel de Administración</h2>
-          <p className="text-[10px] text-slate-500 hidden md:block">GK GEMINIX Control Center</p>
+          <p className="text-[10px] text-slate-500 hidden md:block">PROYECTO X Control Center</p>
         </div>
       </div>
 

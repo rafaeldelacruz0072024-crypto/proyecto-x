@@ -440,7 +440,7 @@ const Withdrawals: React.FC = () => {
                       <p className="text-2xl font-black text-rose-500 tabular-nums">-${w.net_amount ? w.net_amount.toLocaleString('en-US', { minimumFractionDigits: 2 }) : w.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
                       <p className="text-[9px] text-slate-600 font-black uppercase tracking-[0.2em] mt-1">Neto a Enviar</p>
                       {(w.fee || 0) > 0 && (
-                        <p className="text-[8px] text-geminix-gold font-bold uppercase tracking-widest mt-1">Fee Retenido: ${(w.fee || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+                        <p className="text-[8px] text-proyecto-gold font-bold uppercase tracking-widest mt-1">Fee Retenido: ${(w.fee || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
                       )}
                       <p className="text-[8px] text-slate-500 font-bold uppercase tracking-widest mt-1">Bruto: ${w.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
                     </div>

@@ -16,7 +16,7 @@ export interface SocketMessage {
 
 type MessageCallback = (msg: SocketMessage) => void;
 
-class GeminixSocketService {
+class ProyectoXSocketService {
   private listeners: MessageCallback[] = [];
   private interval: any = null;
 
@@ -72,4 +72,4 @@ class GeminixSocketService {
   }
 }
 
-export const GeminixSocket = new GeminixSocketService();
+export const ProyectoXSocket = new ProyectoXSocketService();

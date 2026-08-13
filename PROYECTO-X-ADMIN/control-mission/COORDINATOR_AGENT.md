@@ -343,4 +343,4 @@ Mientras tú descansas, el Coordinador:
 
 *Documento creado: 2026-03-16*
 *Versión: 1.0.0*
-*Autor: GEMINIX-ADMIN*
+*Autor: PROYECTO X-ADMIN*

@@ -23,7 +23,7 @@ import {
   PieChart
 } from 'lucide-react';
 
-const GeminixCards: React.FC = () => {
+const ProyectoXCards: React.FC = () => {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [registeredUsers, setRegisteredUsers] = useState<any[]>([]);
   const [viewTab, setViewTab] = useState<'terminal' | 'registry'>('terminal');
@@ -46,7 +46,7 @@ const GeminixCards: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      // Filtrar por método 'GEMINIX CARD'
+      // Filtrar por método 'PROYECTO X CARD'
       const { data, error } = await supabase
         .from('withdrawals')
         .select(`
@@ -59,7 +59,7 @@ const GeminixCards: React.FC = () => {
             user_tag
           )
         `)
-        .eq('method', 'GEMINIX CARD')
+        .eq('method', 'PROYECTO X CARD')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -68,7 +68,7 @@ const GeminixCards: React.FC = () => {
       const { data: usersData, error: usersError } = await supabase
         .from('profiles')
         .select('*')
-        .not('geminix_card_address', 'is', null)
+        .not('proyecto_x_card_address', 'is', null)
         .order('created_at', { ascending: false });
         
       if (usersError) throw usersError;
@@ -176,38 +176,38 @@ const GeminixCards: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-4xl font-black text-white tracking-tight flex items-center gap-4">
-            <div className="p-3 bg-geminix-accent/10 rounded-2xl border border-geminix-accent/20 shadow-[0_0_20px_rgba(0,243,255,0.1)]">
-              <CreditCard className="text-geminix-accent" size={32} />
+            <div className="p-3 bg-proyecto-accent/10 rounded-2xl border border-proyecto-accent/20 shadow-[0_0_20px_rgba(0,243,255,0.1)]">
+              <CreditCard className="text-proyecto-accent" size={32} />
             </div>
-            GEMINIX CARD Terminal
+            PROYECTO X CARD Terminal
           </h1>
-          <p className="text-slate-500 font-medium mt-2">Gestión exclusiva de desembolsos a tarjetas corporativas Geminix.</p>
+          <p className="text-slate-500 font-medium mt-2">Gestión exclusiva de desembolsos a tarjetas corporativas Proyecto X.</p>
         </div>
 
         <div className="flex items-center space-x-4">
           <div className="flex bg-[#111114] border border-slate-800 rounded-3xl overflow-hidden p-1 mr-2 shadow-xl">
             <button
               onClick={() => setViewTab('terminal')}
-              className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${viewTab === 'terminal' ? 'bg-geminix-accent text-slate-950 shadow-lg' : 'text-slate-500 hover:text-white'}`}
+              className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${viewTab === 'terminal' ? 'bg-proyecto-accent text-slate-950 shadow-lg' : 'text-slate-500 hover:text-white'}`}
             >
               Terminal
             </button>
             <button
               onClick={() => setViewTab('registry')}
-              className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${viewTab === 'registry' ? 'bg-geminix-accent text-slate-950 shadow-lg' : 'text-slate-500 hover:text-white'}`}
+              className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${viewTab === 'registry' ? 'bg-proyecto-accent text-slate-950 shadow-lg' : 'text-slate-500 hover:text-white'}`}
             >
               Directorio
             </button>
           </div>
 
           <div className="relative group flex-1 md:w-64">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-geminix-accent transition-colors" size={20} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-proyecto-accent transition-colors" size={20} />
             <input
               type="text"
               placeholder="Buscar tarjeta o usuario..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#111114] border border-slate-800 rounded-3xl py-4 pl-12 pr-6 text-white font-medium focus:ring-2 focus:ring-geminix-accent outline-none transition-all shadow-2xl"
+              className="w-full bg-[#111114] border border-slate-800 rounded-3xl py-4 pl-12 pr-6 text-white font-medium focus:ring-2 focus:ring-proyecto-accent outline-none transition-all shadow-2xl"
             />
           </div>
           <button
@@ -225,7 +225,7 @@ const GeminixCards: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-[#111114] border border-slate-800/50 p-6 rounded-[2rem] shadow-xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <PieChart size={64} className="text-geminix-accent" />
+            <PieChart size={64} className="text-proyecto-accent" />
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Total Procesado</p>
           <p className="text-3xl font-black text-white tabular-nums">${totals.processed.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
@@ -234,23 +234,23 @@ const GeminixCards: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-[#111114] border border-slate-800/50 p-6 rounded-[2rem] shadow-xl relative overflow-hidden group border-l-geminix-gold/30">
+        <div className="bg-[#111114] border border-slate-800/50 p-6 rounded-[2rem] shadow-xl relative overflow-hidden group border-l-proyecto-gold/30">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <RefreshCw size={64} className="text-geminix-gold" />
+            <RefreshCw size={64} className="text-proyecto-gold" />
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Pendiente por Pagar</p>
-          <p className="text-3xl font-black text-geminix-gold tabular-nums">${totals.pending.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+          <p className="text-3xl font-black text-proyecto-gold tabular-nums">${totals.pending.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
           <p className="text-[9px] text-slate-400 font-bold mt-2 uppercase tracking-tight">
             {withdrawals.filter(w => w.status === 'PENDING').length} solicitudes en espera
           </p>
         </div>
 
-        <div className="bg-[#111114] border border-slate-800/50 p-6 rounded-[2rem] shadow-xl relative overflow-hidden group border-l-geminix-accent/30">
+        <div className="bg-[#111114] border border-slate-800/50 p-6 rounded-[2rem] shadow-xl relative overflow-hidden group border-l-proyecto-accent/30">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <TrendingDown size={64} className="text-geminix-accent" />
+            <TrendingDown size={64} className="text-proyecto-accent" />
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Ahorro en Comisiones</p>
-          <p className="text-3xl font-black text-geminix-accent tracking-tighter tabular-nums">${totals.savings.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+          <p className="text-3xl font-black text-proyecto-accent tracking-tighter tabular-nums">${totals.savings.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
           <p className="text-[9px] text-slate-400 font-bold mt-2 uppercase tracking-tight">7% de ahorro vs USDT Standard</p>
         </div>
 
@@ -282,7 +282,7 @@ const GeminixCards: React.FC = () => {
                 <tr>
                   <td colSpan={5} className="px-10 py-40 text-center">
                     <div className="flex flex-col items-center justify-center space-y-6">
-                      <Loader2 className="animate-spin text-geminix-accent" size={48} />
+                      <Loader2 className="animate-spin text-proyecto-accent" size={48} />
                       <span className="text-slate-500 font-black uppercase text-xs tracking-[0.3em] animate-pulse">Sincronizando Tarjetas...</span>
                     </div>
                   </td>
@@ -294,7 +294,7 @@ const GeminixCards: React.FC = () => {
                   </td>
                 </tr>
               ) : filtered.map((w) => (
-                <tr key={w.id} className="group hover:bg-white/[0.02] transition-colors border-l-2 border-l-transparent hover:border-l-geminix-accent">
+                <tr key={w.id} className="group hover:bg-white/[0.02] transition-colors border-l-2 border-l-transparent hover:border-l-proyecto-accent">
                   <td className="px-10 py-8">
                     <div className="flex items-center space-x-5">
                       <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/50 flex items-center justify-center text-xl font-black text-slate-400 group-hover:scale-105 transition-transform duration-500 shadow-xl">
@@ -309,8 +309,8 @@ const GeminixCards: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-10 py-8 text-center">
-                    <div className="inline-block px-6 py-3 bg-geminix-accent/5 rounded-2xl border border-geminix-accent/10">
-                      <p className="text-2xl font-black text-geminix-accent tabular-nums">-${w.net_amount?.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+                    <div className="inline-block px-6 py-3 bg-proyecto-accent/5 rounded-2xl border border-proyecto-accent/10">
+                      <p className="text-2xl font-black text-proyecto-accent tabular-nums">-${w.net_amount?.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
                       <p className="text-[9px] text-slate-600 font-black uppercase tracking-[0.2em] mt-1">Neto a Desembolsar</p>
                       <p className="text-[8px] text-emerald-500 font-bold uppercase tracking-widest mt-1">Comisión: 3%</p>
                     </div>
@@ -357,7 +357,7 @@ const GeminixCards: React.FC = () => {
                         <button
                           onClick={() => setShowCompleteModal(w)}
                           disabled={!!processing}
-                          className="bg-geminix-accent/10 hover:bg-geminix-accent text-geminix-accent hover:text-slate-950 px-5 py-3 rounded-2xl border border-geminix-accent/20 transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-2"
+                          className="bg-proyecto-accent/10 hover:bg-proyecto-accent text-proyecto-accent hover:text-slate-950 px-5 py-3 rounded-2xl border border-proyecto-accent/20 transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-2"
                         >
                           <ShieldCheck size={16} />
                           COMPLETAR ENVÍO
@@ -383,10 +383,10 @@ const GeminixCards: React.FC = () => {
         <div className="p-8 border-b border-slate-800/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-black text-white">Directorio de Usuarios</h2>
-            <p className="text-slate-500 font-medium text-sm mt-1">Usuarios que han vinculado la Geminix Card.</p>
+            <p className="text-slate-500 font-medium text-sm mt-1">Usuarios que han vinculado la Proyecto X Card.</p>
           </div>
           <div className="bg-slate-900/50 px-6 py-3 rounded-2xl border border-slate-800 flex items-center gap-3">
-            <UserIcon size={18} className="text-geminix-accent" />
+            <UserIcon size={18} className="text-proyecto-accent" />
             <div>
               <span className="block text-[10px] font-black tracking-widest uppercase text-slate-500">Tarjetas Activas</span>
               <span className="block text-lg font-black text-white leading-none mt-1">{registeredUsers.length}</span>
@@ -398,7 +398,7 @@ const GeminixCards: React.FC = () => {
             <thead>
               <tr className="bg-slate-900/60 text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] border-b border-slate-800/50">
                 <th className="px-10 py-6">Identidad</th>
-                <th className="px-10 py-6 text-left">Geminix Card (Bancus)</th>
+                <th className="px-10 py-6 text-left">Proyecto X Card (Bancus)</th>
                 <th className="px-10 py-6 text-center">Registro</th>
                 <th className="px-10 py-6 text-right">Estatus</th>
               </tr>
@@ -408,7 +408,7 @@ const GeminixCards: React.FC = () => {
                 <tr>
                   <td colSpan={4} className="px-10 py-40 text-center">
                     <div className="flex flex-col items-center justify-center space-y-6">
-                      <Loader2 className="animate-spin text-geminix-accent" size={48} />
+                      <Loader2 className="animate-spin text-proyecto-accent" size={48} />
                       <span className="text-slate-500 font-black uppercase text-xs tracking-[0.3em] animate-pulse">Sincronizando Directorio...</span>
                     </div>
                   </td>
@@ -420,7 +420,7 @@ const GeminixCards: React.FC = () => {
                   </td>
                 </tr>
               ) : registeredUsers.map((user) => (
-                <tr key={user.id} className="group hover:bg-white/[0.02] transition-colors border-l-2 border-l-transparent hover:border-l-geminix-accent">
+                <tr key={user.id} className="group hover:bg-white/[0.02] transition-colors border-l-2 border-l-transparent hover:border-l-proyecto-accent">
                   <td className="px-10 py-8">
                     <div className="flex items-center space-x-5">
                       <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/50 flex items-center justify-center text-xl font-black text-slate-400 group-hover:scale-105 transition-transform duration-500 shadow-xl">
@@ -436,16 +436,16 @@ const GeminixCards: React.FC = () => {
                   </td>
                   <td className="px-10 py-8">
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 px-4 py-3 bg-geminix-accent/5 rounded-xl border border-geminix-accent/10 w-max">
-                        <CreditCard size={14} className="text-geminix-accent" />
-                        <span className="text-xs font-mono text-geminix-accent">
-                          {user.geminix_card_user || 'Sin Bancus ID'}
+                      <div className="flex items-center gap-2 px-4 py-3 bg-proyecto-accent/5 rounded-xl border border-proyecto-accent/10 w-max">
+                        <CreditCard size={14} className="text-proyecto-accent" />
+                        <span className="text-xs font-mono text-proyecto-accent">
+                          {user.proyecto_x_card_user || 'Sin Bancus ID'}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50 w-max">
                         <ArrowUpRight size={14} className="text-slate-500" />
                         <span className="text-[10px] font-mono text-slate-400">
-                          {user.geminix_card_address || 'Sin Dirección BSC'}
+                          {user.proyecto_x_card_address || 'Sin Dirección BSC'}
                         </span>
                       </div>
                     </div>
@@ -479,7 +479,7 @@ const GeminixCards: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-xl font-black text-white">Rechazar Operación</h3>
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Informar al usuario Geminix</p>
+                <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Informar al usuario Proyecto X</p>
               </div>
             </div>
 
@@ -520,7 +520,7 @@ const GeminixCards: React.FC = () => {
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowCompleteModal(null)} />
           <div className="relative bg-[#111114] border border-slate-800 w-full max-w-lg rounded-[2.5rem] overflow-hidden shadow-2xl animate-in zoom-in-95">
             <div className="p-8 border-b border-slate-800 flex items-center gap-4">
-              <div className="p-3 bg-geminix-accent/10 rounded-2xl text-geminix-accent font-bold">
+              <div className="p-3 bg-proyecto-accent/10 rounded-2xl text-proyecto-accent font-bold">
                 <ShieldCheck size={24} />
               </div>
               <div>
@@ -537,7 +537,7 @@ const GeminixCards: React.FC = () => {
                   value={txHash}
                   onChange={(e) => setTxHash(e.target.value)}
                   placeholder="Hash de la transacción BSC..."
-                  className="w-full bg-[#09090b] border border-slate-800 rounded-2xl p-4 text-white text-sm outline-none focus:border-geminix-accent transition-all font-mono"
+                  className="w-full bg-[#09090b] border border-slate-800 rounded-2xl p-4 text-white text-sm outline-none focus:border-proyecto-accent transition-all font-mono"
                 />
               </div>
             </div>
@@ -552,7 +552,7 @@ const GeminixCards: React.FC = () => {
               <button
                 onClick={submitComplete}
                 disabled={!txHash.trim() || !!processing}
-                className="flex-[2] py-4 bg-geminix-accent hover:bg-cyan-400 text-slate-950 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all"
+                className="flex-[2] py-4 bg-proyecto-accent hover:bg-cyan-400 text-slate-950 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all"
               >
                 {processing ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
                 Confirmar Envío
@@ -565,4 +565,4 @@ const GeminixCards: React.FC = () => {
   );
 };
 
-export default GeminixCards;
+export default ProyectoXCards;

@@ -203,7 +203,7 @@ export default function MarketComments({
                             onClick={() => setTab(t.key)}
                             className={`flex items-center gap-1.5 px-4 py-3 text-[9px] font-black uppercase tracking-widest transition-all border-b-2 ${
                                 active
-                                    ? 'border-geminix-accent text-white'
+                                    ? 'border-proyecto-accent text-white'
                                     : 'border-transparent text-slate-600 hover:text-slate-400'
                             }`}
                         >
@@ -211,7 +211,7 @@ export default function MarketComments({
                             {t.label}
                             {t.count !== undefined && t.count > 0 && (
                                 <span className={`text-[8px] px-1.5 py-0.5 clip-corner-sm font-black ${
-                                    active ? 'bg-geminix-accent/20 text-geminix-accent' : 'bg-white/5 text-slate-600'
+                                    active ? 'bg-proyecto-accent/20 text-proyecto-accent' : 'bg-white/5 text-slate-600'
                                 }`}>
                                     {t.count}
                                 </span>
@@ -238,7 +238,7 @@ export default function MarketComments({
                                     onKeyDown={onKeyDown}
                                     placeholder="Añade un comentario... (Ctrl+Enter para enviar)"
                                     rows={2}
-                                    className="w-full bg-white/5 border border-white/8 clip-corner-sm px-4 py-3 text-xs text-white placeholder-slate-600 outline-none focus:border-geminix-accent/40 resize-none transition-all font-mono"
+                                    className="w-full bg-white/5 border border-white/8 clip-corner-sm px-4 py-3 text-xs text-white placeholder-slate-600 outline-none focus:border-proyecto-accent/40 resize-none transition-all font-mono"
                                 />
                                 <div className="flex items-center justify-between">
                                     <span className={`text-[9px] font-mono ${text.length > MAX * 0.85 ? 'text-yellow-500' : 'text-slate-700'}`}>
@@ -247,7 +247,7 @@ export default function MarketComments({
                                     <button
                                         onClick={submit}
                                         disabled={!text.trim() || submitting}
-                                        className="flex items-center gap-1.5 px-4 py-2 bg-geminix-accent/10 hover:bg-geminix-accent/20 text-geminix-accent border border-geminix-accent/20 clip-corner-sm text-[9px] font-black uppercase tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                                        className="flex items-center gap-1.5 px-4 py-2 bg-proyecto-accent/10 hover:bg-proyecto-accent/20 text-proyecto-accent border border-proyecto-accent/20 clip-corner-sm text-[9px] font-black uppercase tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                                     >
                                         <Send size={10} />
                                         Publicar
@@ -261,7 +261,7 @@ export default function MarketComments({
                     <div className="divide-y divide-white/5 max-h-96 overflow-y-auto scrollbar-none">
                         {loading ? (
                             <div className="p-6 text-center">
-                                <div className="w-5 h-5 border-2 border-geminix-accent/30 border-t-geminix-accent rounded-full animate-spin mx-auto" />
+                                <div className="w-5 h-5 border-2 border-proyecto-accent/30 border-t-proyecto-accent rounded-full animate-spin mx-auto" />
                             </div>
                         ) : comments.length === 0 ? (
                             <div className="py-10 text-center">
@@ -308,7 +308,7 @@ export default function MarketComments({
                                     <p className="text-[10px] font-bold text-white truncate">{userLabel(h.profile)}</p>
                                     <p className="text-[9px] font-mono text-slate-600">{optLabel}</p>
                                 </div>
-                                <span className="text-sm font-black font-mono text-geminix-accent">${h.amount.toFixed(2)}</span>
+                                <span className="text-sm font-black font-mono text-proyecto-accent">${h.amount.toFixed(2)}</span>
                             </div>
                         );
                     })}

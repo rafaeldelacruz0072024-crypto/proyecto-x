@@ -114,9 +114,9 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
     }
 
     // REGLA DE ORO: código de patrocinador obligatorio
-    const sponsorCode = (localStorage.getItem('geminix_referral') || formData.referralCode?.trim() || '').toUpperCase();
+    const sponsorCode = (localStorage.getItem('proyecto_x_referral') || formData.referralCode?.trim() || '').toUpperCase();
     if (!sponsorCode || !sponsorCode.startsWith('GK-')) {
-      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a GEMINIX.');
+      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a PROYECTO X.');
       return;
     }
 
@@ -210,8 +210,8 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       }
 
       // Limpiar referral del localStorage después del registro exitoso
-      localStorage.removeItem('geminix_referral');
-      document.cookie = 'geminix_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+      localStorage.removeItem('proyecto_x_referral');
+      document.cookie = 'proyecto_x_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
 
       // Login automático
       onLogin(authData.user);
@@ -278,7 +278,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       // Omitting captcha verification as requested
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(
         formData.email,
-        { redirectTo: 'https://geminixprotocol.com/login' }
+        { redirectTo: 'https://proyecto-x-user.vercel.app/login' }
       );
       if (resetError) throw resetError;
       setForgotEmailSent(true);
@@ -332,18 +332,18 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
       <div className="w-full max-w-md relative z-10 animate-fade-in">
         <div className="flex flex-col items-center mb-10 relative">
-          <div className="absolute -top-10 w-40 h-40 bg-geminix-accent/10 rounded-full blur-[80px] animate-pulse"></div>
+          <div className="absolute -top-10 w-40 h-40 bg-proyecto-accent/10 rounded-full blur-[80px] animate-pulse"></div>
           <Logo size="lg" variant="blue" className="transition-all hover:scale-105 duration-1000 ease-in-out drop-shadow-[0_0_30px_rgba(0,243,255,0.4)]" />
           <div className="flex flex-col items-center mt-4">
-            <p className="text-[10px] uppercase text-geminix-accent font-black tracking-[0.6em] text-glow-cyan text-center opacity-90 animate-pulse">
-              GK GEMINIX FINANCIAL NETWORK
+            <p className="text-[10px] uppercase text-proyecto-accent font-black tracking-[0.6em] text-glow-cyan text-center opacity-90 animate-pulse">
+              PROYECTO X FINANCIAL NETWORK
             </p>
-            <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-geminix-accent/50 to-transparent mt-2"></div>
+            <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-proyecto-accent/50 to-transparent mt-2"></div>
           </div>
         </div>
 
-        <div className="holo-card p-8 rounded-[2.5rem] border border-geminix-accent/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-20 group isolation-auto">
-          <div className="absolute inset-0 bg-gradient-to-br from-geminix-accent/5 via-transparent to-geminix-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 -z-10"></div>
+        <div className="holo-card p-8 rounded-[2.5rem] border border-proyecto-accent/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-20 group isolation-auto">
+          <div className="absolute inset-0 bg-gradient-to-br from-proyecto-accent/5 via-transparent to-proyecto-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 -z-10"></div>
           {mode === 'forgot' ? (
             <div className="mb-6 py-2 animate-fade-in">
               <button
@@ -361,8 +361,8 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                 <span className="text-[10px] font-bold uppercase tracking-widest">{t('auth.login_tab')}</span>
               </button>
               <div className="text-center">
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-geminix-accent/10 border border-geminix-accent/30 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-proyecto-accent/10 border border-proyecto-accent/30 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
@@ -414,7 +414,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                     type="text"
                     required
                     disabled={loading}
-                    className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-geminix-accent transition-all disabled:opacity-50"
+                    className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-proyecto-accent transition-all disabled:opacity-50"
                     placeholder={t('auth.kyc_placeholder')}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -431,7 +431,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                       className={`w-full bg-slate-950/50 border rounded-xl py-3 px-4 pr-10 text-sm text-white focus:outline-none transition-all disabled:opacity-50 ${
                         usernameStatus === 'available' ? 'border-green-500 focus:border-green-400' :
                         usernameStatus === 'taken' ? 'border-red-500 focus:border-red-400' :
-                        'border-slate-800 focus:border-geminix-accent'
+                        'border-slate-800 focus:border-proyecto-accent'
                       }`}
                       placeholder={t('auth.alias_placeholder')}
                       value={formData.username}
@@ -465,7 +465,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                     <select
                       required
                       disabled={loading}
-                      className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-geminix-accent transition-all disabled:opacity-50 appearance-none cursor-pointer"
+                      className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-proyecto-accent transition-all disabled:opacity-50 appearance-none cursor-pointer"
                       value={formData.country}
                       onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                     >
@@ -479,7 +479,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                       type="tel"
                       required
                       disabled={loading}
-                      className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-geminix-accent transition-all disabled:opacity-50"
+                      className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-proyecto-accent transition-all disabled:opacity-50"
                       placeholder="+1 234..."
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -499,7 +499,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                   className={`w-full bg-slate-950/50 border rounded-xl py-3 px-4 pr-10 text-sm text-white focus:outline-none transition-all disabled:opacity-50 ${
                     mode === 'register' && emailStatus === 'available' ? 'border-green-500 focus:border-green-400' :
                     mode === 'register' && emailStatus === 'taken' ? 'border-red-500 focus:border-red-400' :
-                    'border-slate-800 focus:border-geminix-accent'
+                    'border-slate-800 focus:border-proyecto-accent'
                   }`}
                   placeholder="node@gk-network.com"
                   value={formData.email}
@@ -535,7 +535,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                   required
                   disabled={loading}
                   minLength={6}
-                  className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-geminix-accent transition-all disabled:opacity-50"
+                  className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-proyecto-accent transition-all disabled:opacity-50"
                   placeholder="••••••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -551,7 +551,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                       setError(null);
                       setForgotEmailSent(false);
                     }}
-                    className="text-[9px] text-geminix-accent/70 mt-1.5 ml-1 font-bold uppercase tracking-tighter hover:text-geminix-accent transition-colors cursor-pointer block text-right w-full"
+                    className="text-[9px] text-proyecto-accent/70 mt-1.5 ml-1 font-bold uppercase tracking-tighter hover:text-proyecto-accent transition-colors cursor-pointer block text-right w-full"
                   >
                     {t('reset_password.forgot_link')}
                   </button>
@@ -561,8 +561,8 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
             {mode === 'forgot' && forgotEmailSent && (
               <div className="text-center animate-fade-in py-4">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-geminix-green/20 border border-geminix-green/50 flex items-center justify-center">
-                  <svg className="w-7 h-7 text-geminix-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-proyecto-green/20 border border-proyecto-green/50 flex items-center justify-center">
+                  <svg className="w-7 h-7 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -575,7 +575,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                     setForgotEmailSent(false);
                     setError(null);
                   }}
-                  className="text-geminix-accent text-[10px] font-bold uppercase tracking-widest hover:underline"
+                  className="text-proyecto-accent text-[10px] font-bold uppercase tracking-widest hover:underline"
                 >
                   {t('reset_password.back_to_login')}
                 </button>
@@ -585,13 +585,13 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
             {mode === 'register' && (
               <>
                 <div className="animate-fade-in">
-                  <label className="block text-[9px] font-black text-geminix-accent uppercase tracking-widest mb-1.5 ml-1">
+                  <label className="block text-[9px] font-black text-proyecto-accent uppercase tracking-widest mb-1.5 ml-1">
                     {t('auth.sponsor')} <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
                     disabled={loading}
-                    className="w-full bg-geminix-accent/5 border border-geminix-accent/20 rounded-xl py-3 px-4 text-sm text-geminix-accent font-black focus:outline-none focus:border-geminix-accent transition-all disabled:opacity-50 uppercase"
+                    className="w-full bg-proyecto-accent/5 border border-proyecto-accent/20 rounded-xl py-3 px-4 text-sm text-proyecto-accent font-black focus:outline-none focus:border-proyecto-accent transition-all disabled:opacity-50 uppercase"
                     placeholder="GK-XXXX-XX"
                     value={formData.referralCode}
                     onChange={(e) => setFormData({ ...formData, referralCode: e.target.value.toUpperCase() })}
@@ -605,10 +605,10 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                     required
                     checked={formData.termsAccepted}
                     onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
-                    className="mt-1 w-4 h-4 bg-slate-950 border-slate-800 text-geminix-accent rounded focus:ring-geminix-accent cursor-pointer transition-all"
+                    className="mt-1 w-4 h-4 bg-slate-950 border-slate-800 text-proyecto-accent rounded focus:ring-proyecto-accent cursor-pointer transition-all"
                   />
                   <label htmlFor="terms" className="text-[10px] text-slate-500 font-bold uppercase tracking-tight -mt-0.5 leading-tight">
-                    Confirmo ser mayor de edad y acepto los <button type="button" onClick={() => setShowTermsModal(true)} className="text-geminix-accent hover:underline cursor-pointer">Términos del Protocolo</button>.
+                    Confirmo ser mayor de edad y acepto los <button type="button" onClick={() => setShowTermsModal(true)} className="text-proyecto-accent hover:underline cursor-pointer">Términos del Protocolo</button>.
                   </label>
                 </div>
               </>
@@ -617,7 +617,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
             {!(mode === 'forgot' && forgotEmailSent) && (
               <div className="pt-4 border-t border-slate-800/50">
                 <div className="flex flex-col mb-6 bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-geminix-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-proyecto-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   <label className="text-[10px] text-slate-400 uppercase tracking-widest font-black mb-2 flex items-center gap-2">
                     <svg className="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -638,7 +638,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`relative w-full overflow-hidden rounded-xl bg-geminix-accent text-white font-black text-xs sm:text-sm uppercase tracking-[0.2em] py-4 transition-all duration-300 shadow-[0_0_20px_rgba(26,115,232,0.3)] hover:shadow-[0_0_40px_rgba(26,115,232,0.6)] group disabled:opacity-50 disabled:grayscale ${mode === 'register' ? 'mt-4' : ''}`}
+                  className={`relative w-full overflow-hidden rounded-xl bg-proyecto-accent text-white font-black text-xs sm:text-sm uppercase tracking-[0.2em] py-4 transition-all duration-300 shadow-[0_0_20px_rgba(26,115,232,0.3)] hover:shadow-[0_0_40px_rgba(26,115,232,0.6)] group disabled:opacity-50 disabled:grayscale ${mode === 'register' ? 'mt-4' : ''}`}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">

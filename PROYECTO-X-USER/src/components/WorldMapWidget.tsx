@@ -93,8 +93,8 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
   return (
     <div className="holo-card p-6 bg-black/50 border-slate-800 rounded-3xl overflow-hidden backdrop-blur-2xl flex flex-col md:grid md:grid-cols-4 gap-6 min-h-[450px] relative group">
       {/* Glow Effects */}
-      <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-3xl opacity-10 bg-geminix-accent group-hover:opacity-20 transition-all pointer-events-none" />
-      <div className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full blur-3xl opacity-10 bg-geminix-brand group-hover:opacity-20 transition-all pointer-events-none" />
+      <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-3xl opacity-10 bg-proyecto-accent group-hover:opacity-20 transition-all pointer-events-none" />
+      <div className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full blur-3xl opacity-10 bg-proyecto-brand group-hover:opacity-20 transition-all pointer-events-none" />
 
       {/* Cyber Grid Pattern */}
       <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none z-0"></div>
@@ -103,7 +103,7 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
       <div className="md:col-span-1 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800/60 pb-4 md:pb-0 md:pr-6 z-10">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Radio className="w-4 h-4 text-geminix-accent animate-pulse" />
+            <Radio className="w-4 h-4 text-proyecto-accent animate-pulse" />
             <span className="font-orbitron text-xs font-black tracking-[0.2em] text-white">TELEMETRÍA GLOBAL</span>
           </div>
           <p className="text-[10px] text-slate-500 font-mono-tech uppercase tracking-wider mb-6">Red de Nodos y Arbitraje de IA</p>
@@ -117,7 +117,7 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
               </div>
               <div className="flex items-baseline gap-1.5">
                 <span className="text-xl font-orbitron font-bold text-white tabular-nums">{usersOnline.toLocaleString()}</span>
-                <span className="text-[8px] font-mono-tech text-geminix-green font-bold uppercase tracking-wider animate-pulse">ONLINE</span>
+                <span className="text-[8px] font-mono-tech text-proyecto-green font-bold uppercase tracking-wider animate-pulse">ONLINE</span>
               </div>
             </div>
 
@@ -128,8 +128,8 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
                 <span className="text-[9px] font-mono-tech font-bold uppercase tracking-wider">Estado de Simulación</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${settings?.is_active ? 'bg-geminix-green animate-pulse shadow-[0_0_8px_#10b981]' : 'bg-red-500'}`} />
-                <span className={`text-[10px] font-orbitron font-black uppercase tracking-widest ${settings?.is_active ? 'text-geminix-green' : 'text-red-400'}`}>
+                <div className={`w-2 h-2 rounded-full ${settings?.is_active ? 'bg-proyecto-green animate-pulse shadow-[0_0_8px_#10b981]' : 'bg-red-500'}`} />
+                <span className={`text-[10px] font-orbitron font-black uppercase tracking-widest ${settings?.is_active ? 'text-proyecto-green' : 'text-red-400'}`}>
                   {settings?.is_active ? 'ACTIVO' : 'PAUSADO'}
                 </span>
               </div>
@@ -142,7 +142,7 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
                 <span className="text-[9px] font-mono-tech font-bold uppercase tracking-wider">Intervalo IA Feed</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-xl font-orbitron font-bold text-geminix-accent tabular-nums">{settings?.speed || 5}</span>
+                <span className="text-xl font-orbitron font-bold text-proyecto-accent tabular-nums">{settings?.speed || 5}</span>
                 <span className="text-[8px] font-mono-tech text-slate-500 font-bold uppercase tracking-wider">segundos</span>
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
         {/* Sync telemetry text footer */}
         <div className="text-[9px] font-mono-tech text-slate-500 uppercase tracking-widest mt-6">
           <span>LATENCY: </span>
-          <span className="text-geminix-green font-bold">12ms</span>
+          <span className="text-proyecto-green font-bold">12ms</span>
           <span className="mx-2">|</span>
           <span>THROUGHPUT: </span>
           <span className="text-white">1.04 Gb/s</span>
@@ -189,8 +189,8 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
                 {/* Active pulse ripple ring */}
                 {isPulsing && (
                   <>
-                    <div className="absolute w-12 h-12 -left-6 -top-6 rounded-full border border-geminix-accent/50 animate-ping opacity-75" />
-                    <div className="absolute w-8 h-8 -left-4 -top-4 rounded-full border-2 border-geminix-brand/60 animate-ping opacity-50 animation-delay-500" />
+                    <div className="absolute w-12 h-12 -left-6 -top-6 rounded-full border border-proyecto-accent/50 animate-ping opacity-75" />
+                    <div className="absolute w-8 h-8 -left-4 -top-4 rounded-full border-2 border-proyecto-brand/60 animate-ping opacity-50 animation-delay-500" />
                     <div className="absolute w-4 h-4 -left-2 -top-2 rounded-full bg-white animate-pulse" />
                   </>
                 )}
@@ -199,7 +199,7 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
                 <div className={`w-2 h-2 rounded-full transition-all duration-300 border border-black shadow-lg ${
                   isPulsing
                     ? 'bg-white scale-125 shadow-[0_0_15px_#00f3ff]'
-                    : 'bg-geminix-accent/80 hover:bg-white hover:scale-125'
+                    : 'bg-proyecto-accent/80 hover:bg-white hover:scale-125'
                 }`} />
 
                 {/* Country Tooltip Hover */}
@@ -215,10 +215,10 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
 
           {/* Floating Event Overlay Display */}
           {latestEvent && latestEvent.payload?.country && (
-            <div className="absolute bottom-4 right-4 max-w-xs bg-slate-950/90 border border-geminix-accent/30 rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-md animate-fade-in z-30 flex items-start gap-3">
+            <div className="absolute bottom-4 right-4 max-w-xs bg-slate-950/90 border border-proyecto-accent/30 rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-md animate-fade-in z-30 flex items-start gap-3">
               {/* Event Badge Glow */}
               <div className={`w-1.5 h-10 rounded-full flex-shrink-0 ${
-                latestEvent.type === 'PROFIT_TICK' ? 'bg-geminix-green shadow-[0_0_8px_#10b981]' : 'bg-geminix-accent shadow-[0_0_8px_cyan]'
+                latestEvent.type === 'PROFIT_TICK' ? 'bg-proyecto-green shadow-[0_0_8px_#10b981]' : 'bg-proyecto-accent shadow-[0_0_8px_cyan]'
               }`} />
 
               <div className="flex-1 min-w-0">
@@ -226,7 +226,7 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
                   {COUNTRY_COORDINATES[latestEvent.payload.country] && (
                     <span className="text-xs">{COUNTRY_COORDINATES[latestEvent.payload.country].flag}</span>
                   )}
-                  <span className="text-[8px] font-black font-orbitron text-geminix-accent uppercase tracking-wider">
+                  <span className="text-[8px] font-black font-orbitron text-proyecto-accent uppercase tracking-wider">
                     {latestEvent.payload.country}
                   </span>
                   <span className="text-[8px] text-slate-500 font-mono">•</span>
@@ -240,7 +240,7 @@ export default function WorldMapWidget({ settings, latestEvent }: Props) {
                 </p>
 
                 {latestEvent.payload.amount && (
-                  <p className="text-xs font-orbitron font-black text-geminix-green mt-1">
+                  <p className="text-xs font-orbitron font-black text-proyecto-green mt-1">
                     +${latestEvent.payload.amount.toFixed(2)} USD
                   </p>
                 )}

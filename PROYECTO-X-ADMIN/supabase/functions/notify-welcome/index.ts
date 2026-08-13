@@ -20,7 +20,7 @@ serve(async (req) => {
 
         // Get email and name from the new profile record
         const email = record.email
-        const name = record.full_name || record.username || 'Miembro GEMINIX'
+        const name = record.full_name || record.username || 'Miembro PROYECTO X'
 
         if (!email) {
             console.error("No email found in profile record")
@@ -43,7 +43,7 @@ serve(async (req) => {
             <h3 style="color: #00f3ff; margin-top: 0; font-size: 16px; letter-spacing: 1px;">¿QUÉ PUEDES HACER AHORA?</h3>
             <ul style="color: #94a3b8; font-size: 15px; line-height: 2; padding-left: 20px; margin: 0;">
                 <li>Activar tu membresía y comenzar a generar rendimientos</li>
-                <li>Acceder a los planes de inversión GEMINIX GOLD</li>
+                <li>Acceder a los planes de inversión PROYECTO X GOLD</li>
                 <li>Invitar referidos y ganar comisiones en 30 niveles</li>
                 <li>Recibir tu salario semanal cada Sábado</li>
             </ul>
@@ -51,7 +51,7 @@ serve(async (req) => {
 
         <div style="background-color: #052e16; border: 1px solid #166534; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
             <p style="color: #86efac; margin: 0; font-size: 14px; font-weight: bold;">
-                💡 GEMINIX GOLD — +1000% auditado en Myfxbook 2025
+                💡 PROYECTO X GOLD — +1000% auditado en Myfxbook 2025
             </p>
             <p style="color: #4ade80; margin: 8px 0 0; font-size: 13px;">
                 5 IAs Neurales operando XAU/USD en tiempo real
@@ -59,13 +59,13 @@ serve(async (req) => {
         </div>
 
         <div style="text-align: center; margin: 35px 0 20px;">
-            <a href="https://geminixprotocol.com" style="background-color: #00f3ff; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
+            <a href="https://proyecto-x-user.vercel.app" style="background-color: #00f3ff; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
                 ACCEDER AL PANEL →
             </a>
         </div>
 
         <p style="color: #475569; font-size: 13px; text-align: center; margin-top: 30px; border-top: 1px solid #1f2937; padding-top: 20px;">
-            Gracias por confiar en GEMINIX Protocol.<br/>
+            Gracias por confiar en PROYECTO X Protocol.<br/>
             Si no creaste esta cuenta, ignora este mensaje.
         </p>
     </div>
@@ -79,9 +79,9 @@ serve(async (req) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                from: "GEMINIX Protocol <soporte@geminixprotocol.com>",
+                from: "PROYECTO X Protocol <soporte@proyecto-x-user.vercel.app>",
                 to: [email],
-                subject: "¡Bienvenido a GEMINIX Protocol! Tu cuenta está lista",
+                subject: "¡Bienvenido a PROYECTO X Protocol! Tu cuenta está lista",
                 html: html
             })
         })

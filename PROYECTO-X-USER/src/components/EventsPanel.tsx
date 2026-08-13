@@ -61,10 +61,10 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
 
     const getIcon = (type: string) => {
         switch (type) {
-            case 'CASHBACK': return <Percent className="w-6 h-6 text-geminix-accent" />;
-            case 'BONUS': return <Gift className="w-6 h-6 text-geminix-gold" />;
-            case 'DISCOUNT': return <Zap className="w-6 h-6 text-geminix-accent" />;
-            default: return <Gift className="w-6 h-6 text-geminix-gold" />;
+            case 'CASHBACK': return <Percent className="w-6 h-6 text-proyecto-accent" />;
+            case 'BONUS': return <Gift className="w-6 h-6 text-proyecto-gold" />;
+            case 'DISCOUNT': return <Zap className="w-6 h-6 text-proyecto-accent" />;
+            default: return <Gift className="w-6 h-6 text-proyecto-gold" />;
         }
     };
 
@@ -80,7 +80,7 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center h-64 space-y-4">
-                <div className="w-12 h-12 border-4 border-geminix-accent border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-4 border-proyecto-accent border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-slate-400 font-medium tracking-widest text-sm uppercase">Cargando Eventos...</p>
             </div>
         );
@@ -124,7 +124,7 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {promos.map((promo) => (
-                    <div key={promo.id} className="group relative rounded-2xl overflow-hidden border border-slate-800/80 hover:border-geminix-accent/40 transition-all duration-500 bg-[#0a0f1a] flex flex-col">
+                    <div key={promo.id} className="group relative rounded-2xl overflow-hidden border border-slate-800/80 hover:border-proyecto-accent/40 transition-all duration-500 bg-[#0a0f1a] flex flex-col">
 
                         {/* === THUMBNAIL BANNER === */}
                         <div className="relative w-full h-44 overflow-hidden shrink-0">
@@ -167,14 +167,14 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
                             <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
 
                             {/* LIVE badge over image */}
-                            <div className="absolute top-3 left-3 px-3 py-1 bg-black/60 backdrop-blur-sm border border-geminix-gold/30 rounded-full flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 bg-geminix-gold rounded-full animate-pulse"></span>
-                                <span className="text-xs font-bold text-geminix-gold">LIVE</span>
+                            <div className="absolute top-3 left-3 px-3 py-1 bg-black/60 backdrop-blur-sm border border-proyecto-gold/30 rounded-full flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 bg-proyecto-gold rounded-full animate-pulse"></span>
+                                <span className="text-xs font-bold text-proyecto-gold">LIVE</span>
                             </div>
 
                             {/* Type badge over image */}
-                            <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm border border-geminix-accent/30 rounded-full">
-                                <span className="text-[10px] font-black text-geminix-accent tracking-widest uppercase">
+                            <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm border border-proyecto-accent/30 rounded-full">
+                                <span className="text-[10px] font-black text-proyecto-accent tracking-widest uppercase">
                                     {getTypeLabel(promo.type)}
                                 </span>
                             </div>
@@ -205,7 +205,7 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
                                 </div>
                                 <div>
                                     <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Beneficio</div>
-                                    <div className="text-geminix-accent font-bold text-lg leading-none">
+                                    <div className="text-proyecto-accent font-bold text-lg leading-none">
                                         {promo.type === 'CASHBACK' || promo.type === 'DISCOUNT' ? `${promo.reward_value}%` : `$${promo.reward_value}`}
                                     </div>
                                 </div>
@@ -213,7 +213,7 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
 
                             {/* Footer */}
                             <div className="flex items-center justify-between pt-4 border-t border-slate-800 mt-auto">
-                                <div className="flex items-center gap-2 text-geminix-gold">
+                                <div className="flex items-center gap-2 text-proyecto-gold">
                                     <Clock className="w-4 h-4" />
                                     <span className="text-sm font-bold font-mono tracking-wider">
                                         {timeRemaining[promo.id] || 'Calculando...'}
@@ -224,7 +224,7 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
                                         if (onSelectPromo) onSelectPromo(promo);
                                         else onNavigateToDeposit();
                                     }}
-                                    className="flex items-center gap-2 px-5 py-2.5 bg-geminix-accent hover:bg-geminix-accent-hover text-white rounded-lg font-bold text-sm transition-all shadow-[0_0_20px_rgba(26,115,232,0.3)] hover:shadow-[0_0_30px_rgba(26,115,232,0.5)] transform hover:-translate-y-0.5"
+                                    className="flex items-center gap-2 px-5 py-2.5 bg-proyecto-accent hover:bg-proyecto-accent-hover text-white rounded-lg font-bold text-sm transition-all shadow-[0_0_20px_rgba(26,115,232,0.3)] hover:shadow-[0_0_30px_rgba(26,115,232,0.5)] transform hover:-translate-y-0.5"
                                 >
                                     Aplicar Promoción
                                     <ArrowRight className="w-4 h-4" />

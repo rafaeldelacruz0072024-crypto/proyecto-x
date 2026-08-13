@@ -663,7 +663,7 @@ export default function App() {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
             <Rocket className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-xl font-bold text-white tracking-wide">GEMINIX <span className="text-purple-500">CRASH</span></h1>
+          <h1 className="text-xl font-bold text-white tracking-wide">PROYECTO X <span className="text-purple-500">CRASH</span></h1>
         </div>
         
         <div className="flex items-center gap-4">

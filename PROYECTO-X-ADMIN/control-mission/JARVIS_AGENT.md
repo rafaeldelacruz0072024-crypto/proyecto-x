@@ -347,7 +347,7 @@ Mientras tú descansas, JARVIS:
 
 *Documento creado: 2026-03-17*
 *Versión: 1.1.0 (JARVIS)*
-*Autor: GEMINIX-ADMIN*
+*Autor: PROYECTO X-ADMIN*
 
 ---
 

@@ -31,17 +31,17 @@ const ToastItem: React.FC<{ notif: Notification; remove: () => void }> = ({ noti
   }, [remove]);
 
   const bgClass =
-    notif.type === 'success' ? 'bg-geminix-green/10 border-geminix-green' :
+    notif.type === 'success' ? 'bg-proyecto-green/10 border-proyecto-green' :
       notif.type === 'error' ? 'bg-red-500/10 border-red-500' :
-        'bg-geminix-accent/10 border-geminix-accent';
+        'bg-proyecto-accent/10 border-proyecto-accent';
 
   const icon =
     notif.type === 'success' ? (
-      <svg className="w-5 h-5 text-geminix-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+      <svg className="w-5 h-5 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
     ) : notif.type === 'error' ? (
       <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
     ) : (
-      <svg className="w-5 h-5 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <svg className="w-5 h-5 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
     );
 
   return (

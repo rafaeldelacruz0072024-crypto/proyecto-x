@@ -186,7 +186,7 @@ const CrashBoard: React.FC<CrashBoardProps> = ({ gameState, currentMultiplier, c
 
                 {(gameState === 'playing' || gameState === 'crashed') && (
                     <div className="text-center">
-                        <p className={`text-7xl md:text-9xl font-black tracking-tighter italic ${gameState === 'crashed' ? 'text-red-500' : 'text-geminix-green'} transition-colors duration-300 drop-shadow-neon`}>
+                        <p className={`text-7xl md:text-9xl font-black tracking-tighter italic ${gameState === 'crashed' ? 'text-red-500' : 'text-proyecto-green'} transition-colors duration-300 drop-shadow-neon`}>
                             {(gameState === 'crashed' ? crashPoint : currentMultiplier).toFixed(2)}x
                         </p>
                         {gameState === 'crashed' && (

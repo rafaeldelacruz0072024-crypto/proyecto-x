@@ -1,5 +1,5 @@
 -- ==========================================================
--- TABLA DE CONFIGURACIÓN DE SIMULACIÓN EN VIVO (GEMINIX)
+-- TABLA DE CONFIGURACIÓN DE SIMULACIÓN EN VIVO (PROYECTO X)
 -- ==========================================================
 -- Ejecuta este script en el editor SQL de Supabase para habilitar
 -- el control centralizado de la simulación en el panel admin.

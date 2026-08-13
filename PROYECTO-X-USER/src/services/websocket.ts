@@ -9,8 +9,8 @@ export interface SocketMessage {
     };
 }
 
-export class GeminixSocket {
-    private static instance: GeminixSocket;
+export class ProyectoXSocket {
+    private static instance: ProyectoXSocket;
     private subscribers: ((msg: SocketMessage) => void)[] = [];
     private interval: any;
 
@@ -18,11 +18,11 @@ export class GeminixSocket {
         this.startMockFeed();
     }
 
-    public static getInstance(): GeminixSocket {
-        if (!GeminixSocket.instance) {
-            GeminixSocket.instance = new GeminixSocket();
+    public static getInstance(): ProyectoXSocket {
+        if (!ProyectoXSocket.instance) {
+            ProyectoXSocket.instance = new ProyectoXSocket();
         }
-        return GeminixSocket.instance;
+        return ProyectoXSocket.instance;
     }
 
     public subscribe(callback: (msg: SocketMessage) => void): () => void {

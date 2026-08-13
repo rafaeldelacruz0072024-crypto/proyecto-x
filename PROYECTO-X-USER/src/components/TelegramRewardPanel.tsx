@@ -71,11 +71,11 @@ const TelegramRewardPanel: React.FC<{ userId: string; onRewardClaimed?: () => vo
                     id: 'telegram_connect',
                     title: t('telegram_reward.task1_title', { defaultValue: 'CONECTA TU TELEGRAM' }),
                     name: t('telegram_reward.task1_name', { defaultValue: 'Vincular Cuenta' }),
-                    description: t('telegram_reward.task1_desc', { defaultValue: 'Paso 1: Vincula tu cuenta de Telegram al ecosistema GK GEMINIX.' }),
+                    description: t('telegram_reward.task1_desc', { defaultValue: 'Paso 1: Vincula tu cuenta de Telegram al ecosistema PROYECTO X.' }),
                     icon: <Smartphone className="w-4 h-4" />,
                     status: userTasks.find((t: any) => t.task_id === 'telegram_connect')?.status || 'PENDING',
                     actionLabel: t('telegram_reward.connect', { defaultValue: 'Conectar' }),
-                    link: sysSettings?.telegram_link_connect || 'https://t.me/Geminix22_bot'
+                    link: sysSettings?.telegram_link_connect || 'https://t.me/Proyecto X22_bot'
                 },
                 {
                     id: 'telegram_bot',
@@ -85,7 +85,7 @@ const TelegramRewardPanel: React.FC<{ userId: string; onRewardClaimed?: () => vo
                     icon: <Bot className="w-4 h-4" />,
                     status: userTasks.find((t: any) => t.task_id === 'telegram_bot')?.status || 'PENDING',
                     actionLabel: t('telegram_reward.start', { defaultValue: 'Iniciar' }),
-                    link: sysSettings?.telegram_link_bot || 'https://t.me/Geminix22_bot'
+                    link: sysSettings?.telegram_link_bot || 'https://t.me/Proyecto X22_bot'
                 },
                 {
                     id: 'telegram_channel',
@@ -96,7 +96,7 @@ const TelegramRewardPanel: React.FC<{ userId: string; onRewardClaimed?: () => vo
                     status: userTasks.find((t: any) => t.task_id === 'telegram_channel')?.status || 'PENDING',
                     actionLabel: t('telegram_reward.join', { defaultValue: 'Verificar' }),
                     // The link here can be the bot again or empty since the bot gives the access
-                    link: sysSettings?.telegram_link_channel || 'https://t.me/Geminix22_bot'
+                    link: sysSettings?.telegram_link_channel || 'https://t.me/Proyecto X22_bot'
                 }
             ];
 

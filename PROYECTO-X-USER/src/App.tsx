@@ -53,7 +53,7 @@ import GamesPanel from './components/GamesPanel';
 import PredictionMarketsPanel from './components/PredictionMarketsPanel';
 import RoadMapPanel from './components/RoadMapPanel';
 import MarketingFunnelPanel from './components/MarketingFunnelPanel';
-import GeminixCardPanel from './components/GeminixCardPanel';
+import ProyectoXCardPanel from './components/ProyectoXCardPanel';
 import PromoModal from './components/PromoModal';
 import BaccaratPanel from './components/BaccaratPanel';
 import DirectCommissionPanel from './components/DirectCommissionPanel';
@@ -89,7 +89,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'products' | 'tutorials' | 'games' | 'predictions' | 'credit' | 'profile' | 'roadmap' | 'marketing' | 'geminix_card' | 'baccarat'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'network' | 'finance' | 'events' | 'products' | 'tutorials' | 'games' | 'predictions' | 'credit' | 'profile' | 'roadmap' | 'marketing' | 'proyecto_x_card' | 'baccarat'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -232,8 +232,8 @@ const App: React.FC = () => {
 
     if (refInUrl) {
       const expires90 = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
-      localStorage.setItem('geminix_referral', refInUrl.toUpperCase());
-      document.cookie = `geminix_ref=${encodeURIComponent(refInUrl.toUpperCase())};expires=${expires90};path=/;SameSite=Lax`;
+      localStorage.setItem('proyecto_x_referral', refInUrl.toUpperCase());
+      document.cookie = `proyecto_x_ref=${encodeURIComponent(refInUrl.toUpperCase())};expires=${expires90};path=/;SameSite=Lax`;
       setReferralFromUrl(refInUrl.toUpperCase());
       // Limpiar ?ref de la URL sin recargar
       urlParams.delete('ref');
@@ -241,8 +241,8 @@ const App: React.FC = () => {
       window.history.replaceState({}, '', window.location.pathname + (newSearch ? `?${newSearch}` : ''));
     } else {
       // Recuperar ref guardado de visitas anteriores
-      const stored = localStorage.getItem('geminix_referral')
-        || decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('geminix_ref='))?.split('=')[1] || '');
+      const stored = localStorage.getItem('proyecto_x_referral')
+        || decodeURIComponent(document.cookie.split('; ').find(r => r.startsWith('proyecto_x_ref='))?.split('=')[1] || '');
       if (stored) setReferralFromUrl(stored);
     }
   }, []);
@@ -254,7 +254,7 @@ const App: React.FC = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const hasAuthTokensInHash = window.location.hash.includes('access_token');
     const hasRegisterAction = urlParams.get('action') === 'register';
-    if (!user && (path === '/' || path === '/index.html') && !referralFromUrl && !localStorage.getItem('geminix_referral') && !hasAuthTokensInHash && !hasRegisterAction) {
+    if (!user && (path === '/' || path === '/index.html') && !referralFromUrl && !localStorage.getItem('proyecto_x_referral') && !hasAuthTokensInHash && !hasRegisterAction) {
       window.location.href = '/landing';
     }
   }, [user, authLoading, referralFromUrl]);
@@ -300,7 +300,7 @@ const App: React.FC = () => {
 
         if (flashPromos && flashPromos.length > 0) {
           const promo = flashPromos[0];
-          const dismissedPromoId = localStorage.getItem('geminix_dismissed_flash_promo');
+          const dismissedPromoId = localStorage.getItem('proyecto_x_dismissed_flash_promo');
 
           if (dismissedPromoId !== promo.id) {
             setActivePromotion(promo);
@@ -400,10 +400,10 @@ const App: React.FC = () => {
     );
 
     // Limpiar todo rastro del referral (localStorage + cookies)
-    localStorage.removeItem('geminix_referral');
-    localStorage.removeItem('geminix_ref_token');
-    document.cookie = 'geminix_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
-    document.cookie = 'geminix_ref_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+    localStorage.removeItem('proyecto_x_referral');
+    localStorage.removeItem('proyecto_x_ref_token');
+    document.cookie = 'proyecto_x_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+    document.cookie = 'proyecto_x_ref_token=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
 
     // Refrescar datos desde Supabase
     refetch();
@@ -479,7 +479,7 @@ const App: React.FC = () => {
         subject: "Depósito Enviado - Esperando Aprobación Admin",
         amount,
         method: "USDT (BEP-20)",
-        address: "Geminix Wallet Bank",
+        address: "Proyecto X Wallet Bank",
         txId: result.deposit.id,
         date: new Date(),
         isConfirmed: false
@@ -754,8 +754,8 @@ const App: React.FC = () => {
       <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-20 animate-pulse"></div>
         <div className="z-10 text-center">
-          <div className="text-geminix-accent font-orbitron text-2xl tracking-[0.5em] animate-bounce">{t('common.loading')}</div>
-          <div className="text-[10px] text-geminix-brand font-mono mt-2">{t('common.secure_conn')}</div>
+          <div className="text-proyecto-accent font-orbitron text-2xl tracking-[0.5em] animate-bounce">{t('common.loading')}</div>
+          <div className="text-[10px] text-proyecto-brand font-mono mt-2">{t('common.secure_conn')}</div>
         </div>
       </div>
     );
@@ -800,7 +800,7 @@ const App: React.FC = () => {
             </svg>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-500 mb-3">GK GEMINIX</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-500 mb-3">PROYECTO X</p>
             <h1 className="text-3xl font-black text-white uppercase tracking-tight">Cuenta Suspendida</h1>
             <p className="text-slate-500 font-medium mt-4 leading-relaxed text-sm">
               Tu cuenta ha sido temporalmente suspendida por el equipo administrativo.
@@ -831,7 +831,7 @@ const App: React.FC = () => {
   const unreadCount = mockEmails.filter(e => !e.isConfirmed).length;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-slate-200 font-rajdhani selection:bg-geminix-accent/30 selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-slate-200 font-rajdhani selection:bg-proyecto-accent/30 selection:text-white relative overflow-x-hidden">
       {/* GLOBAL FUTURISTIC BACKGROUND LAYER */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
         {/* Holographic Brand Core */}
@@ -869,19 +869,19 @@ const App: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2 md:mb-12 border-b border-white/5 pb-6">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-geminix-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
-                <span className="text-[10px] font-mono-tech text-geminix-accent uppercase tracking-[0.4em]">Node Active: {profile?.username || profile?.full_name || user?.id?.slice(0, 8) || 'G-0X23'}</span>
+                <div className="w-2 h-2 bg-proyecto-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
+                <span className="text-[10px] font-mono-tech text-proyecto-accent uppercase tracking-[0.4em]">Node Active: {profile?.username || profile?.full_name || user?.id?.slice(0, 8) || 'G-0X23'}</span>
               </div>
               <h1 className="text-4xl md:text-5xl font-orbitron font-black text-white uppercase tracking-tighter flex items-center gap-4">
                 {t(`nav.${activeTab}`)}
-                <span className="text-geminix-accent opacity-20 text-2xl">//</span>
+                <span className="text-proyecto-accent opacity-20 text-2xl">//</span>
               </h1>
             </div>
 
             <div className="hidden md:flex items-center gap-6 bg-black/40 backdrop-blur-xl border border-white/5 p-2 px-6 clip-corner-sm">
               <div className="text-right">
                 <p className="text-[8px] font-mono-tech text-slate-500 uppercase tracking-widest leading-none mb-1">Network Latency</p>
-                <p className="text-xs font-orbitron font-bold text-geminix-green leading-none">12ms <span className="text-[10px] opacity-50">SYNC</span></p>
+                <p className="text-xs font-orbitron font-bold text-proyecto-green leading-none">12ms <span className="text-[10px] opacity-50">SYNC</span></p>
               </div>
               <div className="h-8 w-[1px] bg-white/10"></div>
               <div className="text-right">
@@ -896,11 +896,11 @@ const App: React.FC = () => {
               {/* REFERRAL CENTER */}
               <div className="holo-card p-6 rounded-none clip-corner flex flex-col md:flex-row items-center justify-between gap-6 transition-all hover:bg-slate-900/40">
                 <div className="flex items-center gap-5">
-                  <div className={`w-12 h-12 clip-corner flex items-center justify-center transition-all duration-500 ${isReferralCopied ? 'bg-geminix-green/20 shadow-neon-cyan' : 'bg-geminix-brand/20'}`}>
+                  <div className={`w-12 h-12 clip-corner flex items-center justify-center transition-all duration-500 ${isReferralCopied ? 'bg-proyecto-green/20 shadow-neon-cyan' : 'bg-proyecto-brand/20'}`}>
                     {isReferralCopied ? (
-                      <svg className="w-6 h-6 text-geminix-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                      <svg className="w-6 h-6 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
                     ) : (
-                      <svg className="w-6 h-6 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.826L10.242 9.172a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.102 1.101" /></svg>
+                      <svg className="w-6 h-6 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.826L10.242 9.172a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.102 1.101" /></svg>
                     )}
                   </div>
                   <div>
@@ -909,9 +909,9 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-1 max-w-lg w-full items-center bg-black/60 border border-geminix-accent/20 clip-corner px-4 py-3 gap-3">
+                <div className="flex flex-1 max-w-lg w-full items-center bg-black/60 border border-proyecto-accent/20 clip-corner px-4 py-3 gap-3">
                   {profile?.ref_code ? (
-                    <span className={`text-xs font-mono-tech truncate flex-1 transition-colors duration-300 ${isReferralCopied ? 'text-geminix-green' : 'text-geminix-accent'}`}>
+                    <span className={`text-xs font-mono-tech truncate flex-1 transition-colors duration-300 ${isReferralCopied ? 'text-proyecto-green' : 'text-proyecto-accent'}`}>
                       {window.location.origin}/?ref={profile.ref_code}
                     </span>
                   ) : (
@@ -922,8 +922,8 @@ const App: React.FC = () => {
                       onClick={copyReferralLink}
                       disabled={!profile?.ref_code}
                       className={`p-2 transition-all duration-300 border clip-corner-sm flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed ${isReferralCopied
-                        ? 'bg-geminix-green text-slate-950 border-geminix-green shadow-neon-cyan'
-                        : 'bg-geminix-brand/20 border-geminix-brand/50 text-geminix-accent hover:bg-geminix-brand/40 hover:text-white'
+                        ? 'bg-proyecto-green text-slate-950 border-proyecto-green shadow-neon-cyan'
+                        : 'bg-proyecto-brand/20 border-proyecto-brand/50 text-proyecto-accent hover:bg-proyecto-brand/40 hover:text-white'
                         }`}
                       title="INITIATE COPY"
                     >
@@ -947,71 +947,71 @@ const App: React.FC = () => {
                 <div className="lg:col-span-2 space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
                     {/* WALLET BANK CARD */}
-                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-geminix-green/50 transition-colors">
+                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-proyecto-green/50 transition-colors">
                       <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-60 transition-opacity">
-                        <svg className="w-10 h-10 text-geminix-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <svg className="w-10 h-10 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       </div>
                       <p className="text-slate-400 text-[10px] font-orbitron uppercase tracking-widest mb-2 opacity-80">{t('dashboard.wallet_bank')}</p>
                       <div className="flex items-baseline gap-1 mb-2">
-                        <span className="text-geminix-green font-orbitron text-xl">$</span>
+                        <span className="text-proyecto-green font-orbitron text-xl">$</span>
                         <p className="text-3xl font-orbitron font-bold text-white text-glow-white">
                           {walletBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </p>
                       </div>
                       <div className="flex items-center gap-1.5 mt-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-geminix-green animate-pulse shadow-[0_0_8px_#10b981]"></div>
-                        <span className="text-[9px] font-mono-tech text-geminix-green uppercase tracking-widest">{t('dashboard.liquidity_available')}</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-proyecto-green animate-pulse shadow-[0_0_8px_#10b981]"></div>
+                        <span className="text-[9px] font-mono-tech text-proyecto-green uppercase tracking-widest">{t('dashboard.liquidity_available')}</span>
                       </div>
                     </div>
 
                     {/* CREDIT WALLET CARD */}
-                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-geminix-neon-purple/50 transition-colors border-geminix-neon-purple/20">
+                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-proyecto-neon-purple/50 transition-colors border-proyecto-neon-purple/20">
                       <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-60 transition-opacity">
-                        <svg className="w-10 h-10 text-geminix-neon-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        <svg className="w-10 h-10 text-proyecto-neon-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                       </div>
                       <p className="text-slate-400 text-[10px] font-orbitron uppercase tracking-widest mb-2 opacity-80">{t('credit.labels.credit_balance')}</p>
                       <div className="flex items-baseline gap-1 mb-2">
-                        <span className="text-geminix-neon-purple font-orbitron text-xl">$</span>
+                        <span className="text-proyecto-neon-purple font-orbitron text-xl">$</span>
                         <p className="text-3xl font-orbitron font-bold text-white text-glow-purple">
                           {creditBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </p>
                       </div>
                       <div className="flex items-center gap-1.5 mt-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-geminix-neon-purple animate-pulse shadow-[0_0_8px_purple]"></div>
-                        <span className="text-[9px] font-mono-tech text-geminix-neon-purple uppercase tracking-widest">{t('credit.status_ready')}</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-proyecto-neon-purple animate-pulse shadow-[0_0_8px_purple]"></div>
+                        <span className="text-[9px] font-mono-tech text-proyecto-neon-purple uppercase tracking-widest">{t('credit.status_ready')}</span>
                       </div>
                     </div>
 
                     {/* ACTIVE CAPITAL CARD */}
-                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-geminix-accent/50 transition-colors">
+                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-proyecto-accent/50 transition-colors">
                       <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-60 transition-opacity">
-                        <svg className="w-10 h-10 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        <svg className="w-10 h-10 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                       </div>
                       <p className="text-slate-400 text-[10px] font-orbitron uppercase tracking-widest mb-2 opacity-80">{t('dashboard.active_capital')}</p>
                       <div className="flex items-baseline gap-1 mb-2">
-                        <span className="text-geminix-accent font-orbitron text-xl">$</span>
+                        <span className="text-proyecto-accent font-orbitron text-xl">$</span>
                         <p className="text-3xl font-orbitron font-bold text-white text-glow-cyan">
                           {activeInvestmentTotal.toLocaleString('en-US')}
                         </p>
                       </div>
-                      <div className="px-2 py-0.5 bg-geminix-accent/10 border border-geminix-accent/20 rounded inline-block">
-                        <span className="text-[9px] font-mono-tech text-geminix-accent uppercase tracking-widest">{t('dashboard.yield_rate')}</span>
+                      <div className="px-2 py-0.5 bg-proyecto-accent/10 border border-proyecto-accent/20 rounded inline-block">
+                        <span className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-widest">{t('dashboard.yield_rate')}</span>
                       </div>
                     </div>
 
                     {/* EARNINGS CARD */}
-                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-geminix-gold/50 transition-colors">
+                    <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden hover:border-proyecto-gold/50 transition-colors">
                       <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-60 transition-opacity">
-                        <svg className="w-10 h-10 text-geminix-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <svg className="w-10 h-10 text-proyecto-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       </div>
                       <p className="text-slate-400 text-[10px] font-orbitron uppercase tracking-widest mb-2 opacity-80">{t('dashboard.total_returns')}</p>
                       <div className="flex items-baseline gap-1 mb-2">
-                        <span className="text-geminix-gold font-orbitron text-xl">$</span>
+                        <span className="text-proyecto-gold font-orbitron text-xl">$</span>
                         <p className="text-3xl font-orbitron font-bold text-white text-glow-white">
                           {(profile?.email === 'alejo@bancus.io' ? 825 + earningsSinceApr22 : totalEarnings).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </p>
                       </div>
-                      <div className="mt-2 text-[9px] font-mono-tech text-geminix-gold uppercase tracking-widest">{t('dashboard.earnings_breakdown')}</div>
+                      <div className="mt-2 text-[9px] font-mono-tech text-proyecto-gold uppercase tracking-widest">{t('dashboard.earnings_breakdown')}</div>
                     </div>
                   </div>
 
@@ -1021,11 +1021,11 @@ const App: React.FC = () => {
                   {/* CHARTS & TERMINAL */}
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                     <div className="md:col-span-3 holo-card p-6 rounded-none clip-corner h-80 flex flex-col relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-geminix-accent to-transparent opacity-50"></div>
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-proyecto-accent to-transparent opacity-50"></div>
                       <div className="absolute top-2 right-2 z-10">
-                        <div className="flex items-center gap-2 px-3 py-1 bg-black/40 border border-geminix-accent/30 rounded clip-corner-sm">
-                          <div className="w-1.5 h-1.5 rounded-full bg-geminix-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
-                          <span className="text-[8px] font-mono-tech text-geminix-accent uppercase tracking-widest">{t('dashboard.arbitrage_live')}</span>
+                        <div className="flex items-center gap-2 px-3 py-1 bg-black/40 border border-proyecto-accent/30 rounded clip-corner-sm">
+                          <div className="w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
+                          <span className="text-[8px] font-mono-tech text-proyecto-accent uppercase tracking-widest">{t('dashboard.arbitrage_live')}</span>
                         </div>
                       </div>
                       <WeeklyYieldChart investments={investments || []} />
@@ -1115,27 +1115,27 @@ const App: React.FC = () => {
 
                   {/* ── PASIVO DIARIO — visible solo con > $2,000 activos ── */}
                   {activeInvestmentTotal > 2000 && (
-                    <div className="holo-card p-5 rounded-none clip-corner border-geminix-gold/30 bg-geminix-gold/5">
+                    <div className="holo-card p-5 rounded-none clip-corner border-proyecto-gold/30 bg-proyecto-gold/5">
                       {/* Header */}
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 clip-corner-sm bg-geminix-gold/10 border border-geminix-gold/30 flex items-center justify-center flex-shrink-0">
-                          <svg className="w-4 h-4 text-geminix-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-8 h-8 clip-corner-sm bg-proyecto-gold/10 border border-proyecto-gold/30 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-4 h-4 text-proyecto-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                           </svg>
                         </div>
                         <div>
-                          <p className="text-[10px] font-orbitron font-bold text-geminix-gold uppercase tracking-widest">Pasivo Diario</p>
+                          <p className="text-[10px] font-orbitron font-bold text-proyecto-gold uppercase tracking-widest">Pasivo Diario</p>
                           <p className="text-[8px] font-mono-tech text-slate-400 uppercase tracking-wider">Cobro automático al wallet</p>
                         </div>
                       </div>
 
                       {/* Estimated today */}
-                      <div className="mb-4 px-3 py-2 bg-black/40 border border-geminix-gold/20 clip-corner-sm">
+                      <div className="mb-4 px-3 py-2 bg-black/40 border border-proyecto-gold/20 clip-corner-sm">
                         <p className="text-[8px] font-mono-tech text-slate-500 uppercase tracking-widest mb-1">Capital activo calificado</p>
                         <p className="text-lg font-orbitron font-bold text-white">
                           ${activeInvestmentTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </p>
-                        <p className="text-[8px] text-geminix-gold font-mono-tech mt-1">
+                        <p className="text-[8px] text-proyecto-gold font-mono-tech mt-1">
                           ≈ +${(activeInvestmentTotal * 0.022).toFixed(2)} USD estimado hoy (2.2%)
                         </p>
                       </div>
@@ -1148,8 +1148,8 @@ const App: React.FC = () => {
                           passivePaidToday
                             ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                             : collectingPassive
-                            ? 'bg-geminix-gold/20 text-geminix-gold border border-geminix-gold/30 cursor-wait'
-                            : 'bg-geminix-gold text-slate-950 hover:brightness-110 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)]'
+                            ? 'bg-proyecto-gold/20 text-proyecto-gold border border-proyecto-gold/30 cursor-wait'
+                            : 'bg-proyecto-gold text-slate-950 hover:brightness-110 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)]'
                         }`}
                       >
                         {collectingPassive ? (
@@ -1177,18 +1177,18 @@ const App: React.FC = () => {
                   <div className="holo-card p-6 rounded-none clip-corner border-slate-800">
                     <h4 className="text-[10px] font-orbitron text-slate-500 uppercase tracking-widest mb-4">{t('dashboard.security_protocol')}</h4>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 clip-corner-sm bg-geminix-accent/5 border border-geminix-accent/20 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-geminix-accent animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                      <div className="w-10 h-10 clip-corner-sm bg-proyecto-accent/5 border border-proyecto-accent/20 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-proyecto-accent animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                       </div>
                       <div>
                         <p className="text-[10px] text-white font-rajdhani font-bold uppercase tracking-wider">{t('dashboard.immutable_guard')}</p>
-                        <p className="text-[8px] text-geminix-accent font-mono-tech">{t('dashboard.encryption')}</p>
+                        <p className="text-[8px] text-proyecto-accent font-mono-tech">{t('dashboard.encryption')}</p>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => { setActiveTab('finance'); }}
-                        className="py-3 px-2 bg-geminix-brand text-white clip-corner-sm text-[9px] font-bold uppercase tracking-widest hover:brightness-110 hover:shadow-neon-cyan transition-all"
+                        className="py-3 px-2 bg-proyecto-brand text-white clip-corner-sm text-[9px] font-bold uppercase tracking-widest hover:brightness-110 hover:shadow-neon-cyan transition-all"
                       >
                         {t('dashboard.deposit_funds')}
                       </button>
@@ -1213,19 +1213,19 @@ const App: React.FC = () => {
 
           {activeTab === 'network' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-geminix-accent">
+              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent">
                 <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">{t('network.strategic_network')}</h2>
-                <span className="text-[9px] font-mono-tech text-geminix-accent bg-geminix-accent/10 px-3 py-1 border border-geminix-accent/20">{t('network.node_status')}</span>
+                <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">{t('network.node_status')}</span>
               </div>
 
               {/* REFERRAL CENTER (DUPLICATED FOR USER CONVENIENCE) */}
               <div className="holo-card p-4 sm:p-6 rounded-none clip-corner flex flex-col gap-4 transition-all hover:bg-slate-900/40">
                 <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 clip-corner flex items-center justify-center flex-shrink-0 transition-all duration-500 ${isReferralCopied ? 'bg-geminix-green/20 shadow-neon-cyan' : 'bg-geminix-brand/20'}`}>
+                  <div className={`w-10 h-10 clip-corner flex items-center justify-center flex-shrink-0 transition-all duration-500 ${isReferralCopied ? 'bg-proyecto-green/20 shadow-neon-cyan' : 'bg-proyecto-brand/20'}`}>
                     {isReferralCopied ? (
-                      <svg className="w-5 h-5 text-geminix-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                      <svg className="w-5 h-5 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
                     ) : (
-                      <svg className="w-5 h-5 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.826L10.242 9.172a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.102 1.101" /></svg>
+                      <svg className="w-5 h-5 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.826L10.242 9.172a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.102 1.101" /></svg>
                     )}
                   </div>
                   <div>
@@ -1233,9 +1233,9 @@ const App: React.FC = () => {
                     <p className="text-[9px] sm:text-[10px] text-slate-400 font-mono-tech uppercase tracking-tighter">{t('dashboard.expand_network')}</p>
                   </div>
                 </div>
-                <div className="w-full bg-black/60 border border-geminix-accent/20 clip-corner px-3 py-2 mb-1">
+                <div className="w-full bg-black/60 border border-proyecto-accent/20 clip-corner px-3 py-2 mb-1">
                   {profile?.ref_code ? (
-                    <span className={`text-[10px] font-mono-tech break-all transition-colors duration-300 ${isReferralCopied ? 'text-geminix-green' : 'text-geminix-accent'}`}>
+                    <span className={`text-[10px] font-mono-tech break-all transition-colors duration-300 ${isReferralCopied ? 'text-proyecto-green' : 'text-proyecto-accent'}`}>
                       {window.location.origin}/?ref={profile.ref_code}
                     </span>
                   ) : (
@@ -1247,8 +1247,8 @@ const App: React.FC = () => {
                     onClick={copyReferralLink}
                     disabled={!profile?.ref_code}
                     className={`flex-1 px-3 py-2.5 text-[10px] font-orbitron font-bold uppercase tracking-wider transition-all duration-300 border clip-corner-sm flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed ${isReferralCopied
-                      ? 'bg-geminix-green text-slate-950 border-geminix-green shadow-neon-cyan'
-                      : 'bg-geminix-brand/20 border-geminix-brand/50 text-geminix-accent hover:bg-geminix-brand/40 hover:text-white'
+                      ? 'bg-proyecto-green text-slate-950 border-proyecto-green shadow-neon-cyan'
+                      : 'bg-proyecto-brand/20 border-proyecto-brand/50 text-proyecto-accent hover:bg-proyecto-brand/40 hover:text-white'
                       }`}
                   >
                     {isReferralCopied ? t('dashboard.copied') : t('dashboard.copy_link')}
@@ -1278,7 +1278,7 @@ const App: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center px-2">
                     <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.inject_liquidity')}</h2>
-                    <div className="w-2 h-2 rounded-full bg-geminix-green shadow-[0_0_10px_#10b981]"></div>
+                    <div className="w-2 h-2 rounded-full bg-proyecto-green shadow-[0_0_10px_#10b981]"></div>
                   </div>
                   <DepositForm
                     onDeposit={handleDeposit}
@@ -1291,7 +1291,7 @@ const App: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center px-2">
                     <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.activate_node')}</h2>
-                    <div className="w-2 h-2 rounded-full bg-geminix-accent shadow-[0_0_10px_cyan]"></div>
+                    <div className="w-2 h-2 rounded-full bg-proyecto-accent shadow-[0_0_10px_cyan]"></div>
                   </div>
                   <InvestmentPanel
                     onInvest={handleInvestment}
@@ -1310,13 +1310,13 @@ const App: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center px-2">
                     <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.liquidate')}</h2>
-                    <div className="w-2 h-2 rounded-full bg-geminix-gold shadow-[0_0_10px_gold]"></div>
+                    <div className="w-2 h-2 rounded-full bg-proyecto-gold shadow-[0_0_10px_gold]"></div>
                   </div>
                   {profile ? (
                     <WithdrawalForm balance={walletBalance} handleWithdrawal={handleWithdrawal} user={profile} />
                   ) : (
                     <div className="p-10 text-center border border-dashed border-slate-800 rounded-2xl">
-                      <div className="w-8 h-8 border-2 border-geminix-gold border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                      <div className="w-8 h-8 border-2 border-proyecto-gold border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                       <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{t('common.loading')} Protocol...</p>
                     </div>
                   )}
@@ -1351,9 +1351,9 @@ const App: React.FC = () => {
 
           {activeTab === 'games' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-geminix-brand mb-6">
+              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-brand mb-6">
                 <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">{t('games.title')}</h2>
-                <span className="text-[9px] font-mono-tech text-geminix-brand bg-geminix-brand/10 px-3 py-1 border border-geminix-brand/20">ENTERTAINMENT</span>
+                <span className="text-[9px] font-mono-tech text-proyecto-brand bg-proyecto-brand/10 px-3 py-1 border border-proyecto-brand/20">ENTERTAINMENT</span>
               </div>
               {profile ? (
                 <GamesPanel
@@ -1363,7 +1363,7 @@ const App: React.FC = () => {
                 />
               ) : (
                 <div className="p-10 text-center border border-dashed border-slate-800 rounded-2xl">
-                  <div className="w-8 h-8 border-2 border-geminix-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <div className="w-8 h-8 border-2 border-proyecto-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                   <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{t('common.loading')} Gaming Node...</p>
                 </div>
               )}
@@ -1372,9 +1372,9 @@ const App: React.FC = () => {
 
           {activeTab === 'events' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-geminix-accent mb-6">
+              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent mb-6">
                 <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">Eventos Exclusivos</h2>
-                <span className="text-[9px] font-mono-tech text-geminix-accent bg-geminix-accent/10 px-3 py-1 border border-geminix-accent/20">LIVE OPS</span>
+                <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">LIVE OPS</span>
               </div>
               <EventsPanel
                 onNavigateToDeposit={() => setActiveTab('finance')}
@@ -1405,9 +1405,9 @@ const App: React.FC = () => {
 
           {activeTab === 'credit' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-geminix-neon-purple">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-purple">◈ TOKEN GMX — GEMINIX Protocol</h2>
-                <span className="text-[9px] font-mono-tech text-geminix-neon-purple bg-geminix-neon-purple/10 px-3 py-1 border border-geminix-neon-purple/20">{t('common.internal_network')}</span>
+              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-neon-purple">
+                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-purple">◈ TOKEN GMX — PROYECTO X Protocol</h2>
+                <span className="text-[9px] font-mono-tech text-proyecto-neon-purple bg-proyecto-neon-purple/10 px-3 py-1 border border-proyecto-neon-purple/20">{t('common.internal_network')}</span>
               </div>
               <CreditPanel
                 userId={user?.id || ''}
@@ -1420,9 +1420,9 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'geminix_card' && (
+          {activeTab === 'proyecto_x_card' && (
             <div className="space-y-6 animate-slide-in">
-              <GeminixCardPanel profile={profile} />
+              <ProyectoXCardPanel profile={profile} />
             </div>
           )}
 
@@ -1430,13 +1430,13 @@ const App: React.FC = () => {
             <div className="space-y-6 animate-slide-in">
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-white/50">
                 <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em]">{t('common.system_config')}</h2>
-                <span className="text-[9px] font-mono-tech text-geminix-accent bg-geminix-accent/10 px-3 py-1 border border-geminix-accent/20">{t('common.access_granted')}</span>
+                <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">{t('common.access_granted')}</span>
               </div>
               {profile ? (
                 <ProfilePanel user={profile} onUpdateUser={handleUpdateUser} addNotification={addNotification} />
               ) : loading ? (
                 <div className="holo-card p-12 text-center animate-pulse">
-                  <div className="text-geminix-accent font-orbitron text-xl tracking-widest mb-4">SINCRONIZANDO PERFIL...</div>
+                  <div className="text-proyecto-accent font-orbitron text-xl tracking-widest mb-4">SINCRONIZANDO PERFIL...</div>
                   <div className="text-[10px] text-slate-500 font-mono">Verificando integridad de datos en el nodo central...</div>
                 </div>
               ) : (
@@ -1445,7 +1445,7 @@ const App: React.FC = () => {
                   <div className="text-[10px] text-slate-500 font-mono mb-6">No se pudo sincronizar tu perfil. Verifica tu conexión e intenta de nuevo.</div>
                   <button
                     onClick={() => refetch()}
-                    className="px-6 py-3 bg-geminix-accent text-white font-orbitron font-black text-[10px] uppercase tracking-widest clip-corner-sm hover:brightness-110 transition-all"
+                    className="px-6 py-3 bg-proyecto-accent text-white font-orbitron font-black text-[10px] uppercase tracking-widest clip-corner-sm hover:brightness-110 transition-all"
                   >
                     Reintentar
                   </button>
@@ -1456,9 +1456,9 @@ const App: React.FC = () => {
 
           {activeTab === 'predictions' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-geminix-accent mb-6">
+              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent mb-6">
                 <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">PREDICTION MARKETS</h2>
-                <span className="text-[9px] font-mono-tech text-geminix-accent bg-geminix-accent/10 px-3 py-1 border border-geminix-accent/20">AMM · POLYMARKET STYLE</span>
+                <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">AMM · POLYMARKET STYLE</span>
               </div>
               {profile ? (
                 <PredictionMarketsPanel
@@ -1468,7 +1468,7 @@ const App: React.FC = () => {
                 />
               ) : (
                 <div className="p-10 text-center border border-dashed border-slate-800 rounded-2xl">
-                  <div className="w-8 h-8 border-2 border-geminix-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <div className="w-8 h-8 border-2 border-proyecto-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                   <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Cargando mercados...</p>
                 </div>
               )}
@@ -1520,7 +1520,7 @@ const App: React.FC = () => {
         </a>
       )}
       <footer className="mt-20 py-8 border-t border-slate-900/50 bg-black/40 text-center backdrop-blur-sm relative z-10">
-        <p className="text-slate-600 text-[10px] font-rajdhani font-bold uppercase tracking-[0.5em]">GK GEMINIX SYSTEMS • VERIFIED NODE ARCHITECTURE • V2.5.5</p>
+        <p className="text-slate-600 text-[10px] font-rajdhani font-bold uppercase tracking-[0.5em]">PROYECTO X SYSTEMS • VERIFIED NODE ARCHITECTURE • V2.5.5</p>
       </footer>
 
       <NotificationToast notifications={notifications} removeNotification={removeNotification} />
@@ -1559,7 +1559,7 @@ const App: React.FC = () => {
           promotion={activePromotion}
           onClose={() => {
             setShowFlashOffer(false);
-            localStorage.setItem('geminix_dismissed_flash_promo', activePromotion.id);
+            localStorage.setItem('proyecto_x_dismissed_flash_promo', activePromotion.id);
           }}
         />
       )}

@@ -93,7 +93,7 @@ const Login: React.FC = () => {
           {/* Logo */}
           <div className="text-center mb-8">
             <Logo size="lg" className="mx-auto mb-4" variant="blue" glow={true} />
-            <h1 className="text-3xl font-black text-white tracking-tight">GK GEMINIX ADMIN</h1>
+            <h1 className="text-3xl font-black text-white tracking-tight">PROYECTO X ADMIN</h1>
             <p className="text-slate-500 text-sm mt-2 font-bold uppercase tracking-wider">
               Sistema de Control Maestro
             </p>
@@ -117,7 +117,7 @@ const Login: React.FC = () => {
                 required
                 disabled={!supabase}
                 className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                placeholder="admin@geminix.com"
+                placeholder="admin@proyecto-x.com"
               />
             </div>
 
@@ -147,7 +147,7 @@ const Login: React.FC = () => {
 
           <div className="mt-8 text-center">
             <p className="text-slate-700 text-xs font-bold uppercase tracking-wider">
-              GK GEMINIX Core v2.0 • Sesión Cifrada
+              PROYECTO X Core v2.0 • Sesión Cifrada
             </p>
           </div>
         </div>

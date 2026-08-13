@@ -149,9 +149,9 @@ const Settings: React.FC = () => {
     credit_transfer_fee: 5,
     support_whatsapp: '',
     telegram_reward_amount: 5,
-    telegram_link_connect: 'https://t.me/GeminixOfficial',
-    telegram_link_bot: 'https://t.me/geminix_bot',
-    telegram_link_channel: 'https://t.me/GeminixNews',
+    telegram_link_connect: 'https://t.me/ProyectoXOfficial',
+    telegram_link_bot: 'https://t.me/proyecto_x_bot',
+    telegram_link_channel: 'https://t.me/ProyectoXNews',
     instagram_link: '',
     youtube_link: '',
     telegram_enabled: true,
@@ -256,9 +256,9 @@ const Settings: React.FC = () => {
           credit_transfer_fee: data.credit_transfer_fee,
           support_whatsapp: data.support_whatsapp || '',
           telegram_reward_amount: data.telegram_reward_amount ?? 5,
-          telegram_link_connect: data.telegram_link_connect || 'https://t.me/GeminixOfficial',
-          telegram_link_bot: data.telegram_link_bot || 'https://t.me/geminix_bot',
-          telegram_link_channel: data.telegram_link_channel || 'https://t.me/GeminixNews',
+          telegram_link_connect: data.telegram_link_connect || 'https://t.me/ProyectoXOfficial',
+          telegram_link_bot: data.telegram_link_bot || 'https://t.me/proyecto_x_bot',
+          telegram_link_channel: data.telegram_link_channel || 'https://t.me/ProyectoXNews',
           instagram_link: data.instagram_link || '',
           youtube_link: data.youtube_link || '',
           telegram_enabled: data.telegram_enabled ?? true,
@@ -543,7 +543,7 @@ const Settings: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
           <h1 className="text-4xl font-black text-slate-50 tracking-tight">System Configuration</h1>
-          <p className="text-slate-400 font-medium">Parámetros maestros de GK GEMINIX: Retiros, Límites y Plan de Compensación.</p>
+          <p className="text-slate-400 font-medium">Parámetros maestros de PROYECTO X: Retiros, Límites y Plan de Compensación.</p>
         </div>
         <div className={`transition-all duration-700 border-2 px-8 py-5 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col items-center min-w-[200px] backdrop-blur-xl relative overflow-hidden group ${totalResidualPercent > 100
           ? 'bg-rose-500/10 border-rose-500/20 shadow-rose-900/20'
@@ -1177,7 +1177,7 @@ const Settings: React.FC = () => {
                         value={(settings as any).instagram_link}
                         onChange={(e) => setSettings({ ...settings, instagram_link: e.target.value } as any)}
                         className="w-full bg-black/40 border-2 border-slate-800 focus:border-pink-500/50 rounded-2xl py-5 px-6 text-slate-300 font-bold text-sm outline-none transition-all shadow-inner"
-                        placeholder="https://instagram.com/geminix"
+                        placeholder="https://instagram.com/proyecto-x"
                       />
                     </div>
                     <div className="space-y-3">
@@ -1189,7 +1189,7 @@ const Settings: React.FC = () => {
                         value={(settings as any).youtube_link}
                         onChange={(e) => setSettings({ ...settings, youtube_link: e.target.value } as any)}
                         className="w-full bg-black/40 border-2 border-slate-800 focus:border-red-500/50 rounded-2xl py-5 px-6 text-slate-300 font-bold text-sm outline-none transition-all shadow-inner"
-                        placeholder="https://youtube.com/@geminix"
+                        placeholder="https://youtube.com/@proyecto-x"
                       />
                     </div>
                   </div>

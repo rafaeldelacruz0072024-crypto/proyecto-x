@@ -194,7 +194,7 @@ export default function BaccaratPanel() {
   const handleSelect = (plan: Plan) => {
     const price = formatPrice(prices, plan.priceKey);
     const message = encodeURIComponent(
-      `Hola! Me interesa adquirir GEMINIX BACCARAT.\n\n📦 Plan: ${plan.subtitle} (${plan.name})\n⏱ Duración: ${plan.durationLabel}\n💰 Precio: ${price}\n\n¿Cómo puedo obtener mi licencia?`
+      `Hola! Me interesa adquirir PROYECTO X BACCARAT.\n\n📦 Plan: ${plan.subtitle} (${plan.name})\n⏱ Duración: ${plan.durationLabel}\n💰 Precio: ${price}\n\n¿Cómo puedo obtener mi licencia?`
     );
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
   };
@@ -210,7 +210,7 @@ export default function BaccaratPanel() {
           </div>
           <div className="text-left">
             <h1 className="text-xl font-orbitron font-black text-white uppercase tracking-widest text-glow-cyan">
-              GEMINIX BACCARAT
+              PROYECTO X BACCARAT
             </h1>
             <p className="text-[10px] font-mono-tech text-slate-500 uppercase tracking-[0.3em]">
               Software de Estrategia Profesional · Licencias Oficiales

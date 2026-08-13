@@ -46,7 +46,7 @@ async function forceAdminSetup() {
         console.log(`Email: ${email}`);
         console.log(`Password: ${password}`);
         console.log("-----------------------------------");
-        console.log("🚀 Everything ready! Please try logging in at https://admin.geminixprotocol.com");
+        console.log("🚀 Everything ready! Please try logging in at https://admin.proyecto-x-user.vercel.app");
     }
 }
 

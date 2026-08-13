@@ -6,7 +6,7 @@ async function run() {
         const page = await browser.newPage();
         await page.goto('http://localhost:3001/login');
 
-        await page.fill('input[type="email"]', 'admin@geminix.com');
+        await page.fill('input[type="email"]', 'admin@proyecto-x.com');
         await page.fill('input[type="password"]', 'admin123');
         await page.click('button[type="submit"]');
 

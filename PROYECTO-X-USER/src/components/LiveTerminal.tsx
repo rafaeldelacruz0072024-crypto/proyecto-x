@@ -93,18 +93,18 @@ const LiveTerminal: React.FC<Props> = ({ messages }) => {
   }, []);
 
   return (
-    <div className="holo-card p-0 rounded-none clip-corner border border-geminix-brand/30 h-full flex flex-col relative overflow-hidden group">
+    <div className="holo-card p-0 rounded-none clip-corner border border-proyecto-brand/30 h-full flex flex-col relative overflow-hidden group">
       {/* Header */}
-      <div className="bg-black/80 px-4 py-2 border-b border-geminix-brand/20 flex justify-between items-center relative z-20 backdrop-blur-sm">
+      <div className="bg-black/80 px-4 py-2 border-b border-proyecto-brand/20 flex justify-between items-center relative z-20 backdrop-blur-sm">
         <div className="flex gap-1.5 items-center">
           <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-          <div className="w-1.5 h-1.5 rounded-full bg-geminix-gold opacity-50"></div>
-          <div className="w-1.5 h-1.5 rounded-full bg-geminix-green opacity-50"></div>
-          <span className="ml-2 text-[8px] font-mono-tech font-bold text-geminix-brand uppercase tracking-[0.2em]">LIVE_FEED_V.2.0</span>
+          <div className="w-1.5 h-1.5 rounded-full bg-proyecto-gold opacity-50"></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-proyecto-green opacity-50"></div>
+          <span className="ml-2 text-[8px] font-mono-tech font-bold text-proyecto-brand uppercase tracking-[0.2em]">LIVE_FEED_V.2.0</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full border border-geminix-green/50 flex items-center justify-center">
-            <div className="w-0.5 h-0.5 bg-geminix-green rounded-full animate-ping"></div>
+          <span className="w-2 h-2 rounded-full border border-proyecto-green/50 flex items-center justify-center">
+            <div className="w-0.5 h-0.5 bg-proyecto-green rounded-full animate-ping"></div>
           </span>
           <span className="text-[8px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest">CONNECTED</span>
         </div>
@@ -120,25 +120,25 @@ const LiveTerminal: React.FC<Props> = ({ messages }) => {
         ref={scrollRef}
         className="flex-grow p-4 font-mono-tech text-[10px] overflow-y-auto custom-scrollbar space-y-1.5 select-none relative z-10"
       >
-        <div className="text-geminix-brand/60 mb-4 italic border-b border-geminix-brand/10 pb-2">
-          <span className="text-geminix-brand">sys_init</span> :: <span className="text-slate-400">Encrypted WebSocket session established...</span><br />
-          <span className="text-geminix-brand">auth_verify</span> :: <span className="text-slate-400">Access node verified. Streaming real-time telemetry...</span>
+        <div className="text-proyecto-brand/60 mb-4 italic border-b border-proyecto-brand/10 pb-2">
+          <span className="text-proyecto-brand">sys_init</span> :: <span className="text-slate-400">Encrypted WebSocket session established...</span><br />
+          <span className="text-proyecto-brand">auth_verify</span> :: <span className="text-slate-400">Access node verified. Streaming real-time telemetry...</span>
         </div>
 
         {messages.map((msg) => (
           <div key={msg.id} className="animate-fade-in flex items-start gap-2 hover:bg-white/5 p-1 rounded transition-colors group/msg">
             <span className="text-slate-600 shrink-0 opacity-50">[{msg.timestamp.toLocaleTimeString([], { hour12: false })}]</span>
             <div className="flex-grow break-all">
-              <span className={`font-bold uppercase tracking-tighter mr-2 ${msg.type === 'PROFIT_TICK' ? 'text-geminix-green text-glow-green' :
-                msg.type === 'NETWORK_EVENT' ? 'text-geminix-accent text-glow-cyan' :
+              <span className={`font-bold uppercase tracking-tighter mr-2 ${msg.type === 'PROFIT_TICK' ? 'text-proyecto-green text-glow-green' :
+                msg.type === 'NETWORK_EVENT' ? 'text-proyecto-accent text-glow-cyan' :
                   'text-slate-500'
                 }`}>
                 {msg.type.replace('_', ' ')}
               </span>
-              <span className="text-geminix-brand/40 mr-2">»</span>
+              <span className="text-proyecto-brand/40 mr-2">»</span>
               <span className="text-slate-300 font-medium group-hover/msg:text-white transition-colors">{msg.payload.description}</span>
               {msg.payload.amount && (
-                <span className="ml-2 text-geminix-green font-bold bg-geminix-green/10 px-1 rounded">
+                <span className="ml-2 text-proyecto-green font-bold bg-proyecto-green/10 px-1 rounded">
                   (+${msg.payload.amount.toFixed(2)})
                 </span>
               )}
@@ -147,12 +147,12 @@ const LiveTerminal: React.FC<Props> = ({ messages }) => {
         ))}
 
         <div className="flex items-center gap-2 mt-4 opacity-50">
-          <span className="text-geminix-accent animate-pulse font-black text-xs">_</span>
+          <span className="text-proyecto-accent animate-pulse font-black text-xs">_</span>
         </div>
       </div>
 
       {/* Scan line effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-geminix-accent/5 to-transparent h-[10%] w-full animate-scan pointer-events-none z-20"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-proyecto-accent/5 to-transparent h-[10%] w-full animate-scan pointer-events-none z-20"></div>
     </div>
   );
 };

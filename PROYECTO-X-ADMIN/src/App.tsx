@@ -26,7 +26,7 @@ import RoadMap from './pages/RoadMap';
 import Marketing from './pages/Marketing';
 import Communications from './pages/Communications';
 import Payroll from './pages/Payroll';
-import GeminixCards from './pages/GeminixCards';
+import ProyectoXCards from './pages/ProyectoXCards';
 import BalanceManager from './pages/BalanceManager';
 
 // Protected Route Component
@@ -118,11 +118,11 @@ const App: React.FC = () => {
         />
 
         <Route
-          path="/geminix-cards"
+          path="/proyecto-x-cards"
           element={
             <ProtectedRoute>
               <Layout>
-                <GeminixCards />
+                <ProyectoXCards />
               </Layout>
             </ProtectedRoute>
           }

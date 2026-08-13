@@ -1,5 +1,5 @@
 -- ============================================================
--- GEMINIX-USER: Corregir Vulnerabilidades Críticas de Seguridad
+-- PROYECTO X-USER: Corregir Vulnerabilidades Críticas de Seguridad
 -- Ejecutar en: Supabase Dashboard → SQL Editor
 -- Fecha: 2026-04-01
 -- ============================================================

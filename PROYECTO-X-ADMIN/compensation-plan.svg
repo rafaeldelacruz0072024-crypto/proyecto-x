@@ -42,7 +42,7 @@
   <!-- Logo accent bar -->
   <rect x="0" y="0" width="5" height="90" fill="url(#cyan)"/>
 
-  <text x="500" y="38" text-anchor="middle" font-size="28" font-weight="900" letter-spacing="10" fill="url(#cyan)" filter="url(#glow)">GEMINIX</text>
+  <text x="500" y="38" text-anchor="middle" font-size="28" font-weight="900" letter-spacing="8" fill="url(#cyan)" filter="url(#glow)">PROYECTO X</text>
   <text x="500" y="62" text-anchor="middle" font-size="11" letter-spacing="6" fill="#64748b">PLAN DE COMPENSACIÓN OFICIAL · V2.5.5</text>
   <text x="500" y="80" text-anchor="middle" font-size="9" letter-spacing="3" fill="#00f3ff" fill-opacity="0.5">SISTEMA MULTINIVEL · 30 NIVELES · ROI DIARIO</text>
 
@@ -309,8 +309,8 @@
   <!-- ══════════════════════════════════════════ -->
   <rect x="0" y="1224" width="1000" height="96" fill="#00f3ff" fill-opacity="0.03"/>
   <line x1="0" y1="1224" x2="1000" y2="1224" stroke="#00f3ff" stroke-width="0.5" stroke-opacity="0.2"/>
-  <text x="500" y="1256" text-anchor="middle" font-size="10" letter-spacing="6" fill="#00f3ff" fill-opacity="0.5">GEMINIX PROTOCOL · SISTEMA DE ARBITRAJE CUANTITATIVO</text>
+  <text x="500" y="1256" text-anchor="middle" font-size="10" letter-spacing="5" fill="#00f3ff" fill-opacity="0.5">PROYECTO X · SISTEMA DE ARBITRAJE CUANTITATIVO</text>
   <text x="500" y="1278" text-anchor="middle" font-size="8" letter-spacing="3" fill="#64748b">2.2% ROI DIARIO · 30 NIVELES DE RED · RANGOS ELITE · BONO SEMANAL</text>
-  <text x="500" y="1300" text-anchor="middle" font-size="8" letter-spacing="2" fill="#334155">geminixprotocol.com · CONFIDENCIAL · USO INTERNO</text>
+  <text x="500" y="1300" text-anchor="middle" font-size="8" letter-spacing="2" fill="#334155">proyecto-x-user.vercel.app · CONFIDENCIAL · USO INTERNO</text>
   <rect x="0" y="1314" width="1000" height="6" fill="url(#cyan)" fill-opacity="0.3"/>
 </svg>

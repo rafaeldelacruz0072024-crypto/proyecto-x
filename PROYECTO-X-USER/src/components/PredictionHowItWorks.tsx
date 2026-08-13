@@ -101,7 +101,7 @@ const STEPS: Step[] = [
 
                 <div style={{ ...S.highlight('#00f3ff'), display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                     <Zap size={16} style={{ flexShrink: 0, marginTop: 1 }} />
-                    <span>En GEMINIX tienes acceso a <strong>mercados propios</strong> creados por el equipo Y a <strong>mercados globales de Polymarket</strong> — el mayor exchange de predicciones del mundo.</span>
+                    <span>En PROYECTO X tienes acceso a <strong>mercados propios</strong> creados por el equipo Y a <strong>mercados globales de Polymarket</strong> — el mayor exchange de predicciones del mundo.</span>
                 </div>
             </div>
         ),
@@ -325,7 +325,7 @@ const STEPS: Step[] = [
 
                 <div style={{ ...S.highlight('#fbbf24'), display: 'flex', gap: 10 }}>
                     <Clock size={16} style={{ flexShrink: 0 }} />
-                    <span>Para mercados de <strong>Polymarket</strong>, la resolución se basa en el resultado oficial del oráculo de Polymarket. Para mercados propios de GEMINIX, el equipo confirma el resultado.</span>
+                    <span>Para mercados de <strong>Polymarket</strong>, la resolución se basa en el resultado oficial del oráculo de Polymarket. Para mercados propios de PROYECTO X, el equipo confirma el resultado.</span>
                 </div>
             </div>
         ),
@@ -361,7 +361,7 @@ const STEPS: Step[] = [
                             icon: '⚖️',
                             color: '#a855f7',
                             title: 'Fee de la casa: 2%',
-                            desc: 'GEMINIX cobra un 2% sobre el pago final solo si ganas. Si pierdes, no se cobra nada adicional.',
+                            desc: 'PROYECTO X cobra un 2% sobre el pago final solo si ganas. Si pierdes, no se cobra nada adicional.',
                         },
                         {
                             icon: '🔒',
@@ -379,7 +379,7 @@ const STEPS: Step[] = [
                             icon: '🚫',
                             color: '#f87171',
                             title: 'Solo para mayores de edad',
-                            desc: 'Al apostar en GEMINIX confirmas que eres mayor de edad y que el juego está permitido en tu jurisdicción.',
+                            desc: 'Al apostar en PROYECTO X confirmas que eres mayor de edad y que el juego está permitido en tu jurisdicción.',
                         },
                     ].map((rule, i) => (
                         <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '12px 14px', borderRadius: 12, background: 'rgba(255,255,255,0.03)', border: `1px solid ${rule.color}15` }}>
@@ -420,12 +420,12 @@ const STEPS: Step[] = [
                         a: 'Instantáneo. En el momento que el admin resuelve el mercado, el pago aparece en tu wallet automáticamente.',
                     },
                     {
-                        q: '¿Qué es un mercado de Polymarket vs. uno de GEMINIX?',
-                        a: 'Los mercados de Polymarket son eventos globales (política, macro, crypto) con millones en volumen. Los de GEMINIX son creados por el equipo y pueden incluir eventos locales o temáticos.',
+                        q: '¿Qué es un mercado de Polymarket vs. uno de PROYECTO X?',
+                        a: 'Los mercados de Polymarket son eventos globales (política, macro, crypto) con millones en volumen. Los de PROYECTO X son creados por el equipo y pueden incluir eventos locales o temáticos.',
                     },
                     {
                         q: '¿Cómo sé que el resultado es justo?',
-                        a: 'Para mercados globales usamos el oráculo de Polymarket (verificado públicamente en blockchain). Para mercados propios, el equipo de GEMINIX confirma basándose en fuentes públicas verificables.',
+                        a: 'Para mercados globales usamos el oráculo de Polymarket (verificado públicamente en blockchain). Para mercados propios, el equipo de PROYECTO X confirma basándose en fuentes públicas verificables.',
                     },
                     {
                         q: '¿Puedo ver el historial de mis apuestas?',

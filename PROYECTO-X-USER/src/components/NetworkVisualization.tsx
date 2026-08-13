@@ -133,15 +133,15 @@ const NeuralExplorer: React.FC<{ data: NetworkNode }> = ({ data }) => {
   }, [links]);
 
   return (
-    <div className="w-full h-[800px] border border-geminix-accent/20 rounded-2xl bg-black/40 relative overflow-hidden group">
+    <div className="w-full h-[800px] border border-proyecto-accent/20 rounded-2xl bg-black/40 relative overflow-hidden group">
       {/* Background Grid */}
       <div className="absolute inset-0 bg-grid opacity-10 pointer-events-none"></div>
 
       {/* UI Overlay */}
       <div className="absolute top-6 left-6 z-10">
         <div className="flex items-center gap-2 mb-1">
-          <div className="w-2 h-2 rounded-full bg-geminix-accent animate-ping"></div>
-          <h4 className="text-geminix-accent font-orbitron text-xs tracking-widest uppercase">{t('network.strategic_network')}</h4>
+          <div className="w-2 h-2 rounded-full bg-proyecto-accent animate-ping"></div>
+          <h4 className="text-proyecto-accent font-orbitron text-xs tracking-widest uppercase">{t('network.strategic_network')}</h4>
         </div>
         <p className="text-[9px] text-slate-500 font-mono italic">{t('network.status')}: {t('network.synchronized')}</p>
       </div>
@@ -198,7 +198,7 @@ const NeuralExplorer: React.FC<{ data: NetworkNode }> = ({ data }) => {
 
             <circle
               r={node.level === 0 ? 8 : 4}
-              className={`transition-all duration-300 ${node.totalVolume > 0 ? 'fill-geminix-accent' : 'fill-slate-700'}`}
+              className={`transition-all duration-300 ${node.totalVolume > 0 ? 'fill-proyecto-accent' : 'fill-slate-700'}`}
               filter={node.totalVolume > 0 ? 'url(#neonGlow)' : ''}
               stroke={node.level === 0 ? "#fff" : "rgba(255,255,255,0.3)"}
               strokeWidth={node.level === 0 ? "2" : "1"}
@@ -282,20 +282,20 @@ const NodeCard: React.FC<{
           relative group cursor-pointer transition-all duration-500
           flex items-center gap-5 p-4 rounded-2xl border backdrop-blur-xl
           ${isExpanded
-            ? 'bg-geminix-accent/15 border-geminix-accent/40 shadow-[0_0_25px_rgba(0,243,255,0.15)]'
-            : 'bg-black/40 border-slate-800/80 hover:border-geminix-accent/30 hover:bg-white/5'
+            ? 'bg-proyecto-accent/15 border-proyecto-accent/40 shadow-[0_0_25px_rgba(0,243,255,0.15)]'
+            : 'bg-black/40 border-slate-800/80 hover:border-proyecto-accent/30 hover:bg-white/5'
           }
         `}
       >
         {/* Status Glow Bar */}
-        <div className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full transition-all duration-500 ${isActive ? 'bg-geminix-accent shadow-[0_0_15px_cyan]' : 'bg-slate-700'}`}></div>
+        <div className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full transition-all duration-500 ${isActive ? 'bg-proyecto-accent shadow-[0_0_15px_cyan]' : 'bg-slate-700'}`}></div>
 
         {/* Avatar Plate */}
         <div className="relative w-12 h-12 flex-shrink-0">
-          <div className="absolute inset-0 rounded-full border border-geminix-accent/20 animate-spin-slow"></div>
+          <div className="absolute inset-0 rounded-full border border-proyecto-accent/20 animate-spin-slow"></div>
           <div className={`
              absolute inset-1 rounded-full flex items-center justify-center font-orbitron font-bold text-lg
-             ${isActive ? 'bg-geminix-accent/20 text-white' : 'bg-slate-900 text-slate-500'}
+             ${isActive ? 'bg-proyecto-accent/20 text-white' : 'bg-slate-900 text-slate-500'}
              border border-slate-700
           `}>
             {node.name.charAt(0).toUpperCase()}
@@ -305,18 +305,18 @@ const NodeCard: React.FC<{
         {/* Identity & Stats */}
         <div className="flex-grow">
           <div className="flex items-center justify-between mb-1.5">
-            <h4 className="font-rajdhani font-black text-xl tracking-tight text-white group-hover:text-geminix-accent transition-colors">
+            <h4 className="font-rajdhani font-black text-xl tracking-tight text-white group-hover:text-proyecto-accent transition-colors">
               {node.name}
-              {node.level === 0 && <span className="ml-3 text-[9px] bg-geminix-accent/20 text-geminix-accent border border-geminix-accent/30 px-2 py-0.5 rounded-full font-mono font-bold tracking-tighter">{t('network.orbital_id')}</span>}
+              {node.level === 0 && <span className="ml-3 text-[9px] bg-proyecto-accent/20 text-proyecto-accent border border-proyecto-accent/30 px-2 py-0.5 rounded-full font-mono font-bold tracking-tighter">{t('network.orbital_id')}</span>}
             </h4>
             <div className="flex items-center gap-2">
               {node.rank && node.rank !== 'Starter' && (
-                <span className="px-2 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest bg-geminix-gold/20 text-geminix-gold border border-geminix-gold/30">
+                <span className="px-2 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest bg-proyecto-gold/20 text-proyecto-gold border border-proyecto-gold/30">
                   {node.rank}
                 </span>
               )}
               <span className="font-mono text-[9px] text-slate-500 font-bold uppercase tracking-widest">{t('network.level_label', { level: node.level })}</span>
-              <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-geminix-accent animate-pulse shadow-[0_0_5px_cyan]' : 'bg-slate-700'}`}></div>
+              <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-proyecto-accent animate-pulse shadow-[0_0_5px_cyan]' : 'bg-slate-700'}`}></div>
             </div>
           </div>
 
@@ -327,14 +327,14 @@ const NodeCard: React.FC<{
             </div>
             <div className="flex flex-col text-right">
               <span className="text-[8px] text-slate-500 font-black uppercase tracking-widest leading-none mb-1">{t('network.directs')}</span>
-              <span className="font-orbitron font-bold text-xs text-geminix-accent">{node.directsCount || 0}_{t('network.units')}</span>
+              <span className="font-orbitron font-bold text-xs text-proyecto-accent">{node.directsCount || 0}_{t('network.units')}</span>
             </div>
           </div>
         </div>
 
         {/* Expansion Trigger */}
         {hasChildren && (
-          <div className={`w-8 h-8 rounded-full border border-slate-700/50 flex items-center justify-center transition-all duration-500 ${isExpanded ? 'rotate-180 bg-geminix-accent text-slate-950 shadow-[0_0_15px_cyan]' : 'text-slate-500 hover:text-white group-hover:border-geminix-accent'}`}>
+          <div className={`w-8 h-8 rounded-full border border-slate-700/50 flex items-center justify-center transition-all duration-500 ${isExpanded ? 'rotate-180 bg-proyecto-accent text-slate-950 shadow-[0_0_15px_cyan]' : 'text-slate-500 hover:text-white group-hover:border-proyecto-accent'}`}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
           </div>
         )}
@@ -378,11 +378,11 @@ const NetworkVisualization: React.FC<Props> = ({ data, totalVolume = 0, totalEar
         {!isRoot && (
           <>
             {/* Horizontal Bridge */}
-            <div className="absolute left-0 top-8 w-8 md:w-16 h-[1.5px] bg-gradient-to-r from-geminix-accent/40 to-transparent">
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-geminix-accent shadow-[0_0_8px_cyan]"></div>
+            <div className="absolute left-0 top-8 w-8 md:w-16 h-[1.5px] bg-gradient-to-r from-proyecto-accent/40 to-transparent">
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-proyecto-accent shadow-[0_0_8px_cyan]"></div>
             </div>
             {/* Vertical Stem */}
-            <div className="absolute left-0 -top-8 bottom-0 w-[1.5px] bg-slate-800/50 -z-10 group-hover:bg-geminix-accent/20 transition-all"></div>
+            <div className="absolute left-0 -top-8 bottom-0 w-[1.5px] bg-slate-800/50 -z-10 group-hover:bg-proyecto-accent/20 transition-all"></div>
           </>
         )}
 
@@ -394,7 +394,7 @@ const NetworkVisualization: React.FC<Props> = ({ data, totalVolume = 0, totalEar
         />
 
         {isExpanded && hasChildren && (
-          <div className="animate-tree-slide-in border-l border-slate-800/30 hover:border-geminix-accent/10 transition-colors ml-6">
+          <div className="animate-tree-slide-in border-l border-slate-800/30 hover:border-proyecto-accent/10 transition-colors ml-6">
             {node.children.map(child => renderTree(child))}
           </div>
         )}
@@ -412,11 +412,11 @@ const NetworkVisualization: React.FC<Props> = ({ data, totalVolume = 0, totalEar
           { label: 'TOTAL DE USUARIOS', val: totalUsers.toLocaleString('en-US'), color: 'purple', pct: 100 },
         ].map((stat, i) => (
           <div key={i} className="holo-card p-6 border-slate-800 bg-black/40 backdrop-blur-md relative group overflow-hidden">
-            <div className={`absolute -right-4 -top-4 w-20 h-20 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity ${stat.color === 'cyan' ? 'bg-geminix-accent' : stat.color === 'green' ? 'bg-geminix-green' : 'bg-purple-500'}`}></div>
+            <div className={`absolute -right-4 -top-4 w-20 h-20 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity ${stat.color === 'cyan' ? 'bg-proyecto-accent' : stat.color === 'green' ? 'bg-proyecto-green' : 'bg-purple-500'}`}></div>
             <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em] font-black mb-3">{stat.label}</p>
             <h3 className="text-3xl font-orbitron font-bold text-white tracking-tight">{stat.val}</h3>
             <div className="mt-4 h-1 w-full bg-slate-900 rounded-full overflow-hidden">
-              <div className={`h-full transition-all duration-1000 ${stat.color === 'cyan' ? 'bg-geminix-accent' : stat.color === 'green' ? 'bg-geminix-green' : 'bg-purple-500'}`} style={{ width: `${stat.pct}%` }}></div>
+              <div className={`h-full transition-all duration-1000 ${stat.color === 'cyan' ? 'bg-proyecto-accent' : stat.color === 'green' ? 'bg-proyecto-green' : 'bg-purple-500'}`} style={{ width: `${stat.pct}%` }}></div>
             </div>
           </div>
         ))}
@@ -430,9 +430,9 @@ const NetworkVisualization: React.FC<Props> = ({ data, totalVolume = 0, totalEar
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-              <div className="w-3 h-3 rounded-full bg-geminix-accent/20 border border-geminix-accent/50"></div>
+              <div className="w-3 h-3 rounded-full bg-proyecto-accent/20 border border-proyecto-accent/50"></div>
             </div>
-            <span className="font-orbitron text-xs font-black tracking-[0.4em] text-white/40 ml-4 uppercase">{t('network.system_visualize')}_v3.0 // <span className="text-geminix-accent">{t('network.org_mapping')}</span></span>
+            <span className="font-orbitron text-xs font-black tracking-[0.4em] text-white/40 ml-4 uppercase">{t('network.system_visualize')}_v3.0 // <span className="text-proyecto-accent">{t('network.org_mapping')}</span></span>
           </div>
 
           <div className="flex p-1 bg-slate-900 rounded-xl border border-slate-800">
@@ -443,7 +443,7 @@ const NetworkVisualization: React.FC<Props> = ({ data, totalVolume = 0, totalEar
               <button
                 key={m.id}
                 onClick={() => setViewMode(m.id as any)}
-                className={`px-6 py-2 rounded-lg text-[10px] font-mono uppercase tracking-widest transition-all ${viewMode === m.id ? 'bg-geminix-accent text-slate-950 font-black shadow-[0_0_20px_rgba(0,243,255,0.4)]' : 'text-slate-500 hover:text-white'}`}
+                className={`px-6 py-2 rounded-lg text-[10px] font-mono uppercase tracking-widest transition-all ${viewMode === m.id ? 'bg-proyecto-accent text-slate-950 font-black shadow-[0_0_20px_rgba(0,243,255,0.4)]' : 'text-slate-500 hover:text-white'}`}
               >
                 {m.label}
               </button>
@@ -471,7 +471,7 @@ const NetworkVisualization: React.FC<Props> = ({ data, totalVolume = 0, totalEar
         {/* Status Footer */}
         <div className="px-8 py-4 border-t border-slate-800/50 bg-white/5 flex justify-between items-center text-[10px] font-mono text-slate-500">
           <div className="flex gap-6">
-            <span>{t('network.status')}: <span className="text-geminix-accent text-glow-cyan">{t('network.synchronized')}</span></span>
+            <span>{t('network.status')}: <span className="text-proyecto-accent text-glow-cyan">{t('network.synchronized')}</span></span>
             <span>{t('network.node_count')}: <span className="text-white">{data?.children?.length || 0} {t('network.direct_units')}</span></span>
           </div>
           <div className="animate-pulse">{t('network.decrypting')}</div>

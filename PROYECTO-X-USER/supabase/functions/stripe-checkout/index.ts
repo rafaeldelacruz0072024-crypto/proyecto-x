@@ -103,7 +103,7 @@ serve(async (req) => {
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Depósito Geminix",
+              name: "Depósito Proyecto X",
               description: `Recarga de saldo por $${amount} USD`,
               images: [],
             },

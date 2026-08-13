@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 import { Game } from '../types';
 import PlinkoGame from "./PlinkoGame";
-import GeminixCrash from "./GeminixCrash";
+import ProyectoXCrash from "./ProyectoXCrash";
 import LiveWallet from './LiveWallet';
 import CreditPanel from './CreditPanel';
 
@@ -86,8 +86,8 @@ export default function GamesPanel({ user, walletBalance, onUpdateBalance }: { u
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-                <div className="w-12 h-12 border-4 border-geminix-accent border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-geminix-accent font-mono-tech animate-pulse uppercase tracking-[0.3em]">{t('common.loading')}</p>
+                <div className="w-12 h-12 border-4 border-proyecto-accent border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-proyecto-accent font-mono-tech animate-pulse uppercase tracking-[0.3em]">{t('common.loading')}</p>
             </div>
         );
     }
@@ -96,11 +96,11 @@ export default function GamesPanel({ user, walletBalance, onUpdateBalance }: { u
         return (
             <>
                 <div className="flex justify-between items-center mb-6">
-                    <p className="text-[8px] font-mono-tech text-geminix-accent/40 uppercase tracking-[0.4em]">SYSTEM_MOD_GAMES_V2.0.1</p>
+                    <p className="text-[8px] font-mono-tech text-proyecto-accent/40 uppercase tracking-[0.4em]">SYSTEM_MOD_GAMES_V2.0.1</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {games.map(game => (
-                        <div key={game.id} className="bg-black/40 backdrop-blur-xl border border-white/5 p-6 clip-corner group hover:border-geminix-accent/30 transition-all cursor-pointer" onClick={() => setSelectedGame(game)}>
+                        <div key={game.id} className="bg-black/40 backdrop-blur-xl border border-white/5 p-6 clip-corner group hover:border-proyecto-accent/30 transition-all cursor-pointer" onClick={() => setSelectedGame(game)}>
                             <div className="h-40 bg-slate-900/50 mb-4 clip-corner-sm relative overflow-hidden">
                                 {game.image_url || (game.title?.toLowerCase().includes('trading') ? 'https://bzyfubrqlnyvymzquuzv.supabase.co/storage/v1/object/public/games/trading_game_thumb.png' : '') ? (
                                     <img
@@ -109,15 +109,15 @@ export default function GamesPanel({ user, walletBalance, onUpdateBalance }: { u
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-geminix-accent/20">
+                                    <div className="w-full h-full flex items-center justify-center text-proyecto-accent/20">
                                         <LayoutGrid size={48} />
                                     </div>
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
-                                    <span className="text-[10px] bg-geminix-accent/20 text-geminix-accent px-2 py-0.5 rounded uppercase font-bold tracking-widest">{game.category}</span>
+                                    <span className="text-[10px] bg-proyecto-accent/20 text-proyecto-accent px-2 py-0.5 rounded uppercase font-bold tracking-widest">{game.category}</span>
                                 </div>
                             </div>
-                            <h3 className="text-xl font-orbitron font-bold text-white mb-1 uppercase group-hover:text-geminix-accent transition-colors">{game.title}</h3>
+                            <h3 className="text-xl font-orbitron font-bold text-white mb-1 uppercase group-hover:text-proyecto-accent transition-colors">{game.title}</h3>
                             <p className="text-[10px] text-slate-500 uppercase tracking-widest mb-3 font-bold">{game.category}</p>
                             <p className="text-xs text-slate-400 mb-6 line-clamp-2 leading-relaxed">
                                 {game.title?.toLowerCase().includes('plinko')
@@ -126,7 +126,7 @@ export default function GamesPanel({ user, walletBalance, onUpdateBalance }: { u
                                         ? "Maximiza tu capital en segundos. Un juego de alta velocidad donde el objetivo es retirar tus ganancias antes de que el multiplicador explote."
                                         : "Predice si el precio del Bitcoin subirá o bajará en los próximos 10 segundos. ¡Gana el 90% de tu apuesta al instante!"}
                             </p>
-                            <button className="w-full py-3 bg-geminix-brand text-white font-bold uppercase tracking-widest text-[10px] clip-corner-sm flex items-center justify-center gap-2 group-hover:shadow-neon-cyan transition-all">
+                            <button className="w-full py-3 bg-proyecto-brand text-white font-bold uppercase tracking-widest text-[10px] clip-corner-sm flex items-center justify-center gap-2 group-hover:shadow-neon-cyan transition-all">
                                 <Play size={14} fill="currentColor" /> {t('games.play_now')}
                             </button>
                         </div>
@@ -159,8 +159,8 @@ export default function GamesPanel({ user, walletBalance, onUpdateBalance }: { u
                     onUpdateBalance={onUpdateBalance}
                     maxBet={selectedGame.max_bet || 100}
                 />
-            ) : selectedGame.title?.trim().toLowerCase() === 'geminix crash' ? (
-                <GeminixCrash
+            ) : selectedGame.title?.trim().toLowerCase() === 'proyecto-x crash' ? (
+                <ProyectoXCrash
                     user={user}
                     walletBalance={walletBalance}
                     onUpdateBalance={onUpdateBalance}
@@ -172,7 +172,7 @@ export default function GamesPanel({ user, walletBalance, onUpdateBalance }: { u
                     <p className="text-slate-400 mb-8">This game type is coming soon or handled externally.</p>
                     <p className="text-[8px] text-slate-600 font-mono">DEBUG_TITLE: "{selectedGame.title}"</p>
                     {selectedGame.game_url && (
-                        <a href={selectedGame.game_url} target="_blank" rel="noopener noreferrer" className="px-8 py-3 bg-geminix-accent text-white font-bold uppercase tracking-widest clip-corner-sm">
+                        <a href={selectedGame.game_url} target="_blank" rel="noopener noreferrer" className="px-8 py-3 bg-proyecto-accent text-white font-bold uppercase tracking-widest clip-corner-sm">
                             Open Project
                         </a>
                     )}
@@ -440,11 +440,11 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                     <div className="absolute top-0 left-0 right-0 z-[60] p-4 lg:p-6 flex justify-center items-start pointer-events-none">
                         <div className="bg-black/60 backdrop-blur-md p-3 px-5 rounded-2xl border border-white/10 shadow-2xl pointer-events-auto">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-geminix-accent/20 flex items-center justify-center border border-geminix-accent/30 shadow-neon-cyan">
-                                    <TrendingUp className="text-geminix-accent" size={16} />
+                                <div className="w-8 h-8 rounded-lg bg-proyecto-accent/20 flex items-center justify-center border border-proyecto-accent/30 shadow-neon-cyan">
+                                    <TrendingUp className="text-proyecto-accent" size={16} />
                                 </div>
                                 <div>
-                                    <h3 className="text-[10px] font-black text-geminix-accent uppercase tracking-widest leading-none mb-1">Mercado Live</h3>
+                                    <h3 className="text-[10px] font-black text-proyecto-accent uppercase tracking-widest leading-none mb-1">Mercado Live</h3>
                                     <p className="text-lg font-black text-white italic tracking-tighter leading-none">BTC / USD</p>
                                 </div>
                                 <div className="ml-4 pl-4 border-l border-white/10">
@@ -466,7 +466,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                             <div key={i} className="flex justify-between items-center text-[8px] font-bold">
                                 <span className="text-slate-400 capitalize">{winner.name}</span>
                                 <div className="flex items-center gap-1">
-                                    <span className="text-geminix-green">{winner.win}</span>
+                                    <span className="text-proyecto-green">{winner.win}</span>
                                     <span className="text-white/80">{winner.amount}</span>
                                 </div>
                             </div>
@@ -476,13 +476,13 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                     {/* Win Notification Overlay */}
                     {showWinNotification && (
                         <div className="absolute inset-0 z-[150] flex items-center justify-center animate-in fade-in zoom-in duration-500 bg-black/60 backdrop-blur-sm">
-                            <div className="text-center p-8 lg:p-10 rounded-[2.5rem] bg-gradient-to-b from-geminix-green/20 to-black border-2 border-geminix-green/40 shadow-neon-green relative overflow-hidden max-w-[90%] lg:max-w-md">
+                            <div className="text-center p-8 lg:p-10 rounded-[2.5rem] bg-gradient-to-b from-proyecto-green/20 to-black border-2 border-proyecto-green/40 shadow-neon-green relative overflow-hidden max-w-[90%] lg:max-w-md">
                                 {/* Celebration Effect */}
                                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                                     {Array.from({ length: 15 }).map((_, i) => (
                                         <div
                                             key={i}
-                                            className="absolute w-1.5 h-1.5 rounded-full bg-geminix-green animate-ping opacity-20"
+                                            className="absolute w-1.5 h-1.5 rounded-full bg-proyecto-green animate-ping opacity-20"
                                             style={{
                                                 top: `${Math.random() * 100}%`,
                                                 left: `${Math.random() * 100}%`,
@@ -492,16 +492,16 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                                     ))}
                                 </div>
 
-                                <Trophy className="mx-auto mb-4 text-geminix-green drop-shadow-neon" size={56} />
+                                <Trophy className="mx-auto mb-4 text-proyecto-green drop-shadow-neon" size={56} />
                                 <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter mb-1">¡APUESTA GANADA!</h2>
-                                <div className="h-0.5 w-16 bg-geminix-green mx-auto mb-4"></div>
+                                <div className="h-0.5 w-16 bg-proyecto-green mx-auto mb-4"></div>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Pago Total</p>
-                                <p className="text-4xl font-black text-geminix-green shadow-neon-green">
+                                <p className="text-4xl font-black text-proyecto-green shadow-neon-green">
                                     {lastWinAmount !== null ? formatCurrency(lastWinAmount) : '$0.00'}
                                 </p>
                                 <button
                                     onClick={() => setShowWinNotification(false)}
-                                    className="mt-8 px-10 py-3 bg-geminix-green text-black font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl text-xs"
+                                    className="mt-8 px-10 py-3 bg-proyecto-green text-black font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl text-xs"
                                 >
                                     Excelente
                                 </button>
@@ -512,8 +512,8 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                     {/* Active Bet Indicator (New) */}
                     {currentBet && (
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] animate-in zoom-in duration-300">
-                            <div className={`px-6 py-3 rounded-full backdrop-blur-xl border-2 flex items-center gap-3 shadow-2xl ${currentBet.direction === 'UP' ? 'bg-geminix-green/20 border-geminix-green/50' : 'bg-red-500/20 border-red-500/50'}`}>
-                                <div className={`w-3 h-3 rounded-full animate-pulse ${currentBet.direction === 'UP' ? 'bg-geminix-green shadow-neon-green' : 'bg-red-500 shadow-neon-red'}`}></div>
+                            <div className={`px-6 py-3 rounded-full backdrop-blur-xl border-2 flex items-center gap-3 shadow-2xl ${currentBet.direction === 'UP' ? 'bg-proyecto-green/20 border-proyecto-green/50' : 'bg-red-500/20 border-red-500/50'}`}>
+                                <div className={`w-3 h-3 rounded-full animate-pulse ${currentBet.direction === 'UP' ? 'bg-proyecto-green shadow-neon-green' : 'bg-red-500 shadow-neon-red'}`}></div>
                                 <span className="text-sm font-black uppercase tracking-tighter text-white">
                                     POSICIÓN {currentBet.direction === 'UP' ? 'ALZA' : 'BAJA'} ACTIVA
                                 </span>
@@ -557,13 +557,13 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                                         fill="transparent"
                                         strokeDasharray="226"
                                         strokeDashoffset={226 - (226 * (phase === 'BETTING' ? (timeLeft - 15) / 15 : timeLeft / 15))}
-                                        className={`transition-all duration-1000 ease-linear ${phase === 'BETTING' ? 'text-geminix-accent shadow-neon-cyan' : 'text-red-500 shadow-neon-red'}`}
+                                        className={`transition-all duration-1000 ease-linear ${phase === 'BETTING' ? 'text-proyecto-accent shadow-neon-cyan' : 'text-red-500 shadow-neon-red'}`}
                                         strokeLinecap="round"
                                     />
                                 </svg>
 
                                 <div className="text-center z-10">
-                                    <p className={`text-[10px] font-black uppercase tracking-tighter leading-none mb-1 ${phase === 'BETTING' ? 'text-geminix-accent' : 'text-red-500'}`}>
+                                    <p className={`text-[10px] font-black uppercase tracking-tighter leading-none mb-1 ${phase === 'BETTING' ? 'text-proyecto-accent' : 'text-red-500'}`}>
                                         {phase === 'BETTING' ? 'Apuesta' : 'Cierre'}
                                     </p>
                                     <p className="text-2xl font-black text-white font-mono leading-none">
@@ -577,12 +577,12 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
 
                 {/* Mobile Sentiment Bar (Right under chart) */}
                 <div className="lg:hidden h-10 w-full flex items-center px-4 bg-black/40 border-y border-white/5">
-                    <div className="flex-1 flex items-center gap-2 text-geminix-green text-[10px] font-black">
+                    <div className="flex-1 flex items-center gap-2 text-proyecto-green text-[10px] font-black">
                         <TrendingUp size={10} />
                         <span>MERCADO EN ALZA (+2.4%)</span>
                     </div>
                     <div className="flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-geminix-green shadow-neon-green"></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-proyecto-green shadow-neon-green"></div>
                         <span className="text-[9px] text-slate-500 font-bold">LIVE</span>
                     </div>
                 </div>
@@ -636,13 +636,13 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                                 className="group flex-1 h-16 bg-[#1c1c1e] border border-white/5 rounded-3xl px-4 flex flex-col items-start justify-center cursor-pointer active:bg-white/5 transition-all relative overflow-hidden"
                             >
                                 <div className="flex items-center gap-1.5 mb-0.5">
-                                    <div className="w-4 h-4 rounded bg-geminix-accent/20 flex items-center justify-center text-geminix-accent">
+                                    <div className="w-4 h-4 rounded bg-proyecto-accent/20 flex items-center justify-center text-proyecto-accent">
                                         <Wallet size={10} />
                                     </div>
                                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">CARTERA</span>
                                 </div>
                                 <div className="flex items-baseline gap-1">
-                                    <span className="text-lg font-black text-white group-active:text-geminix-accent">{formatCurrency(balance).replace('$', '')}</span>
+                                    <span className="text-lg font-black text-white group-active:text-proyecto-accent">{formatCurrency(balance).replace('$', '')}</span>
                                     <span className="text-xs text-slate-400">$</span>
                                 </div>
                                 <span className="text-[7px] text-slate-600 italic mt-1 font-bold uppercase">Tap to refresh</span>
@@ -657,7 +657,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                                                 <button
                                                     key={v}
                                                     onClick={() => { setStake(v); setShowChipSelector(false); }}
-                                                    className={`h-11 rounded-full border-2 border-white/10 flex items-center justify-center text-[10px] font-black transition-all active:scale-90 ${stake === v ? 'bg-geminix-accent border-geminix-accent shadow-neon-cyan text-white' : 'bg-black/40 text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                                    className={`h-11 rounded-full border-2 border-white/10 flex items-center justify-center text-[10px] font-black transition-all active:scale-90 ${stake === v ? 'bg-proyecto-accent border-proyecto-accent shadow-neon-cyan text-white' : 'bg-black/40 text-slate-400 hover:text-white hover:bg-white/5'}`}
                                                 >
                                                     {v < 1000 ? v : `${(v / 1000).toFixed(0)}K`}
                                                 </button>
@@ -666,7 +666,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                                             {![1, 5, 10, 25, 50, 100, 250, 500, 1000].includes(maxBet) && (
                                                 <button
                                                     onClick={() => { setStake(maxBet); setShowChipSelector(false); }}
-                                                    className={`h-11 rounded-full border-2 border-white/10 flex items-center justify-center text-[10px] font-black transition-all active:scale-90 ${stake === maxBet ? 'bg-geminix-accent border-geminix-accent shadow-neon-cyan text-white' : 'bg-black/40 text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                                    className={`h-11 rounded-full border-2 border-white/10 flex items-center justify-center text-[10px] font-black transition-all active:scale-90 ${stake === maxBet ? 'bg-proyecto-accent border-proyecto-accent shadow-neon-cyan text-white' : 'bg-black/40 text-slate-400 hover:text-white hover:bg-white/5'}`}
                                                 >
                                                     {maxBet}
                                                 </button>
@@ -683,7 +683,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
 
                                 <button
                                     onClick={() => setShowChipSelector(!showChipSelector)}
-                                    className={`w-16 h-16 rounded-full bg-[#2c2c2e] border-4 border-[#3a3a3c] flex flex-col items-center justify-center shadow-2xl active:scale-95 transition-all relative ${showChipSelector ? 'ring-2 ring-geminix-accent/50' : ''}`}
+                                    className={`w-16 h-16 rounded-full bg-[#2c2c2e] border-4 border-[#3a3a3c] flex flex-col items-center justify-center shadow-2xl active:scale-95 transition-all relative ${showChipSelector ? 'ring-2 ring-proyecto-accent/50' : ''}`}
                                 >
                                     <span className="text-[10px] font-black text-white">{stake.toFixed(2)}</span>
                                     <div className="w-10 h-10 border-2 border-white/10 rounded-full flex items-center justify-center mt-0.5">
@@ -728,7 +728,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                             </button>
 
                             {/* Focus Chip Toggle (Center) */}
-                            <button className="w-14 h-14 rounded-full bg-geminix-accent/20 border-2 border-geminix-accent/40 flex items-center justify-center text-geminix-accent shadow-neon-cyan animate-pulse">
+                            <button className="w-14 h-14 rounded-full bg-proyecto-accent/20 border-2 border-proyecto-accent/40 flex items-center justify-center text-proyecto-accent shadow-neon-cyan animate-pulse">
                                 <Plus size={24} />
                             </button>
 
@@ -740,7 +740,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                             {/* Menu/History toggle */}
                             <button
                                 onClick={() => setShowMobileHistory(true)}
-                                className={`w-12 h-12 rounded-full border border-white/10 flex items-center justify-center transition-all active:scale-95 ${showMobileHistory ? 'bg-geminix-accent text-white' : 'bg-[#1c1c1e] text-slate-400'}`}
+                                className={`w-12 h-12 rounded-full border border-white/10 flex items-center justify-center transition-all active:scale-95 ${showMobileHistory ? 'bg-proyecto-accent text-white' : 'bg-[#1c1c1e] text-slate-400'}`}
                             >
                                 <div className="flex flex-col gap-1 items-center">
                                     <div className="w-4 h-0.5 bg-current"></div>
@@ -758,7 +758,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                             <div className="flex justify-between items-end">
                                 <div className="flex flex-col">
                                     <p className="text-[10px] text-white font-black uppercase">Apuesta total <span className="text-yellow-500">{stake.toFixed(2)} $</span></p>
-                                    <p className="text-[10px] text-white font-black uppercase">Saldo <span className="text-geminix-green">{balance.toFixed(2)} $</span></p>
+                                    <p className="text-[10px] text-white font-black uppercase">Saldo <span className="text-proyecto-green">{balance.toFixed(2)} $</span></p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-[8px] text-slate-500 font-mono tracking-tighter">00:16 | # 04:16:22</p>
@@ -777,7 +777,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
             `}>
                 {/* Header for Mobile Overlay */}
                 <div className="lg:hidden flex justify-between items-center p-4 border-b border-white/10">
-                    <h3 className="font-orbitron font-black text-sm uppercase tracking-widest text-geminix-accent">Panel de Control</h3>
+                    <h3 className="font-orbitron font-black text-sm uppercase tracking-widest text-proyecto-accent">Panel de Control</h3>
                     <button onClick={() => { setShowMobileHistory(false); setActiveTab('CHAT'); }} className="text-slate-400">
                         <History size={20} className="rotate-180" />
                     </button>
@@ -786,13 +786,13 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                 <div className="flex border-b border-white/5">
                     <button
                         onClick={() => setActiveTab('CHAT')}
-                        className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'CHAT' ? 'text-geminix-accent bg-geminix-accent/5 border-b border-geminix-accent' : 'text-slate-500 hover:text-white'}`}
+                        className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'CHAT' ? 'text-proyecto-accent bg-proyecto-accent/5 border-b border-proyecto-accent' : 'text-slate-500 hover:text-white'}`}
                     >
                         Chat
                     </button>
                     <button
                         onClick={() => setActiveTab('HISTORY')}
-                        className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'HISTORY' ? 'text-geminix-accent bg-geminix-accent/5 border-b border-geminix-accent' : 'text-slate-500 hover:text-white'}`}
+                        className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'HISTORY' ? 'text-proyecto-accent bg-proyecto-accent/5 border-b border-proyecto-accent' : 'text-slate-500 hover:text-white'}`}
                     >
                         Historial
                     </button>
@@ -804,7 +804,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                             {chatMessages.map(msg => (
                                 <div key={msg.id} className="space-y-1">
                                     <div className="flex justify-between items-center">
-                                        <span className={`text-[10px] font-bold ${msg.user === 'System' ? 'text-geminix-brand' : 'text-slate-300'}`}>{msg.user}</span>
+                                        <span className={`text-[10px] font-bold ${msg.user === 'System' ? 'text-proyecto-brand' : 'text-slate-300'}`}>{msg.user}</span>
                                         <span className="text-[8px] text-slate-600">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                     </div>
                                     <p className="text-xs text-slate-400 leading-relaxed font-bold">{msg.text}</p>
@@ -817,13 +817,13 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                                 <div key={tx.id} className="p-3 bg-white/5 border border-white/5 rounded-xl flex justify-between items-center group hover:bg-white/10 transition-all">
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <span className={`text-[8px] font-bold p-1 rounded ${tx.amount > 0 ? 'bg-geminix-green/20 text-geminix-green' : 'bg-red-500/20 text-red-500'}`}>
+                                            <span className={`text-[8px] font-bold p-1 rounded ${tx.amount > 0 ? 'bg-proyecto-green/20 text-proyecto-green' : 'bg-red-500/20 text-red-500'}`}>
                                                 {tx.amount > 0 ? 'WIN' : 'BET'}
                                             </span>
                                             <span className="text-[10px] text-slate-400 font-mono-tech">{new Date(tx.created_at).toLocaleTimeString()}</span>
                                         </div>
                                     </div>
-                                    <p className={`text-[10px] font-bold ${tx.amount > 0 ? 'text-geminix-green font-mono' : 'text-slate-300 font-mono'}`}>
+                                    <p className={`text-[10px] font-bold ${tx.amount > 0 ? 'text-proyecto-green font-mono' : 'text-slate-300 font-mono'}`}>
                                         {tx.amount > 0 ? `+$${tx.amount.toFixed(2)}` : `-$${Math.abs(tx.amount).toFixed(2)}`}
                                     </p>
                                 </div>
@@ -844,7 +844,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                             value={chatInput}
                             onChange={(e) => setChatInput(e.target.value)}
                             placeholder="Escribe un mensaje..."
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-geminix-accent/50 transition-all font-bold"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-proyecto-accent/50 transition-all font-bold"
                         />
                     </div>
                 )}
@@ -862,7 +862,7 @@ function TradingGameEngine({ user, walletBalance, onUpdateBalance, maxBet }: { u
                 <div className={`absolute bottom-0 left-0 right-0 bg-[#0a0a0c] border-t border-white/10 rounded-t-[3rem] max-h-[90vh] overflow-y-auto transition-transform duration-500 transform ${isWalletOpen ? 'translate-y-0' : 'translate-y-full'}`}>
                     <div className="sticky top-0 bg-[#0a0a0c] p-6 flex justify-between items-center border-b border-white/5 z-50">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-geminix-accent/10 border border-geminix-accent/20 flex items-center justify-center text-geminix-accent">
+                            <div className="w-10 h-10 rounded-xl bg-proyecto-accent/10 border border-proyecto-accent/20 flex items-center justify-center text-proyecto-accent">
                                 <Wallet size={20} />
                             </div>
                             <div>

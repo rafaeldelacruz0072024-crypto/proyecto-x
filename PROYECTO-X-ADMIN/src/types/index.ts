@@ -17,8 +17,8 @@ export interface Profile {
   transfer_blocked?: boolean;
   withdrawals_blocked?: boolean;
   roi_blocked?: boolean;
-  geminix_card_address?: string;
-  geminix_card_user?: string;
+  proyecto_x_card_address?: string;
+  proyecto_x_card_user?: string;
 
   created_at?: string;
 }

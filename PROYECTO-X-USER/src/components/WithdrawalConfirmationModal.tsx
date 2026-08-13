@@ -18,8 +18,8 @@ const WithdrawalConfirmationModal: React.FC<Props> = ({ isOpen, onClose, txId, a
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-md animate-fade-in">
       <div className="blue-glass border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl relative translate-y-[-5%] sm:translate-y-0">
         <div className="p-8 text-center">
-          <div className="w-20 h-20 bg-geminix-green/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-geminix-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-20 h-20 bg-proyecto-green/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-10 h-10 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
             </svg>
           </div>
@@ -32,12 +32,12 @@ const WithdrawalConfirmationModal: React.FC<Props> = ({ isOpen, onClose, txId, a
           <div className="bg-slate-900/50 rounded-xl p-4 mb-6 border border-slate-800 text-left space-y-3">
             <div className="flex justify-between text-xs">
               <span className="text-slate-500 uppercase tracking-widest font-bold">{t('withdrawal.modal.tx_id')}</span>
-              <span className="text-geminix-accent font-mono">#{txId.slice(-8)}</span>
+              <span className="text-proyecto-accent font-mono">#{txId.slice(-8)}</span>
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-slate-500 uppercase tracking-widest font-bold">{t('withdrawal.modal.status')}</span>
-              <span className="flex items-center text-geminix-gold font-bold">
-                <span className="h-1.5 w-1.5 rounded-full bg-geminix-gold mr-2 animate-pulse"></span>
+              <span className="flex items-center text-proyecto-gold font-bold">
+                <span className="h-1.5 w-1.5 rounded-full bg-proyecto-gold mr-2 animate-pulse"></span>
                 {t('withdrawal.modal.pending')}
               </span>
             </div>

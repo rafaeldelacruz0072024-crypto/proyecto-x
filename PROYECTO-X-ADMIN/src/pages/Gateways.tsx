@@ -373,7 +373,7 @@ const Gateways: React.FC = () => {
                     <input
                       type="text"
                       readOnly
-                      value={`https://api.geminix.com/webhooks/${gw.provider.toLowerCase().replace(/\s+/g, '-')}`}
+                      value={`https://api.proyecto-x.com/webhooks/${gw.provider.toLowerCase().replace(/\s+/g, '-')}`}
                       className="w-full bg-[#0c0c0e]/50 border border-slate-800 rounded-[1.5rem] py-5 px-6 text-slate-600 text-[10px] font-bold outline-none cursor-default group-hover/url:text-slate-400 transition-colors"
                     />
                     <ExternalLink className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-800 group-hover/url:text-yellow-500/50 transition-colors" size={16} />

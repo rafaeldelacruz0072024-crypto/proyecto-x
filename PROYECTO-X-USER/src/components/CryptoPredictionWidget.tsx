@@ -656,7 +656,7 @@ function BettingSection({
                         onChange={e => { setBetAmount(e.target.value); setBetResult(null); }}
                         placeholder={selectedOption ? '0.00' : 'Selecciona opción ↑'}
                         disabled={!selectedOption}
-                        className="w-full bg-black/60 border border-white/8 clip-corner-sm py-4 pl-9 pr-4 text-white text-xl font-black font-mono outline-none focus:border-geminix-accent/40 transition-all disabled:opacity-30 placeholder:text-slate-700"
+                        className="w-full bg-black/60 border border-white/8 clip-corner-sm py-4 pl-9 pr-4 text-white text-xl font-black font-mono outline-none focus:border-proyecto-accent/40 transition-all disabled:opacity-30 placeholder:text-slate-700"
                     />
                 </div>
 

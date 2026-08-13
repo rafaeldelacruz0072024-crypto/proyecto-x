@@ -4,7 +4,7 @@ from reportlab.lib.colors import HexColor, Color
 from reportlab.lib.units import mm
 import os
 
-OUT = os.path.join(os.path.dirname(__file__), "GEMINIX_Tabla_Inversiones.pdf")
+OUT = os.path.join(os.path.dirname(__file__), "PROYECTO-X_Tabla_Inversiones.pdf")
 
 W, H = landscape(A4)  # 842 x 595
 
@@ -26,7 +26,7 @@ TEXT2   = HexColor("#94a3b8")
 RED     = HexColor("#f87171")
 
 c = canvas.Canvas(OUT, pagesize=landscape(A4))
-c.setTitle("GEMINIX | Tabla de Inversiones")
+c.setTitle("PROYECTO X | Tabla de Inversiones")
 
 # ── Background ─────────────────────────────────────────
 c.setFillColor(BG)
@@ -60,7 +60,7 @@ c.roundRect(14, H - 72, W - 28, 60, 10, fill=1, stroke=0)
 
 c.setFillColor(CYAN)
 c.setFont("Helvetica-Bold", 22)
-c.drawString(30, H - 42, "GEMINIX")
+c.drawString(30, H - 42, "PROYECTO X")
 
 c.setFillColor(MUTED)
 c.setFont("Helvetica", 7.5)
@@ -263,7 +263,7 @@ c.drawString(MARGIN, 20,
     "* Proyecciones basadas en ROI diario fijo de 2.2% durante 91 días. "
     "Los rendimientos son estimados y sujetos a las condiciones del sistema.  "
     "Total al vencimiento = Capital + Ganancias acumuladas (200% del capital invertido).")
-c.drawRightString(W - MARGIN, 20, "geminixprotocol.com")
+c.drawRightString(W - MARGIN, 20, "proyecto-x-user.vercel.app")
 
 c.save()
 print("PDF generado:", OUT)

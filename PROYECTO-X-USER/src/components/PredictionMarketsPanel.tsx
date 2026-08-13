@@ -325,8 +325,8 @@ export default function PredictionMarketsPanel({ user, walletBalance, onUpdateBa
                         user={user}
                         walletBalance={walletBalance}
                         onUpdateBalance={onUpdateBalance}
-                        onSelectGeminixMarket={(geminixMkt) => {
-                            const fullMarket = markets.find(m => m.id === geminixMkt.id);
+                        onSelectProyectoXMarket={(proyectoXMkt) => {
+                            const fullMarket = markets.find(m => m.id === proyectoXMkt.id);
                             if (fullMarket) openDetail(fullMarket);
                             else setView('list');
                         }}

@@ -21,8 +21,8 @@ const STAGES = [
     emoji: '💡',
     color: '#6366f1',
     glow: 'rgba(99,102,241,0.3)',
-    desc: 'Educa sobre la oportunidad de GEMINIX. Muestra el potencial.',
-    tip: 'Explica qué es GEMINIX sin presionar. Deja que la oportunidad hable sola.',
+    desc: 'Educa sobre la oportunidad de PROYECTO X. Muestra el potencial.',
+    tip: 'Explica qué es PROYECTO X sin presionar. Deja que la oportunidad hable sola.',
   },
   {
     id: 'deseo',
@@ -186,11 +186,11 @@ export default function MarketingFunnelPanel({ user }: { user: any }) {
 
   // Load referral link and history from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('geminix_marketing_history');
+    const saved = localStorage.getItem('proyecto_x_marketing_history');
     if (saved) {
       try { setHistory(JSON.parse(saved)); } catch {}
     }
-    const savedLink = localStorage.getItem('geminix_referral_link');
+    const savedLink = localStorage.getItem('proyecto_x_referral_link');
     if (savedLink) setReferralLink(savedLink);
   }, []);
 
@@ -201,7 +201,7 @@ export default function MarketingFunnelPanel({ user }: { user: any }) {
         if (data?.ref_code && !referralLink) {
           const link = `${window.location.origin}?ref=${data.ref_code}`;
           setReferralLink(link);
-          localStorage.setItem('geminix_referral_link', link);
+          localStorage.setItem('proyecto_x_referral_link', link);
         }
         if (data?.username && !userName) setUserName(data.username);
       });
@@ -249,7 +249,7 @@ export default function MarketingFunnelPanel({ user }: { user: any }) {
       };
       const newHistory = [item, ...history.slice(0, 9)];
       setHistory(newHistory);
-      localStorage.setItem('geminix_marketing_history', JSON.stringify(newHistory));
+      localStorage.setItem('proyecto_x_marketing_history', JSON.stringify(newHistory));
     } catch (e: any) {
       setError(e.message || 'Error al generar contenido');
     } finally {
@@ -445,7 +445,7 @@ export default function MarketingFunnelPanel({ user }: { user: any }) {
             {[
               { label: 'Tu nombre', value: userName, setter: setUserName, placeholder: 'Tu nombre en redes', type: 'input' },
               { label: 'Audiencia objetivo', value: targetAudience, setter: setTargetAudience, placeholder: 'Ej: mamás que buscan ingresos desde casa', type: 'input' },
-              { label: 'Tu link de referido', value: referralLink, setter: setReferralLink, placeholder: 'https://geminix.app?ref=TUCODE', type: 'input' },
+              { label: 'Tu link de referido', value: referralLink, setter: setReferralLink, placeholder: 'https://proyecto-x.app?ref=TUCODE', type: 'input' },
               { label: 'Tu testimonio personal', value: testimony, setter: setTestimony, placeholder: 'Ej: Llevo 3 meses y ya generé mi primer $500...', type: 'textarea' },
               { label: 'Contexto adicional (opcional)', value: extraContext, setter: setExtraContext, placeholder: 'Ej: Promoción especial, evento, lanzamiento...', type: 'textarea' },
             ].map(field => (
@@ -628,7 +628,7 @@ export default function MarketingFunnelPanel({ user }: { user: any }) {
             <button onClick={() => {
               setHistory([]);
               setActiveHistoryId(null);
-              localStorage.removeItem('geminix_marketing_history');
+              localStorage.removeItem('proyecto_x_marketing_history');
             }} style={{
               fontSize: 9, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase',
               padding: '5px 12px', borderRadius: 8, cursor: 'pointer',

@@ -1,5 +1,5 @@
 -- ============================================================
--- ROAD MAP — Tabla de fases y pasos del proyecto GEMINIX
+-- ROAD MAP — Tabla de fases y pasos del proyecto PROYECTO X
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS public.roadmap_items (
@@ -39,5 +39,5 @@ INSERT INTO public.roadmap_items (phase, title, description, icon, status, sort_
 (2, '15 Niveles de Referidos 25%', 'Comisiones por red en 15 niveles con distribución del 25%', '🌐', 'planned', 2),
 (2, 'Salario Quincenal', 'Pago de salario cada 15 días para miembros activos', '💰', 'planned', 3),
 (2, 'Fee 10% Transferencia Crédito', 'Comisión del 10% en transferencias de crédito entre usuarios', '🔄', 'planned', 4),
-(2, 'GEMINIX Market Predictions V2', 'Nueva versión del módulo de predicciones con más mercados', '🎯', 'planned', 5)
+(2, 'PROYECTO X Market Predictions V2', 'Nueva versión del módulo de predicciones con más mercados', '🎯', 'planned', 5)
 ON CONFLICT DO NOTHING;

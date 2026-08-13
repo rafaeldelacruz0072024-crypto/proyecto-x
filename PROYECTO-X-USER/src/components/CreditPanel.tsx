@@ -54,11 +54,11 @@ const ReferralAccordion: React.FC<AccordionProps> = ({ node, selectedId, onSelec
         onClick={() => onSelect(node.id)}
         className={`
           flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer group
-          ${isSelected ? 'bg-geminix-accent/15 border-geminix-accent shadow-[0_0_15px_rgba(0,243,255,0.1)]' : 'bg-slate-950/50 border-slate-800 hover:border-slate-700'}
+          ${isSelected ? 'bg-proyecto-accent/15 border-proyecto-accent shadow-[0_0_15px_rgba(0,243,255,0.1)]' : 'bg-slate-950/50 border-slate-800 hover:border-slate-700'}
         `}
       >
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs border ${isSelected ? 'bg-geminix-accent text-slate-950 border-geminix-accent' : 'bg-slate-900 text-slate-500 border-slate-800'}`}>
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs border ${isSelected ? 'bg-proyecto-accent text-slate-950 border-proyecto-accent' : 'bg-slate-900 text-slate-500 border-slate-800'}`}>
             {node.name.charAt(0).toUpperCase()}
           </div>
           <div>
@@ -68,7 +68,7 @@ const ReferralAccordion: React.FC<AccordionProps> = ({ node, selectedId, onSelec
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-[8px] font-black text-geminix-accent px-2 py-0.5 bg-geminix-accent/10 border border-geminix-accent/20 rounded uppercase tracking-tighter">
+          <span className="text-[8px] font-black text-proyecto-accent px-2 py-0.5 bg-proyecto-accent/10 border border-proyecto-accent/20 rounded uppercase tracking-tighter">
             L{node.level || level}
           </span>
           {hasChildren && (
@@ -348,22 +348,22 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
     <div className="space-y-6 animate-fade-in pb-20">
       {/* Balance Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="holo-card p-8 rounded-none clip-corner border border-geminix-accent/20 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-tr from-geminix-accent/5 to-transparent pointer-events-none"></div>
+        <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-tr from-proyecto-accent/5 to-transparent pointer-events-none"></div>
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <svg className="w-20 h-20 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+            <svg className="w-20 h-20 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
           </div>
           <div className="flex items-center gap-2 mb-4">
-            <span className="px-2 py-0.5 bg-geminix-accent/20 border border-geminix-accent/40 rounded text-[8px] font-black text-geminix-accent uppercase tracking-widest">GMX</span>
+            <span className="px-2 py-0.5 bg-proyecto-accent/20 border border-proyecto-accent/40 rounded text-[8px] font-black text-proyecto-accent uppercase tracking-widest">GMX</span>
             <p className="text-[10px] font-orbitron font-black text-slate-500 uppercase tracking-[0.3em]">{t('credit.labels.credit_balance')}</p>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-geminix-accent font-black text-xl text-glow-cyan font-orbitron">◈</span>
+            <span className="text-proyecto-accent font-black text-xl text-glow-cyan font-orbitron">◈</span>
             <p className="text-5xl font-orbitron font-black text-white tracking-tighter tabular-nums text-glow-cyan">{creditBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
           </div>
           <div className="mt-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-none rotate-45 bg-geminix-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
+              <div className="w-2 h-2 rounded-none rotate-45 bg-proyecto-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
               <p className="text-[9px] text-slate-400 font-mono-tech font-bold uppercase tracking-[0.2em]">1 GMX = $1.00 USDT</p>
             </div>
             <span className="text-[8px] font-black text-amber-400 uppercase tracking-widest">BSC · Fase 3</span>
@@ -393,7 +393,7 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500 flex items-center justify-center gap-3 ${activeTab === tab
-              ? 'bg-geminix-accent text-slate-950 shadow-[0_0_20px_rgba(0,243,255,0.3)] scale-[1.02]'
+              ? 'bg-proyecto-accent text-slate-950 shadow-[0_0_20px_rgba(0,243,255,0.3)] scale-[1.02]'
               : 'text-slate-500 hover:text-white hover:bg-white/5'
               }`}
           >
@@ -417,12 +417,12 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
               </div>
 
               {/* Fee Indicator */}
-              <div className="px-6 py-3 bg-geminix-accent/5 border border-geminix-accent/20 rounded-2xl flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-geminix-accent/10 flex items-center justify-center text-geminix-accent">
+              <div className="px-6 py-3 bg-proyecto-accent/5 border border-proyecto-accent/20 rounded-2xl flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-proyecto-accent/10 flex items-center justify-center text-proyecto-accent">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                 </div>
                 <div>
-                  <p className="text-[9px] font-black text-geminix-accent uppercase tracking-widest">Gas Protocol</p>
+                  <p className="text-[9px] font-black text-proyecto-accent uppercase tracking-widest">Gas Protocol</p>
                   <p className="text-[11px] text-white font-black italic">LOW FEE: {transferFee}%</p>
                 </div>
               </div>
@@ -449,16 +449,16 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       disabled={transferBlocked}
-                      className="w-full bg-[#050507] border border-slate-800 rounded-2xl py-5 px-6 pl-14 text-sm text-white focus:border-geminix-accent outline-none ring-0 transition-all font-medium placeholder:text-slate-700 disabled:opacity-50"
+                      className="w-full bg-[#050507] border border-slate-800 rounded-2xl py-5 px-6 pl-14 text-sm text-white focus:border-proyecto-accent outline-none ring-0 transition-all font-medium placeholder:text-slate-700 disabled:opacity-50"
                     />
-                    <svg className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-geminix-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    <svg className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-proyecto-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                   </div>
                 </div>
 
                 <div className="max-h-[350px] overflow-y-auto space-y-2 scrollbar-none pr-2 bg-slate-900/10 rounded-2xl p-2 border border-slate-800/30 relative">
                   {isSearchingGlobal && (
                     <div className="absolute top-2 right-2">
-                      <div className="w-4 h-4 border-2 border-geminix-accent border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 border-2 border-proyecto-accent border-t-transparent rounded-full animate-spin"></div>
                     </div>
                   )}
 
@@ -475,12 +475,12 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                             key={user.id}
                             onClick={() => setSelectedUser(user.id)}
                             className={`p-5 rounded-2xl border transition-all cursor-pointer flex justify-between items-center group ${selectedUser === user.id
-                              ? 'bg-geminix-accent border-geminix-accent shadow-lg scale-[0.98]'
+                              ? 'bg-proyecto-accent border-proyecto-accent shadow-lg scale-[0.98]'
                               : 'bg-slate-950 border-slate-800 hover:border-slate-700'
                               }`}
                           >
                             <div className="flex items-center gap-4">
-                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm border ${selectedUser === user.id ? 'bg-slate-950 text-geminix-accent border-slate-950' : 'bg-slate-900 text-slate-500 border-slate-800 group-hover:border-slate-600'}`}>
+                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm border ${selectedUser === user.id ? 'bg-slate-950 text-proyecto-accent border-slate-950' : 'bg-slate-900 text-slate-500 border-slate-800 group-hover:border-slate-600'}`}>
                                 {user.name.charAt(0).toUpperCase()}
                               </div>
                               <div>
@@ -488,7 +488,7 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                                 <p className={`text-[9px] font-bold uppercase tracking-tight ${selectedUser === user.id ? 'text-slate-950/60' : 'text-slate-500'}`}>{user.email}</p>
                               </div>
                             </div>
-                            <span className={`text-[9px] font-black px-3 py-1 rounded-lg border ${selectedUser === user.id ? 'bg-slate-950/20 border-slate-950/30 text-slate-950' : 'text-geminix-accent bg-geminix-accent/10 border-geminix-accent/20'}`}>
+                            <span className={`text-[9px] font-black px-3 py-1 rounded-lg border ${selectedUser === user.id ? 'bg-slate-950/20 border-slate-950/30 text-slate-950' : 'text-proyecto-accent bg-proyecto-accent/10 border-proyecto-accent/20'}`}>
                               L{user.level}
                             </span>
                           </div>
@@ -502,12 +502,12 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                             key={user.id}
                             onClick={() => setSelectedUser(user.id)}
                             className={`p-5 rounded-2xl border transition-all cursor-pointer flex justify-between items-center group ${selectedUser === user.id
-                              ? 'bg-geminix-accent border-geminix-accent shadow-lg scale-[0.98]'
+                              ? 'bg-proyecto-accent border-proyecto-accent shadow-lg scale-[0.98]'
                               : 'bg-slate-950 border-slate-800 hover:border-slate-700'
                               }`}
                           >
                             <div className="flex items-center gap-4">
-                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm border ${selectedUser === user.id ? 'bg-slate-950 text-geminix-accent border-slate-950' : 'bg-slate-900 text-slate-500 border-slate-800 group-hover:border-slate-600'}`}>
+                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm border ${selectedUser === user.id ? 'bg-slate-950 text-proyecto-accent border-slate-950' : 'bg-slate-900 text-slate-500 border-slate-800 group-hover:border-slate-600'}`}>
                                 {user.name.charAt(0).toUpperCase()}
                               </div>
                               <div>
@@ -553,23 +553,23 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                   <div className="flex justify-between items-end">
                     <div className="flex flex-col">
                       <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">02. Define Amount</label>
-                      <p className="text-[9px] text-geminix-accent/60 font-bold uppercase tracking-widest mt-0.5">{t('credit.transfer.min_amount_hint')}</p>
+                      <p className="text-[9px] text-proyecto-accent/60 font-bold uppercase tracking-widest mt-0.5">{t('credit.transfer.min_amount_hint')}</p>
                     </div>
                     {amount && parseFloat(amount) > 0 && (
-                      <p className="text-[10px] text-geminix-accent font-black animate-pulse">
+                      <p className="text-[10px] text-proyecto-accent font-black animate-pulse">
                         NET: ${(parseFloat(amount) * (1 - transferFee / 100)).toFixed(2)}
                       </p>
                     )}
                   </div>
                   <div className="relative group">
-                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-geminix-accent font-black text-3xl group-focus-within:scale-110 transition-transform">$</span>
+                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-proyecto-accent font-black text-3xl group-focus-within:scale-110 transition-transform">$</span>
                     <input
                       type="number"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"
                       disabled={transferBlocked}
-                      className="w-full bg-[#050507] border border-slate-800 rounded-3xl py-8 pl-16 pr-6 text-4xl font-black text-white focus:border-geminix-accent outline-none transition-all shadow-inner tabular-nums disabled:opacity-50"
+                      className="w-full bg-[#050507] border border-slate-800 rounded-3xl py-8 pl-16 pr-6 text-4xl font-black text-white focus:border-proyecto-accent outline-none transition-all shadow-inner tabular-nums disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -600,9 +600,9 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
         {activeTab === 'convert' && (
           <div className="blue-glass p-10 rounded-[2.5rem] border border-slate-800/50 max-w-2xl mx-auto space-y-10 shadow-2xl">
             <div className="text-center space-y-4">
-              <div className="w-20 h-20 bg-geminix-accent/10 rounded-[2rem] border border-geminix-accent/20 flex items-center justify-center mx-auto mb-6 relative">
-                <svg className="w-10 h-10 text-geminix-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-geminix-accent rounded-full animate-ping opacity-30"></div>
+              <div className="w-20 h-20 bg-proyecto-accent/10 rounded-[2rem] border border-proyecto-accent/20 flex items-center justify-center mx-auto mb-6 relative">
+                <svg className="w-10 h-10 text-proyecto-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-proyecto-accent rounded-full animate-ping opacity-30"></div>
               </div>
               <h3 className="text-3xl font-black text-white uppercase tracking-tighter">{t('credit.convert.title')}</h3>
               <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em] leading-relaxed">
@@ -617,26 +617,26 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
               </div>
               <div className="bg-[#050507] p-6 rounded-3xl border border-slate-800/50 flex flex-col items-center">
                 <p className="text-[9px] text-slate-500 uppercase font-black tracking-widest mb-2">Bridge Protocol</p>
-                <p className="text-2xl font-black text-geminix-accent uppercase">Active</p>
+                <p className="text-2xl font-black text-proyecto-accent uppercase">Active</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-2 font-mono">Input Amount</label>
-                <button onClick={() => setAmount(mainBalance.toString())} className="text-[9px] font-black text-geminix-accent uppercase hover:scale-105 transition-transform flex items-center gap-1">
+                <button onClick={() => setAmount(mainBalance.toString())} className="text-[9px] font-black text-proyecto-accent uppercase hover:scale-105 transition-transform flex items-center gap-1">
                   Select Maximum
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" /></svg>
                 </button>
               </div>
               <div className="relative group">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-geminix-accent font-black text-3xl">$</span>
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-proyecto-accent font-black text-3xl">$</span>
                 <input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full bg-[#050507] border border-slate-800 rounded-3xl py-8 pl-16 pr-6 text-4xl font-black text-white focus:border-geminix-accent outline-none transition-all shadow-inner"
+                  className="w-full bg-[#050507] border border-slate-800 rounded-3xl py-8 pl-16 pr-6 text-4xl font-black text-white focus:border-proyecto-accent outline-none transition-all shadow-inner"
                 />
               </div>
             </div>
@@ -644,7 +644,7 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
             <button
               onClick={handleConvert}
               disabled={loading || !amount}
-              className="w-full py-6 bg-geminix-accent text-slate-950 rounded-[2rem] font-black text-sm uppercase tracking-[0.3em] shadow-[0_15px_40px_rgba(0,243,255,0.3)] hover:shadow-[0_20px_60px_rgba(0,243,255,0.4)] transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center gap-4"
+              className="w-full py-6 bg-proyecto-accent text-slate-950 rounded-[2rem] font-black text-sm uppercase tracking-[0.3em] shadow-[0_15px_40px_rgba(0,243,255,0.3)] hover:shadow-[0_20px_60px_rgba(0,243,255,0.4)] transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center gap-4"
             >
               {loading ? (
                 <>
@@ -670,16 +670,16 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                 <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">BSC Binance Smart Chain · Fase 3</span>
               </div>
               <h3 className="text-5xl font-black text-white uppercase tracking-tighter font-orbitron">
-                TOKEN <span className="text-geminix-accent text-glow-cyan">GMX</span>
+                TOKEN <span className="text-proyecto-accent text-glow-cyan">GMX</span>
               </h3>
-              <p className="text-slate-500 font-black text-[10px] uppercase tracking-[0.3em]">GEMINIX Protocol Native Token · BEP-20</p>
+              <p className="text-slate-500 font-black text-[10px] uppercase tracking-[0.3em]">PROYECTO X Protocol Native Token · BEP-20</p>
             </div>
 
             {/* Total Supply */}
-            <div className="bg-geminix-accent/5 border border-geminix-accent/20 rounded-3xl p-8 text-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-geminix-accent/5 to-transparent pointer-events-none"></div>
+            <div className="bg-proyecto-accent/5 border border-proyecto-accent/20 rounded-3xl p-8 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-proyecto-accent/5 to-transparent pointer-events-none"></div>
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-3">Suministro Total</p>
-              <p className="text-6xl font-black text-geminix-accent font-orbitron tracking-tighter text-glow-cyan">10,000,000</p>
+              <p className="text-6xl font-black text-proyecto-accent font-orbitron tracking-tighter text-glow-cyan">10,000,000</p>
               <p className="text-2xl font-black text-white mt-2 tracking-widest">GMX</p>
               <p className="text-[9px] text-slate-600 mt-2 uppercase tracking-widest">1 GMX = $1.00 USDT · Precio Interno</p>
             </div>
@@ -688,20 +688,20 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
             <div className="space-y-4">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Distribución del 100%</p>
 
-              {/* GEMINIX Reserve 25% */}
-              <div className="p-5 bg-slate-900/50 border border-geminix-accent/20 rounded-2xl">
+              {/* PROYECTO X Reserve 25% */}
+              <div className="p-5 bg-slate-900/50 border border-proyecto-accent/20 rounded-2xl">
                 <div className="flex justify-between items-center mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-geminix-accent shadow-[0_0_8px_rgba(0,243,255,0.6)]"></div>
-                    <span className="text-sm font-black text-white uppercase tracking-wide">GEMINIX Reserva</span>
+                    <div className="w-3 h-3 rounded-full bg-proyecto-accent shadow-[0_0_8px_rgba(0,243,255,0.6)]"></div>
+                    <span className="text-sm font-black text-white uppercase tracking-wide">PROYECTO X Reserva</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-geminix-accent font-black text-lg">25%</span>
+                    <span className="text-proyecto-accent font-black text-lg">25%</span>
                     <span className="text-slate-500 text-[10px] ml-2 font-mono">2,500,000 GMX</span>
                   </div>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2.5">
-                  <div className="bg-geminix-accent h-2.5 rounded-full shadow-[0_0_8px_rgba(0,243,255,0.4)]" style={{ width: '25%' }}></div>
+                  <div className="bg-proyecto-accent h-2.5 rounded-full shadow-[0_0_8px_rgba(0,243,255,0.4)]" style={{ width: '25%' }}></div>
                 </div>
                 <p className="text-[9px] text-slate-600 mt-2 uppercase tracking-widest">Propietario del protocolo · Vesting gradual</p>
               </div>
@@ -773,9 +773,9 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                 <p className="text-xl font-black text-amber-400 font-orbitron">BSC</p>
                 <p className="text-[8px] text-slate-600 mt-1">BEP-20 · Fase 3</p>
               </div>
-              <div className="bg-geminix-accent/5 border border-geminix-accent/20 rounded-2xl p-5 text-center">
+              <div className="bg-proyecto-accent/5 border border-proyecto-accent/20 rounded-2xl p-5 text-center">
                 <p className="text-[9px] text-slate-500 uppercase tracking-widest mb-2">Tu Balance</p>
-                <p className="text-xl font-black text-geminix-accent font-orbitron text-glow-cyan">{creditBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+                <p className="text-xl font-black text-proyecto-accent font-orbitron text-glow-cyan">{creditBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
                 <p className="text-[8px] text-slate-600 mt-1">GMX disponibles</p>
               </div>
             </div>
@@ -783,10 +783,10 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
             {/* Phase roadmap */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-geminix-accent flex items-center justify-center text-slate-950 font-black text-sm shadow-[0_0_12px_rgba(0,243,255,0.4)]">1</div>
-                <span className="text-[8px] text-geminix-accent font-black uppercase tracking-widest text-center">Utilidad<br/>Interna</span>
+                <div className="w-10 h-10 rounded-full bg-proyecto-accent flex items-center justify-center text-slate-950 font-black text-sm shadow-[0_0_12px_rgba(0,243,255,0.4)]">1</div>
+                <span className="text-[8px] text-proyecto-accent font-black uppercase tracking-widest text-center">Utilidad<br/>Interna</span>
               </div>
-              <div className="flex-1 h-[2px] bg-gradient-to-r from-geminix-accent to-slate-700"></div>
+              <div className="flex-1 h-[2px] bg-gradient-to-r from-proyecto-accent to-slate-700"></div>
               <div className="flex flex-col items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 font-black text-sm">2</div>
                 <span className="text-[8px] text-slate-600 font-black uppercase tracking-widest text-center">Pre-Sale<br/>Privada</span>
@@ -804,8 +804,8 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
           <div className="blue-glass rounded-[2.5rem] overflow-hidden border border-slate-800/50 shadow-2xl">
             <div className="p-8 border-b border-slate-800/50 flex justify-between items-center bg-slate-900/10">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-geminix-accent/10 rounded-2xl border border-geminix-accent/20">
-                  <svg className="w-6 h-6 text-geminix-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                <div className="p-3 bg-proyecto-accent/10 rounded-2xl border border-proyecto-accent/20">
+                  <svg className="w-6 h-6 text-proyecto-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-white uppercase tracking-tighter">{t('credit.history.title')}</h3>
@@ -830,7 +830,7 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                   return (
                     <div key={tx.id} className="p-8 hover:bg-white/[0.02] transition-all flex items-center justify-between group">
                       <div className="flex items-center gap-6">
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-transform duration-500 group-hover:scale-105 shadow-xl ${isPositive ? 'bg-geminix-green/10 border-geminix-green/20 text-geminix-green' : 'bg-rose-500/10 border-rose-500/20 text-rose-500'}`}>
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-transform duration-500 group-hover:scale-105 shadow-xl ${isPositive ? 'bg-proyecto-green/10 border-proyecto-green/20 text-proyecto-green' : 'bg-rose-500/10 border-rose-500/20 text-rose-500'}`}>
                           {tx.type === 'TRANSFER_IN' && <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>}
                           {tx.type === 'TRANSFER_OUT' && <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>}
                           {tx.type === 'CONVERSION' && <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>}
@@ -859,11 +859,11 @@ const CreditPanel: React.FC<Props> = ({ userId, creditBalance, mainBalance, onRe
                       </div>
 
                       <div className="text-right">
-                        <div className={`text-2xl font-black tabular-nums transition-transform group-hover:scale-110 ${isPositive ? 'text-geminix-green' : 'text-rose-500'}`}>
+                        <div className={`text-2xl font-black tabular-nums transition-transform group-hover:scale-110 ${isPositive ? 'text-proyecto-green' : 'text-rose-500'}`}>
                           {isPositive ? '+' : '-'}${absAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
                         <div className="mt-1 flex items-center justify-end gap-2">
-                          <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded border ${isPositive ? 'text-geminix-green/70 border-geminix-green/20 bg-geminix-green/5' : 'text-rose-500/70 border-rose-500/20 bg-rose-500/5'}`}>
+                          <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded border ${isPositive ? 'text-proyecto-green/70 border-proyecto-green/20 bg-proyecto-green/5' : 'text-rose-500/70 border-rose-500/20 bg-rose-500/5'}`}>
                             {isPositive ? 'GMX Inbound' : 'GMX Outbound'}
                           </span>
                         </div>

@@ -138,17 +138,17 @@ export default function PlinkoGame({ user, walletBalance, onUpdateBalance, maxBe
                     {/* Win Notification Overlay */}
                     {showWinNotification && (
                         <div className="absolute inset-0 z-[150] flex items-center justify-center animate-in fade-in zoom-in duration-500 bg-black/60 backdrop-blur-sm">
-                            <div className="text-center p-8 lg:p-10 rounded-[2.5rem] bg-gradient-to-b from-geminix-green/20 to-black border-2 border-geminix-green/40 shadow-neon-green relative overflow-hidden max-w-[90%] lg:max-w-md">
-                                <Trophy className="mx-auto mb-4 text-geminix-green drop-shadow-neon" size={48} />
+                            <div className="text-center p-8 lg:p-10 rounded-[2.5rem] bg-gradient-to-b from-proyecto-green/20 to-black border-2 border-proyecto-green/40 shadow-neon-green relative overflow-hidden max-w-[90%] lg:max-w-md">
+                                <Trophy className="mx-auto mb-4 text-proyecto-green drop-shadow-neon" size={48} />
                                 <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter mb-1">¡PREMIO PLINKO!</h2>
-                                <div className="h-0.5 w-16 bg-geminix-green mx-auto mb-4"></div>
+                                <div className="h-0.5 w-16 bg-proyecto-green mx-auto mb-4"></div>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Ganancia</p>
-                                <p className="text-4xl font-black text-geminix-green shadow-neon-green">
+                                <p className="text-4xl font-black text-proyecto-green shadow-neon-green">
                                     {lastWinAmount !== null ? formatCurrency(lastWinAmount) : '$0.00'}
                                 </p>
                                 <button
                                     onClick={() => setShowWinNotification(false)}
-                                    className="mt-8 px-10 py-3 bg-geminix-green text-black font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl text-xs"
+                                    className="mt-8 px-10 py-3 bg-proyecto-green text-black font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl text-xs"
                                 >
                                     Excelente
                                 </button>
@@ -351,12 +351,12 @@ export default function PlinkoGame({ user, walletBalance, onUpdateBalance, maxBe
                             {dbHistory.length > 0 ? dbHistory.map((tx) => (
                                 <div key={tx.id} className="p-3 bg-white/5 border border-white/5 rounded-xl flex justify-between items-center">
                                     <div className="flex flex-col gap-1">
-                                        <span className={`text-[8px] font-bold p-1 rounded w-fit ${tx.amount > 0 ? 'bg-geminix-green/20 text-geminix-green' : 'bg-red-500/20 text-red-500'}`}>
+                                        <span className={`text-[8px] font-bold p-1 rounded w-fit ${tx.amount > 0 ? 'bg-proyecto-green/20 text-proyecto-green' : 'bg-red-500/20 text-red-500'}`}>
                                             {tx.amount > 0 ? 'WIN' : 'BET'}
                                         </span>
                                         <span className="text-[8px] text-slate-500">{new Date(tx.created_at).toLocaleTimeString()}</span>
                                     </div>
-                                    <span className={tx.amount > 0 ? 'text-geminix-green font-bold font-mono' : 'text-slate-300 font-bold font-mono'}>
+                                    <span className={tx.amount > 0 ? 'text-proyecto-green font-bold font-mono' : 'text-slate-300 font-bold font-mono'}>
                                         {tx.amount > 0 ? `+$${tx.amount.toFixed(2)}` : `-$${Math.abs(tx.amount).toFixed(2)}`}
                                     </span>
                                 </div>

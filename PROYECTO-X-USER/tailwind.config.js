@@ -15,7 +15,7 @@ export default {
         'mono-tech': ['"Outfit"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'], // Alias for Data
       },
       colors: {
-        geminix: {
+        proyecto: {
           // Legacy support
           blue: '#0a192f',
           gold: '#ffd700',
@@ -35,8 +35,8 @@ export default {
         }
       },
       boxShadow: {
-        'neon-cyan': '0 0 5px theme("colors.geminix.neon.cyan"), 0 0 20px theme("colors.geminix.neon.cyan")',
-        'neon-purple': '0 0 5px theme("colors.geminix.neon.purple"), 0 0 20px theme("colors.geminix.neon.purple")',
+        'neon-cyan': '0 0 5px theme("colors.proyecto.neon.cyan"), 0 0 20px theme("colors.proyecto.neon.cyan")',
+        'neon-purple': '0 0 5px theme("colors.proyecto.neon.purple"), 0 0 20px theme("colors.proyecto.neon.purple")',
         'holo': '0 0 30px rgba(0, 243, 255, 0.1), inset 0 0 20px rgba(0, 243, 255, 0.05)',
       },
       animation: {

@@ -51,11 +51,11 @@ serve(async (req) => {
     }
 
     // ── Wallet setup ───────────────────────────────────────────────────
-    const privateKey = Deno.env.get('GEMINIXPAY_PRIVATE_KEY') ?? ''
+    const privateKey = Deno.env.get('PROYECTO_XPAY_PRIVATE_KEY') ?? ''
     const rpcUrl     = Deno.env.get('BSC_RPC_URL') ?? 'https://bsc-dataseed.binance.org'
 
     if (!privateKey) {
-      return new Response(JSON.stringify({ error: 'GEMINIXPAY_PRIVATE_KEY no configurado.' }), {
+      return new Response(JSON.stringify({ error: 'PROYECTO_XPAY_PRIVATE_KEY no configurado.' }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -186,7 +186,7 @@ serve(async (req) => {
     })
 
   } catch (error: any) {
-    console.error('GeminixPay error:', error.message)
+    console.error('ProyectoXPay error:', error.message)
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })

@@ -32,22 +32,22 @@ const RankWidget: React.FC<Props> = ({ rank, teamVolume, directsCount }) => {
     const isMaxRank = !nextRankInfo;
 
     return (
-        <div className="holo-card p-6 rounded-none clip-corner border border-geminix-accent/20 relative overflow-hidden group shadow-[0_0_30px_rgba(0,114,255,0.05)]">
+        <div className="holo-card p-6 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group shadow-[0_0_30px_rgba(0,114,255,0.05)]">
             {/* HUD Background Decorations */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-geminix-accent/5 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-proyecto-accent/5 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
             <div className="flex items-center justify-between mb-6 relative z-10">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="w-1.5 h-1.5 rounded-none rotate-45 bg-geminix-accent animate-pulse shadow-[0_0_5px_cyan]"></div>
+                        <div className="w-1.5 h-1.5 rounded-none rotate-45 bg-proyecto-accent animate-pulse shadow-[0_0_5px_cyan]"></div>
                         <h3 className="text-[10px] font-orbitron font-black text-slate-500 uppercase tracking-[0.3em]">{t('ranks.elite_standing')}</h3>
                     </div>
                     <p className={`text-2xl font-orbitron font-black uppercase tracking-tighter text-glow-cyan ${currentRankInfo.color}`}>
                         {t(`ranks.${rank}`)}
                     </p>
                 </div>
-                <div className="w-14 h-14 bg-black/40 border border-geminix-accent/30 flex items-center justify-center rounded-none clip-corner relative group-hover:border-geminix-accent transition-colors shadow-[0_0_15px_rgba(0,114,255,0.1)]">
-                    <RankIcon className="w-8 h-8 text-geminix-accent drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]" />
+                <div className="w-14 h-14 bg-black/40 border border-proyecto-accent/30 flex items-center justify-center rounded-none clip-corner relative group-hover:border-proyecto-accent transition-colors shadow-[0_0_15px_rgba(0,114,255,0.1)]">
+                    <RankIcon className="w-8 h-8 text-proyecto-accent drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]" />
                 </div>
             </div>
 
@@ -67,7 +67,7 @@ const RankWidget: React.FC<Props> = ({ rank, teamVolume, directsCount }) => {
                             </div>
                             <div className="h-1 w-full bg-black/60 border border-white/5 rounded-none overflow-hidden p-[1px]">
                                 <div
-                                    className="h-full bg-geminix-accent shadow-[0_0_10px_#00f3ff] transition-all duration-1000"
+                                    className="h-full bg-proyecto-accent shadow-[0_0_10px_#00f3ff] transition-all duration-1000"
                                     style={{ width: `${volProgress}%` }}
                                 ></div>
                             </div>
@@ -81,7 +81,7 @@ const RankWidget: React.FC<Props> = ({ rank, teamVolume, directsCount }) => {
                             </div>
                             <div className="h-1 w-full bg-black/60 border border-white/5 rounded-none overflow-hidden p-[1px]">
                                 <div
-                                    className="h-full bg-geminix-neon-purple shadow-[0_0_10px_purple] transition-all duration-1000"
+                                    className="h-full bg-proyecto-neon-purple shadow-[0_0_10px_purple] transition-all duration-1000"
                                     style={{ width: `${directsProgress}%` }}
                                 ></div>
                             </div>
@@ -89,8 +89,8 @@ const RankWidget: React.FC<Props> = ({ rank, teamVolume, directsCount }) => {
                     </div>
 
                     <div className="pt-4 border-t border-white/5 flex items-center gap-3">
-                        <div className="p-2 bg-geminix-gold/10 rounded-none border border-geminix-gold/30">
-                            <svg className="w-3.5 h-3.5 text-geminix-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        <div className="p-2 bg-proyecto-gold/10 rounded-none border border-proyecto-gold/30">
+                            <svg className="w-3.5 h-3.5 text-proyecto-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                         </div>
                         <p
                             className="text-[9px] text-slate-400 font-medium leading-relaxed uppercase tracking-tighter"
@@ -99,8 +99,8 @@ const RankWidget: React.FC<Props> = ({ rank, teamVolume, directsCount }) => {
                     </div>
                 </div>
             ) : (
-                <div className="py-10 text-center space-y-4 bg-geminix-accent/5 border border-dashed border-geminix-accent/20 rounded-none">
-                    <svg className="w-12 h-12 mx-auto text-geminix-gold animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                <div className="py-10 text-center space-y-4 bg-proyecto-accent/5 border border-dashed border-proyecto-accent/20 rounded-none">
+                    <svg className="w-12 h-12 mx-auto text-proyecto-gold animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                     <h4 className="text-xl font-orbitron font-black text-white italic tracking-widest">{t('ranks.max_rank')}</h4>
                     <p className="text-[9px] text-slate-500 font-mono-tech uppercase">{t('ranks.zenith_desc')}</p>
                 </div>

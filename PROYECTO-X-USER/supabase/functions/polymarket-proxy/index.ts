@@ -16,7 +16,7 @@ serve(async (req) => {
 
     const res = await fetch(
       `https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=${limit}&order=${order}&ascending=false`,
-      { headers: { 'Accept': 'application/json', 'User-Agent': 'GeminixProxy/1.0' } }
+      { headers: { 'Accept': 'application/json', 'User-Agent': 'ProyectoXProxy/1.0' } }
     )
 
     if (!res.ok) throw new Error(`Polymarket API error: ${res.status}`)

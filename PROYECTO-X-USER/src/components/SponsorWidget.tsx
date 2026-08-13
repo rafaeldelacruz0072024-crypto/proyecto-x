@@ -59,9 +59,9 @@ const SponsorWidget: React.FC<SponsorWidgetProps> = ({ sponsorId }) => {
     if (!sponsorId) return null;
 
     return (
-        <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden border-geminix-accent/20 hover:border-geminix-accent/50 transition-colors">
+        <div className="holo-card p-6 rounded-none clip-corner relative group overflow-hidden border-proyecto-accent/20 hover:border-proyecto-accent/50 transition-colors">
             <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-60 transition-opacity">
-                <svg className="w-10 h-10 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                <svg className="w-10 h-10 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
             </div>
             <p className="text-slate-400 text-[10px] font-orbitron uppercase tracking-widest mb-4 opacity-80">{t('profile.identity.sponsor', 'SPONSOR DE RED')}</p>
 
@@ -75,7 +75,7 @@ const SponsorWidget: React.FC<SponsorWidgetProps> = ({ sponsorId }) => {
                 </div>
             ) : (
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center text-xl font-orbitron font-bold text-white border border-geminix-accent/20 shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center text-xl font-orbitron font-bold text-white border border-proyecto-accent/20 shadow-[0_0_15px_rgba(0,243,255,0.2)]">
                         {sponsorName ? sponsorName.charAt(0).toUpperCase() : '?'}
                     </div>
                     <div>
@@ -83,7 +83,7 @@ const SponsorWidget: React.FC<SponsorWidgetProps> = ({ sponsorId }) => {
                             {sponsorName}
                         </p>
                         <div className="flex items-center gap-1.5 mt-1">
-                            <span className="text-[9px] font-mono-tech text-geminix-accent uppercase tracking-widest truncate max-w-[150px]">@{sponsorUsername}</span>
+                            <span className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-widest truncate max-w-[150px]">@{sponsorUsername}</span>
                         </div>
                     </div>
                 </div>

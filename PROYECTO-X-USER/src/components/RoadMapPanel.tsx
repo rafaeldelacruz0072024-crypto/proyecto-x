@@ -22,7 +22,7 @@ interface Countdown {
 const PHASE2_DURATION_DAYS = 60;
 
 const PHASE1_ITEMS = [
-  { icon: '📊', title: 'Pasivo GEMINIX GOLD', desc: '+1000% auditado Myfxbook 2025 · 5 IAs XAU/USD' },
+  { icon: '📊', title: 'Pasivo PROYECTO X GOLD', desc: '+1000% auditado Myfxbook 2025 · 5 IAs XAU/USD' },
   { icon: '🌐', title: '30 Niveles de Referidos', desc: 'Comisiones residuales según Regla de Oro oficial' },
   { icon: '💰', title: 'Salario Semanal', desc: 'Pago cada Sábado a miembros activos calificados' },
   { icon: '🎯', title: 'Predicciones V1', desc: 'Módulo de mercados de predicción activo' },
@@ -101,19 +101,19 @@ export default function RoadMapPanel() {
     <div className="space-y-8 animate-slide-in">
 
       {/* HEADER */}
-      <div className="flex items-center gap-4 bg-black/30 p-4 border-l-2 border-geminix-accent">
+      <div className="flex items-center gap-4 bg-black/30 p-4 border-l-2 border-proyecto-accent">
         <div>
           <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">ROAD MAP</h2>
-          <p className="text-[9px] font-mono-tech text-geminix-accent uppercase tracking-widest mt-0.5">PLAN DE EVOLUCIÓN · PROTOCOLO GEMINIX</p>
+          <p className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-widest mt-0.5">PLAN DE EVOLUCIÓN · PROTOCOLO PROYECTO X</p>
         </div>
       </div>
 
       {/* COUNTDOWN */}
       <div className="holo-card p-8 clip-corner relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-geminix-brand/5 via-transparent to-geminix-accent/5 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-proyecto-brand/5 via-transparent to-proyecto-accent/5 pointer-events-none" />
 
         <div className="text-center mb-6 relative z-10">
-          <p className="text-[10px] font-mono-tech text-geminix-accent uppercase tracking-[0.4em] mb-1">Transición a</p>
+          <p className="text-[10px] font-mono-tech text-proyecto-accent uppercase tracking-[0.4em] mb-1">Transición a</p>
           <h3 className="text-2xl font-orbitron font-black text-white uppercase tracking-widest text-glow-cyan">FASE 2</h3>
           <p className="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-widest">Contador oficial — {PHASE2_DURATION_DAYS} días</p>
         </div>
@@ -128,15 +128,15 @@ export default function RoadMapPanel() {
           ].map(({ value, label }, i) => (
             <React.Fragment key={label}>
               <div className="text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-black border border-geminix-brand/30 clip-corner flex items-center justify-center shadow-neon-cyan relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-geminix-brand/10 to-transparent" />
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-black border border-proyecto-brand/30 clip-corner flex items-center justify-center shadow-neon-cyan relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-proyecto-brand/10 to-transparent" />
                   <span className="text-2xl md:text-3xl font-orbitron font-black text-white relative z-10 tabular-nums">
                     {String(value).padStart(2, '0')}
                   </span>
                 </div>
-                <p className="text-[8px] font-mono-tech text-geminix-accent uppercase tracking-widest mt-2">{label}</p>
+                <p className="text-[8px] font-mono-tech text-proyecto-accent uppercase tracking-widest mt-2">{label}</p>
               </div>
-              {i < 3 && <span className="text-xl font-black text-geminix-brand/50 mb-4">:</span>}
+              {i < 3 && <span className="text-xl font-black text-proyecto-brand/50 mb-4">:</span>}
             </React.Fragment>
           ))}
         </div>
@@ -145,12 +145,12 @@ export default function RoadMapPanel() {
         <div className="max-w-lg mx-auto relative z-10">
           <div className="flex justify-between text-[9px] font-mono-tech text-slate-500 uppercase tracking-widest mb-2">
             <span className="text-emerald-400">Fase 1 · Activa</span>
-            <span className="text-geminix-accent">{progressPct}% transcurrido</span>
-            <span className="text-geminix-brand">Fase 2</span>
+            <span className="text-proyecto-accent">{progressPct}% transcurrido</span>
+            <span className="text-proyecto-brand">Fase 2</span>
           </div>
           <div className="h-1.5 bg-slate-900 rounded-none overflow-hidden border border-slate-800">
             <div
-              className="h-full bg-gradient-to-r from-geminix-brand to-geminix-accent transition-all duration-1000 relative"
+              className="h-full bg-gradient-to-r from-proyecto-brand to-proyecto-accent transition-all duration-1000 relative"
               style={{ width: `${progressPct}%` }}
             >
               <div className="absolute inset-0 bg-white/20 animate-pulse" />
@@ -191,17 +191,17 @@ export default function RoadMapPanel() {
 
         {/* FASE 2 */}
         <div className="holo-card p-6 clip-corner relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-geminix-brand to-geminix-accent" />
+          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-proyecto-brand to-proyecto-accent" />
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 clip-corner bg-geminix-brand/10 border border-geminix-brand/20 flex items-center justify-center">
-                <svg className="w-4 h-4 text-geminix-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 clip-corner bg-proyecto-brand/10 border border-proyecto-brand/20 flex items-center justify-center">
+                <svg className="w-4 h-4 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
                 <h4 className="text-sm font-orbitron font-black text-white uppercase tracking-widest">Fase 2</h4>
-                <span className="text-[9px] font-mono-tech text-geminix-accent uppercase tracking-widest">⏳ PRÓXIMAMENTE</span>
+                <span className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-widest">⏳ PRÓXIMAMENTE</span>
               </div>
             </div>
             <span className="text-[9px] font-mono-tech text-slate-400 bg-black/50 border border-slate-800 px-2 py-1">
@@ -218,7 +218,7 @@ export default function RoadMapPanel() {
           ) : (
             <div className="space-y-3">
               {phase2Items.map((item) => (
-                <div key={item.id} className="flex items-start gap-3 p-3 bg-black/40 border border-geminix-brand/10 clip-corner">
+                <div key={item.id} className="flex items-start gap-3 p-3 bg-black/40 border border-proyecto-brand/10 clip-corner">
                   <span className="text-lg mt-0.5">{item.icon}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -291,12 +291,12 @@ export default function RoadMapPanel() {
       </div>
 
       {/* VISION BANNER */}
-      <div className="holo-card p-6 clip-corner relative overflow-hidden border border-geminix-accent/10">
-        <div className="absolute inset-0 bg-gradient-to-r from-geminix-brand/5 via-transparent to-purple-600/5 pointer-events-none" />
+      <div className="holo-card p-6 clip-corner relative overflow-hidden border border-proyecto-accent/10">
+        <div className="absolute inset-0 bg-gradient-to-r from-proyecto-brand/5 via-transparent to-purple-600/5 pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
-            <p className="text-[9px] font-mono-tech text-geminix-accent uppercase tracking-[0.3em] mb-1">Visión del Protocolo</p>
-            <h3 className="text-lg font-orbitron font-black text-white uppercase tracking-widest">GEMINIX ECOSYSTEM</h3>
+            <p className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-[0.3em] mb-1">Visión del Protocolo</p>
+            <h3 className="text-lg font-orbitron font-black text-white uppercase tracking-widest">PROYECTO X ECOSYSTEM</h3>
             <p className="text-[10px] text-slate-400 font-bold mt-1">
               3 fases · {PHASE2_DURATION_DAYS} días de transición · Evolución continua
             </p>
@@ -308,14 +308,14 @@ export default function RoadMapPanel() {
               </div>
               <p className="text-[8px] font-mono-tech text-emerald-400 uppercase tracking-widest">Fase 1</p>
             </div>
-            <div className="text-geminix-brand/30 font-black">→</div>
+            <div className="text-proyecto-brand/30 font-black">→</div>
             <div className="text-center">
-              <div className="w-12 h-12 clip-corner bg-geminix-brand/10 border border-geminix-brand/20 flex items-center justify-center mx-auto mb-1 shadow-neon-cyan">
+              <div className="w-12 h-12 clip-corner bg-proyecto-brand/10 border border-proyecto-brand/20 flex items-center justify-center mx-auto mb-1 shadow-neon-cyan">
                 <span className="text-lg">⏳</span>
               </div>
-              <p className="text-[8px] font-mono-tech text-geminix-accent uppercase tracking-widest">Fase 2</p>
+              <p className="text-[8px] font-mono-tech text-proyecto-accent uppercase tracking-widest">Fase 2</p>
             </div>
-            <div className="text-geminix-brand/30 font-black">→</div>
+            <div className="text-proyecto-brand/30 font-black">→</div>
             <div className="text-center">
               <div className="w-12 h-12 clip-corner bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-1">
                 <span className="text-lg">⚡</span>

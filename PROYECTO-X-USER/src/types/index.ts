@@ -23,8 +23,8 @@ export interface Profile {
     withdrawals_blocked?: boolean;
     roi_blocked?: boolean;
     transfer_blocked?: boolean;
-    geminix_card_address?: string | null;
-    geminix_card_user?: string | null;
+    proyecto_x_card_address?: string | null;
+    proyecto_x_card_user?: string | null;
 }
 
 export enum TransactionType {

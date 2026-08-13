@@ -332,7 +332,7 @@ El Coordinador trabaja sin descanso para:
 
 *Actualización creada: 2026-03-16*
 *Versión: 1.1.0 (Con Coordinador)*
-*Autor: GEMINIX-ADMIN*
+*Autor: PROYECTO X-ADMIN*
 
 ---
 

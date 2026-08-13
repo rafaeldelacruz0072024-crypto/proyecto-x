@@ -55,7 +55,7 @@ function AudioPlayer({ src, title }: { src: string; title: string }) {
             <div className="flex items-center gap-3">
                 <button
                     onClick={toggle}
-                    className="w-10 h-10 rounded-full bg-geminix-accent flex items-center justify-center text-black shadow-[0_0_15px_rgba(0,243,255,0.3)] hover:scale-110 transition-transform shrink-0"
+                    className="w-10 h-10 rounded-full bg-proyecto-accent flex items-center justify-center text-black shadow-[0_0_15px_rgba(0,243,255,0.3)] hover:scale-110 transition-transform shrink-0"
                 >
                     {playing ? <Pause size={16} className="fill-black" /> : <Play size={16} className="fill-black ml-0.5" />}
                 </button>
@@ -66,7 +66,7 @@ function AudioPlayer({ src, title }: { src: string; title: string }) {
                         <input
                             type="range" min={0} max={duration || 1} value={progress}
                             onChange={(e) => { if (audioRef.current) audioRef.current.currentTime = Number(e.target.value); setProgress(Number(e.target.value)); }}
-                            className="flex-1 h-1 accent-geminix-accent cursor-pointer"
+                            className="flex-1 h-1 accent-proyecto-accent cursor-pointer"
                         />
                         <span className="text-[8px] text-slate-500 font-mono w-8 text-right">{fmt(duration)}</span>
                     </div>
@@ -167,7 +167,7 @@ export default function TutorialsPanel() {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 animate-pulse">
-                <Loader2 className="w-12 h-12 text-geminix-accent animate-spin mb-4" />
+                <Loader2 className="w-12 h-12 text-proyecto-accent animate-spin mb-4" />
                 <p className="text-[10px] font-orbitron font-bold text-slate-500 uppercase tracking-[0.3em]">
                     {t('tutorials.loading') || 'Sincronizando Biblioteca Educativa...'}
                 </p>
@@ -182,7 +182,7 @@ export default function TutorialsPanel() {
             <div className="space-y-8 animate-fade-in">
                 <button
                     onClick={() => setSelectedTutorial(null)}
-                    className="flex items-center gap-2 text-geminix-accent hover:text-white transition-colors group mb-6"
+                    className="flex items-center gap-2 text-proyecto-accent hover:text-white transition-colors group mb-6"
                 >
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
                     <span className="text-[10px] font-orbitron font-bold uppercase tracking-widest">
@@ -221,7 +221,7 @@ export default function TutorialsPanel() {
                                         href={selectedTutorial.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="px-8 py-4 bg-geminix-accent text-slate-950 font-black text-xs uppercase tracking-widest clip-corner hover:scale-105 transition-all flex items-center gap-3"
+                                        className="px-8 py-4 bg-proyecto-accent text-slate-950 font-black text-xs uppercase tracking-widest clip-corner hover:scale-105 transition-all flex items-center gap-3"
                                     >
                                         <ExternalLink size={18} />
                                         {selectedTutorial.content_type === 'VIDEO'
@@ -234,8 +234,8 @@ export default function TutorialsPanel() {
                     </div>
 
                     <div className="space-y-6">
-                        <div className="holo-card p-6 clip-corner border-geminix-accent/20">
-                            <h3 className="text-xs font-orbitron font-bold text-geminix-accent uppercase tracking-[0.2em] mb-4">Información del Módulo</h3>
+                        <div className="holo-card p-6 clip-corner border-proyecto-accent/20">
+                            <h3 className="text-xs font-orbitron font-bold text-proyecto-accent uppercase tracking-[0.2em] mb-4">Información del Módulo</h3>
                             <div className="space-y-4">
                                 <div>
                                     <p className="text-[9px] text-slate-500 uppercase font-bold tracking-widest mb-1">Categoría</p>
@@ -274,7 +274,7 @@ export default function TutorialsPanel() {
                     onClick={() => setActiveTab('tutorials')}
                     className={`flex items-center gap-2 px-5 py-3 text-[10px] font-black uppercase tracking-widest border-b-2 transition-all whitespace-nowrap ${
                         activeTab === 'tutorials'
-                            ? 'border-geminix-accent text-white'
+                            ? 'border-proyecto-accent text-white'
                             : 'border-transparent text-slate-600 hover:text-slate-300'
                     }`}
                 >
@@ -295,7 +295,7 @@ export default function TutorialsPanel() {
                     onClick={() => setActiveTab('flyer')}
                     className={`flex items-center gap-2 px-5 py-3 text-[10px] font-black uppercase tracking-widest border-b-2 transition-all whitespace-nowrap ${
                         activeTab === 'flyer'
-                            ? 'border-geminix-accent text-white'
+                            ? 'border-proyecto-accent text-white'
                             : 'border-transparent text-slate-600 hover:text-slate-300'
                     }`}
                 >
@@ -491,13 +491,13 @@ export default function TutorialsPanel() {
             {/* SEARCH AND FILTER SECTION */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
                 <div className="relative w-full max-w-md group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-geminix-accent group-hover:scale-110 transition-transform" size={18} />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-proyecto-accent group-hover:scale-110 transition-transform" size={18} />
                     <input
                         type="text"
                         placeholder={t('tutorials.search_placeholder') || 'BUSCAR RECURSOS...'}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-black/40 border border-white/5 rounded-none pl-12 pr-4 py-4 text-xs font-orbitron tracking-widest text-white placeholder-slate-700 focus:outline-none focus:border-geminix-accent/50 transition-all clip-corner-sm"
+                        className="w-full bg-black/40 border border-white/5 rounded-none pl-12 pr-4 py-4 text-xs font-orbitron tracking-widest text-white placeholder-slate-700 focus:outline-none focus:border-proyecto-accent/50 transition-all clip-corner-sm"
                     />
                 </div>
 
@@ -507,7 +507,7 @@ export default function TutorialsPanel() {
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
                             className={`px-6 py-2.5 text-[9px] font-orbitron font-bold uppercase tracking-widest clip-corner-sm transition-all whitespace-nowrap ${selectedCategory === cat
-                                ? 'bg-geminix-accent text-slate-950 shadow-neon-cyan'
+                                ? 'bg-proyecto-accent text-slate-950 shadow-neon-cyan'
                                 : 'bg-white/5 text-slate-500 hover:text-white hover:bg-white/10'}`}
                         >
                             {cat === 'ALL' ? (t('tutorials.all_categories') || 'TODAS') : cat}
@@ -529,7 +529,7 @@ export default function TutorialsPanel() {
                     {filteredTutorials.map((tutorial) => (
                         <div
                             key={tutorial.id}
-                            className="group relative flex flex-col bg-slate-900/40 border border-white/5 hover:border-geminix-accent/30 transition-all duration-500 clip-corner-sm overflow-hidden hover:translate-y-[-4px]"
+                            className="group relative flex flex-col bg-slate-900/40 border border-white/5 hover:border-proyecto-accent/30 transition-all duration-500 clip-corner-sm overflow-hidden hover:translate-y-[-4px]"
                         >
                             <div className="relative h-44 overflow-hidden bg-black/50 border-b border-white/5">
                                 {tutorial.thumbnail_url ? (
@@ -548,14 +548,14 @@ export default function TutorialsPanel() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
 
                                 <div className="absolute top-3 left-3 flex gap-2">
-                                    <span className="px-2 py-0.5 bg-black/60 backdrop-blur-md border border-white/10 text-geminix-accent text-[8px] font-orbitron font-black uppercase tracking-widest">
+                                    <span className="px-2 py-0.5 bg-black/60 backdrop-blur-md border border-white/10 text-proyecto-accent text-[8px] font-orbitron font-black uppercase tracking-widest">
                                         {tutorial.category}
                                     </span>
                                 </div>
 
                                 {tutorial.content_type === 'VIDEO' && (
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div className="w-14 h-14 rounded-full bg-geminix-accent/20 border border-geminix-accent/50 flex items-center justify-center backdrop-blur-md">
+                                        <div className="w-14 h-14 rounded-full bg-proyecto-accent/20 border border-proyecto-accent/50 flex items-center justify-center backdrop-blur-md">
                                             <Play size={24} className="text-white fill-white shadow-neon-cyan" />
                                         </div>
                                     </div>
@@ -563,7 +563,7 @@ export default function TutorialsPanel() {
                             </div>
 
                             <div className="p-5 flex flex-col flex-1">
-                                <h3 className="text-sm font-orbitron font-black text-white uppercase italic tracking-tight mb-2 group-hover:text-geminix-accent transition-colors truncate">
+                                <h3 className="text-sm font-orbitron font-black text-white uppercase italic tracking-tight mb-2 group-hover:text-proyecto-accent transition-colors truncate">
                                     {tutorial.title}
                                 </h3>
 
@@ -585,7 +585,7 @@ export default function TutorialsPanel() {
 
                                 <button
                                     onClick={() => setSelectedTutorial(tutorial)}
-                                    className="mt-auto w-full py-3 border border-white/10 group-hover:border-geminix-accent group-hover:bg-geminix-accent/10 transition-all font-orbitron font-black text-[9px] uppercase tracking-[0.2em] flex items-center justify-center gap-2"
+                                    className="mt-auto w-full py-3 border border-white/10 group-hover:border-proyecto-accent group-hover:bg-proyecto-accent/10 transition-all font-orbitron font-black text-[9px] uppercase tracking-[0.2em] flex items-center justify-center gap-2"
                                 >
                                     {tutorial.content_type === 'VIDEO' ? (t('tutorials.watch_now') || 'REPRODUCIR AHORA') : (t('tutorials.open_resource') || 'ABRIR RECURSO')}
                                     <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />

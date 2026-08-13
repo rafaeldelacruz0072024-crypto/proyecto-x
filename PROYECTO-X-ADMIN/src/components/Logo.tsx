@@ -106,7 +106,7 @@ const Logo: React.FC<Props> = ({ size = 'md', className = '', variant = 'white',
                     letterSpacing="0.1em"
                     className="drop-shadow-[0_4px_10px_rgba(255,255,255,0.3)]"
                 >
-                    GEMINIX
+                    PROYECTO X
                 </text>
             </svg>
         </div>

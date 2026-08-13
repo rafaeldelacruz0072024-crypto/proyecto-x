@@ -16,8 +16,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [is2faLoading, setIs2faLoading] = useState(false);
   const [isChangingPass, setIsChangingPass] = useState(false);
   const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.withdrawalWallet || '');
-  const [cardAddress, setCardAddress] = useState(user?.geminix_card_address || '');
-  const [cardUser, setCardUser] = useState(user?.geminix_card_user || '');
+  const [cardAddress, setCardAddress] = useState(user?.proyecto_x_card_address || '');
+  const [cardUser, setCardUser] = useState(user?.proyecto_x_card_user || '');
 
   // Derivados de seguridad
   const kycVerified = user?.kycVerified || user?.kyc_verified || false;
@@ -122,8 +122,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     } else {
       onUpdateUser({ 
         withdrawal_wallet: wallet,
-        geminix_card_address: cardAddress,
-        geminix_card_user: cardUser
+        proyecto_x_card_address: cardAddress,
+        proyecto_x_card_user: cardUser
       });
       addNotification(t('profile.notifications.wallet_saved'), "success");
     }
@@ -148,8 +148,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
 
       if (isLinkingWalletWith2FA) {
         updates.withdrawal_wallet = wallet;
-        updates.geminix_card_address = cardAddress;
-        updates.geminix_card_user = cardUser;
+        updates.proyecto_x_card_address = cardAddress;
+        updates.proyecto_x_card_user = cardUser;
       }
 
       onUpdateUser(updates);
@@ -176,41 +176,41 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-fade-in">
       {/* Sidebar - Node Status */}
       <div className="lg:col-span-1 space-y-6">
-        <div className="holo-card p-6 rounded-none clip-corner border border-geminix-accent/20 text-center relative overflow-hidden group">
-          <div className="absolute top-0 left-0 w-full h-1 bg-geminix-brand shadow-[0_0_10px_cyan]"></div>
+        <div className="holo-card p-6 rounded-none clip-corner border border-proyecto-accent/20 text-center relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-proyecto-brand shadow-[0_0_10px_cyan]"></div>
 
-          <div className="relative mx-auto w-24 h-24 rounded-full p-1 border border-geminix-accent/50 mb-4 flex items-center justify-center group-hover:scale-105 transition-transform">
-            <div className="w-20 h-20 rounded-full bg-black flex items-center justify-center text-4xl font-orbitron font-bold text-white border border-geminix-accent/20 shadow-[0_0_20px_rgba(0,243,255,0.2)]">
+          <div className="relative mx-auto w-24 h-24 rounded-full p-1 border border-proyecto-accent/50 mb-4 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-20 h-20 rounded-full bg-black flex items-center justify-center text-4xl font-orbitron font-bold text-white border border-proyecto-accent/20 shadow-[0_0_20px_rgba(0,243,255,0.2)]">
               {userInitial}
             </div>
-            <div className="absolute inset-0 rounded-full border border-geminix-accent/30 animate-ping opacity-20"></div>
+            <div className="absolute inset-0 rounded-full border border-proyecto-accent/30 animate-ping opacity-20"></div>
           </div>
 
           <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-tighter leading-none text-glow-cyan">{userName}</h2>
           <div className="flex items-center justify-center gap-2 mt-2 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-geminix-accent animate-pulse"></div>
-            <p className="text-[10px] text-geminix-accent font-mono-tech font-bold uppercase tracking-widest">{t('profile.sidebar.rank_operator', { rank: t(`ranks.${user?.rank || 'Starter'}`) })}</p>
+            <div className="w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse"></div>
+            <p className="text-[10px] text-proyecto-accent font-mono-tech font-bold uppercase tracking-widest">{t('profile.sidebar.rank_operator', { rank: t(`ranks.${user?.rank || 'Starter'}`) })}</p>
           </div>
 
           {/* Security Score Meter */}
           <div className="mb-6 px-2">
             <div className="flex justify-between text-[9px] font-mono-tech font-bold uppercase text-slate-500 mb-2 tracking-widest">
               <span>{t('profile.sidebar.integrity')}</span>
-              <span className={securityScore > 70 ? 'text-geminix-green text-glow-green' : 'text-geminix-gold'}>{securityScore}%</span>
+              <span className={securityScore > 70 ? 'text-proyecto-green text-glow-green' : 'text-proyecto-gold'}>{securityScore}%</span>
             </div>
             <div className="h-1.5 w-full bg-black rounded-none overflow-hidden border border-slate-800">
               <div
-                className={`h-full transition-all duration-1000 ${securityScore > 70 ? 'bg-geminix-green shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-geminix-gold shadow-[0_0_8px_rgba(255,215,0,0.5)]'}`}
+                className={`h-full transition-all duration-1000 ${securityScore > 70 ? 'bg-proyecto-green shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-proyecto-gold shadow-[0_0_8px_rgba(255,215,0,0.5)]'}`}
                 style={{ width: `${securityScore}%` }}
               ></div>
             </div>
           </div>
 
           <div className="flex justify-center gap-2 mb-8">
-            <span className={`px-3 py-1 clip-corner-sm text-[8px] font-mono-tech font-bold uppercase border transition-all ${kycVerified ? 'bg-geminix-green/10 text-geminix-green border-geminix-green/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
+            <span className={`px-3 py-1 clip-corner-sm text-[8px] font-mono-tech font-bold uppercase border transition-all ${kycVerified ? 'bg-proyecto-green/10 text-proyecto-green border-proyecto-green/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
               KYC {kycVerified ? t('profile.sidebar.verified') : t('profile.sidebar.pending')}
             </span>
-            <span className={`px-3 py-1 clip-corner-sm text-[8px] font-mono-tech font-bold uppercase border transition-all ${twoFactorEnabled ? 'bg-geminix-accent/10 text-geminix-accent border-geminix-accent/20' : 'bg-slate-800 text-slate-500 border-slate-700'}`}>
+            <span className={`px-3 py-1 clip-corner-sm text-[8px] font-mono-tech font-bold uppercase border transition-all ${twoFactorEnabled ? 'bg-proyecto-accent/10 text-proyecto-accent border-proyecto-accent/20' : 'bg-slate-800 text-slate-500 border-slate-700'}`}>
               2FA {twoFactorEnabled ? t('profile.2fa.on') : t('profile.2fa.off')}
             </span>
           </div>
@@ -222,7 +222,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
             </div>
             <div className="flex items-center justify-between">
               <span className="text-[9px] uppercase text-slate-600 font-mono-tech font-bold tracking-widest">{t('profile.identity.node_id')}</span>
-              <span className="text-[10px] text-geminix-accent font-mono">{user?.id?.slice(-8) || 'N/A'}</span>
+              <span className="text-[10px] text-proyecto-accent font-mono">{user?.id?.slice(-8) || 'N/A'}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-[9px] uppercase text-slate-600 font-mono-tech font-bold tracking-widest">{t('profile.identity.member_since')}</span>
@@ -240,7 +240,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
             <button
               key={tab}
               onClick={() => setActiveSubTab(tab)}
-              className={`flex-1 py-3 rounded-none clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-[0.2em] transition-all ${activeSubTab === tab ? 'bg-geminix-brand text-white shadow-[0_0_15px_rgba(0,114,255,0.3)]' : 'text-slate-500 hover:text-white hover:bg-slate-900'}`}
+              className={`flex-1 py-3 rounded-none clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-[0.2em] transition-all ${activeSubTab === tab ? 'bg-proyecto-brand text-white shadow-[0_0_15px_rgba(0,114,255,0.3)]' : 'text-slate-500 hover:text-white hover:bg-slate-900'}`}
             >
               {t(`profile.tabs.${tab}`)}
             </button>
@@ -250,7 +250,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
         {activeSubTab === 'info' && (
           <div className="space-y-6">
             {/* Personal Information */}
-            <div className="holo-card p-8 rounded-none clip-corner border border-geminix-accent/20">
+            <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20">
               <h3 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] mb-8 text-glow-cyan">{t('profile.identity.title')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -263,7 +263,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                 </div>
                 <div>
                   <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">{t('profile.identity.username')}</label>
-                  <input type="text" value={user?.username || 'N/A'} disabled className="w-full bg-black/50 border border-slate-800 clip-corner-sm py-4 px-5 text-geminix-accent opacity-80 cursor-not-allowed font-mono-tech" />
+                  <input type="text" value={user?.username || 'N/A'} disabled className="w-full bg-black/50 border border-slate-800 clip-corner-sm py-4 px-5 text-proyecto-accent opacity-80 cursor-not-allowed font-mono-tech" />
                 </div>
                 <div>
                   <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">{t('profile.identity.country')}</label>
@@ -282,7 +282,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                             type="text" 
                             value={user?.ref_code || 'NO DETECTADO'} 
                             disabled 
-                            className={`w-full bg-geminix-accent/5 border clip-corner-sm py-4 px-5 font-orbitron cursor-not-allowed tracking-widest ${!user?.ref_code ? 'text-red-400 border-red-500/30 font-bold' : 'text-geminix-accent border-geminix-accent/20'}`} 
+                            className={`w-full bg-proyecto-accent/5 border clip-corner-sm py-4 px-5 font-orbitron cursor-not-allowed tracking-widest ${!user?.ref_code ? 'text-red-400 border-red-500/30 font-bold' : 'text-proyecto-accent border-proyecto-accent/20'}`}
                           />
                           {!user?.ref_code && (
                             <button 
@@ -301,7 +301,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                              // Simple alert or feedback could be added here
                            }
                          }}
-                         className="px-4 bg-slate-900 border border-geminix-accent/20 text-geminix-accent hover:bg-geminix-accent/10 transition-colors clip-corner-sm flex items-center justify-center"
+                         className="px-4 bg-slate-900 border border-proyecto-accent/20 text-proyecto-accent hover:bg-proyecto-accent/10 transition-colors clip-corner-sm flex items-center justify-center"
                          title={t('common.copy', 'Copy')}
                        >
                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
@@ -328,12 +328,12 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
             </div>
 
             {/* Withdrawal Configuration */}
-            <div className="holo-card p-8 rounded-none clip-corner border border-geminix-accent/20 relative overflow-hidden group">
+            <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group">
               {isWalletFrozen && (
                 <div className="absolute top-0 right-0 p-4">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-geminix-green/10 border border-geminix-green/20 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                    <svg className="w-3 h-3 text-geminix-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                    <span className="text-[9px] font-mono-tech font-bold text-geminix-green uppercase tracking-widest">{t('profile.vault.status_locked')}</span>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-proyecto-green/10 border border-proyecto-green/20 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <svg className="w-3 h-3 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    <span className="text-[9px] font-mono-tech font-bold text-proyecto-green uppercase tracking-widest">{t('profile.vault.status_locked')}</span>
                   </div>
                 </div>
               )}
@@ -356,13 +356,13 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                         onChange={(e) => !isWalletFrozen && setWallet(e.target.value)}
                         disabled={isWalletFrozen}
                         placeholder="0x..."
-                        className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-geminix-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-geminix-accent focus:border-geminix-accent focus:shadow-[0_0_10px_cyan]'}`}
+                        className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-proyecto-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-proyecto-accent focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]'}`}
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* GEMINIX CARD FIELDS */}
+                {/* PROYECTO X CARD FIELDS */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800/30">
                   <div className="space-y-2">
                     <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest ml-1">{t('profile.vault.card_address_label')}</label>
@@ -372,7 +372,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                       onChange={(e) => !isWalletFrozen && setCardAddress(e.target.value)}
                       disabled={isWalletFrozen}
                       placeholder={t('profile.vault.card_address_placeholder')}
-                      className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-geminix-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-geminix-accent focus:border-geminix-accent focus:shadow-[0_0_10px_cyan]'}`}
+                      className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-proyecto-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-proyecto-accent focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]'}`}
                     />
                   </div>
                   <div className="space-y-2">
@@ -383,20 +383,20 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                       onChange={(e) => !isWalletFrozen && setCardUser(e.target.value)}
                       disabled={isWalletFrozen}
                       placeholder={t('profile.vault.card_user_placeholder')}
-                      className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-geminix-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-geminix-accent focus:border-geminix-accent focus:shadow-[0_0_10px_cyan]'}`}
+                      className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-proyecto-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-proyecto-accent focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]'}`}
                     />
                   </div>
                 </div>
 
                 <div className="pt-4">
                   {!isWalletFrozen && (
-                    <button onClick={saveWallet} className="w-full md:w-auto px-12 py-4 bg-geminix-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all hover:brightness-110">
+                    <button onClick={saveWallet} className="w-full md:w-auto px-12 py-4 bg-proyecto-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all hover:brightness-110">
                       {twoFactorEnabled ? t('profile.vault.update_button') : t('profile.vault.save_button')}
                     </button>
                   )}
                   {isWalletFrozen && (
                     <div className="px-6 py-4 bg-slate-900/50 border border-slate-800 clip-corner-sm flex items-center justify-center md:justify-start gap-3">
-                      <div className="w-2 h-2 rounded-full bg-geminix-green animate-pulse"></div>
+                      <div className="w-2 h-2 rounded-full bg-proyecto-green animate-pulse"></div>
                       <span className="text-[10px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest">{t('profile.vault.immutable')}</span>
                     </div>
                   )}
@@ -409,36 +409,36 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
         {activeSubTab === 'security' && (
           <div className="space-y-6">
             {/* Password Change */}
-            <div className="holo-card p-8 rounded-none clip-corner border border-geminix-accent/20">
+            <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20">
               <h3 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] mb-8 text-glow-cyan">{t('profile.security.title')}</h3>
               <form onSubmit={handlePasswordChange} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">{t('profile.security.current_key')}</label>
-                    <input type="password" required value={passForm.current} onChange={e => setPassForm({ ...passForm, current: e.target.value })} className="w-full bg-black/50 border border-slate-800 clip-corner-sm py-4 px-5 text-white text-sm focus:border-geminix-accent focus:shadow-[0_0_10px_cyan] transition-all font-mono" />
+                    <input type="password" required value={passForm.current} onChange={e => setPassForm({ ...passForm, current: e.target.value })} className="w-full bg-black/50 border border-slate-800 clip-corner-sm py-4 px-5 text-white text-sm focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan] transition-all font-mono" />
                   </div>
                   <div>
                     <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">{t('profile.security.new_key')}</label>
-                    <input type={showPass ? 'text' : 'password'} required value={passForm.new} onChange={e => setPassForm({ ...passForm, new: e.target.value })} className="w-full bg-black/50 border border-slate-800 clip-corner-sm py-4 px-5 text-white text-sm focus:border-geminix-accent focus:shadow-[0_0_10px_cyan] transition-all font-mono" />
+                    <input type={showPass ? 'text' : 'password'} required value={passForm.new} onChange={e => setPassForm({ ...passForm, new: e.target.value })} className="w-full bg-black/50 border border-slate-800 clip-corner-sm py-4 px-5 text-white text-sm focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan] transition-all font-mono" />
                     {passForm.new && (
                       <div className="mt-3">
                         <div className="flex justify-between text-[8px] uppercase text-slate-600 mb-2 font-mono-tech font-bold tracking-widest">
                           <span>{t('profile.security.strength')}</span>
-                          <span className={passStrength > 75 ? 'text-geminix-green' : 'text-geminix-gold'}>{passStrength}%</span>
+                          <span className={passStrength > 75 ? 'text-proyecto-green' : 'text-proyecto-gold'}>{passStrength}%</span>
                         </div>
                         <div className="h-1 bg-black rounded-none overflow-hidden border border-slate-800">
-                          <div className={`h-full transition-all ${passStrength > 75 ? 'bg-geminix-green shadow-[0_0_5px_green]' : 'bg-geminix-gold shadow-[0_0_5px_gold]'}`} style={{ width: `${passStrength}%` }}></div>
+                          <div className={`h-full transition-all ${passStrength > 75 ? 'bg-proyecto-green shadow-[0_0_5px_green]' : 'bg-proyecto-gold shadow-[0_0_5px_gold]'}`} style={{ width: `${passStrength}%` }}></div>
                         </div>
                       </div>
                     )}
                   </div>
                   <div>
                     <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">{t('profile.security.confirm_key')}</label>
-                    <input type="password" required value={passForm.confirm} onChange={e => setPassForm({ ...passForm, confirm: e.target.value })} className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 text-white text-sm focus:border-geminix-accent transition-all font-mono ${passForm.confirm && passForm.new !== passForm.confirm ? 'border-red-500 shadow-[0_0_10px_red]' : 'border-slate-800'}`} />
+                    <input type="password" required value={passForm.confirm} onChange={e => setPassForm({ ...passForm, confirm: e.target.value })} className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 text-white text-sm focus:border-proyecto-accent transition-all font-mono ${passForm.confirm && passForm.new !== passForm.confirm ? 'border-red-500 shadow-[0_0_10px_red]' : 'border-slate-800'}`} />
                   </div>
                 </div>
                 <div className="pt-6">
-                  <button type="submit" disabled={isChangingPass || !passForm.new || passForm.new !== passForm.confirm} className="px-10 py-4 bg-geminix-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all disabled:opacity-50 hover:brightness-110">
+                  <button type="submit" disabled={isChangingPass || !passForm.new || passForm.new !== passForm.confirm} className="px-10 py-4 bg-proyecto-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all disabled:opacity-50 hover:brightness-110">
                     {isChangingPass ? t('auth.processing') : t('profile.security.button')}
                   </button>
                 </div>
@@ -446,16 +446,16 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
             </div>
 
             {/* Multi-Factor Shield */}
-            <div className="holo-card p-8 rounded-none clip-corner border border-geminix-accent/20 relative overflow-hidden group">
+            <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group">
               <div className="flex flex-col md:flex-row gap-8 items-center mb-8 relative z-10">
-                <div className={`w-20 h-20 clip-corner-sm flex items-center justify-center shrink-0 border transition-all duration-500 ${twoFactorEnabled ? 'bg-geminix-green/10 border-geminix-green shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'bg-red-500/10 border-red-500 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.2)]'}`}>
-                  <svg className={`w-10 h-10 ${twoFactorEnabled ? 'text-geminix-green' : 'text-red-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                <div className={`w-20 h-20 clip-corner-sm flex items-center justify-center shrink-0 border transition-all duration-500 ${twoFactorEnabled ? 'bg-proyecto-green/10 border-proyecto-green shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'bg-red-500/10 border-red-500 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.2)]'}`}>
+                  <svg className={`w-10 h-10 ${twoFactorEnabled ? 'text-proyecto-green' : 'text-red-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                 </div>
                 <div className="flex-grow text-center md:text-left">
                   <div className="flex items-center gap-3 justify-center md:justify-start">
                     <h4 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('profile.2fa.title')}</h4>
                     {twoFactorEnabled && (
-                      <span className="bg-geminix-green/10 text-geminix-green text-[8px] font-mono-tech font-bold px-2 py-0.5 rounded border border-geminix-green/20 shadow-[0_0_5px_green]">{t('profile.2fa.active')}</span>
+                      <span className="bg-proyecto-green/10 text-proyecto-green text-[8px] font-mono-tech font-bold px-2 py-0.5 rounded border border-proyecto-green/20 shadow-[0_0_5px_green]">{t('profile.2fa.active')}</span>
                     )}
                   </div>
                   <p className="text-[11px] text-slate-500 font-mono-tech uppercase font-bold tracking-tighter mt-1 leading-relaxed">
@@ -468,7 +468,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                   <button
                     onClick={twoFactorEnabled ? disable2FA : start2FASetup}
                     disabled={is2faLoading}
-                    className={`px-10 py-4 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest transition-all active:scale-95 ${twoFactorEnabled ? 'bg-slate-900 text-slate-400 border border-slate-800' : 'bg-geminix-brand text-white shadow-[0_0_15px_rgba(0,114,255,0.4)] hover:brightness-110'}`}
+                    className={`px-10 py-4 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest transition-all active:scale-95 ${twoFactorEnabled ? 'bg-slate-900 text-slate-400 border border-slate-800' : 'bg-proyecto-brand text-white shadow-[0_0_15px_rgba(0,114,255,0.4)] hover:brightness-110'}`}
                   >
                     {is2faLoading ? t('auth.processing').toUpperCase() : (twoFactorEnabled ? t('profile.2fa.disable') : t('profile.2fa.setup'))}
                   </button>
@@ -481,7 +481,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-[0_0_20px_white]">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/GEMINIX:${userEmail}?secret=JBSWY3DPEHPK3PXP&issuer=GEMINIX`}
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/PROYECTO X:${userEmail}?secret=JBSWY3DPEHPK3PXP&issuer=PROYECTO X`}
                         alt="2FA QR Code"
                         className="w-40 h-40 mix-blend-multiply"
                       />
@@ -496,9 +496,9 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
 
                       <div className="space-y-1">
                         <h5 className="text-[10px] font-orbitron font-bold text-white uppercase tracking-widest">{t('profile.2fa.step2')}</h5>
-                        <div className="bg-black border border-geminix-accent/20 px-4 py-3 clip-corner-sm font-mono text-geminix-accent text-[10px] flex justify-between items-center group/key shadow-[0_0_10px_rgba(0,243,255,0.1)]">
+                        <div className="bg-black border border-proyecto-accent/20 px-4 py-3 clip-corner-sm font-mono text-proyecto-accent text-[10px] flex justify-between items-center group/key shadow-[0_0_10px_rgba(0,243,255,0.1)]">
                           <span>JBSWY3DPEHPK3PXP</span>
-                          <button className="text-slate-700 group-hover/key:text-geminix-accent transition-colors">
+                          <button className="text-slate-700 group-hover/key:text-proyecto-accent transition-colors">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
                           </button>
                         </div>
@@ -514,12 +514,12 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                             placeholder="000000"
                             value={verificationCode}
                             onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
-                            className="flex-grow bg-black/50 border border-slate-800 clip-corner-sm py-3 px-4 text-center font-orbitron font-bold tracking-[0.5em] text-geminix-accent text-lg focus:border-geminix-accent focus:shadow-[0_0_10px_cyan] transition-all"
+                            className="flex-grow bg-black/50 border border-slate-800 clip-corner-sm py-3 px-4 text-center font-orbitron font-bold tracking-[0.5em] text-proyecto-accent text-lg focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan] transition-all"
                           />
                           <button
                             onClick={complete2FASetup}
                             disabled={is2faLoading || verificationCode.length !== 6}
-                            className="px-6 bg-geminix-green text-slate-950 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.4)] disabled:opacity-30 transition-all hover:brightness-110"
+                            className="px-6 bg-proyecto-green text-slate-950 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.4)] disabled:opacity-30 transition-all hover:brightness-110"
                           >
                             {is2faLoading ? '...' : t('profile.2fa.verify_button')}
                           </button>
@@ -541,7 +541,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
         )}
 
         {activeSubTab === 'sessions' && (
-          <div className="holo-card p-8 rounded-none clip-corner border border-geminix-accent/20 space-y-8">
+          <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 space-y-8">
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">{t('profile.sessions.title')}</h3>
               <button className="text-[9px] font-mono-tech font-bold text-red-500 uppercase border border-red-500/20 px-4 py-2 clip-corner-sm hover:bg-red-500/10 transition-all hover:shadow-[0_0_10px_red]">{t('profile.sessions.emergency_logout')}</button>
@@ -549,19 +549,19 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
             <div className="space-y-4">
               {[
                 { ip: '192.168.1.45', device: 'Web Terminal (Chrome/macOS)', location: 'London, UK', status: 'ACTIVE' },
-                { ip: '172.24.5.12', device: 'Geminix Mobile Node (iOS)', location: 'Current Position', status: 'PAST' }
+                { ip: '172.24.5.12', device: 'Proyecto X Mobile Node (iOS)', location: 'Current Position', status: 'PAST' }
               ].map((session, i) => (
-                <div key={i} className="flex items-center justify-between p-5 bg-black/40 clip-corner-sm border border-slate-800 hover:border-geminix-accent/30 transition-colors group">
+                <div key={i} className="flex items-center justify-between p-5 bg-black/40 clip-corner-sm border border-slate-800 hover:border-proyecto-accent/30 transition-colors group">
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 clip-corner-sm flex items-center justify-center border ${session.status === 'ACTIVE' ? 'bg-geminix-green/10 text-geminix-green border-geminix-green/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]' : 'bg-slate-900 text-slate-600 border-slate-800'}`}>
+                    <div className={`w-12 h-12 clip-corner-sm flex items-center justify-center border ${session.status === 'ACTIVE' ? 'bg-proyecto-green/10 text-proyecto-green border-proyecto-green/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]' : 'bg-slate-900 text-slate-600 border-slate-800'}`}>
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                     </div>
                     <div>
-                      <p className="text-sm font-orbitron font-bold text-white uppercase tracking-tighter group-hover:text-geminix-accent transition-colors">{session.device}</p>
+                      <p className="text-sm font-orbitron font-bold text-white uppercase tracking-tighter group-hover:text-proyecto-accent transition-colors">{session.device}</p>
                       <p className="text-[10px] text-slate-500 font-mono-tech font-bold uppercase tracking-widest">{session.ip} • {session.location}</p>
                     </div>
                   </div>
-                  <span className={`text-[8px] font-mono-tech font-bold uppercase px-3 py-1 clip-corner-sm border ${session.status === 'ACTIVE' ? 'bg-geminix-green/10 text-geminix-green border-geminix-green/20' : 'bg-slate-900 text-slate-500 border-slate-800'}`}>{session.status === 'ACTIVE' ? t('profile.sessions.current') : t('profile.sessions.past')}</span>
+                  <span className={`text-[8px] font-mono-tech font-bold uppercase px-3 py-1 clip-corner-sm border ${session.status === 'ACTIVE' ? 'bg-proyecto-green/10 text-proyecto-green border-proyecto-green/20' : 'bg-slate-900 text-slate-500 border-slate-800'}`}>{session.status === 'ACTIVE' ? t('profile.sessions.current') : t('profile.sessions.past')}</span>
                 </div>
               ))}
             </div>

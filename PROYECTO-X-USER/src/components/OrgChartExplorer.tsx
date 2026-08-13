@@ -87,36 +87,36 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
   };
 
   return (
-    <div ref={containerRef} className="w-full h-[800px] border border-geminix-accent/20 rounded-3xl bg-black/60 relative overflow-hidden group cursor-grab active:cursor-grabbing">
+    <div ref={containerRef} className="w-full h-[800px] border border-proyecto-accent/20 rounded-3xl bg-black/60 relative overflow-hidden group cursor-grab active:cursor-grabbing">
       {/* Background HUD Grid */}
       <div className="absolute inset-0 bg-grid opacity-10 pointer-events-none"></div>
 
       {/* Terminal Title Overlay */}
       <div className="absolute top-6 left-6 z-10 pointer-events-none">
         <div className="flex items-center gap-3 mb-1">
-          <div className="w-2 h-2 rounded-full bg-geminix-accent animate-ping shadow-[0_0_10px_cyan]"></div>
-          <h4 className="text-geminix-accent font-orbitron text-[10px] tracking-widest uppercase font-black">{t('network.strategic_network')}</h4>
+          <div className="w-2 h-2 rounded-full bg-proyecto-accent animate-ping shadow-[0_0_10px_cyan]"></div>
+          <h4 className="text-proyecto-accent font-orbitron text-[10px] tracking-widest uppercase font-black">{t('network.strategic_network')}</h4>
         </div>
         <p className="text-[8px] text-slate-500 font-mono-tech italic">{t('network.status')}: {t('network.synchronized')} // DEPLOYMENT_LEVEL_ACTIVE</p>
       </div>
 
       {/* Controls Overlay (Level Expansion) */}
       <div className="absolute top-6 right-6 z-20 flex flex-col gap-3">
-        <div className="bg-black/80 backdrop-blur-md border border-geminix-accent/30 p-2 rounded-xl flex flex-col gap-2 shadow-[0_0_20px_rgba(0,243,255,0.1)]">
-           <span className="text-[8px] font-black font-orbitron text-geminix-accent/60 px-2 uppercase tracking-widest">Deployment Range</span>
+        <div className="bg-black/80 backdrop-blur-md border border-proyecto-accent/30 p-2 rounded-xl flex flex-col gap-2 shadow-[0_0_20px_rgba(0,243,255,0.1)]">
+           <span className="text-[8px] font-black font-orbitron text-proyecto-accent/60 px-2 uppercase tracking-widest">Deployment Range</span>
            <div className="flex gap-1">
              {[1, 2, 3, 5].map(lvl => (
                <button 
                  key={lvl}
                  onClick={() => expandToLevel(lvl)}
-                 className="w-10 h-8 flex items-center justify-center rounded-lg border border-white/5 hover:border-geminix-accent/50 hover:bg-geminix-accent/10 transition-all text-[10px] font-bold font-mono text-white"
+                 className="w-10 h-8 flex items-center justify-center rounded-lg border border-white/5 hover:border-proyecto-accent/50 hover:bg-proyecto-accent/10 transition-all text-[10px] font-bold font-mono text-white"
                >
                  L{lvl}
                </button>
              ))}
              <button 
                onClick={() => setCollapsedNodes(new Set())}
-               className="px-3 h-8 flex items-center justify-center rounded-lg border border-geminix-accent/20 bg-geminix-accent/10 hover:bg-geminix-accent/20 transition-all text-[9px] font-black font-orbitron text-geminix-accent uppercase"
+               className="px-3 h-8 flex items-center justify-center rounded-lg border border-proyecto-accent/20 bg-proyecto-accent/10 hover:bg-proyecto-accent/20 transition-all text-[9px] font-black font-orbitron text-proyecto-accent uppercase"
              >
                Max
              </button>
@@ -128,7 +128,7 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
       <div className="absolute bottom-6 left-6 z-10 flex gap-2">
          <div className="bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl flex items-center gap-4 text-[10px] font-mono-tech text-slate-400">
             <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-geminix-accent"></div>
+                <div className="w-2 h-2 rounded-full bg-proyecto-accent"></div>
                 <span>{t('network.active_node')}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
                   onClick={(e) => hasChildren && toggleNode(node.data.id, e as any)}
                   className={`
                     transition-all duration-500 ease-out fill-slate-950 border-2 cursor-pointer
-                    ${isActive ? 'stroke-geminix-accent' : 'stroke-slate-800'}
+                    ${isActive ? 'stroke-proyecto-accent' : 'stroke-slate-800'}
                     ${hasChildren ? 'hover:stroke-white' : ''}
                   `}
                   strokeWidth="2.5"
@@ -217,7 +217,7 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
                     transform={`translate(${nodeRadius - 4}, ${nodeRadius - 4})`}
                     className="cursor-pointer"
                   >
-                    <circle r="10" className={`${isCollapsed ? 'fill-geminix-accent' : 'fill-slate-800'} stroke-black stroke-2 shadow-lg`} />
+                    <circle r="10" className={`${isCollapsed ? 'fill-proyecto-accent' : 'fill-slate-800'} stroke-black stroke-2 shadow-lg`} />
                     <path 
                       d={isCollapsed ? "M -4 0 L 4 0 M 0 -4 L 0 4" : "M -4 0 L 4 0"} 
                       stroke={isCollapsed ? "black" : "white"} 
@@ -230,7 +230,7 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
                 {/* Avatar Placeholder / Initials */}
                 <circle
                   r={nodeRadius - 4}
-                  className={isActive ? 'fill-geminix-accent/10' : 'fill-slate-900'}
+                  className={isActive ? 'fill-proyecto-accent/10' : 'fill-slate-900'}
                   pointerEvents="none"
                 />
 
@@ -239,7 +239,7 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
                   dy="0.35em"
                   className={`
                     font-orbitron font-bold text-xl pointer-events-none select-none
-                    ${isActive ? 'fill-geminix-accent text-glow-cyan' : 'fill-slate-700'}
+                    ${isActive ? 'fill-proyecto-accent text-glow-cyan' : 'fill-slate-700'}
                   `}
                 >
                   {node.data.name.charAt(0).toUpperCase()}
@@ -260,7 +260,7 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
                   <text
                     y="12"
                     textAnchor="middle"
-                    className="font-mono-tech text-[7px] font-black fill-geminix-accent uppercase tracking-widest opacity-80"
+                    className="font-mono-tech text-[7px] font-black fill-proyecto-accent uppercase tracking-widest opacity-80"
                   >
                     {node.data.rank || 'STARTER'}
                   </text>
@@ -270,12 +270,12 @@ const OrgChartExplorer: React.FC<Props> = ({ data }) => {
                 <g transform={`translate(0, -${nodeRadius + 12})`}>
                   <rect
                     x="-35" y="-8" width="70" height="16" rx="8"
-                    className={`${isActive ? 'fill-geminix-accent/20 stroke-geminix-accent/40' : 'fill-slate-900 stroke-slate-800'} stroke-[0.5px]`}
+                    className={`${isActive ? 'fill-proyecto-accent/20 stroke-proyecto-accent/40' : 'fill-slate-900 stroke-slate-800'} stroke-[0.5px]`}
                   />
                   <text
                     textAnchor="middle"
                     dy="3"
-                    className={`font-mono-tech text-[7px] font-bold ${isActive ? 'fill-geminix-accent' : 'fill-slate-500'}`}
+                    className={`font-mono-tech text-[7px] font-bold ${isActive ? 'fill-proyecto-accent' : 'fill-slate-500'}`}
                   >
                     ${Number(node.data.totalVolume).toLocaleString('en-US')}
                   </text>

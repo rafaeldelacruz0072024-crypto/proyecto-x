@@ -40,7 +40,7 @@ serve(async (req) => {
 
         const email = profile.email
         const name = profile.full_name || profile.username || 'Usuario'
-        const description = record.description || 'Salario Semanal GEMINIX'
+        const description = record.description || 'Salario Semanal PROYECTO X'
         const paidAt = new Date(record.created_at).toLocaleDateString('es-ES', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         })
@@ -80,13 +80,13 @@ serve(async (req) => {
         </div>
 
         <div style="text-align: center; margin: 35px 0 20px;">
-            <a href="https://geminixprotocol.com" style="background-color: #00f3ff; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
+            <a href="https://proyecto-x-user.vercel.app" style="background-color: #00f3ff; color: #030712; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; display: inline-block;">
                 VER MI WALLET BANK →
             </a>
         </div>
 
         <p style="color: #475569; font-size: 13px; text-align: center; margin-top: 30px; border-top: 1px solid #1f2937; padding-top: 20px;">
-            Gracias por confiar en GEMINIX Protocol.<br/>
+            Gracias por confiar en PROYECTO X Protocol.<br/>
             Ventana de retiro: Sábados 8:00 AM – 11:59 PM UTC-5
         </p>
     </div>
@@ -100,9 +100,9 @@ serve(async (req) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                from: "GEMINIX Protocol <soporte@geminixprotocol.com>",
+                from: "PROYECTO X Protocol <soporte@proyecto-x-user.vercel.app>",
                 to: [email],
-                subject: `GEMINIX: ¡Tu salario semanal de $${amount} USDT fue acreditado!`,
+                subject: `PROYECTO X: ¡Tu salario semanal de $${amount} USDT fue acreditado!`,
                 html
             })
         })
