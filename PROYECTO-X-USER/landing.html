@@ -2135,6 +2135,11 @@
             </div>
 
             <style>
+                /* NOVA DIGITAL se concentra en mercados de predicción. */
+                #roadmap > .section-container > div > div > div:has(div[style*="rgba(255,215,0,.05)"]),
+                #roadmap > .section-container > div > div > div:has(div[style*="rgba(245,158,11,.1)"]) {
+                    display: none;
+                }
                 @keyframes pulse-amber {
                     0%, 100% { box-shadow: 0 0 30px rgba(245,158,11,.5), 0 0 60px rgba(245,158,11,.2); }
                     50% { box-shadow: 0 0 40px rgba(245,158,11,.8), 0 0 80px rgba(245,158,11,.4); }
