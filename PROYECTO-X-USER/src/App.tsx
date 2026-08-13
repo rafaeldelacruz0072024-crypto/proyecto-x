@@ -57,6 +57,7 @@ import NovaDigitalCardPanel from './components/NovaDigitalCardPanel';
 import PromoModal from './components/PromoModal';
 import BaccaratPanel from './components/BaccaratPanel';
 import DirectCommissionPanel from './components/DirectCommissionPanel';
+import RoiDailyTasks from './components/RoiDailyTasks';
 import UserSidebar from './components/UserSidebar';
 import SpecialEditionWidget from './components/SpecialEditionWidget';
 // ElevenLabsWidget is loaded globally via index.html to cover all pages (including login/register)
@@ -134,8 +135,6 @@ const App: React.FC = () => {
     return sessionStorage.getItem('promo_seen') !== 'true';
   });
 
-  // Pasivo diario — cobro manual para usuarios con > $2,000 activos
-  const [collectingPassive, setCollectingPassive] = useState(false);
   const [passivePaidToday, setPassivePaidToday] = useState(false);
 
   const handleClosePromo = useCallback(() => {
@@ -641,35 +640,10 @@ const App: React.FC = () => {
     }
   }, [user, addNotification, refetch]);
 
-  const handleCollectPassive = useCallback(async () => {
-    if (!user || collectingPassive) return;
-    setCollectingPassive(true);
-    try {
-      const { data, error } = await supabase.rpc('activate_daily_roi', { p_user_id: user.id });
-      if (error) throw error;
-      if (data?.success) {
-        setPassivePaidToday(true);
-        const resets = Number(data.reset_contracts || 0);
-        const activated = Number(data.activated_contracts || 0);
-        const paid = Number(data.total_paid || 0);
-        if (data.already_activated_today) {
-          addNotification('Los nodos ya fueron activados hoy.', 'info');
-        } else {
-          addNotification(
-            `Activación completada en ${activated} nodo(s).${resets ? ` ${resets} ciclo(s) reiniciado(s).` : ''}${paid ? ` +$${paid.toFixed(2)} al wallet.` : ''}`,
-            resets ? 'info' : 'success'
-          );
-        }
-        refetch();
-      } else {
-        addNotification(data?.error || 'No se pudieron activar los nodos.', 'error');
-      }
-    } catch (err: any) {
-      addNotification(err.message || 'Error al cobrar pasivo.', 'error');
-    } finally {
-      setCollectingPassive(false);
-    }
-  }, [user, collectingPassive, addNotification, refetch]);
+  const handleRoiActivated = useCallback((result: any) => {
+    if (!result?.already_activated_today) setPassivePaidToday(true);
+    refetch();
+  }, [refetch]);
 
   // Mock email confirmation (puedes quitarlo después si no lo usas)
   const confirmTransactionFromEmail = useCallback((txId: string, emailId: string) => {
@@ -1125,64 +1099,9 @@ const App: React.FC = () => {
                     </div>
                   )}
 
-                  {/* REGLA DE ORO ROI — visible con cualquier nodo activo */}
+                  {/* REGLA DE ORO ROI — las tareas diarias son el único disparador */}
                   {activeInvestmentTotal > 0 && (
-                    <div className="holo-card p-5 rounded-none clip-corner border-proyecto-gold/30 bg-proyecto-gold/5">
-                      {/* Header */}
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-8 h-8 clip-corner-sm bg-proyecto-gold/10 border border-proyecto-gold/30 flex items-center justify-center flex-shrink-0">
-                          <svg className="w-4 h-4 text-proyecto-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-orbitron font-bold text-proyecto-gold uppercase tracking-widest">Activación diaria ROI</p>
-                          <p className="text-[8px] font-mono-tech text-slate-400 uppercase tracking-wider">Regla de Oro · lunes a viernes</p>
-                        </div>
-                      </div>
-
-                      {/* Estimated today */}
-                      <div className="mb-4 px-3 py-2 bg-black/40 border border-proyecto-gold/20 clip-corner-sm">
-                        <p className="text-[8px] font-mono-tech text-slate-500 uppercase tracking-widest mb-1">Capital activo calificado</p>
-                        <p className="text-lg font-orbitron font-bold text-white">
-                          ${activeInvestmentTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </p>
-                        <p className="text-[8px] text-proyecto-gold font-mono-tech mt-1">
-                          ≈ ${estimatedDailyRoi.toFixed(2)} USD de ROI asignado para hoy
-                        </p>
-                      </div>
-
-                      {/* Button */}
-                      <button
-                        onClick={handleCollectPassive}
-                        disabled={collectingPassive || passivePaidToday}
-                        className={`w-full py-3 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
-                          passivePaidToday
-                            ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                            : collectingPassive
-                            ? 'bg-proyecto-gold/20 text-proyecto-gold border border-proyecto-gold/30 cursor-wait'
-                            : 'bg-proyecto-gold text-slate-950 hover:brightness-110 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)]'
-                        }`}
-                      >
-                        {collectingPassive ? (
-                          <>
-                            <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                            </svg>
-                            Procesando...
-                          </>
-                        ) : passivePaidToday ? (
-                          '✓ Nodos activados hoy'
-                        ) : (
-                          'Activar nodos de hoy'
-                        )}
-                      </button>
-
-                      <p className="text-[8px] text-slate-600 font-mono-tech text-center mt-2 uppercase tracking-wider">
-                        Si omites un día hábil, pierdes el ROI pendiente y el ciclo vuelve a cero
-                      </p>
-                    </div>
+                    <RoiDailyTasks userId={user?.id || ''} hasActiveContracts={activeInvestmentTotal > 0} onRoiActivated={handleRoiActivated} addNotification={addNotification} />
                   )}
 
                   {/* SECURITY WIDGET */}
