@@ -374,11 +374,77 @@ export async function createReferral(referrerId: string, referredId: string, lev
 
 export async function getNetworkTree(userId: string): Promise<{ tree: NetworkNode, stats: { totalEarnings: number, teamVolume: number, activeNodes: number } } | null> {
   try {
-    const { data: members, error } = await supabase.rpc('get_network_tree', { root_id: userId });
+    const { data: rpcMembers, error: rpcError } = await supabase.rpc('get_network_tree', { root_id: userId });
+    let members: any[] = Array.isArray(rpcMembers) ? rpcMembers : [];
 
-    if (error) throw error;
+    // Algunas instalaciones no tienen todavía el RPC get_network_tree. En ese
+    // caso reconstruimos el árbol desde profiles (solo lectura), conservando
+    // los enlaces por UUID y también los enlaces antiguos guardados por código.
+    if (rpcError || members.length === 0) {
+      if (rpcError) console.warn('get_network_tree no disponible; usando fallback visual desde profiles:', rpcError.message);
 
-    const memberIds = members ? [userId, ...(members as any[]).map(m => m.id)] : [userId];
+      const [{ data: profileRows, error: profileError }, { data: rootProfile, error: rootError }] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('id, email, username, status, ref_code, referred_by, created_at, personal_volume, direct_referrals_count, rank')
+          .neq('id', userId)
+          .limit(5000),
+        supabase
+          .from('profiles')
+          .select('id, ref_code')
+          .eq('id', userId)
+          .maybeSingle()
+      ]);
+
+      if (profileError) throw profileError;
+      if (rootError) throw rootError;
+
+      const rows = (profileRows || []) as any[];
+      const idByReference = new Map<string, string>();
+      idByReference.set(userId.toLowerCase().trim(), userId);
+      rows.forEach(row => {
+        if (row.id) idByReference.set(String(row.id).toLowerCase().trim(), row.id);
+        if (row.ref_code) idByReference.set(String(row.ref_code).toLowerCase().trim(), row.id);
+      });
+      if (rootProfile?.ref_code) {
+        idByReference.set(String(rootProfile.ref_code).toLowerCase().trim(), userId);
+      }
+
+      const canonicalRows = rows.map(row => ({
+        ...row,
+        referred_by: row.referred_by
+          ? (idByReference.get(String(row.referred_by).toLowerCase().trim()) || row.referred_by)
+          : null,
+        joined_at: row.created_at,
+        level: 1,
+        personal_volume: Number(row.personal_volume || 0),
+        direct_referrals_count: Number(row.direct_referrals_count || 0)
+      }));
+
+      const rowById = new Map<string, any>(canonicalRows.map(row => [String(row.id).toLowerCase().trim(), row]));
+      const directCounts = new Map<string, number>();
+      canonicalRows.forEach(row => {
+        const parentId = row.referred_by ? String(row.referred_by).toLowerCase().trim() : '';
+        if (parentId) directCounts.set(parentId, (directCounts.get(parentId) || 0) + 1);
+      });
+
+      const getLevel = (row: any, trail = new Set<string>()): number => {
+        const rowId = String(row.id).toLowerCase().trim();
+        if (trail.has(rowId)) return 1;
+        const parentId = row.referred_by ? String(row.referred_by).toLowerCase().trim() : '';
+        if (!parentId || parentId === userId.toLowerCase().trim()) return 1;
+        const parent = rowById.get(parentId);
+        return parent ? getLevel(parent, new Set([...trail, rowId])) + 1 : 1;
+      };
+
+      members = canonicalRows.map(row => ({
+        ...row,
+        level: getLevel(row),
+        direct_referrals_count: directCounts.get(String(row.id).toLowerCase().trim()) || 0
+      }));
+    }
+
+    const memberIds = members.length ? [userId, ...members.map(m => m.id)] : [userId];
 
     // 1. Fetch Referral Commissions for all members (to calculate "Total Earnings")
     const { data: commissionData } = await supabase
