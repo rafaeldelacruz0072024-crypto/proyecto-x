@@ -67,14 +67,14 @@ const InvestmentPanel: React.FC<Props> = ({
   };
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-8 animate-fade-in">
-      <section className="rounded-2xl border border-white/10 bg-[#080c17]/90 p-5 shadow-2xl">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-0 animate-fade-in sm:space-y-8">
+      <section className="rounded-2xl border border-white/10 bg-[#080c17]/90 p-4 shadow-2xl sm:p-6">
+        <div className="mb-5 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[10px] font-mono-tech tracking-[0.3em] text-blue-400">Nova Digital</p>
-            <h2 className="mt-1 text-2xl font-black text-white">Mis nodos</h2>
+            <h2 className="mt-1 text-2xl font-black tracking-tight text-white sm:text-3xl">Mis nodos</h2>
           </div>
-          <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-2 text-right">
+          <div className="flex w-full items-center justify-between rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-3 text-left sm:block sm:w-auto sm:px-4 sm:py-2 sm:text-right">
             <p className="text-[9px] uppercase tracking-widest text-slate-500">Wallet Bank</p>
             <p className="font-mono text-lg font-black text-emerald-400">${walletBalance.toFixed(2)}</p>
           </div>
@@ -82,33 +82,33 @@ const InvestmentPanel: React.FC<Props> = ({
 
         {loadError && <p className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">{loadError}</p>}
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 sm:gap-5">
           {plans.map(plan => {
             const amount = Number(amounts[plan.id] || 0);
             const minDaily = amount * plan.roi_min_percentage / 100;
             const maxDaily = amount * plan.roi_max_percentage / 100;
             const isMaturity = plan.payout_mode === 'maturity';
             return (
-              <article key={plan.id} className="flex min-h-[430px] flex-col rounded-2xl border border-slate-700/70 bg-[#0b101d] p-6 shadow-xl">
-                <div className="mb-6 flex items-start justify-between gap-3">
-                  <h3 className="text-xl font-black text-white">{plan.name}</h3>
-                  <span className="rounded-lg border border-blue-400/10 bg-blue-500/10 px-3 py-1 text-[11px] font-bold text-blue-300">
+              <article key={plan.id} className="flex min-h-[390px] flex-col rounded-2xl border border-slate-700/70 bg-[#0b101d] p-4 shadow-xl transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-400/40 hover:shadow-blue-950/30 sm:min-h-[430px] sm:p-6">
+                <div className="mb-5 flex items-start justify-between gap-2 sm:mb-6 sm:gap-3">
+                  <h3 className="text-lg font-black leading-tight text-white sm:text-xl">{plan.name}</h3>
+                  <span className="max-w-[48%] rounded-lg border border-blue-400/10 bg-blue-500/10 px-2 py-1 text-right text-[10px] font-bold leading-tight text-blue-300 sm:max-w-none sm:px-3 sm:text-[11px]">
                     {plan.duration_business_days ? `${plan.duration_business_days} días hábiles` : 'Sin plazo'}
                   </span>
                 </div>
 
-                <div className={`bg-gradient-to-r ${planAccent[plan.code] || planAccent.DAILY} bg-clip-text text-5xl font-black leading-none text-transparent`}>
+                <div className={`bg-gradient-to-r ${planAccent[plan.code] || planAccent.DAILY} bg-clip-text text-4xl font-black leading-none text-transparent sm:text-5xl`}>
                   {plan.roi_min_percentage}% - {plan.roi_max_percentage}%
                 </div>
-                <p className="mt-2 text-sm text-slate-400">diario · lunes a viernes</p>
-                <p className="mt-5 min-h-[66px] text-sm leading-relaxed text-slate-300">{plan.description}</p>
+                <p className="mt-2 text-xs text-slate-400 sm:text-sm">diario · lunes a viernes</p>
+                <p className="mt-4 min-h-0 text-xs leading-relaxed text-slate-300 sm:mt-5 sm:min-h-[66px] sm:text-sm">{plan.description}</p>
 
-                <div className={`mt-4 text-sm font-bold ${isMaturity ? 'text-blue-300' : 'text-emerald-400'}`}>
+                <div className={`mt-4 text-xs font-bold sm:text-sm ${isMaturity ? 'text-blue-300' : 'text-emerald-400'}`}>
                   {isMaturity ? 'Pago al vencimiento' : 'Pago diario'}
                 </div>
 
-                <div className="mt-auto pt-6">
-                  <label className="mb-2 block text-sm font-medium text-slate-300">Monto (mín. ${plan.min_amount.toFixed(0)})</label>
+                <div className="mt-auto pt-5 sm:pt-6">
+                  <label className="mb-2 block text-xs font-medium text-slate-300 sm:text-sm">Monto (mín. ${plan.min_amount.toFixed(0)})</label>
                   <input
                     type="number"
                     min={plan.min_amount}
@@ -117,7 +117,7 @@ const InvestmentPanel: React.FC<Props> = ({
                     value={amounts[plan.id] || ''}
                     onChange={event => setAmounts(current => ({ ...current, [plan.id]: event.target.value }))}
                     placeholder={plan.min_amount.toFixed(0)}
-                    className="w-full rounded-xl border border-slate-700 bg-[#050812] px-4 py-4 text-lg font-bold text-white outline-none transition focus:border-blue-500"
+                    className="w-full rounded-xl border border-slate-700 bg-[#050812] px-3 py-3.5 text-base font-bold text-white outline-none transition focus:border-blue-500 sm:px-4 sm:py-4 sm:text-lg"
                   />
                   {amount > 0 && (
                     <p className="mt-2 text-xs text-slate-500">
@@ -128,7 +128,7 @@ const InvestmentPanel: React.FC<Props> = ({
                     type="button"
                     onClick={() => activate(plan)}
                     disabled={isLoading || amount <= 0 || amount > walletBalance}
-                    className="mt-5 w-full rounded-xl bg-blue-600 px-4 py-4 text-base font-black text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="mt-4 w-full rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-black text-white transition hover:bg-blue-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 sm:mt-5 sm:py-4 sm:text-base"
                   >
                     {isLoading ? 'Procesando…' : 'Activar contrato'}
                   </button>
@@ -140,8 +140,8 @@ const InvestmentPanel: React.FC<Props> = ({
       </section>
 
       {activeInvestments.length > 0 && (
-        <section className="rounded-2xl border border-white/10 bg-[#080c17]/90 p-5">
-          <div className="mb-4 flex items-center justify-between">
+        <section className="rounded-2xl border border-white/10 bg-[#080c17]/90 p-4 sm:p-5">
+          <div className="mb-4 flex items-center justify-between gap-3">
             <h3 className="text-lg font-black text-white">Contratos activos</h3>
             <span className="text-sm font-bold text-blue-300">{activeInvestments.length}</span>
           </div>
