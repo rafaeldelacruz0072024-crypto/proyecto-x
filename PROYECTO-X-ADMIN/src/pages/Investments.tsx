@@ -17,7 +17,11 @@ import {
   Zap,
   Info,
   Trash2,
-  RotateCcw
+  RotateCcw,
+  Eye,
+  CalendarDays,
+  History,
+  FileSearch
 } from 'lucide-react';
 
 const Investments: React.FC = () => {
@@ -40,6 +44,12 @@ const Investments: React.FC = () => {
   // Reset confirmation modal
   const [resetTarget, setResetTarget] = useState<Investment | null>(null);
   const [resetSuccess, setResetSuccess] = useState(false);
+
+  // Read-only audit drawer for one user/cycle.
+  const [auditTarget, setAuditTarget] = useState<Investment | null>(null);
+  const [auditTransactions, setAuditTransactions] = useState<any[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [auditError, setAuditError] = useState<string | null>(null);
 
   const [newInvestment, setNewInvestment] = useState({
     userId: '',
@@ -116,6 +126,35 @@ const Investments: React.FC = () => {
       .select('id, name')
       .eq('status', 'active');
     setPlans(data || []);
+  };
+
+  const openCycleAudit = async (investment: Investment) => {
+    setAuditTarget(investment);
+    setAuditTransactions([]);
+    setAuditError(null);
+    setAuditLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('id, amount, type, status, description, reference_id, created_at')
+        .eq('user_id', investment.user_id)
+        .in('type', ['DAILY_RETURN', 'REFERRAL_COMMISSION', 'WEEKLY_BONUS', 'bonus_weekly'])
+        .gte('created_at', investment.created_at)
+        .order('created_at', { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      setAuditTransactions(data || []);
+    } catch (err: any) {
+      setAuditError(err.message || 'No se pudo cargar el ledger del ciclo.');
+    } finally {
+      setAuditLoading(false);
+    }
+  };
+
+  const closeCycleAudit = () => {
+    setAuditTarget(null);
+    setAuditTransactions([]);
+    setAuditError(null);
   };
 
   const handleAuditCap = async () => {
@@ -457,6 +496,13 @@ const Investments: React.FC = () => {
                         <div className="flex items-center gap-3">
                           <p className="text-[10px] text-slate-600 font-bold uppercase">{new Date(inv.created_at).toLocaleDateString()}</p>
                           <button
+                            onClick={() => openCycleAudit(inv)}
+                            className="p-2 text-slate-600 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-all"
+                            title="Auditar ciclo y movimientos"
+                          >
+                            <Eye size={16} />
+                          </button>
+                          <button
                             onClick={() => { setResetTarget(inv); setResetSuccess(false); }}
                             className="p-2 text-slate-600 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-all"
                             title="Reiniciar Inversión al 0%"
@@ -480,6 +526,81 @@ const Investments: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* CYCLE AUDIT MODAL */}
+      {auditTarget && (() => {
+        const auditTargetAmount = Number(auditTarget.amount) || 0;
+        const auditTargetCap = auditTargetAmount * 2;
+        const ledgerTotal = auditTransactions.reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
+        const gap = Math.max(auditTargetCap - Number(auditTarget.accumulated_earnings || 0), 0);
+        const progress = auditTargetCap > 0 ? Math.min((Number(auditTarget.accumulated_earnings || 0) / auditTargetCap) * 100, 100) : 0;
+        const lastEvent = auditTransactions[0]?.created_at;
+        return (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={closeCycleAudit} />
+            <div className="relative bg-[#0d0d12] border border-cyan-500/20 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] shadow-2xl animate-in zoom-in-95">
+              <div className="p-7 border-b border-slate-800 flex items-center gap-4 sticky top-0 bg-[#0d0d12]/95 backdrop-blur-xl z-10">
+                <div className="p-3 bg-cyan-500/10 rounded-2xl border border-cyan-500/20"><FileSearch size={22} className="text-cyan-400" /></div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-black text-white uppercase tracking-tight">Auditoría de ciclo / nodo</h3>
+                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Control individual por usuario y contrato</p>
+                </div>
+                <button onClick={closeCycleAudit} className="p-2 hover:bg-slate-800 rounded-xl text-slate-500 hover:text-white transition-colors"><X size={20} /></button>
+              </div>
+
+              <div className="p-7 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center gap-4 bg-slate-900/60 rounded-2xl border border-slate-800 p-5">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center font-black text-indigo-400 text-xl">
+                    {(auditTarget.profiles as any)?.full_name?.[0] || 'U'}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-base font-black text-white">{(auditTarget.profiles as any)?.full_name || 'Usuario'}</p>
+                    <p className="text-[10px] text-slate-500 font-bold">{(auditTarget.profiles as any)?.email || auditTarget.user_id}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[9px] text-slate-600 font-black uppercase tracking-widest">ID del nodo</p>
+                    <p className="text-xs text-cyan-400 font-mono">#{auditTarget.id.slice(0, 16).toUpperCase()}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Capital</p><p className="text-xl font-black text-white mt-1">${auditTargetAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p></div>
+                  <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Meta 200%</p><p className="text-xl font-black text-indigo-400 mt-1">${auditTargetCap.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p></div>
+                  <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Acumulado</p><p className="text-xl font-black text-emerald-400 mt-1">${Number(auditTarget.accumulated_earnings || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p></div>
+                  <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Eventos ledger</p><p className="text-xl font-black text-cyan-400 mt-1">{auditTransactions.length}</p></div>
+                </div>
+
+                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5 space-y-3">
+                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest"><span className="text-slate-400">Progreso del ciclo</span><span className={progress >= 100 ? 'text-emerald-400' : 'text-cyan-400'}>{progress.toFixed(1)}%</span></div>
+                  <div className="h-3 bg-black/50 rounded-full overflow-hidden border border-slate-800"><div className={`h-full ${progress >= 100 ? 'bg-emerald-500' : 'bg-cyan-500'} transition-all`} style={{ width: `${progress}%` }} /></div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[10px] font-bold">
+                    <span className="text-slate-500 flex items-center gap-2"><CalendarDays size={13} /> Activado: <b className="text-slate-300">{new Date(auditTarget.created_at).toLocaleString('es-ES')}</b></span>
+                    <span className="text-slate-500">Estado: <b className="text-white">{auditTarget.status}</b></span>
+                    <span className="text-slate-500">Pendiente: <b className={gap > 0 ? 'text-amber-400' : 'text-emerald-400'}>${gap.toLocaleString('en-US', { minimumFractionDigits: 2 })}</b></span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[10px] font-bold">
+                  <div className="bg-black/20 border border-slate-800 rounded-2xl p-4"><span className="text-slate-600 uppercase tracking-widest">Ledger desde activación</span><p className="text-lg text-white font-black mt-1">${ledgerTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p></div>
+                  <div className="bg-black/20 border border-slate-800 rounded-2xl p-4"><span className="text-slate-600 uppercase tracking-widest">Último evento</span><p className="text-sm text-white font-black mt-1">{lastEvent ? new Date(lastEvent).toLocaleString('es-ES') : 'Sin eventos'}</p></div>
+                  <div className="bg-black/20 border border-slate-800 rounded-2xl p-4"><span className="text-slate-600 uppercase tracking-widest">Comisión directa</span><p className="text-sm text-white font-black mt-1">{auditTarget.is_referral_commission_paid ? 'Registrada' : 'Pendiente / no marcada'}</p></div>
+                </div>
+
+                <div className="border border-slate-800 rounded-2xl overflow-hidden">
+                  <div className="px-5 py-4 bg-slate-900/70 border-b border-slate-800 flex items-center gap-2"><History size={15} className="text-cyan-400" /><span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Eventos del ciclo desde su activación</span></div>
+                  {auditLoading ? <div className="p-10 text-center text-slate-500 text-xs">Cargando ledger...</div> : auditError ? <div className="p-6 text-center text-rose-400 text-xs">{auditError}</div> : auditTransactions.length === 0 ? <div className="p-10 text-center text-slate-600 text-xs">No hay eventos de rendimiento o comisión desde la activación.</div> : (
+                    <div className="max-h-64 overflow-y-auto divide-y divide-slate-800/60">
+                      {auditTransactions.map(tx => <div key={tx.id} className="px-5 py-3 flex flex-col md:flex-row md:items-center gap-2 md:gap-5 text-xs"><span className="text-slate-600 font-mono md:w-40">{new Date(tx.created_at).toLocaleString('es-ES')}</span><span className="text-cyan-400 font-black md:w-44">{tx.type}</span><span className="text-slate-400 flex-1 truncate">{tx.description || tx.reference_id || 'Movimiento de rendimiento'}</span><span className={Number(tx.amount) >= 0 ? 'text-emerald-400 font-black' : 'text-rose-400 font-black'}>{Number(tx.amount) >= 0 ? '+' : ''}${Number(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span></div>)}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-start gap-2 text-[10px] text-slate-600 font-bold"><Info size={14} className="shrink-0" /> Esta auditoría es de solo lectura: resume inversiones y movimientos existentes; no modifica balances, estados ni contratos.</div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* RESET MODAL */}
       {resetTarget && (
