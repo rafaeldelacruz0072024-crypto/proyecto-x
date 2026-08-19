@@ -24,9 +24,7 @@ import DashboardHeader from './components/DashboardHeader';
 import NetworkVisualization from './components/NetworkVisualization';
 import InvestmentPanel from './components/InvestmentPanel';
 import WithdrawalForm from './components/WithdrawalForm';
-import ReglaDeOroWidget from './components/ReglaDeOroWidget';
 import DepositForm from './components/DepositForm';
-import CareerPlanPanel from './components/CareerPlanPanel';
 import TransactionHistory from './components/TransactionHistory';
 import NotificationToast from './components/NotificationToast';
 import WithdrawalConfirmationModal from './components/WithdrawalConfirmationModal';
@@ -778,7 +776,7 @@ const App: React.FC = () => {
           onMenuToggle={() => setIsSidebarOpen(prev => !prev)}
         />
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-32 relative">
+        <main className="mx-auto w-full max-w-7xl px-4 py-6 pb-32 relative sm:px-6 sm:py-8 lg:px-8">
           {/* Section Header with ID and Status */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2 md:mb-12 border-b border-white/5 pb-6">
             <div className="space-y-1">
@@ -806,7 +804,7 @@ const App: React.FC = () => {
           </div>
 
           {activeTab === 'dashboard' && (
-            <div className="space-y-8 animate-slide-in">
+            <div className="mx-auto w-full max-w-6xl space-y-6 animate-slide-in sm:space-y-8">
               {/* REFERRAL CENTER */}
               <div className="holo-card p-6 rounded-none clip-corner flex flex-col md:flex-row items-center justify-between gap-6 transition-all hover:bg-slate-900/40">
                 <div className="flex items-center gap-5">
@@ -967,9 +965,6 @@ const App: React.FC = () => {
                     isLoading={processingInvestment}
                     dynamicSettings={systemSettings}
                   />
-
-                  <CareerPlanPanel teamVolume={networkStats.teamVolume} />
-
                   {/* ── DIRECT COMMISSION SECTION ── */}
                   {profile && (
                     <div className="space-y-3">
@@ -1018,6 +1013,7 @@ const App: React.FC = () => {
                         setActiveTab('finance');
                       }}
                       profile={profile}
+              teamVolume={networkStats.teamVolume}
                     />
                   </section>
 
@@ -1146,7 +1142,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* ── FILA 2: RETIRO DE BILLETERA + REGLA DE ORO ── */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center px-2">
@@ -1166,16 +1161,8 @@ const App: React.FC = () => {
                 {profile && (
                   <div className="space-y-4">
                     <div className="flex justify-between items-center px-2">
-                      <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">Regla de Oro</h2>
                       <div className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]"></div>
                     </div>
-                    <ReglaDeOroWidget
-                      userId={user?.id || ''}
-                      referralCommissionBalance={referralCommissionBalance}
-                      profile={profile}
-                      onSuccess={refetch}
-                      addNotification={addNotification}
-                    />
                   </div>
                 )}
               </div>
@@ -1247,12 +1234,15 @@ const App: React.FC = () => {
 
           {activeTab === 'predictions' && (
             <div className="space-y-6 animate-slide-in">
+              <div className="mx-auto mb-6 w-full max-w-7xl">
+                <LivePredictionMarketSimulation />
+              </div>
               <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent mb-6">
                 <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">PREDICTION MARKETS</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">DATOS PÚBLICOS · POLYMARKET LIVE</span>
               </div>
               {profile ? (
-                <PredictionMarketsPanel
+<PredictionMarketsPanel
                   user={profile}
                   walletBalance={walletBalance}
                   onUpdateBalance={refetch}

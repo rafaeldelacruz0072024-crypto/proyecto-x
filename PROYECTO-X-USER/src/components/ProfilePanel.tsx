@@ -16,8 +16,6 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [is2faLoading, setIs2faLoading] = useState(false);
   const [isChangingPass, setIsChangingPass] = useState(false);
   const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.withdrawalWallet || '');
-  const [cardAddress, setCardAddress] = useState(user?.nova_digital_card_address || '');
-  const [cardUser, setCardUser] = useState(user?.nova_digital_card_user || '');
 
   // Derivados de seguridad
   const kycVerified = user?.kycVerified || user?.kyc_verified || false;
@@ -105,12 +103,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
       return;
     }
 
-    if (cardAddress && (cardAddress.length < 10 || !cardAddress.startsWith('0x'))) {
-      addNotification("Dirección de tarjeta inválida. Debe empezar con 0x", "error");
-      return;
-    }
 
-    if (!wallet && !cardAddress && !cardUser) {
+    if (!wallet) {
       addNotification("Por favor introduzca alguna dirección", "error");
       return;
     }

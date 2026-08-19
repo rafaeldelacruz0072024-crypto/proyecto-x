@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Promotion, Profile } from '../types';
 import { getActivePromotions } from '../services/database';
+import CareerPlanPanel from './CareerPlanPanel';
 import { Gift, Percent, Zap, Clock, Info, ArrowRight } from 'lucide-react';
 
 interface Props {
     onNavigateToDeposit: () => void;
     onSelectPromo?: (promo: Promotion) => void;
     profile?: Profile | null;
+    teamVolume?: number;
 }
 
-const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo }) => {
+const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, profile, teamVolume = 0 }) => {
     const { t } = useTranslation();
     const [promos, setPromos] = useState<Promotion[]>([]);
     const [loading, setLoading] = useState(true);
@@ -88,6 +90,7 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo }) =>
     if (promos.length === 0) {
         return (
             <div className="space-y-6">
+            <div className="mx-auto w-full max-w-6xl"><CareerPlanPanel teamVolume={teamVolume} /></div>
                 <div className="blue-glass rounded-xl p-12 text-center border border-slate-800/50 relative overflow-hidden">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-slate-800/20 blur-3xl rounded-full"></div>
                     <div className="relative z-10 flex flex-col items-center">
