@@ -67,7 +67,7 @@ const InvestmentPanel: React.FC<Props> = ({
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="mx-auto w-full max-w-6xl space-y-8 animate-fade-in">
       <section className="rounded-2xl border border-white/10 bg-[#080c17]/90 p-5 shadow-2xl">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>

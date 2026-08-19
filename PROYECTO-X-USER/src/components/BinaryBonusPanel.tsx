@@ -60,7 +60,7 @@ function BinaryNodeCard({ node, selected, onSelect }: { node: TreeNode; selected
     <button
       type="button"
       onClick={() => onSelect(node)}
-      className={`group relative w-[176px] text-left transition-all duration-200 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-cyan-300/70 ${selected ? 'scale-[1.03]' : ''}`}
+      className={`group relative w-[160px] sm:w-[176px] text-left transition-all duration-200 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-cyan-300/70 ${selected ? 'scale-[1.03]' : ''}`}
       aria-label={`Seleccionar nodo ${node.username || node.id}`}
     >
       <div className={`absolute -inset-px rounded-xl opacity-70 blur-sm transition-opacity group-hover:opacity-100 ${accent === 'violet' ? 'bg-violet-500/25' : 'bg-cyan-400/25'}`} />
@@ -87,7 +87,7 @@ function BinaryNodeCard({ node, selected, onSelect }: { node: TreeNode; selected
 
 function EmptyBinarySlot({ side }: { side: BinarySide }) {
   return (
-    <div className={`flex h-[105px] w-[176px] flex-col items-center justify-center rounded-xl border border-dashed bg-black/20 text-center ${side === 'RIGHT' ? 'border-violet-300/35' : 'border-cyan-300/35'}`}>
+    <div className={`flex h-[105px] w-[160px] sm:w-[176px] flex-col items-center justify-center rounded-xl border border-dashed bg-black/20 text-center ${side === 'RIGHT' ? 'border-violet-300/35' : 'border-cyan-300/35'}`}>
       <span className={`text-[9px] font-orbitron font-black uppercase tracking-[.2em] ${side === 'RIGHT' ? 'text-violet-200' : 'text-cyan-200'}`}>{side}</span>
       <span className="mt-2 text-[10px] font-mono-tech text-slate-500">Posición disponible</span>
       <span className="mt-1 text-[8px] uppercase tracking-widest text-slate-600">Comparte este enlace</span>
@@ -101,7 +101,7 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
   const [copied, setCopied] = useState<BinarySide | null>(null);
   const [tree, setTree] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
-  const [visibleDepth, setVisibleDepth] = useState(3);
+  const [visibleDepth, setVisibleDepth] = useState(4);
   const treeViewportRef = useRef<HTMLDivElement | null>(null);
 
   const load = useCallback(async () => {
@@ -140,7 +140,7 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
   }, [tree]);
 
   const root = useMemo(() => tree.find(node => node.depth === 0) || tree.find(node => !node.parent_id) || null, [tree]);
-  const maxDepth = useMemo(() => Math.max(0, ...tree.map(node => node.depth)), [tree]);
+  const maxDepth = 6;
   const visibleCount = useMemo(() => tree.filter(node => node.depth <= visibleDepth).length, [tree, visibleDepth]);
 
   const copy = async (side: BinarySide) => {
@@ -167,11 +167,11 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
       <div key={node.id} className="flex flex-col items-center">
         <BinaryNodeCard node={node} selected={selectedNode?.id === node.id} onSelect={setSelectedNode} />
         {canExpand && (
-          <div className="relative flex items-start gap-4 pt-8 md:gap-10">
+          <div className="relative flex items-start gap-2 pt-8 sm:gap-4 md:gap-10">
             <div className="absolute left-1/4 right-1/4 top-3 h-px bg-gradient-to-r from-cyan-300/20 via-white/25 to-violet-300/20" />
             <div className="absolute left-1/2 top-0 h-5 w-px -translate-x-1/2 bg-white/25" />
             {(['LEFT', 'RIGHT'] as const).map(side => (
-              <div key={side} className="relative flex min-w-[176px] flex-col items-center pt-2">
+              <div key={side} className="relative flex min-w-[160px] sm:w-[176px] flex-col items-center pt-2">
                 <span className={`mb-2 text-[8px] font-orbitron font-black uppercase tracking-[.25em] ${side === 'RIGHT' ? 'text-violet-200' : 'text-cyan-200'}`}>{side}</span>
                 <div className="h-3 w-px bg-white/20" />
                 {children[side] ? renderNode(children[side] as TreeNode) : <EmptyBinarySlot side={side} />}
@@ -211,10 +211,10 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
 
         <section className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-[#040914]/90 shadow-[0_20px_60px_rgba(0,0,0,.28)]">
           <div className="flex flex-col gap-4 border-b border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between">
-            <div><div className="flex items-center gap-2 text-cyan-200"><GitFork size={17} /><p className="text-[10px] font-orbitron font-black uppercase tracking-[.2em]">Árbol de usuarios binarios</p></div><p className="mt-1 text-xs text-slate-500">{visibleCount} nodos visibles · profundidad {visibleDepth} de {maxDepth || 0}</p></div>
+            <div><div className="flex items-center gap-2 text-cyan-200"><GitFork size={19} /><p className="text-sm font-orbitron font-black uppercase tracking-[.16em] sm:text-base">Árbol de usuarios binarios</p></div><p className="mt-1 text-sm font-semibold text-slate-400 sm:text-base">{visibleCount} nodos visibles · profundidad {visibleDepth} de {maxDepth || 0}</p></div>
             <div className="flex items-center gap-2 self-end sm:self-auto"><button type="button" onClick={() => setVisibleDepth(depth => Math.max(0, depth - 1))} disabled={visibleDepth <= 0} className="border border-white/10 bg-white/[.03] p-2 text-slate-300 transition hover:border-cyan-300/50 disabled:opacity-30" aria-label="Reducir profundidad"><Minus size={15} /></button><span className="min-w-12 text-center text-[10px] font-mono-tech text-cyan-200">{Math.round((visibleDepth / Math.max(1, maxDepth || 1)) * 100)}%</span><button type="button" onClick={() => setVisibleDepth(depth => Math.min(maxDepth, depth + 1))} disabled={visibleDepth >= maxDepth} className="border border-white/10 bg-white/[.03] p-2 text-slate-300 transition hover:border-cyan-300/50 disabled:opacity-30" aria-label="Aumentar profundidad"><Plus size={15} /></button><button type="button" onClick={focusTree} className="border border-cyan-400/20 bg-cyan-400/[.06] p-2 text-cyan-200 transition hover:bg-cyan-400/15" aria-label="Centrar árbol"><Crosshair size={15} /></button></div>
           </div>
-          <div ref={treeViewportRef} className="relative min-h-[430px] overflow-auto bg-[radial-gradient(circle_at_center,rgba(14,116,144,.10),transparent_45%)] p-8">
+          <div ref={treeViewportRef} className="relative min-h-[360px] touch-pan-x touch-pan-y overflow-auto overscroll-contain bg-[radial-gradient(circle_at_center,rgba(14,116,144,.10),transparent_45%)] p-3 sm:min-h-[430px] sm:p-8">
             <div className="mx-auto flex min-w-max justify-center pb-8 pt-4">
               {root ? renderNode(root) : <div className="flex min-h-[260px] w-full min-w-[280px] flex-col items-center justify-center rounded-2xl border border-dashed border-cyan-300/25 px-8 text-center"><UserRound size={28} className="text-cyan-300/70" /><p className="mt-3 font-orbitron text-sm font-bold text-white">Árbol pendiente de sincronización</p><p className="mt-2 max-w-sm text-xs leading-relaxed text-slate-500">Cuando el nodo raíz esté disponible, aquí aparecerán las dos ramas con sus posiciones ocupadas y disponibles.</p></div>}
             </div>
