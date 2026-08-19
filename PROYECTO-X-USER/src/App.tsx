@@ -473,9 +473,7 @@ const App: React.FC = () => {
   // ✅ INVESTMENT - CONECTADO A SUPABASE
   const handleInvestment = useCallback(async (amount: number, planId?: string) => {
     if (!user || processingInvestment) return;
-
-    const isDirectCommission = method === 'Comisión Directa';
-    if (!isDirectCommission && walletBalance < amount) {
+    if (walletBalance < amount) {
       addNotification('No tienes saldo suficiente en Wallet Bank para activar este nodo.', "error");
       return;
     }
