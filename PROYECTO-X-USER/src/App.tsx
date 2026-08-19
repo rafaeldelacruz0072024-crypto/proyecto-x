@@ -538,17 +538,42 @@ const App: React.FC = () => {
     }
   }, [user, addNotification, refetch]);
 
-  const handleVerify2FA = useCallback((code: string) => {
-    if (!pendingWithdrawal) return;
+  const handleVerify2FA = useCallback(async (code: string) => {
+    if (!pendingWithdrawal || !user) return;
     setIs2FAVerifying(true);
-    setTimeout(() => {
-      executeFinalWithdrawal(pendingWithdrawal.amount, pendingWithdrawal.method, pendingWithdrawal.address);
+
+    const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
+    const factor = factors?.totp?.find(item => item.status === 'verified');
+    if (factorsError || !factor) {
+      addNotification(factorsError?.message || 'No hay un factor 2FA verificado para autorizar este retiro.', 'error');
       setIs2FAVerifying(false);
-      setShow2FAModal(false);
-      setPendingWithdrawal(null);
-      addNotification(t('profile.2fa.verified_notify'), "success");
-    }, 1500);
-  }, [pendingWithdrawal, executeFinalWithdrawal, addNotification]);
+      return;
+    }
+
+    const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: factor.id });
+    if (challengeError || !challenge?.id) {
+      addNotification(challengeError?.message || 'No se pudo crear el desafÃ­o 2FA.', 'error');
+      setIs2FAVerifying(false);
+      return;
+    }
+
+    const { error: verifyError } = await supabase.auth.mfa.verify({
+      factorId: factor.id,
+      challengeId: challenge.id,
+      code,
+    });
+    if (verifyError) {
+      addNotification(verifyError.message, 'error');
+      setIs2FAVerifying(false);
+      return;
+    }
+
+    await executeFinalWithdrawal(pendingWithdrawal.amount, pendingWithdrawal.method, pendingWithdrawal.address);
+    setIs2FAVerifying(false);
+    setShow2FAModal(false);
+    setPendingWithdrawal(null);
+    addNotification(t('profile.2fa.verified_notify'), 'success');
+  }, [pendingWithdrawal, executeFinalWithdrawal, addNotification, user, t]);
 
   const handleRoiActivated = useCallback((result: any) => {
     if (!result?.already_activated_today) setPassivePaidToday(true);
