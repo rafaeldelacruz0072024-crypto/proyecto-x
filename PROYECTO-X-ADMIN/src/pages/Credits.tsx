@@ -152,34 +152,19 @@ const Credits: React.FC = () => {
             const finalAmount  = actionType === 'ADD' ? numAmount : -numAmount;
             const balanceLabel = targetBalance === 'wallet_balance' ? 'Wallet Bank' : 'Credit Balance';
 
-            const { data: profile } = await supabase
-                .from('profiles').select(targetBalance).eq('id', selectedUser!.id).single();
-
-            const currentBalance = Number(profile?.[targetBalance as keyof typeof profile]) || 0;
-            const newBalance = currentBalance + finalAmount;
-            if (newBalance < 0) throw new Error(`Fondos insuficientes en ${balanceLabel}`);
-
-            const { error: updateError } = await supabase
-                .from('profiles').update({ [targetBalance]: newBalance }).eq('id', selectedUser!.id);
-            if (updateError) throw updateError;
-
-            const { error: logError } = await supabase.from('credit_logs').insert({
-                user_id:      selectedUser!.id,
-                amount:       finalAmount,
-                type:         'ADMIN_ADJUSTMENT',
-                description:  description || `Ajuste admin — ${balanceLabel}`,
-                performed_by: authUser.id,
+            // El ajuste, el ledger y la transacción se ejecutan en una sola
+            // operación SECURITY DEFINER. Así no queda el balance actualizado
+            // si falta credit_logs o falla cualquiera de los registros.
+            const { data: adjustment, error: adjustmentError } = await supabase.rpc('admin_adjust_balance', {
+                p_user_id: selectedUser!.id,
+                p_balance_column: targetBalance,
+                p_amount: finalAmount,
+                p_description: description || `Ajuste admin — ${balanceLabel}`,
             });
-            if (logError) throw logError;
-
-            await supabase.from('transactions').insert({
-                user_id:      selectedUser!.id,
-                amount:       finalAmount,
-                type:         actionType === 'ADD' ? 'BONUS' : 'WITHDRAWAL',
-                status:       'COMPLETED',
-                description:  description || `Ajuste admin — ${balanceLabel}`,
-                reference_id: `admin_${Date.now()}`,
-            });
+            if (adjustmentError) throw adjustmentError;
+            if (!adjustment?.success) {
+                throw new Error(adjustment?.error || 'No se pudo completar el ajuste de balance.');
+            }
 
             // Reset all modal state
             setSelectedUser(null);
