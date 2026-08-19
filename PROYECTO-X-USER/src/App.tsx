@@ -86,7 +86,7 @@ const App: React.FC = () => {
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
   const [referralFromUrl, setReferralFromUrl] = useState<string | null>(null);
-  const [isReferralCopied, setIsReferralCopied] = useState(false);
+  const [isReferralCopied, setIsReferralCopied] = useState<'LEFT' | 'RIGHT' | null>(null);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(() =>
     typeof window !== 'undefined' && window.innerWidth >= 768
@@ -203,7 +203,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const refInUrl = urlParams.get('ref');
-    const binarySide = urlParams.get('side')?.toUpperCase();
+    const binarySide = (urlParams.get('side') || urlParams.get('binary') || urlParams.get('position'))?.toUpperCase();
 
     if (refInUrl) {
       const expires90 = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
@@ -214,6 +214,8 @@ const App: React.FC = () => {
       // Limpiar ?ref de la URL sin recargar
       urlParams.delete('ref');
       urlParams.delete('side');
+      urlParams.delete('binary');
+      urlParams.delete('position');
       const newSearch = urlParams.toString();
       window.history.replaceState({}, '', window.location.pathname + (newSearch ? `?${newSearch}` : ''));
     } else {
@@ -582,22 +584,30 @@ const App: React.FC = () => {
     }
   }, [user, refetch, addNotification]);
 
-  const copyReferralLink = useCallback(() => {
-    if (!profile?.ref_code) return;
-    const link = `${window.location.origin}/?ref=${profile.ref_code}`;
-    navigator.clipboard.writeText(link);
-    addNotification("Link de referido copiado", "success");
+  const binaryReferralLinks = useMemo(() => {
+    if (!profile?.ref_code) return null;
+    const base = `${window.location.origin}/login?ref=${encodeURIComponent(profile.ref_code)}&action=register`;
+    return {
+      LEFT: `${base}&side=LEFT`,
+      RIGHT: `${base}&side=RIGHT`,
+    } as const;
+  }, [profile?.ref_code]);
 
-    setIsReferralCopied(true);
-    setTimeout(() => setIsReferralCopied(false), 2000);
-  }, [profile, addNotification]);
+  const copyReferralLink = useCallback((side: 'LEFT' | 'RIGHT') => {
+    const link = binaryReferralLinks?.[side];
+    if (!link) return;
+    void navigator.clipboard.writeText(link);
+    setIsReferralCopied(side);
+    addNotification(`Enlace ${side === 'LEFT' ? 'izquierdo' : 'derecho'} copiado`, 'success');
+    window.setTimeout(() => setIsReferralCopied(null), 2000);
+  }, [binaryReferralLinks, addNotification]);
 
-  const shareOnWhatsApp = useCallback(() => {
-    if (!profile?.ref_code) return;
-    const link = `${window.location.origin}/?ref=${profile.ref_code}`;
-    const text = encodeURIComponent(t('dashboard.whatsapp_share', { link }));
+  const shareOnWhatsApp = useCallback((side: 'LEFT' | 'RIGHT') => {
+    const link = binaryReferralLinks?.[side];
+    if (!link) return;
+    const text = encodeURIComponent(`${side === 'LEFT' ? 'Registro en la pierna izquierda' : 'Registro en la pierna derecha'}: ${link}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
-  }, [profile, t]);
+  }, [binaryReferralLinks]);
 
   const activeInvestmentTotal = useMemo(() => {
     return (investments || [])
@@ -813,38 +823,24 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-1 max-w-lg w-full items-center bg-black/60 border border-proyecto-accent/20 clip-corner px-4 py-3 gap-3">
-                  {profile?.ref_code ? (
-                    <span className={`text-xs font-mono-tech truncate flex-1 transition-colors duration-300 ${isReferralCopied ? 'text-proyecto-green' : 'text-proyecto-accent'}`}>
-                      {window.location.origin}/?ref={profile.ref_code}
-                    </span>
-                  ) : (
-                    <div className="flex flex-1 items-center justify-between gap-3">
-                      <span className="text-xs font-mono-tech text-amber-300">Enlace pendiente de sincronizar</span>
-                      <button onClick={refetch} className="text-[9px] font-orbitron font-bold text-proyecto-accent uppercase tracking-wider hover:text-white">Sincronizar</button>
-                    </div>
-                  )}
-                  <div className="flex gap-2 shrink-0">
-                    <button
-                      onClick={copyReferralLink}
-                      disabled={!profile?.ref_code}
-                      className={`p-2 transition-all duration-300 border clip-corner-sm flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed ${isReferralCopied
-                        ? 'bg-proyecto-green text-slate-950 border-proyecto-green shadow-neon-cyan'
-                        : 'bg-proyecto-brand/20 border-proyecto-brand/50 text-proyecto-accent hover:bg-proyecto-brand/40 hover:text-white'
-                        }`}
-                      title="INITIATE COPY"
-                    >
-                      {isReferralCopied ? t('dashboard.copied') : t('dashboard.copy_link')}
-                    </button>
-                    <button
-                      onClick={shareOnWhatsApp}
-                      disabled={!profile?.ref_code}
-                      className="p-2 bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all clip-corner-sm hover:shadow-[0_0_10px_rgba(34,197,94,0.3)] disabled:opacity-30 disabled:cursor-not-allowed"
-                      title="BROADCAST ON WHATSAPP"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.438 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
-                    </button>
-                  </div>
+                <div className="grid flex-1 max-w-2xl w-full gap-2 sm:grid-cols-2">
+                  {(['LEFT', 'RIGHT'] as const).map(side => {
+                    const link = binaryReferralLinks?.[side];
+                    const copied = isReferralCopied === side;
+                    return (
+                      <div key={side} className="border border-proyecto-accent/20 bg-black/60 clip-corner px-3 py-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[9px] font-orbitron font-bold uppercase tracking-widest text-white">{side === 'LEFT' ? 'Izquierda' : 'Derecha'}</span>
+                          <span className="text-[9px] font-mono-tech text-proyecto-accent">{side}</span>
+                        </div>
+                        <span className="mt-2 block truncate text-[10px] font-mono-tech text-slate-400">{link || 'Enlace pendiente de sincronizar'}</span>
+                        <div className="mt-3 flex gap-2">
+                          <button onClick={() => copyReferralLink(side)} disabled={!link} className={`flex-1 border px-2 py-2 text-[9px] font-orbitron font-bold uppercase disabled:opacity-30 ${copied ? 'border-proyecto-green bg-proyecto-green text-slate-950' : 'border-proyecto-brand/50 bg-proyecto-brand/20 text-proyecto-accent hover:bg-proyecto-brand/40'}`}>{copied ? t('dashboard.copied') : `Copiar ${side}`}</button>
+                          <button onClick={() => shareOnWhatsApp(side)} disabled={!link} className="border border-green-500/30 bg-green-500/10 px-2 py-2 text-[9px] font-orbitron font-bold uppercase text-green-400 disabled:opacity-30">WhatsApp</button>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -1085,33 +1081,18 @@ const App: React.FC = () => {
                     <p className="text-[9px] sm:text-[10px] text-slate-400 font-mono-tech uppercase tracking-tighter">{t('dashboard.expand_network')}</p>
                   </div>
                 </div>
-                <div className="w-full bg-black/60 border border-proyecto-accent/20 clip-corner px-3 py-2 mb-1">
-                  {profile?.ref_code ? (
-                    <span className={`text-[10px] font-mono-tech break-all transition-colors duration-300 ${isReferralCopied ? 'text-proyecto-green' : 'text-proyecto-accent'}`}>
-                      {window.location.origin}/?ref={profile.ref_code}
-                    </span>
-                  ) : (
-                    <span className="text-[10px] font-mono-tech text-amber-300">Enlace pendiente de sincronizar</span>
-                  )}
-                </div>
-                <div className="flex gap-2 w-full">
-                  <button
-                    onClick={copyReferralLink}
-                    disabled={!profile?.ref_code}
-                    className={`flex-1 px-3 py-2.5 text-[10px] font-orbitron font-bold uppercase tracking-wider transition-all duration-300 border clip-corner-sm flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed ${isReferralCopied
-                      ? 'bg-proyecto-green text-slate-950 border-proyecto-green shadow-neon-cyan'
-                      : 'bg-proyecto-brand/20 border-proyecto-brand/50 text-proyecto-accent hover:bg-proyecto-brand/40 hover:text-white'
-                      }`}
-                  >
-                    {isReferralCopied ? t('dashboard.copied') : t('dashboard.copy_link')}
-                  </button>
-                  <button
-                    onClick={shareOnWhatsApp}
-                    disabled={!profile?.ref_code}
-                    className="px-4 py-2.5 bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all clip-corner-sm disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.438 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
-                  </button>
+                <div className="grid w-full gap-2 sm:grid-cols-2">
+                  {(['LEFT', 'RIGHT'] as const).map(side => {
+                    const link = binaryReferralLinks?.[side];
+                    const copied = isReferralCopied === side;
+                    return (
+                      <div key={side} className="border border-proyecto-accent/20 bg-black/60 clip-corner px-3 py-3">
+                        <div className="flex items-center justify-between gap-2"><span className="text-[9px] font-orbitron font-bold uppercase tracking-widest text-white">{side === 'LEFT' ? 'Izquierda' : 'Derecha'}</span><span className="text-[9px] font-mono-tech text-proyecto-accent">{side}</span></div>
+                        <span className="mt-2 block break-all text-[10px] font-mono-tech text-slate-400">{link || 'Enlace pendiente de sincronizar'}</span>
+                        <div className="mt-3 flex gap-2"><button onClick={() => copyReferralLink(side)} disabled={!link} className={`flex-1 border px-2 py-2.5 text-[9px] font-orbitron font-bold uppercase disabled:opacity-30 ${copied ? 'border-proyecto-green bg-proyecto-green text-slate-950' : 'border-proyecto-brand/50 bg-proyecto-brand/20 text-proyecto-accent'}`}>{copied ? t('dashboard.copied') : `Copiar ${side}`}</button><button onClick={() => shareOnWhatsApp(side)} disabled={!link} className="border border-green-500/30 bg-green-500/10 px-3 py-2.5 text-[9px] font-orbitron font-bold uppercase text-green-400 disabled:opacity-30">WhatsApp</button></div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <NetworkVisualization

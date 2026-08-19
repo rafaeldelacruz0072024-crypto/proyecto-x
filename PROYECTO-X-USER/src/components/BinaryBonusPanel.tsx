@@ -50,7 +50,7 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
 
   const links = useMemo(() => {
     if (!refCode) return null;
-    const base = `${window.location.origin}/?ref=${encodeURIComponent(refCode)}`;
+    const base = `${window.location.origin}/login?ref=${encodeURIComponent(refCode)}&action=register`;
     return { LEFT: `${base}&side=LEFT`, RIGHT: `${base}&side=RIGHT` };
   }, [refCode]);
 
