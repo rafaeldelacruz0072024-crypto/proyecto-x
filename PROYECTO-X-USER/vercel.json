@@ -42,7 +42,7 @@
                 },
                 {
                     "key": "Content-Security-Policy",
-                    "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.google.com https://www.gstatic.com https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.nowpayments.io https://min-api.cryptocompare.com https://cloudflareinsights.com https://api.binance.com https://data-api.binance.vision wss://stream.binance.com https://api.coingecko.com; worker-src 'self' blob:; frame-src https://www.google.com https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self' data:; media-src 'self' blob:;"
+                    "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.google.com https://www.gstatic.com https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://min-api.cryptocompare.com https://cloudflareinsights.com https://api.binance.com https://data-api.binance.vision wss://stream.binance.com https://api.coingecko.com; worker-src 'self' blob:; frame-src https://www.google.com https://challenges.cloudflare.com https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self' data:; media-src 'self' blob:;"
                 }
             ]
         }
