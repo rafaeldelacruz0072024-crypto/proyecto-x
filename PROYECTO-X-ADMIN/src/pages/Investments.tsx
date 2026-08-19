@@ -224,30 +224,14 @@ const Investments: React.FC = () => {
     if (!resetTarget) return;
     setProcessing('reset');
     try {
-      // 1. Reset investment
-      const { error: invError } = await supabase
-        .from('investments')
-        .update({
-          accumulated_earnings: 0,
-          status: 'ACTIVE',
-          is_referral_commission_paid: false,
-          created_at: new Date().toISOString(),
-          completed_at: null
-        })
-        .eq('id', resetTarget.id);
+      // Reset only the investment contract. User balances are never modified here.
+      const { data: rpcData, error: rpcError } = await supabase.rpc('admin_reset_investment', {
+        p_investment_id: resetTarget.id,
+        p_admin_id: (await supabase.auth.getUser()).data.user?.id
+      });
 
-      if (invError) throw invError;
-
-      // 2. Reset user wallet & balance
-      const { error: profError } = await supabase
-        .from('profiles')
-        .update({
-          credit_balance: 0,
-          wallet_balance: 0
-        })
-        .eq('id', resetTarget.user_id);
-
-      if (profError) throw profError;
+      if (rpcError) throw rpcError;
+      if (rpcData && !rpcData.success) throw new Error(rpcData.message || 'No se pudo reiniciar la inversión.');
 
       await loadInvestments();
       setResetSuccess(true);
@@ -548,7 +532,7 @@ const Investments: React.FC = () => {
                   <div className="p-4 bg-amber-500/5 rounded-2xl border border-amber-500/10 flex gap-3 text-amber-500">
                     <AlertCircle size={18} className="shrink-0 mt-0.5" />
                     <p className="text-[10px] font-bold leading-relaxed">
-                      Esto reiniciará las ganancias a $0, reactivará la inversión desde hoy, y pondrá el credit_balance y wallet_balance del usuario en $0.
+                      Esto reiniciará únicamente las ganancias del contrato a $0 y lo reactivará desde hoy. El Wallet Bank y el Credit Balance del usuario no serán modificados.
                     </p>
                   </div>
 
