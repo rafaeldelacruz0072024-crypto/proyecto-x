@@ -109,6 +109,10 @@ const EventsPanel: React.FC<Props> = ({ onNavigateToDeposit, onSelectPromo, prof
 
     return (
         <div className="space-y-6">
+            <div className="mx-auto w-full max-w-6xl">
+                <CareerPlanPanel teamVolume={teamVolume} />
+            </div>
+
             {/* ═══ BOOTCAMP PUNTA CANA 2026 ═══ */}
 
             <div className="flex items-center justify-between">
