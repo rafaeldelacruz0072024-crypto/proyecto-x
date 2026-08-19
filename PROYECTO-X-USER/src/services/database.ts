@@ -23,41 +23,26 @@ export async function getSystemSettings() {
 // ==========================================
 // DEPOSITS
 // ==========================================
-export async function createDeposit(userId: string, amount: number, method: string = 'USDT', txHash?: string) {
+export async function createDeposit(userId: string, amount: number, method: string = 'CRYPTOP', txHash?: string) {
   try {
-    // 1. Insert deposit record
-    const { data: deposit, error: depositError } = await supabase
-      .from('deposits')
-      .insert({
-        user_id: userId,
-        amount,
-        method,
-        transaction_hash: txHash, // Use transaction_hash as in types/index.ts, or check if DB uses tx_hash
-        status: 'PENDING' // standardized to uppercase PENDING
-      })
-      .select()
-      .single();
-
-    if (depositError) throw depositError;
-
-    // 2. Create pending transaction (Ledger)
-    const { error: txError } = await supabase
-      .from('transactions')
-      .insert({
-        user_id: userId,
-        type: 'DEPOSIT',
-        amount: amount,
-        status: 'PENDING',
-        description: `Depósito: $${amount} vía ${method} (Ref: ${deposit.id})`,
-        // reference_id omitted intentionally due to fk_transactions_investments constraint
-      });
-
-    if (txError) throw txError;
-
-    return { success: true, deposit };
+    if (method.toUpperCase() !== 'CRYPTOP') {
+      return { success: false, error: 'El Ãºnico mÃ©todo permitido es CRYPTOP.' };
+    }
+    const { data, error } = await supabase.rpc('create_deposit_request_atomic', {
+      p_user_id: userId,
+      p_amount: amount,
+      p_method: 'CRYPTOP',
+      p_transaction_hash: txHash || null,
+    });
+    if (error) throw error;
+    if (!data?.success) throw new Error(data?.error || 'No se pudo crear el depÃ³sito.');
+    return {
+      success: true,
+      deposit: { id: data.deposit_id, amount: data.amount, method: data.method, status: data.status },
+    };
   } catch (error: any) {
     console.error('Error creating deposit:', error);
-    return { success: false, error };
+    return { success: false, error: error?.message || error };
   }
 }
 
