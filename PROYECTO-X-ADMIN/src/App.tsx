@@ -12,7 +12,6 @@ import Investments from './pages/Investments';
 import RoiEngine from './pages/RoiEngine';
 import Settings from './pages/Settings';
 import Gateways from './pages/Gateways';
-import Credits from './pages/Credits';
 import Plans from './pages/Plans';
 import WeeklyBonuses from './pages/WeeklyBonuses';
 import Network from './pages/Network';
@@ -238,16 +237,6 @@ const App: React.FC = () => {
           }
         />
 
-        <Route
-          path="/credits"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Credits />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/plans"

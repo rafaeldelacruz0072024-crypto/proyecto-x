@@ -14,7 +14,6 @@ import {
   Share2,
   History,
   CreditCard,
-  Coins,
   Wrench,
   LogOut,
   ChevronRight,
@@ -60,8 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { path: '/communications', label: 'Comunicaciones', icon: MailOpen },
   { path: '/payroll', label: 'Nómina Cripto', icon: Banknote },
     { path: '/gateways', label: 'Payment Gateways', icon: CreditCard },
-    { path: '/credits', label: 'System Credits', icon: Coins },
-    { path: '/roadmap', label: 'Road Map', icon: Map },
+      { path: '/roadmap', label: 'Road Map', icon: Map },
     { path: '/settings', label: 'Master Settings', icon: Wrench },
   ];
 
