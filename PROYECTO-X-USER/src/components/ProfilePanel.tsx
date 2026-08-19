@@ -31,6 +31,9 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
   const [isLinkingWalletWith2FA, setIsLinkingWalletWith2FA] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
+  const [mfaQrCode, setMfaQrCode] = useState('');
+  const [mfaSecret, setMfaSecret] = useState('');
+  const [mfaFactorId, setMfaFactorId] = useState('');
 
   // Extraer nombre compatible con ambos formatos
   const userName = user?.full_name || user?.name || user?.username || user?.email?.split('@')[0] || 'User';
@@ -74,25 +77,26 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     return score;
   }, [passForm.new]);
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passForm.new !== passForm.confirm) {
-      addNotification(t('profile.notifications.pass_mismatch'), "error");
+      addNotification(t('profile.notifications.pass_mismatch'), 'error');
       return;
     }
     if (passStrength < 75) {
-      addNotification(t('profile.notifications.pass_weak'), "error");
+      addNotification(t('profile.notifications.pass_weak'), 'error');
       return;
     }
 
     setIsChangingPass(true);
-
-    // Simulate encryption update
-    setTimeout(() => {
-      addNotification(t('profile.notifications.pass_sync'), "success");
+    const { error } = await supabase.auth.updateUser({ password: passForm.new });
+    if (error) {
+      addNotification(error.message, 'error');
+    } else {
+      addNotification(t('profile.notifications.pass_sync'), 'success');
       setPassForm({ current: '', new: '', confirm: '' });
-      setIsChangingPass(false);
-    }, 2000);
+    }
+    setIsChangingPass(false);
   };
 
   const saveWallet = () => {
@@ -121,43 +125,70 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     }
   };
 
-  const start2FASetup = () => {
-    setIsSettingUp2FA(true);
+  const start2FASetup = async () => {
+    setIs2faLoading(true);
     setIsLinkingWalletWith2FA(false);
-    addNotification(t('profile.notifications.auth_syncing'), "info");
-  };
-
-  const complete2FASetup = () => {
-    if (verificationCode.length !== 6) {
-      addNotification(t('profile.notifications.code_invalid'), "error");
+    const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'NOVA Authenticator' });
+    if (error || !data?.id || !data.totp) {
+      addNotification(error?.message || 'No se pudo iniciar el enrolamiento 2FA seguro.', 'error');
+      setIs2faLoading(false);
       return;
     }
-
-    setIs2faLoading(true);
-    // Simular validación del código del servidor de auth
-    setTimeout(() => {
-      const updates: any = { two_factor_enabled: true };
-
-      if (isLinkingWalletWith2FA) {
-        updates.withdrawal_wallet = wallet;
-      }
-
-      onUpdateUser(updates);
-      addNotification(t('profile.notifications.auth_success'), "success");
-      setIsSettingUp2FA(false);
-      setIsLinkingWalletWith2FA(false);
-      setVerificationCode('');
-      setIs2faLoading(false);
-    }, 1500);
+    setMfaFactorId(data.id);
+    setMfaQrCode(data.totp.qr_code);
+    setMfaSecret(data.totp.secret);
+    setIsSettingUp2FA(true);
+    setIs2faLoading(false);
+    addNotification(t('profile.notifications.auth_syncing'), 'info');
   };
 
-  const disable2FA = () => {
+  const complete2FASetup = async () => {
+    if (verificationCode.length !== 6 || !mfaFactorId) {
+      addNotification(t('profile.notifications.code_invalid'), 'error');
+      return;
+    }
     setIs2faLoading(true);
-    setTimeout(() => {
-      onUpdateUser({ two_factor_enabled: false });
-      addNotification(t('profile.notifications.auth_disabled'), "info");
+    const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: mfaFactorId });
+    if (challengeError || !challenge?.id) {
+      addNotification(challengeError?.message || 'No se pudo crear el desafÃ­o 2FA.', 'error');
       setIs2faLoading(false);
-    }, 1200);
+      return;
+    }
+    const { error: verifyError } = await supabase.auth.mfa.verify({ factorId: mfaFactorId, challengeId: challenge.id, code: verificationCode });
+    if (verifyError) {
+      addNotification(verifyError.message, 'error');
+      setIs2faLoading(false);
+      return;
+    }
+    const updates: any = { two_factor_enabled: true };
+    if (isLinkingWalletWith2FA) updates.withdrawal_wallet = wallet;
+    onUpdateUser(updates);
+    addNotification(t('profile.notifications.auth_success'), 'success');
+    setIsSettingUp2FA(false);
+    setIsLinkingWalletWith2FA(false);
+    setVerificationCode('');
+    setMfaQrCode('');
+    setMfaSecret('');
+    setIs2faLoading(false);
+  };
+
+  const disable2FA = async () => {
+    setIs2faLoading(true);
+    const { data, error } = await supabase.auth.mfa.listFactors();
+    const factor = data?.totp?.find(item => item.status === 'verified');
+    if (error || !factor) {
+      addNotification(error?.message || 'No hay un factor 2FA verificado para eliminar.', 'error');
+      setIs2faLoading(false);
+      return;
+    }
+    const { error: unenrollError } = await supabase.auth.mfa.unenroll({ factorId: factor.id });
+    if (unenrollError) {
+      addNotification(unenrollError.message, 'error');
+    } else {
+      onUpdateUser({ two_factor_enabled: false });
+      addNotification(t('profile.notifications.auth_disabled'), 'info');
+    }
+    setIs2faLoading(false);
   };
 
   const securityScore = (twoFactorEnabled ? 33 : 0) + (kycVerified ? 34 : 0) + (hasWallet ? 33 : 0);
@@ -448,11 +479,11 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                 <div className="mt-8 pt-8 border-t border-slate-800/50 animate-fade-in relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-[0_0_20px_white]">
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=otpauth://totp/NOVA DIGITAL:${userEmail}?secret=JBSWY3DPEHPK3PXP&issuer=NOVA DIGITAL`}
-                        alt="2FA QR Code"
-                        className="w-40 h-40 mix-blend-multiply"
-                      />
+                      {mfaQrCode ? (
+                        <img src={mfaQrCode} alt="CÃ³digo QR de NOVA Authenticator" className="w-40 h-40 rounded-xl bg-white p-2" />
+                      ) : (
+                        <div className="flex h-40 w-40 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 text-center text-[10px] font-mono-tech font-bold uppercase tracking-widest text-amber-700">2FA seguro</div>
+                      )}
                       <p className="mt-4 text-[9px] text-black font-mono-tech font-bold uppercase tracking-widest border-t border-black/10 pt-2 w-full text-center">{t('profile.2fa.scan_protocol')}</p>
                     </div>
 
@@ -465,7 +496,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                       <div className="space-y-1">
                         <h5 className="text-[10px] font-orbitron font-bold text-white uppercase tracking-widest">{t('profile.2fa.step2')}</h5>
                         <div className="bg-black border border-proyecto-accent/20 px-4 py-3 clip-corner-sm font-mono text-proyecto-accent text-[10px] flex justify-between items-center group/key shadow-[0_0_10px_rgba(0,243,255,0.1)]">
-                          <span>JBSWY3DPEHPK3PXP</span>
+                          <span>{mfaSecret || 'Secreto generado por Supabase Auth'}</span>
                           <button className="text-slate-700 group-hover/key:text-proyecto-accent transition-colors">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
                           </button>
