@@ -112,40 +112,6 @@ const Withdrawals: React.FC = () => {
     }
   };
 
-  const handleManualPay = async (withdrawal: Withdrawal) => {
-    if (!confirm(`¿PAGO MANUAL? Se marcará como PAGADO externamente por $${withdrawal.amount}.`)) return;
-
-    setProcessing(withdrawal.id);
-    try {
-      if (withdrawal.status.toLowerCase() === 'pending') {
-        const { data: rpcData, error: rpcError } = await supabase.rpc('process_withdrawal_approval', {
-          p_withdrawal_id: withdrawal.id,
-          p_admin_id: (await supabase.auth.getUser()).data.user?.id
-        });
-        if (rpcError) throw rpcError;
-        if (rpcData && !rpcData.success) throw new Error(rpcData.message);
-      }
-
-      const { error } = await supabase
-        .from('withdrawals')
-        .update({
-          status: 'COMPLETED',
-          completed_at: new Date().toISOString(),
-          blockchain_tx_hash: 'MANUAL_PAYMENT_BY_ADMIN'
-        })
-        .eq('id', withdrawal.id);
-
-      if (error) throw error;
-
-      await loadWithdrawals();
-    } catch (error: any) {
-      console.error('Error in manual pay:', error);
-      alert('Error en pago manual: ' + error.message);
-    } finally {
-      setProcessing(null);
-    }
-  };
-
   const handleBulkApprove = async () => {
     if (selectedIds.length === 0) return;
 
@@ -223,7 +189,7 @@ const Withdrawals: React.FC = () => {
 
     setProcessing(showCompleteModal.id);
     try {
-      const { data: rpcData, error: rpcError } = await supabase.rpc('complete_withdrawal', {
+      const { data: rpcData, error: rpcError } = await supabase.rpc('complete_withdrawal_atomic', {
         p_withdrawal_id: showCompleteModal.id,
         p_tx_hash: txHash,
         p_admin_id: (await supabase.auth.getUser()).data.user?.id
@@ -311,7 +277,7 @@ const Withdrawals: React.FC = () => {
               className="bg-rose-600 hover:bg-rose-500 text-white px-6 py-4 rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-[0_10px_30px_rgba(225,29,72,0.3)] flex items-center gap-3 animate-in zoom-in-95 scale-105"
             >
               <Send size={18} />
-              PAGAR NÓMINA ({selectedIds.length})
+              APROBAR NÓMINA ({selectedIds.length})
             </button>
           )}
 
@@ -494,15 +460,7 @@ const Withdrawals: React.FC = () => {
                             className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white px-5 py-3 rounded-2xl border border-emerald-500/20 transition-all duration-300 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 disabled:opacity-50"
                           >
                             {processing === w.id ? <Loader2 size={16} className="animate-spin" /> : <ChevronRight size={16} />}
-                            PAGAR
-                          </button>
-                          <button
-                            onClick={() => handleManualPay(w)}
-                            disabled={!!processing}
-                            className="bg-purple-500/10 hover:bg-purple-500 text-purple-500 hover:text-white px-5 py-3 rounded-2xl border border-purple-500/20 transition-all duration-300 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 disabled:opacity-50"
-                          >
-                            <Send size={16} />
-                            MANUAL
+                            APROBAR
                           </button>
                           <button
                             onClick={() => setShowRejectModal(w)}
@@ -523,14 +481,6 @@ const Withdrawals: React.FC = () => {
                           >
                             {processing === w.id ? <Loader2 size={16} className="animate-spin" /> : <ShieldCheck size={16} />}
                             Marcar Enviado
-                          </button>
-                          <button
-                            onClick={() => handleManualPay(w)}
-                            disabled={!!processing}
-                            className="bg-purple-500/10 hover:bg-purple-500 text-purple-500 hover:text-white px-5 py-3 rounded-2xl border border-purple-500/20 transition-all duration-300 flex items-center gap-3 text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 disabled:opacity-50"
-                          >
-                            <Send size={16} />
-                            MANUAL
                           </button>
                         </div>
                       )}
@@ -633,7 +583,7 @@ const Withdrawals: React.FC = () => {
               <div className="p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 flex gap-4 text-emerald-400">
                 <Check size={20} className="shrink-0" />
                 <p className="text-[10px] font-medium leading-relaxed uppercase tracking-widest">
-                  Este paso marcará el retiro como completado permanentemente.
+                  Este paso ejecutará una operación atómica: validará el estado aprobado, registrará el TXID y cerrará el ledger del retiro. No uses un texto ficticio como hash.
                 </p>
               </div>
             </div>
