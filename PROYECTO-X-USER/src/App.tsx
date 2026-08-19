@@ -943,15 +943,7 @@ const App: React.FC = () => {
                   )}
 
 
-                  <InvestmentPanel
-                    onInvest={handleInvestment}
-                    investments={investments || []}
-                    addNotification={addNotification}
-                    walletBalance={walletBalance}
-                    residualConfig={residualConfig}
-                    isLoading={processingInvestment}
-                    dynamicSettings={systemSettings}
-                  />
+
                   {/* ── DIRECT COMMISSION SECTION ── */}
                   {profile && (
                     <div className="space-y-3">
@@ -1033,6 +1025,30 @@ const App: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+            {/* MIS NODOS: sección principal fuera del sidebar */}
+            <section className="mt-8 w-full min-w-0 overflow-hidden border border-proyecto-accent/20 bg-black/20 p-3 sm:p-5 lg:p-6 clip-corner">
+              <div className="mb-4 flex flex-col gap-2 border-l-2 border-proyecto-accent px-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-[9px] font-mono-tech uppercase tracking-[0.28em] text-proyecto-accent">NOVA Digital</p>
+                  <h2 className="mt-1 text-lg font-orbitron font-black uppercase tracking-[0.18em] text-white sm:text-xl">Mis nodos</h2>
+                </div>
+                <p className="text-[9px] font-mono-tech uppercase tracking-widest text-slate-500">Activación de ciclos</p>
+              </div>
+              <div className="w-full min-w-0 overflow-x-auto pb-2 [scrollbar-width:thin]">
+                <div className="min-w-0">
+                  <InvestmentPanel
+                    onInvest={handleInvestment}
+                    investments={investments || []}
+                    addNotification={addNotification}
+                    walletBalance={walletBalance}
+                    residualConfig={residualConfig}
+                    isLoading={processingInvestment}
+                    dynamicSettings={systemSettings}
+                  />
+                </div>
+              </div>
+            </section>
             </div>
           )}
 
