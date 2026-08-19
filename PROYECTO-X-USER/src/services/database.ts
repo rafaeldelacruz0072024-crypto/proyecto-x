@@ -386,7 +386,7 @@ export async function getNetworkTree(userId: string): Promise<{ tree: NetworkNod
       const [{ data: profileRows, error: profileError }, { data: rootProfile, error: rootError }] = await Promise.all([
         supabase
           .from('profiles')
-          .select('id, email, username, status, ref_code, referred_by, created_at, personal_volume, direct_referrals_count, rank')
+          .select('id, email, username, status, ref_code, referred_by, created_at')
           .neq('id', userId)
           .limit(5000),
         supabase
