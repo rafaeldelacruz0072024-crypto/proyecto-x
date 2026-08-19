@@ -148,6 +148,15 @@ export function useUserData(userId: string | null) {
 
     loadData();
 
+    // El ADMIN puede modificar el balance en otra sesión. Revalidamos al
+    // volver a la pestaña y periódicamente para no depender únicamente de
+    // Realtime, que puede no estar habilitado en todos los proyectos.
+    const refreshProfileOnFocus = () => {
+      if (document.visibilityState === 'visible') void fetchProfile();
+    };
+    document.addEventListener('visibilitychange', refreshProfileOnFocus);
+    const balanceRefreshTimer = window.setInterval(fetchProfile, 15000);
+
     // Subscribe to profile changes (balance updates)
     const channel = supabase
       .channel('profile_changes')
@@ -170,6 +179,8 @@ export function useUserData(userId: string | null) {
       .subscribe();
 
     return () => {
+      document.removeEventListener('visibilitychange', refreshProfileOnFocus);
+      window.clearInterval(balanceRefreshTimer);
       supabase.removeChannel(channel);
     };
   }, [userId]);
