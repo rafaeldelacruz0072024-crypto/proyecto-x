@@ -37,6 +37,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
   type FieldStatus = 'idle' | 'checking' | 'available' | 'taken';
   const [usernameStatus, setUsernameStatus] = useState<FieldStatus>('idle');
   const [emailStatus, setEmailStatus] = useState<FieldStatus>('idle');
+  const normalizeEmail = (value: string) => value.trim().toLowerCase();
   const binarySide = (localStorage.getItem('nova_digital_binary_side') || 'LEFT').toUpperCase() === 'RIGHT' ? 'RIGHT' : 'LEFT';
 
   useEffect(() => {
@@ -67,7 +68,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
   useEffect(() => {
     if (mode !== 'register') return;
-    const email = formData.email.trim();
+    const email = normalizeEmail(formData.email);
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setEmailStatus('idle');
       return;
@@ -98,8 +99,9 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       setError('El username debe tener 3-30 caracteres (letras, números, guión bajo).');
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('El email no es válido.');
+    const normalizedEmail = normalizeEmail(formData.email);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      setError('El email no es válido. Escribe un correo como nombre@dominio.com.');
       return;
     }
     if (formData.password.length < 8) {
@@ -120,6 +122,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
     setLoading(true);
     setError(null);
+    setFormData(prev => ({ ...prev, email: normalizedEmail }));
 
     try {
       // Verificar que el código de sponsor existe en la BD
@@ -139,7 +142,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       // 1. Registrar usuario en Supabase Auth
 
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
-        email: formData.email,
+        email: normalizedEmail,
         password: formData.password,
         options: {
           data: {
@@ -168,7 +171,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
         p_user_id:      authData.user.id,
         p_username:     formData.username,
         p_full_name:    formData.name,
-        p_email:        formData.email,
+        p_email:        normalizedEmail,
         p_country:      formData.country,
         p_phone:        formData.phone,
         p_ref_code:     null,
@@ -183,7 +186,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
           p_user_id:      authData.user.id,
           p_username:     formData.username,
           p_full_name:    formData.name,
-          p_email:        formData.email,
+          p_email:        normalizedEmail,
           p_country:      formData.country,
           p_phone:        formData.phone,
           p_ref_code:     null,
@@ -236,7 +239,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
     try {
       const { data, error: loginError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
+        email: normalizeEmail(formData.email),
         password: formData.password
       });
 
@@ -264,7 +267,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
     try {
       // Omitting captcha verification as requested
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-        formData.email,
+        normalizeEmail(formData.email),
         { redirectTo: 'https://proyecto-x-user.vercel.app/login' }
       );
       if (resetError) throw resetError;
