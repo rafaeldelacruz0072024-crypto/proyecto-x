@@ -50,7 +50,6 @@ import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import BinaryBonusPanel from './components/BinaryBonusPanel';
 import UserSidebar from './components/UserSidebar';
-import SpecialEditionWidget from './components/SpecialEditionWidget';
 // Red vacía - se llenará con datos reales cuando se implemente backend de referidos
 const EMPTY_NETWORK: NetworkNode = {
   id: 'root',
@@ -943,16 +942,6 @@ const App: React.FC = () => {
                     <SponsorWidget sponsorId={profile.referred_by} />
                   )}
 
-                  {profile && (
-                    <SpecialEditionWidget
-                      user={profile}
-                      investments={investments || []}
-                      walletBalance={walletBalance}
-                      onInvest={handleInvestment}
-                      addNotification={addNotification}
-                      refetch={refetch}
-                    />
-                  )}
 
                   <InvestmentPanel
                     onInvest={handleInvestment}
