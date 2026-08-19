@@ -37,7 +37,12 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
   type FieldStatus = 'idle' | 'checking' | 'available' | 'taken';
   const [usernameStatus, setUsernameStatus] = useState<FieldStatus>('idle');
   const [emailStatus, setEmailStatus] = useState<FieldStatus>('idle');
-  const normalizeEmail = (value: string) => value.trim().toLowerCase();
+  const normalizeEmail = (value: string) =>
+    (value || '')
+      .normalize('NFKC')
+      .replace(/[\u00A0\u200B-\u200F\u2028-\u202F\u2060\uFEFF]/g, '')
+      .trim()
+      .toLowerCase();
   const binarySide = (localStorage.getItem('nova_digital_binary_side') || 'LEFT').toUpperCase() === 'RIGHT' ? 'RIGHT' : 'LEFT';
 
   useEffect(() => {
@@ -503,7 +508,9 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
               <label className="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">{t('auth.email')}</label>
               <div className="relative">
                 <input
-                  type="email"
+                  type="text"
+                  inputMode="email"
+                  autoComplete="email"
                   required
                   disabled={loading}
                   className={`w-full bg-slate-950/50 border rounded-xl py-3 px-4 pr-10 text-sm text-white focus:outline-none transition-all disabled:opacity-50 ${
