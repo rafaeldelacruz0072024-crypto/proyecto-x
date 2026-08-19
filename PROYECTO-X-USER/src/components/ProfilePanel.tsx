@@ -116,8 +116,6 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     } else {
       onUpdateUser({ 
         withdrawal_wallet: wallet,
-        nova_digital_card_address: cardAddress,
-        nova_digital_card_user: cardUser
       });
       addNotification(t('profile.notifications.wallet_saved'), "success");
     }
@@ -142,8 +140,6 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
 
       if (isLinkingWalletWith2FA) {
         updates.withdrawal_wallet = wallet;
-        updates.nova_digital_card_address = cardAddress;
-        updates.nova_digital_card_user = cardUser;
       }
 
       onUpdateUser(updates);
@@ -358,28 +354,6 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
 
                 {/* NOVA DIGITAL CARD FIELDS */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800/30">
-                  <div className="space-y-2">
-                    <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest ml-1">{t('profile.vault.card_address_label')}</label>
-                    <input
-                      type="text"
-                      value={cardAddress}
-                      onChange={(e) => !isWalletFrozen && setCardAddress(e.target.value)}
-                      disabled={isWalletFrozen}
-                      placeholder={t('profile.vault.card_address_placeholder')}
-                      className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-proyecto-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-proyecto-accent focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]'}`}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-[9px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest ml-1">{t('profile.vault.card_user_label')}</label>
-                    <input
-                      type="text"
-                      value={cardUser}
-                      onChange={(e) => !isWalletFrozen && setCardUser(e.target.value)}
-                      disabled={isWalletFrozen}
-                      placeholder={t('profile.vault.card_user_placeholder')}
-                      className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-proyecto-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-proyecto-accent focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]'}`}
-                    />
-                  </div>
                 </div>
 
                 <div className="pt-4">

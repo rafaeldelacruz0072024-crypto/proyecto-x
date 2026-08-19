@@ -26,7 +26,58 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
     setTimeout(() => setIsCopied(false), 2000);
   };
 
-  
+  // --- STRIPE HANDLER ---
+
+
+  const handleGeneratePayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userId) {
+      setError(t('deposit.user_unauthorized'));
+      return;
+    }
+
+    const numAmount = parseFloat(amount);
+    if (numAmount > 50000) {
+      setError('El monto máximo por depósito es $50,000.');
+      return;
+    }
+    if (numAmount >= 25) {
+      setIsVerifying(true);
+      setError(null);
+
+      const { data, error: apiError } = await createNowPayment(numAmount, userId);
+
+      if (data) {
+        setPaymentData(data);
+        // notify parent to refetch so the pending transaction appears in history
+        onDeposit(numAmount, 'INITIATED');
+        if (onClearPromo) onClearPromo();
+      } else {
+        setError(apiError || t('deposit.api_error'));
+      }
+      setIsVerifying(false);
+    }
+  };
+
+  const handleConfirmFinal = () => {
+    if (paymentData) {
+      // The deposit record was already created by the proxy.
+      // We just notify the user that we are waiting for blockchain confirmation.
+      setPaymentData(null);
+      setAmount('');
+      setTransactionHash('');
+      // We can call onDeposit as a callback to refetch data or show a success toast in the parent
+      // but we should pass a flag or handle it differently if it creates a record.
+      // For now, let's just reset and let the user know.
+    }
+  };
+
+  const resetForm = () => {
+    setPaymentData(null);
+    setAmount('');
+    setError(null);
+  };
+
   return (
     <div className="blue-glass rounded-2xl p-6 border border-slate-800 shadow-2xl animate-fade-in relative overflow-hidden">
       {/* Glow decorativo */}
@@ -98,10 +149,12 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
                 placeholder="0.00"
                 className="w-full bg-slate-950 border border-slate-900 rounded-xl py-4 pl-8 pr-4 text-white text-lg font-black focus:outline-none focus:border-proyecto-green transition-all placeholder:text-slate-800"
                 required
-                min={paymentMethod === 'card' ? '5' : '25'}
+                min="25"
               />
             </div>
-            <p className="text-[9px] text-slate-600 mt-1 ml-1">Mínimo: $25 USD · CRYPTOP en BNB BEP20</p>
+            <p className="text-[9px] text-slate-600 mt-1 ml-1">
+              Mínimo: $25 USD · CRYPTOP en BNB BEP20
+            </p>
           </div>
 
           {error && (
