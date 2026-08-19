@@ -972,28 +972,23 @@ const App: React.FC = () => {
                   {/* REGLA DE ORO ROI — las tareas diarias son el único disparador */}
 
                   {/* PROMOS Y EVENTOS — acceso directo desde el dashboard */}
-                  <section className="space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-l-2 border-violet-400 bg-violet-500/[0.04] px-4 py-3">
-                      <div>
-                        <p className="text-[9px] font-mono-tech text-violet-300 uppercase tracking-[0.25em]">NOVA Digital</p>
+                  {/* PROMOS Y EVENTOS — acceso compacto; el contenido completo vive en su módulo */}
+                  <section className="holo-card p-5 rounded-none clip-corner border-proyecto-accent/20 bg-proyecto-accent/[0.03]">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0">
+                        <p className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-[0.25em]">NOVA Digital</p>
                         <h2 className="mt-1 text-base font-orbitron font-black text-white uppercase tracking-[0.18em]">Promos y Eventos</h2>
+                        <p className="mt-2 text-[10px] leading-relaxed text-slate-400">Consulta las novedades y promociones activas de la comunidad.</p>
                       </div>
                       <button
+                        type="button"
                         onClick={() => setActiveTab('events')}
-                        className="w-fit px-4 py-2 border border-violet-400/40 bg-violet-500/10 text-[9px] font-orbitron font-black text-violet-200 uppercase tracking-widest hover:bg-violet-500/20 transition-all"
+                        className="w-full shrink-0 px-4 py-3 sm:w-fit border border-proyecto-accent/40 bg-proyecto-accent/10 text-[9px] font-orbitron font-black text-proyecto-accent uppercase tracking-widest hover:bg-proyecto-accent/20 transition-all"
+                        aria-label="Abrir módulo de Promos y Eventos"
                       >
                         Ver módulo completo
                       </button>
                     </div>
-                    <EventsPanel
-                      onNavigateToDeposit={() => setActiveTab('finance')}
-                      onSelectPromo={(promo) => {
-                        setActivePromotion(promo);
-                        setActiveTab('finance');
-                      }}
-                      profile={profile}
-              teamVolume={networkStats.teamVolume}
-                    />
                   </section>
 
                   {/* SECURITY WIDGET */}
