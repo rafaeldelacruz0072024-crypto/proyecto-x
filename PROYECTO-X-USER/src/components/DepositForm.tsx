@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createNowPayment, PaymentResponse } from '../services/nowpayments';
+import { createCryptopPayment, CryptopPaymentResponse } from '../services/cryptop';
 
 interface Props {
   onDeposit: (amount: number, hash?: string) => void;
@@ -16,7 +16,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
   const [transactionHash, setTransactionHash] = useState<string>('');
   const [isCopied, setIsCopied] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [paymentData, setPaymentData] = useState<PaymentResponse | null>(null);
+  const [paymentData, setPaymentData] = useState<CryptopPaymentResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleCopy = () => {
@@ -45,7 +45,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
       setIsVerifying(true);
       setError(null);
 
-      const { data, error: apiError } = await createNowPayment(numAmount, userId);
+      const { data, error: apiError } = await createCryptopPayment(numAmount, userId);
 
       if (data) {
         setPaymentData(data);
@@ -167,7 +167,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
 
           <div className="bg-red-500/5 p-4 rounded-xl border border-red-500/10">
             <p className="text-[9px] text-red-400/80 leading-relaxed text-center font-bold uppercase tracking-tighter">
-              t('deposit.attention')
+              {t('deposit.attention')}
             </p>
           </div>
         </form>
