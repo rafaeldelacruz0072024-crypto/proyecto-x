@@ -196,6 +196,14 @@ GRANT EXECUTE ON FUNCTION public.complete_withdrawal_atomic(UUID, TEXT, UUID) TO
 GRANT EXECUTE ON FUNCTION public.complete_withdrawal_atomic(UUID, TEXT, UUID) TO service_role;
 
 -- Mantener las funciones antiguas fuera del alcance directo del cliente.
-REVOKE EXECUTE ON FUNCTION public.complete_withdrawal(UUID, TEXT, UUID) FROM anon, authenticated;
+DO $$
+BEGIN
+  -- La función legacy puede no existir en instalaciones nuevas.
+  -- Revocar solo si la firma está presente para que el script sea idempotente.
+  IF to_regprocedure('public.complete_withdrawal(uuid,text,uuid)') IS NOT NULL THEN
+    REVOKE EXECUTE ON FUNCTION public.complete_withdrawal(UUID, TEXT, UUID) FROM anon, authenticated;
+  END IF;
+END
+$$;
 
 COMMIT;
