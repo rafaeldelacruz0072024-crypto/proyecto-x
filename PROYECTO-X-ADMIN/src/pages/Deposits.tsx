@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Deposit } from '../types';
 import StatusBadge from '../components/StatusBadge';
@@ -43,6 +43,13 @@ const Deposits: React.FC = () => {
   const [targetBalance, setTargetBalance] = useState<'wallet_balance' | 'credit_balance'>('wallet_balance');
   const [injectDescription, setInjectDescription] = useState('');
   const [searchingUsers, setSearchingUsers] = useState(false);
+
+  // Conserva la misma referencia cuando una solicitud se reintenta después
+  // de un timeout, para que el RPC pueda responder idempotentemente.
+  const injectionRequestRef = useRef<{
+    fingerprint: string;
+    referenceId: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchDeposits();
@@ -184,58 +191,77 @@ const Deposits: React.FC = () => {
     if (!selectedUser || !injectAmount || parseFloat(injectAmount) <= 0) return;
 
     setActionLoading('manual_injection');
+
     try {
-      const numAmount = parseFloat(injectAmount);
+      const numAmount = Number.parseFloat(injectAmount);
+      if (!Number.isFinite(numAmount) || numAmount <= 0) {
+        throw new Error('El monto debe ser positivo y válido');
+      }
+
       const finalAmount = injectType === 'ADD' ? numAmount : -numAmount;
+      const description =
+        injectDescription.trim() ||
+        `Ajuste manual de administración (${injectType})`;
 
-      // 1. Update Balance
-      const { data: currentProfile } = await supabase.from('profiles').select(targetBalance).eq('id', selectedUser.id).single();
-      const currentVal = (currentProfile as any)?.[targetBalance] || 0;
-      const newBalance = currentVal + finalAmount;
+      const fingerprint = [
+        selectedUser.id,
+        targetBalance,
+        finalAmount.toFixed(2),
+        description,
+      ].join('|');
 
-      const balanceLabel = targetBalance === 'wallet_balance' ? 'Wallet Bank' : 'Credit Balance';
-      if (newBalance < 0) throw new Error(`Fondos insuficientes en ${balanceLabel}`);
+      if (
+        !injectionRequestRef.current ||
+        injectionRequestRef.current.fingerprint !== fingerprint
+      ) {
+        injectionRequestRef.current = {
+          fingerprint,
+          referenceId: crypto.randomUUID(),
+        };
+      }
 
-      const { error: directErr } = await supabase
-        .from('profiles')
-        .update({ [targetBalance]: newBalance })
-        .eq('id', selectedUser.id);
+      const referenceId = injectionRequestRef.current.referenceId;
 
-      if (directErr) throw directErr;
-
-
-      // 2. Log in credit_logs
-      const { error: logError } = await supabase.from('credit_logs').insert({
-        user_id: selectedUser.id,
-        amount: finalAmount,
-        type: 'ADMIN_ADJUSTMENT',
-        description: injectDescription || `Inyección Manual de Fondos (${injectType})`,
-        performed_by: (await supabase.auth.getUser()).data.user?.id
+      // La autorización, el bloqueo del perfil, el cálculo del saldo,
+      // credit_logs y transactions se ejecutan dentro de Supabase.
+      const { data, error } = await supabase.rpc('admin_adjust_balance', {
+        p_user_id: selectedUser.id,
+        p_balance_column: targetBalance,
+        p_amount: finalAmount,
+        p_description: description,
+        p_reference_id: referenceId,
       });
 
-      if (logError) throw logError;
+      if (error) throw error;
+      if (!data?.success) {
+        throw new Error(data?.message || 'El RPC rechazó el ajuste');
+      }
 
-      // 3. Create a transaction record for the user to see it in their history
-      await supabase.from('transactions').insert({
-        user_id: selectedUser.id,
-        type: injectType === 'ADD' ? 'BONUS' : 'WITHDRAWAL',
-        amount: finalAmount,
-        status: 'COMPLETED',
-        description: injectDescription || `Ajuste manual de administración (${injectType})`,
-        reference_id: `admin_${Date.now()}`
-      });
+      const balanceLabel =
+        targetBalance === 'wallet_balance' ? 'Wallet Bank' : 'Credit Balance';
+      const resultingBalance = data.new_balance ?? data.current_balance;
+      const idempotentNote = data.idempotent
+        ? ' (reintento idempotente; no se duplicó)'
+        : '';
 
-      alert('Inyección procesada correctamente');
+      alert(
+        `Ajuste procesado correctamente${idempotentNote}. ` +
+        `${balanceLabel}: $${Number(resultingBalance ?? 0).toFixed(2)}`
+      );
+
       setShowManualModal(false);
       setSelectedUser(null);
       setInjectAmount('');
       setInjectDescription('');
       setUserSearchTerm('');
       setFoundUsers([]);
-      fetchDeposits(); // Refresh statistics if needed
+      injectionRequestRef.current = null;
 
+      // Solo refresca la vista; no realiza ninguna escritura.
+      await fetchDeposits();
     } catch (err: any) {
-      alert('Error: ' + err.message);
+      console.error('Manual balance adjustment error:', err);
+      alert('Error: ' + (err?.message || 'No se pudo procesar el ajuste'));
     } finally {
       setActionLoading(null);
     }
