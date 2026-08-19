@@ -1,6 +1,7 @@
 {
     "nav": {
         "dashboard": "PANEL",
+        "nodes": "MIS NODOS",
         "network": "RED",
         "binary": "BINARIO 8%",
         "finance": "FINANCIAR",

@@ -1,6 +1,7 @@
 {
     "nav": {
         "dashboard": "DASHBOARD",
+        "nodes": "MY NODES",
         "network": "NETWORK",
         "binary": "BINARY 8%",
         "finance": "FINANCE",
