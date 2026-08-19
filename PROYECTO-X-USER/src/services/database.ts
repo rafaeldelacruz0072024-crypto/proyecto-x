@@ -182,47 +182,6 @@ export async function createWithdrawal(
 }
 
 // ==========================================
-// REGLA DE ORO — Retiro de comisión directa sin ventana
-// ==========================================
-export async function withdrawReglaDeOro(
-  userId: string,
-  amount: number,
-  method: string,
-  walletAddress: string
-) {
-  try {
-    const { data, error } = await supabase.rpc('withdraw_direct_commission', {
-      p_user_id:        userId,
-      p_amount:         amount,
-      p_method:         method,
-      p_wallet_address: walletAddress,
-    });
-
-    if (error) {
-      if (error.message?.includes('Load failed') || error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
-        return { success: false, error: 'Error de conexión. Verifica tu internet e intenta de nuevo.' };
-      }
-      return { success: false, error: error.message };
-    }
-
-    if (!data?.success) {
-      return { success: false, error: data?.error || 'Error al procesar el retiro.' };
-    }
-
-    return {
-      success: true,
-      withdrawal: { id: data.withdrawal_id, amount: data.amount, fee: data.fee, net_amount: data.net_amount }
-    };
-  } catch (error: any) {
-    const msg: string = error?.message || String(error);
-    if (msg.includes('Load failed') || msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
-      return { success: false, error: 'Error de conexión. Verifica tu internet e intenta de nuevo.' };
-    }
-    return { success: false, error: msg };
-  }
-}
-
-// ==========================================
 // CREDIT MODULE (Professional Recording)
 // ==========================================
 
@@ -268,44 +227,8 @@ export async function transferCredits(senderId: string, receiverEmail: string, a
     });
 
     if (error) throw error;
-
-    if (data?.success) {
-      // Registrar en el Ledger Principal (tabla transactions).
-      // NOTA: El RPC transfer_credits ya maneja credit_logs internamente,
-      // así que NO insertamos en credit_logs aquí para evitar duplicados.
-      const receiver = await getProfileByEmail(receiverEmail);
-      const recipientName = receiver?.full_name || receiver?.username || receiverEmail;
-
-      // SENDER Transaction (Debit)
-      await supabase.from('transactions').insert([{
-        user_id: senderId,
-        amount: -amount,
-        type: 'TRANSFER_OUT',
-        status: 'COMPLETED',
-        description: `Envío de Crédito a: ${recipientName} (${receiverEmail})`,
-        created_at: new Date().toISOString()
-      }]);
-
-      // RECEIVER Transaction (Credit)
-      if (receiver) {
-        const settings = await getSystemSettings();
-        const feePercent = settings?.credit_transfer_fee || 5;
-        const netAmount = amount * (1 - feePercent / 100);
-
-        const { data: sender } = await supabase.from('profiles').select('email, full_name').eq('id', senderId).single();
-        const senderName = sender?.full_name || sender?.email || 'Sistema';
-
-        await supabase.from('transactions').insert([{
-          user_id: receiver.id,
-          amount: netAmount,
-          type: 'TRANSFER_IN',
-          status: 'COMPLETED',
-          description: `Recepción de Crédito de: ${senderName}`,
-          created_at: new Date().toISOString()
-        }]);
-      }
-    }
-
+    // El RPC debe registrar balances y ledger de forma atÃ³mica.
+    // El cliente no escribe directamente en transactions ni credit_logs.
     return data;
   } catch (error: any) {
     console.error('Error transferring credits:', error);
@@ -321,28 +244,8 @@ export async function convertBalanceToCredit(userId: string, amount: number) {
     });
 
     if (error) throw error;
-
-    if (data?.success) {
-      // LOG Transaction in Main Ledger
-      await supabase.from('transactions').insert([{
-        user_id: userId,
-        amount: amount,
-        type: 'CONVERSION',
-        status: 'COMPLETED',
-        description: `Conversión Exitosa: Wallet Bank a Balance de Crédito`,
-        created_at: new Date().toISOString()
-      }]);
-
-      // Double Log for Credit UI
-      await supabase.from('credit_logs').insert([{
-        user_id: userId,
-        amount: amount,
-        type: 'CONVERSION',
-        description: `Conversión de Balance Bank`,
-        created_at: new Date().toISOString()
-      }]);
-    }
-
+    // El RPC debe registrar balance y ledger en una sola transacciÃ³n.
+    // El cliente no escribe directamente en transactions ni credit_logs.
     return data;
   } catch (error: any) {
     console.error('Error converting balance:', error);

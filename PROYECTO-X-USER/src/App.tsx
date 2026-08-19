@@ -6,7 +6,6 @@ import {
   createDeposit,
   createInvestment,
   createWithdrawal,
-  withdrawReglaDeOro,
   createOrUpdateProfile,
   updateUserProfile
 } from './services/database';
@@ -508,10 +507,7 @@ const App: React.FC = () => {
 
   const executeFinalWithdrawal = useCallback(async (amount: number, method: string, address: string) => {
     if (!user) return;
-
-    const result = method === 'Comisión Directa'
-      ? await withdrawReglaDeOro(user.id, amount, method, address)
-      : await createWithdrawal(user.id, amount, method, address);
+    const result = await createWithdrawal(user.id, amount, method, address);
 
     if (result.success) {
       setLastWithdrawal({ id: result.withdrawal.id, amount });
