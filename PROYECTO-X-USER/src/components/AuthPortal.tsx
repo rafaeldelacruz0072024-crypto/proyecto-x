@@ -159,6 +159,25 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       if (signUpError) throw signUpError;
       if (!authData.user) throw new Error(t('auth.errors.generic_register'));
 
+      // Supabase puede devolver el usuario sin una sesiÃ³n cuando exige confirmaciÃ³n de email.
+      // Nunca invoques complete_registration como anon: el RPC exige el rol authenticated.
+      const registrationSession = authData.session;
+      if (!registrationSession) {
+        localStorage.removeItem('nova_digital_referral');
+        localStorage.removeItem('nova_digital_binary_side');
+        document.cookie = 'nova_digital_ref=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+        setMode('login');
+        setError('Tu cuenta se creÃ³ correctamente. Revisa tu correo, confirma la cuenta y luego inicia sesiÃ³n.');
+        return;
+      }
+
+      // Instalar explÃ­citamente el JWT devuelto por signUp antes de llamar al RPC.
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: registrationSession.access_token,
+        refresh_token: registrationSession.refresh_token,
+      });
+      if (sessionError) throw sessionError;
+
       // 2. Esperar un momento para que el trigger cree el profile
       await new Promise(resolve => setTimeout(resolve, 1000));
 
