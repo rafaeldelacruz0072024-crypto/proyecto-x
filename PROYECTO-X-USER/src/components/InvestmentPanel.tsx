@@ -4,6 +4,7 @@ import type { Investment, Plan } from '../types';
 
 interface Props {
   onInvest: (amount: number, planId?: string) => void;
+  onWithdrawCapital: (investmentId: string) => Promise<boolean>;
   investments: Investment[];
   addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
   walletBalance: number;
@@ -20,6 +21,7 @@ const planAccent: Record<string, string> = {
 
 const InvestmentPanel: React.FC<Props> = ({
   onInvest,
+  onWithdrawCapital,
   investments,
   addNotification,
   walletBalance,
@@ -28,6 +30,7 @@ const InvestmentPanel: React.FC<Props> = ({
   const [plans, setPlans] = useState<Plan[]>([]);
   const [amounts, setAmounts] = useState<Record<string, string>>({});
   const [loadError, setLoadError] = useState('');
+  const [withdrawingId, setWithdrawingId] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -64,6 +67,17 @@ const InvestmentPanel: React.FC<Props> = ({
       return;
     }
     onInvest(amount, plan.id);
+  };
+
+  const withdrawCapital = async (investment: Investment) => {
+    const confirmed = window.confirm(
+      `¿Retirar $${Number(investment.amount).toFixed(2)} de capital y cerrar este Nodo Diario? El ROI ya acreditado permanece en tu Wallet Bank.`,
+    );
+    if (!confirmed) return;
+
+    setWithdrawingId(investment.id);
+    await onWithdrawCapital(investment.id);
+    setWithdrawingId(null);
   };
 
   return (
@@ -106,6 +120,11 @@ const InvestmentPanel: React.FC<Props> = ({
                 <div className={`mt-4 text-xs font-bold sm:text-sm ${isMaturity ? 'text-blue-300' : 'text-emerald-400'}`}>
                   {isMaturity ? 'Pago al vencimiento' : 'Pago diario'}
                 </div>
+                {!isMaturity && (
+                  <div className="mt-3 rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-3 py-2 text-xs font-semibold leading-relaxed text-emerald-300">
+                    Capital flexible: puedes retirarlo en cualquier momento.
+                  </div>
+                )}
 
                 <div className="mt-auto pt-5 sm:pt-6">
                   <label className="mb-2 block text-xs font-medium text-slate-300 sm:text-sm">Monto (mín. ${plan.min_amount.toFixed(0)})</label>
@@ -146,7 +165,10 @@ const InvestmentPanel: React.FC<Props> = ({
             <span className="text-sm font-bold text-blue-300">{activeInvestments.length}</span>
           </div>
           <div className="space-y-3">
-            {activeInvestments.map(investment => (
+            {activeInvestments.map(investment => {
+              const plan = plans.find(item => item.id === investment.plan_id);
+              const isDaily = plan?.code === 'DAILY';
+              return (
               <div key={investment.id} className="grid gap-3 rounded-xl border border-white/5 bg-black/20 p-4 text-sm sm:grid-cols-3 xl:grid-cols-6">
                 <div><p className="text-slate-500">Capital</p><p className="font-bold text-white">${Number(investment.amount).toFixed(2)}</p></div>
                 <div><p className="text-slate-500">Tasa asignada</p><p className="font-bold text-blue-300">{Number(investment.assigned_roi_percentage).toFixed(3)}%</p></div>
@@ -154,8 +176,23 @@ const InvestmentPanel: React.FC<Props> = ({
                 <div><p className="text-slate-500">Días procesados</p><p className="font-bold text-white">{investment.business_days_elapsed}</p></div>
                 <div><p className="text-slate-500">Última activación</p><p className="font-bold text-cyan-300">{investment.last_cycle_activation_on || 'Pendiente'}</p></div>
                 <div><p className="text-slate-500">Vencimiento</p><p className="font-bold text-white">{investment.matures_on || 'Sin plazo'}</p></div>
+                <div className="sm:col-span-3 xl:col-span-6">
+                  {isDaily ? (
+                    <button
+                      type="button"
+                      onClick={() => withdrawCapital(investment)}
+                      disabled={withdrawingId === investment.id}
+                      className="w-full rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 font-black text-emerald-300 transition hover:bg-emerald-400/20 disabled:cursor-wait disabled:opacity-50 sm:w-auto"
+                    >
+                      {withdrawingId === investment.id ? 'Liberando capital…' : `Retirar capital · $${Number(investment.amount).toFixed(2)}`}
+                    </button>
+                  ) : (
+                    <p className="text-xs font-semibold text-amber-300">Capital bloqueado hasta el vencimiento del ciclo.</p>
+                  )}
+                </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}

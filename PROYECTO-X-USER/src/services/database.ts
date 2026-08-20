@@ -116,6 +116,26 @@ export async function createInvestment(userId: string, amount: number, planId?: 
   }
 }
 
+export async function withdrawDailyNodeCapital(investmentId: string) {
+  try {
+    const { data, error } = await supabase.rpc('withdraw_daily_node_capital', {
+      p_investment_id: investmentId,
+    });
+
+    if (error) throw error;
+    if (!data?.success) throw new Error(data?.error || 'No se pudo liberar el capital.');
+
+    return {
+      success: true,
+      capitalReturned: Number(data.capital_returned || 0),
+      walletBalance: Number(data.wallet_balance || 0),
+    };
+  } catch (error: any) {
+    console.error('Error withdrawing daily node capital:', error);
+    return { success: false, error: error?.message || 'No se pudo liberar el capital.' };
+  }
+}
+
 
 // ==========================================
 // WITHDRAWALS

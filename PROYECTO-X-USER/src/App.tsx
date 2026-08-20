@@ -5,6 +5,7 @@ import { useUserData } from './hooks/useUserData';
 import {
   createDeposit,
   createInvestment,
+  withdrawDailyNodeCapital,
   createWithdrawal,
   createOrUpdateProfile,
   updateUserProfile
@@ -486,6 +487,21 @@ const App: React.FC = () => {
     }
     setProcessingInvestment(false);
   }, [walletBalance, user, addNotification, refetch, processingInvestment]);
+
+  const handleWithdrawDailyCapital = useCallback(async (investmentId: string) => {
+    const result = await withdrawDailyNodeCapital(investmentId);
+    if (!result.success) {
+      addNotification(`No se pudo retirar el capital: ${result.error}`, 'error');
+      return false;
+    }
+
+    addNotification(
+      `Capital de $${result.capitalReturned?.toFixed(2)} devuelto a Wallet Bank.`,
+      'success',
+    );
+    await refetch();
+    return true;
+  }, [addNotification, refetch]);
 
   // ✅ WITHDRAWAL - CONECTADO A SUPABASE
   const handleWithdrawal = useCallback((amount: number, method: string, address: string) => {
@@ -1049,6 +1065,7 @@ const App: React.FC = () => {
             <div className="mx-auto w-full max-w-6xl animate-slide-in">
               <InvestmentPanel
                 onInvest={handleInvestment}
+                onWithdrawCapital={handleWithdrawDailyCapital}
                 investments={investments || []}
                 addNotification={addNotification}
                 walletBalance={walletBalance}
@@ -1144,6 +1161,7 @@ const App: React.FC = () => {
                   </div>
                   <InvestmentPanel
                     onInvest={handleInvestment}
+                    onWithdrawCapital={handleWithdrawDailyCapital}
                     investments={investments || []}
                     addNotification={addNotification}
                     walletBalance={walletBalance}
