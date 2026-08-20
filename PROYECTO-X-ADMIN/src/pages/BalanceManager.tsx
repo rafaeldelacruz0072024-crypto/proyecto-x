@@ -200,24 +200,34 @@ const BalanceManager: React.FC = () => {
   const applySubtract = async () => {
     if (!selected) return;
     setProcessing(true);
+    try {
+      const adminId = (await supabase.auth.getUser()).data.user?.id;
+      if (!adminId) throw new Error('SesiÃ³n administrativa no disponible.');
+      const operations: Array<{ column: 'wallet_balance' | 'credit_balance'; amount: number; label: string }> = [];
+      if (subWalletNum > 0) operations.push({ column: 'wallet_balance', amount: -subWalletNum, label: `Wallet -${fmt(subWalletNum)}` });
+      if (subCreditNum > 0) operations.push({ column: 'credit_balance', amount: -subCreditNum, label: `CrÃ©dito -${fmt(subCreditNum)}` });
+      if (operations.length === 0) throw new Error('Indica un monto mayor que cero.');
 
-    const updates: Record<string, number> = {};
-    if (subWalletNum > 0) updates['wallet_balance'] = Math.max(selected.wallet_balance - subWalletNum, 0);
-    if (subCreditNum > 0) updates['credit_balance'] = Math.max(selected.credit_balance - subCreditNum, 0);
+      const operationKey = `balance_manager_${selected.id}_${Date.now()}`;
+      for (const operation of operations) {
+        const { data, error } = await supabase.rpc('admin_adjust_balance', {
+          p_user_id: selected.id,
+          p_balance_column: operation.column,
+          p_amount: operation.amount,
+          p_description: `Ajuste desde Balance Manager: ${operation.label}`,
+          p_reference_id: `${operationKey}_${operation.column}`,
+        });
+        if (error) throw error;
+        if (data && !data.success) throw new Error(data.error || data.message || 'El RPC rechazÃ³ el ajuste.');
+      }
 
-    const { error } = await supabase.from('profiles').update(updates).eq('id', selected.id);
-
-    if (error) {
-      showToast('Error al ajustar balances: ' + error.message, 'error');
-    } else {
-      const parts = [];
-      if (subWalletNum > 0) parts.push(`Wallet -$${fmt(subWalletNum)}`);
-      if (subCreditNum > 0) parts.push(`Crédito -$${fmt(subCreditNum)}`);
-      addLog('subtract_wallet', `${parts.join(' · ')} → ${selected.full_name || selected.email}`);
-      showToast('Balances ajustados correctamente', 'success');
+      addLog('subtract_wallet', `${operations.map(operation => operation.label).join(' Â· ')} â†’ ${selected.full_name || selected.email}`);
+      showToast('Balances ajustados correctamente mediante RPC atÃ³mico', 'success');
       setSubWallet('');
       setSubCredit('');
       await refreshUser();
+    } catch (error: any) {
+      showToast('Error al ajustar balances: ' + (error?.message || error), 'error');
     }
     setConfirmSubtract(false);
     setProcessing(false);
