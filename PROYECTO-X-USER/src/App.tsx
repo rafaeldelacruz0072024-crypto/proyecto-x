@@ -40,6 +40,7 @@ import WeeklyYieldChart from './components/WeeklyYieldChart';
 import SponsorWidget from './components/SponsorWidget';
 import WorldMapWidget from './components/WorldMapWidget';
 import LivePredictionMarketSimulation from './components/LivePredictionMarketSimulation';
+import LiveValidatedOperations from './components/LiveValidatedOperations';
 import { SocketMessage } from './services/websocket';
 import EventsPanel from './components/EventsPanel';
 import FlashOfferModal from './components/FlashOfferModal';
@@ -943,6 +944,9 @@ const App: React.FC = () => {
 
                   {/* MERCADOS DE PREDICCIÃ“N: visualizaciÃ³n local sin operaciones reales */}
                   <LivePredictionMarketSimulation />
+
+                  {/* FLUJO VISUAL: operaciones algorítmicas simuladas, sin impacto financiero */}
+                  <LiveValidatedOperations />
 
                   {/* CHARTS & TERMINAL */}
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
