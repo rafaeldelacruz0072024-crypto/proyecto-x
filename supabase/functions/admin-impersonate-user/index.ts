@@ -2,11 +2,17 @@ import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
 
 const USER_APP_URL = "https://proyecto-x-user.vercel.app/login";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://proyecto-x-admin.vercel.app",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
 const json = (body: Record<string, unknown>, status = 200) =>
   Response.json(body, {
     status,
     headers: {
+      ...corsHeaders,
       "Cache-Control": "no-store",
       "Content-Type": "application/json",
     },
@@ -14,6 +20,10 @@ const json = (body: Record<string, unknown>, status = 200) =>
 
 export default {
   fetch: withSupabase({ auth: ["publishable", "secret"] }, async (req, ctx) => {
+    if (req.method === "OPTIONS") {
+      return new Response("ok", { headers: corsHeaders });
+    }
+
     if (req.method !== "POST") return json({ error: "Método no permitido" }, 405);
 
     const authorization = req.headers.get("Authorization") ?? "";
