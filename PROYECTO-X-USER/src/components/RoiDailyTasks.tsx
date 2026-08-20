@@ -18,24 +18,12 @@ interface Props {
   addNotification: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-type HistoryDay = { task_day: string; completed_tasks: number };
+type HistoryDay = { task_day: string; completed_tasks: number; completed_at: string | null };
+type TaskCompletion = { task_code: TaskCode; task_day: string; completed_at: string };
 
 const localDate = () => new Intl.DateTimeFormat('en-CA', {
   timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit', day: '2-digit',
 }).format(new Date());
-
-const secondsUntilDailyCut = () => {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Santo_Domingo',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hourCycle: 'h23',
-  }).formatToParts(new Date());
-  const readPart = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find(part => part.type === type)?.value || 0);
-  const elapsed = (readPart('hour') * 3600) + (readPart('minute') * 60) + readPart('second');
-  return 24 * 3600 - elapsed;
-};
 
 const formatCountdown = (totalSeconds: number) => {
   const hours = Math.floor(totalSeconds / 3600);
@@ -51,24 +39,48 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   const [simulation, setSimulation] = useState<TaskCode | null>(null);
   const [history, setHistory] = useState<HistoryDay[]>([]);
   const [accumulatedRoi, setAccumulatedRoi] = useState(0);
-  const [secondsToCut, setSecondsToCut] = useState(secondsUntilDailyCut);
+  const [nextAvailableAt, setNextAvailableAt] = useState<Date | null>(null);
+  const [secondsToCut, setSecondsToCut] = useState(0);
   const activeTaskDay = useRef(localDate());
 
   const load = useCallback(async () => {
     if (!userId) return;
     setLoading(true);
     const [todayResult, historyResult, investmentsResult] = await Promise.all([
-      supabase.from('roi_daily_task_completions').select('task_code').eq('user_id', userId).eq('task_day', localDate()),
-      supabase.from('roi_daily_task_completions').select('task_day').eq('user_id', userId).order('task_day', { ascending: false }).limit(100),
+      supabase.from('roi_daily_task_completions').select('task_code, task_day, completed_at').eq('user_id', userId).eq('task_day', localDate()),
+      supabase.from('roi_daily_task_completions').select('task_code, task_day, completed_at').eq('user_id', userId).order('completed_at', { ascending: false }).limit(100),
       supabase.from('investments').select('accumulated_earnings').eq('user_id', userId),
     ]);
 
-    if (todayResult.error) addNotification('No se pudieron cargar las tareas diarias.', 'error');
-    else setCompleted(new Set((todayResult.data || []).map(item => item.task_code as TaskCode)));
+    if (todayResult.error || historyResult.error) {
+      addNotification('No se pudieron cargar las tareas diarias.', 'error');
+    } else {
+      const rows = (historyResult.data || []) as TaskCompletion[];
+      const groups = new Map<string, TaskCompletion[]>();
+      rows.forEach(row => groups.set(row.task_day, [...(groups.get(row.task_day) || []), row]));
+      const groupedHistory = [...groups.entries()].map(([task_day, completions]) => ({
+        task_day,
+        completed_tasks: completions.length,
+        completed_at: completions.length === 4
+          ? completions.reduce((latest, row) => row.completed_at > latest ? row.completed_at : latest, completions[0].completed_at)
+          : null,
+      })).sort((a, b) => b.task_day.localeCompare(a.task_day));
+      const latestComplete = groupedHistory
+        .filter(day => day.completed_tasks === 4 && day.completed_at)
+        .sort((a, b) => new Date(b.completed_at!).getTime() - new Date(a.completed_at!).getTime())[0];
+      const availableAt = latestComplete?.completed_at
+        ? new Date(new Date(latestComplete.completed_at).getTime() + 24 * 60 * 60 * 1000)
+        : null;
+      const coolingDown = !!availableAt && availableAt.getTime() > Date.now();
 
-    const counts = new Map<string, number>();
-    (historyResult.data || []).forEach(row => counts.set(row.task_day, (counts.get(row.task_day) || 0) + 1));
-    setHistory([...counts.entries()].map(([task_day, completed_tasks]) => ({ task_day, completed_tasks })).slice(0, 7));
+      setNextAvailableAt(coolingDown ? availableAt : null);
+      setCompleted(new Set(
+        coolingDown && latestComplete
+          ? rows.filter(row => row.task_day === latestComplete.task_day).map(row => row.task_code)
+          : ((todayResult.data || []) as TaskCompletion[]).map(item => item.task_code),
+      ));
+      setHistory(groupedHistory.slice(0, 7));
+    }
     setAccumulatedRoi((investmentsResult.data || []).reduce((sum, investment) => sum + Number(investment.accumulated_earnings || 0), 0));
     setLoading(false);
   }, [userId, addNotification]);
@@ -78,7 +90,14 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   useEffect(() => {
     const tick = () => {
       const currentTaskDay = localDate();
-      setSecondsToCut(secondsUntilDailyCut());
+      const remaining = nextAvailableAt
+        ? Math.max(0, Math.ceil((nextAvailableAt.getTime() - Date.now()) / 1000))
+        : 0;
+      setSecondsToCut(remaining);
+      if (nextAvailableAt && remaining === 0) {
+        setNextAvailableAt(null);
+        void load();
+      }
       if (activeTaskDay.current !== currentTaskDay) {
         activeTaskDay.current = currentTaskDay;
         void load();
@@ -88,7 +107,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
     tick();
     const interval = window.setInterval(tick, 1000);
     return () => window.clearInterval(interval);
-  }, [load]);
+  }, [load, nextAvailableAt]);
 
   const progress = useMemo(() => completed.size, [completed]);
 
@@ -139,10 +158,10 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
             <div className="flex items-center gap-3"><div className={`flex h-11 w-11 items-center justify-center border ${progress === 4 ? 'border-emerald-300 text-emerald-300' : 'border-proyecto-accent text-proyecto-accent'}`}>{progress === 4 ? <CheckCircle2 size={26} /> : <FileCheck2 size={24} />}</div><div><p className="font-orbitron text-2xl font-black text-white">{progress}/4</p><p className="text-[10px] font-mono-tech uppercase tracking-wider text-slate-400">Señales analizadas</p></div></div>
             <p className={`mt-3 text-xs ${progress === 4 ? 'text-emerald-300' : 'text-slate-400'}`}>{progress === 4 ? `Análisis confirmado el ${localDate()}. ROI solicitado para este ciclo.` : hasActiveContracts ? 'Completa la lectura del mercado para habilitar el ROI de hoy.' : 'Activa un contrato para habilitar el análisis.'}</p>
             <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
-              <div className="flex items-center gap-2 text-slate-400"><Clock3 size={14} /><span className="text-[9px] font-mono-tech uppercase tracking-wider">Próximo corte</span></div>
+              <div className="flex items-center gap-2 text-slate-400"><Clock3 size={14} /><span className="text-[9px] font-mono-tech uppercase tracking-wider">Próxima sesión</span></div>
               <div className="text-right">
-                <p className="font-mono text-sm font-bold tabular-nums text-proyecto-accent">{formatCountdown(secondsToCut)}</p>
-                <p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">00:00 · Santo Domingo</p>
+                <p className="font-mono text-sm font-bold tabular-nums text-proyecto-accent">{nextAvailableAt ? formatCountdown(secondsToCut) : 'Disponible'}</p>
+                <p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">24 h desde completar 4/4</p>
               </div>
             </div>
           </div>
