@@ -108,13 +108,19 @@ const Deposits: React.FC = () => {
 
         if (rpcError) throw rpcError;
         if (rpcData && !rpcData.success) throw new Error(rpcData.message);
+      } else if (type === 'DEPOSIT') {
+        const adminId = (await supabase.auth.getUser()).data.user?.id;
+        const { data: rpcData, error: rpcError } = await supabase.rpc('admin_reject_deposit_atomic', {
+          p_deposit_id: id,
+          p_admin_id: adminId,
+        });
+        if (rpcError) throw rpcError;
+        if (rpcData && !rpcData.success) throw new Error(rpcData.message || rpcData.error || 'El RPC rechazÃ³ el depÃ³sito.');
       } else {
-        const table = type === 'DEPOSIT' ? 'deposits' : 'withdrawals';
         const { error: updateErr } = await supabase
-          .from(table)
+          .from('withdrawals')
           .update({ status: 'REJECTED' })
           .eq('id', id);
-
         if (updateErr) throw updateErr;
       }
 
