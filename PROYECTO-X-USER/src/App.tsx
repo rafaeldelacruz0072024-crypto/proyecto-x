@@ -69,7 +69,6 @@ const App: React.FC = () => {
     transactions,
     investments,
     walletBalance,
-    creditBalance,
     referralCommissionBalance,
     networkTree,
     networkStats,

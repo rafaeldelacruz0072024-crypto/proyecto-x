@@ -565,7 +565,7 @@ export async function updateUserProfile(userId: string, updates: Partial<Profile
 // ==========================================
 export async function calculateBalance(userId: string): Promise<number> {
   try {
-    // Option 1: Trust 'credit_balance' column in profiles (Faster)
+    // Wallet Bank es el único saldo operativo de NOVA Digital.
     const { data, error } = await supabase
       .from('profiles')
       .select('wallet_balance')

@@ -572,7 +572,7 @@ const Investments: React.FC = () => {
                   <div className="p-4 bg-amber-500/5 rounded-2xl border border-amber-500/10 flex gap-3 text-amber-500">
                     <AlertCircle size={18} className="shrink-0 mt-0.5" />
                     <p className="text-[10px] font-bold leading-relaxed">
-                      Esto reiniciará únicamente las ganancias del contrato a $0 y lo reactivará desde hoy. El Wallet Bank y el Credit Balance del usuario no serán modificados.
+                      Esto reiniciará únicamente las ganancias del contrato a $0 y lo reactivará desde hoy. La Wallet Bank del usuario no será modificada.
                     </p>
                   </div>
 

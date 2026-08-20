@@ -40,7 +40,6 @@ const Deposits: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [injectAmount, setInjectAmount] = useState('');
   const [injectType, setInjectType] = useState<'ADD' | 'SUBTRACT'>('ADD');
-  const [targetBalance, setTargetBalance] = useState<'wallet_balance' | 'credit_balance'>('wallet_balance');
   const [injectDescription, setInjectDescription] = useState('');
   const [searchingUsers, setSearchingUsers] = useState(false);
 
@@ -183,7 +182,7 @@ const Deposits: React.FC = () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, email, wallet_balance, credit_balance')
+        .select('id, full_name, email, wallet_balance')
         .or(`full_name.ilike.%${val}%,email.ilike.%${val}%`)
         .limit(5);
 
@@ -214,7 +213,7 @@ const Deposits: React.FC = () => {
 
       const fingerprint = [
         selectedUser.id,
-        targetBalance,
+        'wallet_balance',
         finalAmount.toFixed(2),
         description,
       ].join('|');
@@ -235,7 +234,7 @@ const Deposits: React.FC = () => {
       // credit_logs y transactions se ejecutan dentro de Supabase.
       const { data, error } = await supabase.rpc('admin_adjust_balance', {
         p_user_id: selectedUser.id,
-        p_balance_column: targetBalance,
+        p_balance_column: 'wallet_balance',
         p_amount: finalAmount,
         p_description: description,
         p_reference_id: referenceId,
@@ -246,8 +245,7 @@ const Deposits: React.FC = () => {
         throw new Error(data?.message || 'El RPC rechazó el ajuste');
       }
 
-      const balanceLabel =
-        targetBalance === 'wallet_balance' ? 'Wallet Bank' : 'Credit Balance';
+      const balanceLabel = 'Wallet Bank';
       const resultingBalance = data.new_balance ?? data.current_balance;
       const idempotentNote = data.idempotent
         ? ' (reintento idempotente; no se duplicó)'
@@ -656,7 +654,7 @@ const Deposits: React.FC = () => {
                           <p className="text-[10px] text-slate-500">{u.email}</p>
                         </div>
                         <p className="text-xs font-black text-emerald-500">
-                          W: ${(u.wallet_balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | C: ${(u.credit_balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          Wallet Bank: ${(u.wallet_balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                       </button>
                     ))}
@@ -701,26 +699,15 @@ const Deposits: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Target Balance Selector */}
+                  {/* Single operational wallet */}
                   <div className="space-y-3">
                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Saldo a Afectar</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setTargetBalance('wallet_balance')}
-                        className={`flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${targetBalance === 'wallet_balance' ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-500' : 'bg-slate-950 border-slate-800 text-slate-500'}`}
-                      >
-                        <Wallet size={14} />
-                        Wallet Bank
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setTargetBalance('credit_balance')}
-                        className={`flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${targetBalance === 'credit_balance' ? 'bg-amber-500/10 border-amber-500/40 text-amber-500' : 'bg-slate-950 border-slate-800 text-slate-500'}`}
-                      >
-                        <Coins size={14} />
-                        Credit balance
-                      </button>
+                    <div className="flex items-center gap-3 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-emerald-400">
+                      <Wallet size={16} />
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest">Wallet Bank</p>
+                        <p className="text-[9px] text-slate-500">Saldo único para ciclos, comisiones y retiros.</p>
+                      </div>
                     </div>
                   </div>
 

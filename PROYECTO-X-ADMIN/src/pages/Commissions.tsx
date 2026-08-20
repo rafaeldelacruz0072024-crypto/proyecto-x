@@ -291,7 +291,7 @@ const Commissions: React.FC = () => {
                                                 <ArrowUpRight size={18} className="text-yellow-500" />
                                                 ${Number(log.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                             </span>
-                                            <span className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em]">Distributed Credit</span>
+                                            <span className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em]">Comisiones distribuidas</span>
                                         </div>
                                     </td>
                                     <td className="px-10 py-7 border-b border-slate-800/20 text-right">

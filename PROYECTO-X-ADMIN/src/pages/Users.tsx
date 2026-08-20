@@ -30,8 +30,8 @@ const ACCOUNT_TAGS = [
   },
   {
     value: 'REAL_CREDIT',
-    label: 'REAL CREDIT',
-    desc: 'Activación con Crédito',
+    label: 'REAL WALLET',
+    desc: 'Activación con Wallet Bank',
     style: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
     dot: 'bg-cyan-500'
   },
@@ -344,7 +344,6 @@ const Users: React.FC = () => {
                 <th className="px-8 py-6 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] text-center">Rango Elite</th>
                 <th className="px-8 py-6 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] text-right">Volumen Red</th>
                 <th className="px-8 py-6 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] text-right">W. Bank</th>
-                <th className="px-8 py-6 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] text-right">Credit</th>
                 <th className="px-8 py-6 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] text-center">Estatus</th>
                 <th className="px-8 py-6 text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] text-center">Acción</th>
               </tr>
@@ -352,7 +351,7 @@ const Users: React.FC = () => {
             <tbody className="divide-y divide-slate-800/30">
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-8 py-32 text-center text-slate-600 font-bold italic">
+                  <td colSpan={8} className="px-8 py-32 text-center text-slate-600 font-bold italic">
                     Sin resultados en la red...
                   </td>
                 </tr>
@@ -403,12 +402,6 @@ const Users: React.FC = () => {
                       <p className="text-base font-black text-emerald-500 tracking-tight">
                         <span className="text-[10px] opacity-50 mr-1">$</span>
                         {fmt(user.wallet_balance)}
-                      </p>
-                    </td>
-                    <td className="px-8 py-6 text-right">
-                      <p className="text-base font-black text-amber-500 tracking-tight">
-                        <span className="text-[10px] opacity-50 mr-1">$</span>
-                        {fmt(user.credit_balance)}
                       </p>
                     </td>
                     <td className="px-8 py-6 text-center">
@@ -702,19 +695,12 @@ const Users: React.FC = () => {
                 <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
                   <div className="bg-indigo-600/5 border border-indigo-600/10 p-8 rounded-[2.5rem] flex flex-col items-center justify-center gap-2">
                     <Wallet className="w-8 h-8 text-indigo-500 mb-1" />
-                    <div className="flex gap-10">
+                    <div>
                       <div className="text-center">
                         <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Wallet Bank</p>
                         <p className="text-3xl font-black text-emerald-500 tracking-tighter">
                           <span className="text-sm opacity-50 mr-1">$</span>
                           {fmt(selectedUser.wallet_balance)}
-                        </p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Credit Balance</p>
-                        <p className="text-3xl font-black text-amber-500 tracking-tighter">
-                          <span className="text-sm opacity-50 mr-1">$</span>
-                          {fmt(selectedUser.credit_balance)}
                         </p>
                       </div>
                     </div>

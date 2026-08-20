@@ -12,7 +12,6 @@ interface Profile {
   full_name: string | null;
   username: string | null;
   wallet_balance: number;
-  credit_balance: number;
   rank: string;
   user_tag?: string;
 }
@@ -32,7 +31,7 @@ interface Investment {
 
 interface OpLog {
   ts: string;
-  type: 'reset_package' | 'reset_all' | 'subtract_wallet' | 'subtract_credit';
+  type: 'reset_package' | 'reset_all' | 'subtract_wallet';
   detail: string;
 }
 
@@ -57,7 +56,6 @@ const BalanceManager: React.FC = () => {
 
   // Subtract state
   const [subWallet, setSubWallet] = useState('');
-  const [subCredit, setSubCredit] = useState('');
 
   // Reset per-package
   const [resetPkgTarget, setResetPkgTarget] = useState<Investment | null>(null);
@@ -70,12 +68,9 @@ const BalanceManager: React.FC = () => {
 
   // Derived
   const subWalletNum  = parseFloat(subWallet)  || 0;
-  const subCreditNum  = parseFloat(subCredit)  || 0;
   const newWallet     = Math.max((selected?.wallet_balance ?? 0) - subWalletNum, 0);
-  const newCredit     = Math.max((selected?.credit_balance ?? 0) - subCreditNum, 0);
-  const canSubtract   = subWalletNum > 0 || subCreditNum > 0;
+  const canSubtract   = subWalletNum > 0;
   const subWalletOver = subWalletNum > (selected?.wallet_balance ?? 0);
-  const subCreditOver = subCreditNum > (selected?.credit_balance ?? 0);
 
   const showToast = (msg: string, type: 'success' | 'error') => {
     setToast({ msg, type });
@@ -93,7 +88,7 @@ const BalanceManager: React.FC = () => {
       setSearching(true);
       const { data } = await supabase
         .from('profiles')
-        .select('id, email, full_name, username, wallet_balance, credit_balance, rank, user_tag')
+        .select('id, email, full_name, username, wallet_balance, rank, user_tag')
         .or(`email.ilike.%${query}%,full_name.ilike.%${query}%,username.ilike.%${query}%`)
         .limit(8);
       setResults(data ?? []);
@@ -107,7 +102,6 @@ const BalanceManager: React.FC = () => {
     setResults([]);
     setQuery('');
     setSubWallet('');
-    setSubCredit('');
     setConfirmAllReset(false);
     setConfirmSubtract(false);
     setResetPkgTarget(null);
@@ -203,28 +197,20 @@ const BalanceManager: React.FC = () => {
     try {
       const adminId = (await supabase.auth.getUser()).data.user?.id;
       if (!adminId) throw new Error('SesiÃ³n administrativa no disponible.');
-      const operations: Array<{ column: 'wallet_balance' | 'credit_balance'; amount: number; label: string }> = [];
-      if (subWalletNum > 0) operations.push({ column: 'wallet_balance', amount: -subWalletNum, label: `Wallet -${fmt(subWalletNum)}` });
-      if (subCreditNum > 0) operations.push({ column: 'credit_balance', amount: -subCreditNum, label: `CrÃ©dito -${fmt(subCreditNum)}` });
-      if (operations.length === 0) throw new Error('Indica un monto mayor que cero.');
+      if (subWalletNum <= 0) throw new Error('Indica un monto mayor que cero.');
+      const { data, error } = await supabase.rpc('admin_adjust_balance', {
+        p_user_id: selected.id,
+        p_balance_column: 'wallet_balance',
+        p_amount: -subWalletNum,
+        p_description: `Ajuste desde Balance Manager: Wallet Bank -${fmt(subWalletNum)}`,
+        p_reference_id: `balance_manager_${selected.id}_${Date.now()}`,
+      });
+      if (error) throw error;
+      if (data && !data.success) throw new Error(data.error || data.message || 'El RPC rechazó el ajuste.');
 
-      const operationKey = `balance_manager_${selected.id}_${Date.now()}`;
-      for (const operation of operations) {
-        const { data, error } = await supabase.rpc('admin_adjust_balance', {
-          p_user_id: selected.id,
-          p_balance_column: operation.column,
-          p_amount: operation.amount,
-          p_description: `Ajuste desde Balance Manager: ${operation.label}`,
-          p_reference_id: `${operationKey}_${operation.column}`,
-        });
-        if (error) throw error;
-        if (data && !data.success) throw new Error(data.error || data.message || 'El RPC rechazÃ³ el ajuste.');
-      }
-
-      addLog('subtract_wallet', `${operations.map(operation => operation.label).join(' Â· ')} â†’ ${selected.full_name || selected.email}`);
-      showToast('Balances ajustados correctamente mediante RPC atÃ³mico', 'success');
+      addLog('subtract_wallet', `Wallet Bank -${fmt(subWalletNum)} → ${selected.full_name || selected.email}`);
+      showToast('Wallet Bank ajustada correctamente mediante RPC atómico', 'success');
       setSubWallet('');
-      setSubCredit('');
       await refreshUser();
     } catch (error: any) {
       showToast('Error al ajustar balances: ' + (error?.message || error), 'error');
@@ -320,10 +306,6 @@ const BalanceManager: React.FC = () => {
               <div className="text-center">
                 <p className="text-xs font-black text-emerald-400">${fmt(selected.wallet_balance)}</p>
                 <p className="text-[8px] text-slate-600 uppercase">Wallet</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs font-black text-amber-400">${fmt(selected.credit_balance)}</p>
-                <p className="text-[8px] text-slate-600 uppercase">Crédito</p>
               </div>
               <button onClick={refreshUser} className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors">
                 <RefreshCw size={14} className="text-slate-400" />
@@ -448,33 +430,6 @@ const BalanceManager: React.FC = () => {
                 )}
               </div>
 
-              {/* Credit */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Crédito Balance</label>
-                  <span className="text-[10px] font-black text-amber-400">Actual: ${fmt(selected.credit_balance)}</span>
-                </div>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-sm">-$</span>
-                  <input
-                    type="number"
-                    value={subCredit}
-                    min="0"
-                    step="0.01"
-                    onChange={e => setSubCredit(e.target.value)}
-                    placeholder="0.00"
-                    className={`w-full bg-black/40 border-2 rounded-2xl py-4 pl-10 pr-4 text-white font-black text-lg outline-none transition-all ${
-                      subCreditOver ? 'border-red-500/60 text-red-400' : 'border-slate-800 focus:border-amber-500/50'
-                    }`}
-                  />
-                </div>
-                {subCreditNum > 0 && (
-                  <p className={`text-[9px] font-bold px-1 ${subCreditOver ? 'text-red-400' : 'text-slate-500'}`}>
-                    {subCreditOver ? '⚠ Excede el saldo disponible' : `Nuevo saldo: $${fmt(newCredit)}`}
-                  </p>
-                )}
-              </div>
-
               {/* Preview */}
               {canSubtract && (
                 <div className="rounded-2xl bg-black/30 border border-slate-800/60 p-4 space-y-2">
@@ -489,22 +444,12 @@ const BalanceManager: React.FC = () => {
                       </span>
                     </div>
                   )}
-                  {subCreditNum > 0 && (
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-400">Crédito</span>
-                      <span className="font-black">
-                        <span className="text-slate-500">${fmt(selected.credit_balance)}</span>
-                        <span className="text-rose-500 mx-1">→</span>
-                        <span className={subCreditOver ? 'text-red-400' : 'text-amber-400'}>${fmt(newCredit)}</span>
-                      </span>
-                    </div>
-                  )}
                 </div>
               )}
 
               <button
                 onClick={() => setConfirmSubtract(true)}
-                disabled={!canSubtract || processing || subWalletOver || subCreditOver}
+                disabled={!canSubtract || processing || subWalletOver}
                 className="w-full py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2
                   disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed
                   enabled:bg-rose-500/15 enabled:hover:bg-rose-500/25 enabled:border enabled:border-rose-500/30 enabled:text-rose-400"
@@ -640,16 +585,10 @@ const BalanceManager: React.FC = () => {
                   <span>${fmt(selected!.wallet_balance)} <span className="text-rose-500">→</span> <span className="text-emerald-400">${fmt(newWallet)}</span></span>
                 </div>
               )}
-              {subCreditNum > 0 && (
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Crédito Balance</span>
-                  <span>${fmt(selected!.credit_balance)} <span className="text-rose-500">→</span> <span className="text-amber-400">${fmt(newCredit)}</span></span>
-                </div>
-              )}
               <div className="h-px bg-slate-800" />
               <div className="flex justify-between items-center text-rose-400">
                 <span>Total sustraído</span>
-                <span>-${fmt(subWalletNum + subCreditNum)}</span>
+                <span>-${fmt(subWalletNum)}</span>
               </div>
             </div>
 
