@@ -25,7 +25,7 @@ import {
 
 const Deposits: React.FC = () => {
   const [deposits, setDeposits] = useState<any[]>([]);
-  const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
+  const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,9 +81,41 @@ const Deposits: React.FC = () => {
 
       if (withErr) throw withErr;
 
+      // Las inyecciones manuales del ADMIN no crean una solicitud en `deposits`.
+      // Su fuente de verdad es `credit_logs`, por lo que se incorporan al historial
+      // como depósitos aprobados de Wallet Bank.
+      const { data: manualDepositsData, error: manualErr } = await supabase
+        .from('credit_logs')
+        .select(`
+          id,
+          user_id,
+          amount,
+          description,
+          balance_column,
+          reference_id,
+          created_at,
+          profiles:user_id ( id, email, full_name )
+        `)
+        .eq('type', 'ADMIN_ADJUSTMENT')
+        .eq('balance_column', 'wallet_balance')
+        .gt('amount', 0)
+        .order('created_at', { ascending: false });
+
+      if (manualErr) throw manualErr;
+
       // Combine and mark types
       const combined = [
         ...(depositsData || []).map(d => ({ ...d, type: 'DEPOSIT' })),
+        ...(manualDepositsData || []).map(entry => ({
+          ...entry,
+          type: 'DEPOSIT',
+          status: 'APPROVED',
+          method: 'ADMIN',
+          is_manual_adjustment: true,
+          transaction_hash: entry.reference_id,
+          blockchain_tx_hash: null,
+          proof_url: null,
+        })),
         ...(withdrawalsData || []).map(w => ({ ...w, type: 'WITHDRAWAL' }))
       ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
@@ -436,13 +468,20 @@ const Deposits: React.FC = () => {
                       <p className={`text-2xl font-black tabular-nums ${dep.type === 'DEPOSIT' ? 'text-emerald-400' : 'text-rose-400'}`}>
                         {dep.type === 'DEPOSIT' ? '+' : '-'}${dep.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                       </p>
-                      <p className="text-[9px] text-slate-600 font-black uppercase tracking-[0.2em] mt-1">{dep.type === 'DEPOSIT' ? 'DEPÓSITO' : 'RETIRO'}</p>
+                      <p className="text-[9px] text-slate-600 font-black uppercase tracking-[0.2em] mt-1">
+                        {dep.is_manual_adjustment ? 'INYECCIÓN ADMIN' : (dep.type === 'DEPOSIT' ? 'DEPÓSITO' : 'RETIRO')}
+                      </p>
                     </div>
                   </td>
                   <td className="px-10 py-8 text-center">
                     <div className="flex flex-col items-center gap-3">
                       {dep.type === 'DEPOSIT' ? (
-                        dep.proof_url ? (
+                        dep.is_manual_adjustment ? (
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Wallet Bank</span>
+                            <span className="text-[9px] text-slate-500 max-w-40 text-center">{dep.description || 'Inyección manual de capital'}</span>
+                          </div>
+                        ) : dep.proof_url ? (
                           <button
                             onClick={() => setSelectedProofUrl(dep.proof_url || null)}
                             className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 rounded-xl transition-all transform hover:-translate-y-1 shadow-lg group/btn"
@@ -462,7 +501,14 @@ const Deposits: React.FC = () => {
 
                       {/* Blockchain Hash Section */}
                       <div className="flex items-center gap-2 max-w-[200px]">
-                        {editingHash && editingHash.id === dep.id ? (
+                        {dep.is_manual_adjustment ? (
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-[10px] font-mono text-slate-500">
+                              {dep.reference_id ? `REF: ${dep.reference_id.slice(0, 12)}...` : 'Ajuste administrativo'}
+                            </span>
+                            <span className="text-[8px] text-slate-600 font-bold uppercase tracking-tighter">Referencia de auditoría</span>
+                          </div>
+                        ) : editingHash && editingHash.id === dep.id ? (
                           <div className="flex items-center gap-1">
                             <input
                               type="text"
@@ -495,6 +541,9 @@ const Deposits: React.FC = () => {
                   <td className="px-10 py-8 text-center">
                     <StatusBadge status={dep.status} />
                     <p className="text-[9px] text-slate-500 font-bold mt-2 uppercase tracking-widest">{new Date(dep.created_at).toLocaleDateString()}</p>
+                    <p className="text-[8px] text-slate-600 font-bold mt-1 uppercase tracking-widest">
+                      {new Date(dep.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
                   </td>
                   <td className="px-10 py-8">
                     <div className="flex items-center justify-end gap-3">
