@@ -117,11 +117,14 @@ const Deposits: React.FC = () => {
         if (rpcError) throw rpcError;
         if (rpcData && !rpcData.success) throw new Error(rpcData.message || rpcData.error || 'El RPC rechazÃ³ el depÃ³sito.');
       } else {
-        const { error: updateErr } = await supabase
-          .from('withdrawals')
-          .update({ status: 'REJECTED' })
-          .eq('id', id);
-        if (updateErr) throw updateErr;
+        const adminId = (await supabase.auth.getUser()).data.user?.id;
+        const { data: rpcData, error: rpcError } = await supabase.rpc('reject_withdrawal', {
+          p_withdrawal_id: id,
+          p_reason: 'Rechazado desde Deposits Terminal',
+          p_admin_id: adminId,
+        });
+        if (rpcError) throw rpcError;
+        if (rpcData && !rpcData.success) throw new Error(rpcData.message || rpcData.error || 'El RPC rechazÃ³ el retiro.');
       }
 
       await fetchDeposits();
