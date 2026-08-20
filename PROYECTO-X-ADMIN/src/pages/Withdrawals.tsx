@@ -31,6 +31,7 @@ const Withdrawals: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'completed'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Modals state
   const [showRejectModal, setShowRejectModal] = useState<Withdrawal | null>(null);
@@ -45,6 +46,7 @@ const Withdrawals: React.FC = () => {
 
   const loadWithdrawals = async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const { data, error } = await supabase
         .from('withdrawals')
@@ -53,7 +55,6 @@ const Withdrawals: React.FC = () => {
           profiles:user_id (
             id,
             email,
-            name,
             full_name,
             user_tag
           )
@@ -65,32 +66,14 @@ const Withdrawals: React.FC = () => {
       setSelectedIds([]); // Clear selection on reload
     } catch (error: any) {
       console.error('Error loading withdrawals:', error);
+      setWithdrawals([]);
+      setLoadError(error?.message || 'No se pudieron cargar los retiros.');
     } finally {
       setLoading(false);
     }
   };
 
-  const getBalance = async (userId: string): Promise<number> => {
-    try {
-      const { data, error } = await supabase
-        .rpc('get_user_balance', { p_user_id: userId });
-
-      if (error) throw error;
-      return data || 0;
-    } catch (error) {
-      console.error('Error getting balance:', error);
-      return 0;
-    }
-  };
-
   const handleApprove = async (withdrawal: Withdrawal) => {
-    const balance = await getBalance(withdrawal.user_id);
-
-    if (balance < withdrawal.amount) {
-      alert(`⚠️ Balance insuficiente. El usuario tiene $${balance.toFixed(2)}, requiere $${withdrawal.amount.toFixed(2)}`);
-      return;
-    }
-
     if (!confirm(`¿ESTÁS SEGURO? Se aprobarán $${withdrawal.amount} para este usuario.`)) return;
 
     setProcessing(withdrawal.id);
@@ -132,13 +115,6 @@ const Withdrawals: React.FC = () => {
 
     for (const w of pendingToApprove) {
       try {
-        const balance = await getBalance(w.user_id);
-        if (balance < w.amount) {
-          console.warn(`Balance insuficiente para ${w.id}`);
-          failCount++;
-          continue;
-        }
-
         const { data: rpcData, error: rpcError } = await supabase.rpc('process_withdrawal_approval', {
           p_withdrawal_id: w.id,
           p_admin_id: (await supabase.auth.getUser()).data.user?.id
@@ -257,6 +233,11 @@ const Withdrawals: React.FC = () => {
 
   return (
     <div className="p-8 space-y-8 animate-in fade-in duration-700 max-w-[1600px] mx-auto">
+      {loadError && (
+        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm font-bold text-rose-300">
+          Error al cargar retiros: {loadError}
+        </div>
+      )}
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>

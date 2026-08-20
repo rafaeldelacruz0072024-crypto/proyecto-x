@@ -26,7 +26,7 @@ import {
 
 const Investments: React.FC = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
-  const [plans, setPlans] = useState<{ id: string, name: string }[]>([]);
+  const [plans, setPlans] = useState<{ id: string, name: string, code: string, duration_business_days: number | null, min_amount: number, max_amount: number | null }[]>([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -123,7 +123,7 @@ const Investments: React.FC = () => {
   const loadPlans = async () => {
     const { data } = await supabase
       .from('plans')
-      .select('id, name')
+      .select('id, name, code, duration_business_days, min_amount, max_amount')
       .eq('status', 'active');
     setPlans(data || []);
   };
@@ -138,7 +138,7 @@ const Investments: React.FC = () => {
         .from('transactions')
         .select('id, amount, type, status, description, reference_id, created_at')
         .eq('user_id', investment.user_id)
-        .in('type', ['DAILY_RETURN', 'REFERRAL_COMMISSION', 'WEEKLY_BONUS', 'bonus_weekly'])
+        .in('type', ['DAILY_RETURN', 'MATURITY_PAYOUT'])
         .gte('created_at', investment.created_at)
         .order('created_at', { ascending: false })
         .limit(200);
@@ -157,78 +157,27 @@ const Investments: React.FC = () => {
     setAuditError(null);
   };
 
-  const handleAuditCap = async () => {
-    if (!confirm('¿Deseas auditar todas las inversiones? Los contratos que llegaron al 200% serán marcados como COMPLETADOS.')) return;
-
-    setProcessing('audit');
-    try {
-      const activeInvests = investments.filter(i => i.status === 'ACTIVE');
-      let completedCount = 0;
-
-      for (const inv of activeInvests) {
-        // Deep Audit: Recalculate from transaction ledger to catch commissions 
-        // that might have missed the accumulated_earnings update.
-        const { data: txs } = await supabase
-          .from('transactions')
-          .select('amount')
-          .eq('user_id', inv.user_id)
-          .in('type', ['DAILY_RETURN', 'REFERRAL_COMMISSION', 'WEEKLY_BONUS', 'bonus_weekly'])
-          .gte('created_at', inv.created_at); // Only count earnings since this investment started
-
-        const realEarnings = (txs || []).reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
-        const threshold = inv.amount * 2;
-        const isCompleted = realEarnings >= threshold;
-
-        // If data is out of sync or threshold is hit, update the record
-        if (realEarnings !== inv.accumulated_earnings || isCompleted) {
-          const cappedEarnings = Math.min(realEarnings, threshold);
-          const { error } = await supabase
-            .from('investments')
-            .update({
-              accumulated_earnings: cappedEarnings,
-              status: isCompleted ? 'COMPLETED' : 'ACTIVE',
-              completed_at: isCompleted ? new Date().toISOString() : (inv.completed_at || null)
-            })
-            .eq('id', inv.id);
-
-          if (!error && isCompleted) completedCount++;
-        }
-      }
-
-      alert(`Auditoría finalizada.\n✅ Contratos saturados: ${completedCount}`);
-      await loadInvestments();
-    } catch (err: any) {
-      alert('Error en auditoría: ' + err.message);
-    } finally {
-      setProcessing(null);
-    }
-  };
-
   const handleCreateInvestment = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     const amount = parseFloat(newInvestment.amount);
 
-    if (!newInvestment.userId || !newInvestment.planId || isNaN(amount) || amount < 5) {
-      setError("Completa todos los campos correctamente. El monto mínimo es $5.");
+    if (!newInvestment.userId || !newInvestment.planId || isNaN(amount) || amount <= 0) {
+      setError("Completa todos los campos correctamente.");
       return;
     }
 
     setProcessing('create');
     try {
-      const { error } = await supabase
-        .from('investments')
-        .insert([{
-          user_id: newInvestment.userId,
-          plan_id: newInvestment.planId,
-          amount: amount,
-          status: 'ACTIVE',
-          accumulated_earnings: 0,
-          is_referral_commission_paid: !newInvestment.generateCommission,
-          created_at: new Date().toISOString()
-        }]);
+      const { data, error } = await supabase.rpc('admin_activate_investment', {
+        p_user_id: newInvestment.userId,
+        p_plan_id: newInvestment.planId,
+        p_amount: amount,
+        p_generate_commission: newInvestment.generateCommission
+      });
 
       if (error) throw error;
+      if (!data?.success) throw new Error(data?.message || 'No se pudo activar el ciclo.');
 
       setIsModalOpen(false);
       setNewInvestment({ userId: '', planId: '', amount: '', generateCommission: true });
@@ -241,22 +190,8 @@ const Investments: React.FC = () => {
     }
   };
   const confirmDelete = async () => {
-    if (!deleteTarget) return;
-    setProcessing('delete');
-    try {
-      const { error } = await supabase
-        .from('investments')
-        .delete()
-        .eq('id', deleteTarget.id);
-      if (error) throw error;
-      await loadInvestments();
-      setDeleteSuccess(true);
-    } catch (err: any) {
-      alert('Error al eliminar: ' + err.message);
-      setDeleteTarget(null);
-    } finally {
-      setProcessing(null);
-    }
+    alert('La eliminación directa de contratos está deshabilitada para proteger el historial financiero. Usa el reinicio controlado del ciclo.');
+    setDeleteTarget(null);
   };
 
   const confirmReset = async () => {
@@ -294,9 +229,9 @@ const Investments: React.FC = () => {
   };
 
   const getProgress = (inv: Investment) => {
-    const target = inv.amount * 2;
-    const progress = (inv.accumulated_earnings / target) * 100;
-    return Math.min(progress, 100);
+    const plan = plans.find(p => p.id === inv.plan_id);
+    if (!plan?.duration_business_days) return 100;
+    return Math.min(((inv.business_days_elapsed || 0) / plan.duration_business_days) * 100, 100);
   };
 
   const filtered = investments.filter(i => {
@@ -339,19 +274,10 @@ const Investments: React.FC = () => {
             </div>
             Investment Audit
           </h1>
-          <p className="text-slate-500 font-medium mt-2">Monitoreo de capital y cumplimiento de Meta 200%.</p>
+          <p className="text-slate-500 font-medium mt-2">Monitoreo de capital, días hábiles y rendimiento por ciclo.</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
-          <button
-            onClick={handleAuditCap}
-            disabled={!!processing}
-            className="flex items-center gap-2 px-6 py-4 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-3xl font-black text-xs uppercase tracking-widest border border-slate-800 transition-all active:scale-95"
-          >
-            {processing === 'audit' ? <Loader2 size={18} className="animate-spin" /> : <ShieldCheck size={18} />}
-            Auditar 200% Cap
-          </button>
-
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-lg shadow-indigo-600/20 transition-all active:scale-95 translate-y-[-2px]"
@@ -419,7 +345,7 @@ const Investments: React.FC = () => {
             <thead>
               <tr className="bg-slate-900/60 text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] border-b border-slate-800/50">
                 <th className="px-10 py-6">Inversor & Progreso</th>
-                <th className="px-10 py-6 text-center">Capital / Objetivo 200%</th>
+                <th className="px-10 py-6 text-center">Capital / Duración</th>
                 <th className="px-10 py-6 text-center">Beneficio Generado</th>
                 <th className="px-10 py-6 text-center">Estado</th>
                 <th className="px-10 py-6 text-right">Acciones</th>
@@ -443,7 +369,9 @@ const Investments: React.FC = () => {
                 </tr>
               ) : filtered.map((inv) => {
                 const progress = getProgress(inv);
-                const falta = (inv.amount * 2) - inv.accumulated_earnings;
+                const plan = plans.find(p => p.id === inv.plan_id);
+                const elapsed = inv.business_days_elapsed || 0;
+                const duration = plan?.duration_business_days;
 
                 return (
                   <tr key={inv.id} className="group hover:bg-white/[0.02] transition-colors">
@@ -460,12 +388,12 @@ const Investments: React.FC = () => {
 
                           <div className="space-y-1">
                             <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                              <span>ROI Progress</span>
-                              <span className={progress >= 100 ? 'text-rose-500' : 'text-indigo-400'}>{progress.toFixed(1)}% / 200%</span>
+                              <span>Progreso del ciclo</span>
+                              <span className={progress >= 100 ? 'text-emerald-500' : 'text-indigo-400'}>{duration ? `${elapsed}/${duration} días` : 'Plan diario'}</span>
                             </div>
                             <div className="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700/50">
                               <div
-                                className={`h-full transition-all duration-1000 ${progress >= 100 ? 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.5)]' : 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]'}`}
+                                className={`h-full transition-all duration-1000 ${progress >= 100 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]'}`}
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
@@ -476,15 +404,13 @@ const Investments: React.FC = () => {
                     <td className="px-10 py-8 text-center">
                       <div className="inline-block p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
                         <p className="text-2xl font-black text-white tabular-nums">${inv.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1">META: ${(inv.amount * 2).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1">{plan?.name || 'Plan'} · {duration ? `${duration} días hábiles` : 'pago diario'}</p>
                       </div>
                     </td>
                     <td className="px-10 py-8 text-center">
                       <div className="space-y-1">
                         <p className="text-2xl font-black text-emerald-500 tabular-nums">${inv.accumulated_earnings.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
-                        <p className={`text-[10px] font-black uppercase tracking-widest ${falta <= 0 ? 'text-emerald-500' : 'text-slate-600'}`}>
-                          {falta <= 0 ? 'META COMPLETADA' : `FALTA: $${falta.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-                        </p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">ROI fijo: {Number(inv.assigned_roi_percentage || 0).toFixed(2)}%</p>
                       </div>
                     </td>
                     <td className="px-10 py-8 text-center">
@@ -509,13 +435,6 @@ const Investments: React.FC = () => {
                           >
                             <RotateCcw size={16} />
                           </button>
-                          <button
-                            onClick={() => { setDeleteTarget(inv); setDeleteSuccess(false); }}
-                            className="p-2 text-slate-600 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
-                            title="Eliminar / Reemplazar Inversión"
-                          >
-                            <Trash2 size={16} />
-                          </button>
                         </div>
                       </div>
                     </td>
@@ -530,10 +449,10 @@ const Investments: React.FC = () => {
       {/* CYCLE AUDIT MODAL */}
       {auditTarget && (() => {
         const auditTargetAmount = Number(auditTarget.amount) || 0;
-        const auditTargetCap = auditTargetAmount * 2;
         const ledgerTotal = auditTransactions.reduce((sum, tx) => sum + (Number(tx.amount) || 0), 0);
-        const gap = Math.max(auditTargetCap - Number(auditTarget.accumulated_earnings || 0), 0);
-        const progress = auditTargetCap > 0 ? Math.min((Number(auditTarget.accumulated_earnings || 0) / auditTargetCap) * 100, 100) : 0;
+        const auditPlan = plans.find(p => p.id === auditTarget.plan_id);
+        const auditDuration = auditPlan?.duration_business_days;
+        const progress = auditDuration ? Math.min(((auditTarget.business_days_elapsed || 0) / auditDuration) * 100, 100) : 100;
         const lastEvent = auditTransactions[0]?.created_at;
         return (
           <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
@@ -565,7 +484,7 @@ const Investments: React.FC = () => {
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                   <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Capital</p><p className="text-xl font-black text-white mt-1">${auditTargetAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p></div>
-                  <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Meta 200%</p><p className="text-xl font-black text-indigo-400 mt-1">${auditTargetCap.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p></div>
+                  <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Duración</p><p className="text-xl font-black text-indigo-400 mt-1">{auditDuration ? `${auditTarget.business_days_elapsed || 0}/${auditDuration} días` : 'Diario'}</p></div>
                   <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Acumulado</p><p className="text-xl font-black text-emerald-400 mt-1">${Number(auditTarget.accumulated_earnings || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</p></div>
                   <div className="bg-black/30 border border-slate-800 rounded-2xl p-4"><p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Eventos ledger</p><p className="text-xl font-black text-cyan-400 mt-1">{auditTransactions.length}</p></div>
                 </div>
@@ -576,7 +495,7 @@ const Investments: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[10px] font-bold">
                     <span className="text-slate-500 flex items-center gap-2"><CalendarDays size={13} /> Activado: <b className="text-slate-300">{new Date(auditTarget.created_at).toLocaleString('es-ES')}</b></span>
                     <span className="text-slate-500">Estado: <b className="text-white">{auditTarget.status}</b></span>
-                    <span className="text-slate-500">Pendiente: <b className={gap > 0 ? 'text-amber-400' : 'text-emerald-400'}>${gap.toLocaleString('en-US', { minimumFractionDigits: 2 })}</b></span>
+                    <span className="text-slate-500">ROI asignado: <b className="text-emerald-400">{Number(auditTarget.assigned_roi_percentage || 0).toFixed(2)}%</b></span>
                   </div>
                 </div>
 
@@ -616,7 +535,7 @@ const Investments: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-black text-white uppercase tracking-tight">Reiniciar Inversión</h3>
-                    <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Ganancias, balance y wallet → $0</p>
+                    <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Solo reinicia el ciclo y su ROI pendiente</p>
                   </div>
                   <button onClick={() => setResetTarget(null)} className="ml-auto p-2 hover:bg-slate-800 rounded-xl text-slate-500 hover:text-white transition-colors">
                     <X size={20} />
@@ -684,7 +603,7 @@ const Investments: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-white uppercase tracking-tight mb-2">Inversión Reiniciada</h3>
-                  <p className="text-sm text-slate-500">Ganancias, balance y wallet han sido reseteados a $0. La inversión arranca desde hoy.</p>
+                  <p className="text-sm text-slate-500">El ciclo fue reiniciado. Los balances del usuario no fueron modificados.</p>
                 </div>
                 <button
                   onClick={() => { setResetTarget(null); setResetSuccess(false); }}

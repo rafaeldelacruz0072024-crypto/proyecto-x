@@ -65,7 +65,7 @@ const Deposits: React.FC = () => {
         .from('deposits')
         .select(`
           *,
-          profiles:user_id ( id, email, name, full_name )
+          profiles:user_id ( id, email, full_name )
         `)
         .order('created_at', { ascending: false });
 
@@ -76,7 +76,7 @@ const Deposits: React.FC = () => {
         .from('withdrawals')
         .select(`
           *,
-          profiles:user_id ( id, email, name, full_name )
+          profiles:user_id ( id, email, full_name )
         `)
         .order('created_at', { ascending: false });
 

@@ -43,7 +43,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     );
   }
 
-  if (!user || profile?.role !== 'admin') {
+  if (!user || !['admin', 'sub-admin'].includes(profile?.role || '')) {
     return <Navigate to="/login" replace />;
   }
 
