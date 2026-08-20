@@ -54,8 +54,8 @@ const initials = (node: TreeNode) => {
 
 const sideLabel = (side: BinarySide | null) => side === 'LEFT' ? 'Izquierda' : side === 'RIGHT' ? 'Derecha' : 'Raíz';
 
-function BinaryNodeCard({ node, selected, onSelect }: { node: TreeNode; selected: boolean; onSelect: (node: TreeNode) => void }) {
-  const accent = node.side === 'RIGHT' ? 'violet' : 'cyan';
+function BinaryNodeCard({ node, legSide, selected, onSelect }: { node: TreeNode; legSide: BinarySide | null; selected: boolean; onSelect: (node: TreeNode) => void }) {
+  const accent = (legSide ?? node.side) === 'RIGHT' ? 'violet' : 'cyan';
   return (
     <button
       type="button"
@@ -85,10 +85,11 @@ function BinaryNodeCard({ node, selected, onSelect }: { node: TreeNode; selected
   );
 }
 
-function EmptyBinarySlot({ side }: { side: BinarySide }) {
+function EmptyBinarySlot({ side, legSide }: { side: BinarySide; legSide: BinarySide | null }) {
+  const accent = legSide ?? side;
   return (
-    <div className={`flex h-[105px] w-[160px] sm:w-[176px] flex-col items-center justify-center rounded-xl border border-dashed bg-black/20 text-center ${side === 'RIGHT' ? 'border-violet-300/35' : 'border-cyan-300/35'}`}>
-      <span className={`text-[9px] font-orbitron font-black uppercase tracking-[.2em] ${side === 'RIGHT' ? 'text-violet-200' : 'text-cyan-200'}`}>{side}</span>
+    <div className={`flex h-[105px] w-[160px] sm:w-[176px] flex-col items-center justify-center rounded-xl border border-dashed bg-black/20 text-center ${accent === 'RIGHT' ? 'border-violet-300/35' : 'border-cyan-300/35'}`}>
+      <span className={`text-[9px] font-orbitron font-black uppercase tracking-[.2em] ${accent === 'RIGHT' ? 'text-violet-200' : 'text-cyan-200'}`}>{side}</span>
       <span className="mt-2 text-[10px] font-mono-tech text-slate-500">Posición disponible</span>
       <span className="mt-1 text-[8px] uppercase tracking-widest text-slate-600">Comparte este enlace</span>
     </div>
@@ -160,23 +161,35 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
     treeViewportRef.current?.scrollTo({ left: Math.max(0, (treeViewportRef.current.scrollWidth - treeViewportRef.current.clientWidth) / 2), top: 0, behavior: 'smooth' });
   };
 
-  const renderNode = (node: TreeNode): React.ReactNode => {
+  const renderNode = (node: TreeNode, legSide: BinarySide | null = null): React.ReactNode => {
     const children = childMap.get(node.id) || {};
     const canExpand = node.depth < visibleDepth;
+    const isRoot = node.depth === 0;
+    const childGap = isRoot ? 'gap-6 sm:gap-10 md:gap-16 xl:gap-24' : 'gap-4 sm:gap-6 md:gap-10';
     return (
-      <div key={node.id} className="flex flex-col items-center">
-        <BinaryNodeCard node={node} selected={selectedNode?.id === node.id} onSelect={setSelectedNode} />
+      <div key={node.id} className="flex w-max min-w-[176px] flex-col items-center">
+        <BinaryNodeCard node={node} legSide={legSide} selected={selectedNode?.id === node.id} onSelect={setSelectedNode} />
         {canExpand && (
-          <div className="relative flex items-start gap-2 pt-8 sm:gap-4 md:gap-10">
+          <div className={`relative flex w-max items-start pt-8 ${childGap}`}>
             <div className="absolute left-1/4 right-1/4 top-3 h-px bg-gradient-to-r from-cyan-300/20 via-white/25 to-violet-300/20" />
             <div className="absolute left-1/2 top-0 h-5 w-px -translate-x-1/2 bg-white/25" />
-            {(['LEFT', 'RIGHT'] as const).map(side => (
-              <div key={side} className="relative flex min-w-[160px] sm:w-[176px] flex-col items-center pt-2">
-                <span className={`mb-2 text-[8px] font-orbitron font-black uppercase tracking-[.25em] ${side === 'RIGHT' ? 'text-violet-200' : 'text-cyan-200'}`}>{side}</span>
-                <div className="h-3 w-px bg-white/20" />
-                {children[side] ? renderNode(children[side] as TreeNode) : <EmptyBinarySlot side={side} />}
-              </div>
-            ))}
+            {(['LEFT', 'RIGHT'] as const).map(side => {
+              const branchLeg = isRoot ? side : legSide;
+              const branchAccent = branchLeg ?? side;
+              return (
+                <div
+                  key={side}
+                  data-tree-leg={isRoot ? side : undefined}
+                  className={`relative flex w-max min-w-[176px] flex-col items-center pt-2 ${isRoot ? `rounded-2xl border px-4 pb-5 sm:px-6 md:px-8 ${branchAccent === 'RIGHT' ? 'border-violet-400/25 bg-violet-500/[.035] shadow-[0_0_35px_rgba(139,92,246,.08)]' : 'border-cyan-400/25 bg-cyan-500/[.035] shadow-[0_0_35px_rgba(34,211,238,.08)]'}` : ''}`}
+                >
+                  <span className={`mb-2 text-[8px] font-orbitron font-black uppercase tracking-[.25em] ${branchAccent === 'RIGHT' ? 'text-violet-200' : 'text-cyan-200'}`}>
+                    {isRoot ? `Rama ${side === 'LEFT' ? 'izquierda' : 'derecha'}` : side}
+                  </span>
+                  <div className="h-3 w-px bg-white/20" />
+                  {children[side] ? renderNode(children[side] as TreeNode, branchLeg) : <EmptyBinarySlot side={side} legSide={branchLeg} />}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
