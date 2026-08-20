@@ -237,8 +237,9 @@ const PredictionMarkets: React.FC = () => {
                 .eq('market_id', market.id)
                 .eq('status', 'ACTIVE');
             for (const bet of (activeBets || [])) {
-                await supabase.from('profiles').update({ wallet_balance: supabase.rpc as any }).eq('id', bet.user_id);
-                await supabase.rpc('admin_refund_bet' as any, { p_bet_id: bet.id });
+                const { data: refundData, error: refundError } = await supabase.rpc('admin_refund_bet', { p_bet_id: bet.id });
+                if (refundError) throw refundError;
+                if (refundData && !refundData.success) throw new Error(refundData.error || refundData.message || 'El RPC rechazÃ³ el reembolso.');
             }
             fetchMarkets();
         }
