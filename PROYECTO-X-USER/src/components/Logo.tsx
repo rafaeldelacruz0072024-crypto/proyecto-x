@@ -7,7 +7,7 @@ interface Props {
   glow?: boolean;
 }
 
-const Logo: React.FC<Props> = ({ size = 'md', className = '', glow = false }) => {
+const Logo: React.FC<Props> = ({ size = 'md', className = '', variant = 'blue', glow = false }) => {
   const dimensions = {
     sm:  { mark: 'w-10 h-10', name: 'text-sm tracking-[0.18em]', glow: 'w-14 h-14 md:w-16 md:h-16' },
     md:  { mark: 'w-14 h-14', name: 'text-xl tracking-[0.2em]', glow: 'w-40 h-14' },
@@ -34,10 +34,12 @@ const Logo: React.FC<Props> = ({ size = 'md', className = '', glow = false }) =>
             </linearGradient>
           </defs>
         </svg>
-        <div className="leading-none text-left">
-          <div className={`${dimensions[size].name} font-black uppercase text-white`}>NOVA</div>
-          <div className="mt-1 text-[0.42rem] font-bold uppercase tracking-[0.38em] text-cyan-200/80">Digital</div>
-        </div>
+        {variant !== 'icon' && (
+          <div className="leading-none text-left">
+            <div className={`${dimensions[size].name} font-black uppercase text-white`}>NOVA</div>
+            <div className="mt-1 text-[0.42rem] font-bold uppercase tracking-[0.38em] text-cyan-200/80">Digital</div>
+          </div>
+        )}
       </div>
     </div>
   );

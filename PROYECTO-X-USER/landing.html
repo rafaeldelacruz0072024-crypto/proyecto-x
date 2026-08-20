@@ -1131,6 +1131,273 @@
         iframe.skiptranslate {
             display: none !important;
         }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                scroll-padding-top: 72px;
+            }
+
+            body {
+                overflow-x: hidden;
+                background-attachment: scroll;
+            }
+
+            .nav {
+                min-height: 64px;
+                padding: .65rem .8rem;
+                padding-top: calc(.65rem + env(safe-area-inset-top));
+            }
+
+            .mobile-nav {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: space-between;
+                gap: .65rem;
+            }
+
+            .mobile-brand {
+                display: flex;
+                min-width: 0;
+                align-items: center;
+                gap: .45rem;
+                color: #fff;
+                font-family: 'Outfit', sans-serif;
+                font-size: .76rem;
+                font-weight: 900;
+                letter-spacing: .12em;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+
+            .mobile-brand-mark {
+                display: grid;
+                width: 34px;
+                height: 34px;
+                flex: 0 0 auto;
+                place-items: center;
+                border: 1px solid rgba(0,243,255,.35);
+                background: linear-gradient(135deg, rgba(0,243,255,.2), rgba(124,77,255,.2));
+                color: var(--cyan);
+                font-size: 1rem;
+                box-shadow: 0 0 18px rgba(0,243,255,.12);
+            }
+
+            .mobile-actions {
+                display: flex;
+                flex: 0 0 auto;
+                gap: .4rem;
+            }
+
+            .mobile-action {
+                display: inline-flex;
+                min-height: 40px;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(0,243,255,.28);
+                padding: .5rem .65rem;
+                color: var(--cyan);
+                font-family: 'Outfit', sans-serif;
+                font-size: .61rem;
+                font-weight: 800;
+                letter-spacing: .08em;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .mobile-action.primary {
+                border-color: transparent;
+                background: var(--brand);
+                color: #fff;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: calc(4.75rem + env(safe-area-inset-top)) 1rem 3.5rem;
+                align-items: flex-start;
+            }
+
+            .hero::before {
+                background: linear-gradient(180deg, rgba(2,5,26,.28) 0%, rgba(2,5,26,.58) 34%, #02051a 65%), url('/nova-global-market-background.png') 68% top / auto 52% no-repeat;
+            }
+
+            .hero-content {
+                width: 100%;
+                max-width: none;
+                margin-left: 0;
+                padding-top: 12.25rem;
+            }
+
+            .hero-badge {
+                max-width: 100%;
+                margin-bottom: 1.25rem;
+                padding: .45rem .75rem;
+                font-size: .55rem;
+                letter-spacing: .12em;
+                line-height: 1.45;
+            }
+
+            .hero h1 {
+                font-size: clamp(2rem, 10vw, 2.8rem);
+                line-height: 1.03;
+                overflow-wrap: anywhere;
+            }
+
+            .hero p {
+                margin-bottom: 1.5rem;
+                font-size: .98rem;
+                line-height: 1.58;
+            }
+
+            .hero-ctas {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: .75rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                min-height: 50px;
+                justify-content: center;
+                padding: .9rem 1rem;
+                font-size: .75rem;
+            }
+
+            .hero-rate {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: .75rem;
+                margin-top: 2rem;
+            }
+
+            .hero-rate-item {
+                min-width: 0;
+                border: 1px solid rgba(0,243,255,.1);
+                background: rgba(4,12,40,.68);
+                padding: .85rem .5rem;
+            }
+
+            .hero-rate-item:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .hero-rate-item .val {
+                font-size: 1.25rem;
+            }
+
+            .hero-rate-item .lbl {
+                letter-spacing: .1em;
+                line-height: 1.35;
+            }
+
+            section {
+                padding: 4rem 1rem;
+            }
+
+            .section-title {
+                font-size: clamp(1.75rem, 9vw, 2.35rem);
+                line-height: 1.08;
+                overflow-wrap: anywhere;
+            }
+
+            .section-sub {
+                margin-bottom: 2rem;
+                font-size: .94rem;
+                line-height: 1.6;
+            }
+
+            .section-tag {
+                max-width: 100%;
+                font-size: .56rem;
+                letter-spacing: .16em;
+                line-height: 1.4;
+            }
+
+            .stats-grid,
+            .plans-grid {
+                gap: 1rem;
+            }
+
+            .stat-card,
+            .plan-card,
+            .sec-card {
+                padding: 1.4rem 1.15rem;
+            }
+
+            #ecosystem .section-container > div[style*="display:grid"],
+            #prediction-markets .section-container > div[style*="display:grid"],
+            #security .section-container > div[style*="display:grid"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+                margin-top: 1.5rem !important;
+            }
+
+            #nova-digital-card {
+                padding: 4rem 1rem !important;
+            }
+
+            #nova-digital-card > div > div[style*="display:flex"] {
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+            }
+
+            #nova-digital-card .card-visual,
+            #nova-digital-card .card-content {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            #nova-digital-card .card-visual img {
+                transform: none !important;
+                border-radius: 12px !important;
+            }
+
+            #nova-digital-card .card-content > div[style*="display:grid"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            footer {
+                padding: 2.5rem 1rem calc(2.5rem + env(safe-area-inset-bottom));
+            }
+
+            footer .legal {
+                letter-spacing: .07em;
+                overflow-wrap: anywhere;
+            }
+
+            .hero-orb,
+            .hero-orb-2 {
+                opacity: .55;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .mobile-brand {
+                font-size: 0;
+            }
+
+            .mobile-action {
+                padding-inline: .5rem;
+                font-size: .56rem;
+            }
+
+            .hero-content {
+                padding-top: 11rem;
+            }
+        }
+
+        @media (hover: none) {
+            .stat-card:hover,
+            .sec-card:hover,
+            .btn-primary:hover {
+                transform: none;
+            }
+        }
     </style>
 </head>
 
@@ -1138,6 +1405,16 @@
 
     <!-- NAVIGATION -->
     <nav class="nav">
+        <div class="mobile-nav">
+            <a href="#inicio" class="mobile-brand" aria-label="NOVA Digital, inicio">
+                <span class="mobile-brand-mark">N</span>
+                NOVA DIGITAL
+            </a>
+            <div class="mobile-actions">
+                <a href="https://proyecto-x-user.vercel.app/login" class="mobile-action">Entrar</a>
+                <a href="https://proyecto-x-user.vercel.app/?action=register" class="mobile-action primary">Crear cuenta</a>
+            </div>
+        </div>
         <div class="nav-links">
             <a href="#plans">Plans</a>
             <a href="#security">Security</a>
@@ -1168,7 +1445,7 @@
     </nav>
 
     <!-- HERO -->
-    <section class="hero">
+    <section class="hero" id="inicio">
         <div class="hero-grid"></div>
         <div class="hero-orb" style="top:-10%;left:30%"></div>
         <div class="hero-orb-2"></div>
@@ -2061,6 +2338,10 @@
         (async function loadLandingStats() {
             const SUPABASE_URL = '%VITE_SUPABASE_URL%';
             const SUPABASE_ANON = '%VITE_SUPABASE_ANON_KEY%';
+            if (SUPABASE_URL.startsWith('%VITE_') || SUPABASE_ANON.startsWith('%VITE_')) {
+                initCounters();
+                return;
+            }
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/site_stats?limit=1`, {
                     headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }

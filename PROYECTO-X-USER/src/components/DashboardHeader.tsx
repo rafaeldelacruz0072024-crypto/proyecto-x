@@ -11,7 +11,7 @@ interface Props {
 }
 
 const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMenuToggle }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isLive, setIsLive] = useState(false);
 
   // Simulate WebSocket heartbeat
@@ -26,18 +26,14 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
   const userName = user?.username || user?.full_name || user?.name || user?.email?.split('@')[0] || t('common.user_placeholder', { defaultValue: 'User' });
   const userInitial = userName.charAt(0).toUpperCase();
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
-
   return (
-    <header className="flex flex-col md:flex-row justify-between items-center p-3.5 sm:p-6 bg-black/60 backdrop-blur-xl border-b border-proyecto-accent/30 sticky top-0 z-50 shadow-[0_4px_30px_rgba(139,92,246,0.14)]">
+    <header className="sticky top-0 z-50 flex min-h-[64px] items-center justify-between gap-2 border-b border-proyecto-accent/30 bg-black/75 px-2.5 py-2 backdrop-blur-xl shadow-[0_4px_30px_rgba(139,92,246,0.14)] sm:min-h-[72px] sm:px-4 md:px-6">
 
-      <div className="flex items-center space-x-4 relative z-10">
+      <div className="relative z-10 flex min-w-0 items-center gap-2 sm:gap-4">
         {/* HAMBURGER — mobile only */}
         <button
           onClick={onMenuToggle}
-          className="flex items-center gap-2 px-3 h-9 border border-proyecto-accent/30 bg-black/40 hover:bg-proyecto-brand/20 transition-all"
+          className="flex h-11 min-w-11 shrink-0 items-center justify-center gap-2 border border-proyecto-accent/30 bg-black/40 px-2.5 transition-all hover:bg-proyecto-brand/20 sm:px-3"
           aria-label="Open menu"
         >
           <div className="flex flex-col justify-center gap-1.5">
@@ -45,13 +41,13 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
             <span className="w-5 h-[1.5px] bg-proyecto-accent"></span>
             <span className="w-3 h-[1.5px] bg-proyecto-accent self-start"></span>
           </div>
-          <span className="text-[9px] font-orbitron font-black text-proyecto-accent uppercase tracking-[0.2em] md:hidden">MENU</span>
+          <span className="hidden text-[9px] font-orbitron font-black uppercase tracking-[0.2em] text-proyecto-accent min-[420px]:inline md:hidden">MENU</span>
         </button>
 
         {/* LOGO */}
         <div className="relative group cursor-pointer" onClick={onProfileClick}>
           <div className="absolute inset-0 bg-proyecto-accent blur-2xl opacity-10 group-hover:opacity-30 transition-opacity"></div>
-          <Logo size="sm" glow={true} className="relative z-10 hover:scale-110 transition-transform duration-700" />
+          <Logo size="sm" variant="icon" glow={true} className="relative z-10 transition-transform duration-700 hover:scale-105" />
         </div>
 
         <div className="hidden md:flex flex-col border-l border-white/10 pl-4">
@@ -67,7 +63,7 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
         </div>
       </div>
 
-      <div className="mt-4 md:mt-0 flex items-center space-x-8 relative z-10">
+      <div className="relative z-10 flex shrink-0 items-center gap-2 sm:gap-4 md:gap-8">
         <div className="text-right hidden md:block">
           <p className="text-[9px] uppercase text-slate-500 font-mono-tech font-bold tracking-widest mb-1">{t('dashboard.liquidity_available')}</p>
           <div className="flex items-center justify-end gap-2 group">
@@ -78,11 +74,11 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* AVATAR */}
           <div className="relative group cursor-pointer" onClick={onProfileClick}>
             <div className="absolute -inset-1 bg-gradient-to-r from-proyecto-accent to-proyecto-brand rounded-full blur opacity-20 group-hover:opacity-75 transition duration-500"></div>
-            <div className="relative h-10 w-10 text-sm clip-corner-sm bg-black border border-proyecto-accent/50 flex items-center justify-center text-white font-orbitron font-bold shadow-lg">
+            <div className="relative flex h-9 w-9 items-center justify-center border border-proyecto-accent/50 bg-black text-xs font-bold text-white shadow-lg clip-corner-sm font-orbitron sm:h-10 sm:w-10 sm:text-sm">
               {userInitial}
             </div>
 
@@ -92,7 +88,7 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
             </div>
           </div>
 
-          <div className="md:hidden text-left">
+          <div className="hidden text-left min-[520px]:block md:hidden">
             <p className="text-[10px] text-white font-orbitron uppercase">{userName}</p>
             <p className="text-[8px] text-proyecto-accent font-mono-tech">ID: #{user?.id?.slice(0, 4)}</p>
           </div>

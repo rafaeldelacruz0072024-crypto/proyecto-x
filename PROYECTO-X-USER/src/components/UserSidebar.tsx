@@ -85,10 +85,11 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 h-full w-64 z-50 flex flex-col
+        fixed top-0 left-0 h-[100dvh] w-[min(86vw,18rem)] md:w-64 z-50 flex flex-col
         bg-[#020408] border-r border-proyecto-accent/20
         shadow-[4px_0_30px_rgba(139,92,246,0.14)]
         transition-transform duration-300 ease-in-out
+        pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
 
@@ -97,7 +98,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
           <p className="text-[9px] font-orbitron font-black text-slate-600 uppercase tracking-[0.3em]">MENÚ</p>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-proyecto-accent hover:bg-proyecto-accent/10 border border-transparent hover:border-proyecto-accent/30 transition-all"
+            className="flex h-11 w-11 items-center justify-center border border-transparent text-slate-500 transition-all hover:border-proyecto-accent/30 hover:bg-proyecto-accent/10 hover:text-proyecto-accent"
             aria-label="Cerrar menú"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,7 +139,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
                 key={item.id}
                 onClick={() => handleTabClick(item.id)}
                 className={`
-                  w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group relative
+                  group relative flex min-h-12 w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-all duration-200
                   ${isActive
                     ? 'bg-proyecto-accent/10 border border-proyecto-accent/30 text-proyecto-accent shadow-[0_0_12px_rgba(0,243,255,0.08)]'
                     : 'text-slate-500 hover:text-white hover:bg-white/[0.03] border border-transparent'}
@@ -165,7 +166,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
         <div className="p-3 border-t border-white/5">
           <button
             onClick={onLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/5 hover:bg-red-500/15 border border-red-500/20 hover:border-red-500/40 text-red-500 text-[9px] font-orbitron font-black uppercase tracking-[0.2em] rounded-xl transition-all"
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-red-500 transition-all font-orbitron hover:border-red-500/40 hover:bg-red-500/15"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

@@ -16,28 +16,28 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className = "" }) =
     const currentLang = i18n.language?.startsWith('es') ? 'es' : 'en';
 
     return (
-        <div className={`flex items-center gap-1 bg-slate-950/60 p-1 border border-slate-800/80 rounded-xl ${className}`}>
+        <div className={`flex shrink-0 items-center gap-0.5 rounded-xl border border-slate-800/80 bg-slate-950/60 p-0.5 sm:gap-1 sm:p-1 ${className}`}>
             <button
                 type="button"
                 onClick={() => changeLanguage('es')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-black text-[9px] tracking-wider uppercase transition-all duration-300 ${
+                className={`flex min-h-9 items-center gap-1 rounded-lg px-2 py-1.5 text-[9px] font-black uppercase tracking-wider transition-all duration-300 sm:gap-1.5 sm:px-3 ${
                     currentLang === 'es'
                         ? 'bg-phyzer-gold/15 text-phyzer-gold border border-phyzer-gold/30 shadow-[0_0_12px_rgba(212,175,55,0.15)]'
                         : 'text-slate-500 hover:text-slate-300 border border-transparent'
                 }`}
             >
-                <span className="text-[11px]">🇪🇸</span> ES
+                <span className="hidden text-[11px] sm:inline">🇪🇸</span> ES
             </button>
             <button
                 type="button"
                 onClick={() => changeLanguage('en')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-black text-[9px] tracking-wider uppercase transition-all duration-300 ${
+                className={`flex min-h-9 items-center gap-1 rounded-lg px-2 py-1.5 text-[9px] font-black uppercase tracking-wider transition-all duration-300 sm:gap-1.5 sm:px-3 ${
                     currentLang === 'en'
                         ? 'bg-phyzer-gold/15 text-phyzer-gold border border-phyzer-gold/30 shadow-[0_0_12px_rgba(212,175,55,0.15)]'
                         : 'text-slate-500 hover:text-slate-300 border border-transparent'
                 }`}
             >
-                <span className="text-[11px]">🇺🇸</span> EN
+                <span className="hidden text-[11px] sm:inline">🇺🇸</span> EN
             </button>
         </div>
     );

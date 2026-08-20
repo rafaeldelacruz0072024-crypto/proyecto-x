@@ -793,15 +793,15 @@ const App: React.FC = () => {
           onMenuToggle={() => setIsSidebarOpen(prev => !prev)}
         />
 
-        <main className="mx-auto w-full max-w-7xl px-4 py-6 pb-32 relative sm:px-6 sm:py-8 lg:px-8">
+        <main className="relative mx-auto w-full max-w-7xl px-3 py-4 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 sm:py-8 lg:px-8">
           {/* Section Header with ID and Status */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2 md:mb-12 border-b border-white/5 pb-6">
+          <div className="mb-5 flex flex-col justify-between gap-4 border-b border-white/5 pb-4 sm:mb-8 sm:pb-6 md:mb-12 md:flex-row md:items-end">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-proyecto-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
-                <span className="text-[10px] font-mono-tech text-proyecto-accent uppercase tracking-[0.4em]">Node Active: {profile?.username || profile?.full_name || user?.id?.slice(0, 8) || 'G-0X23'}</span>
+                <span className="min-w-0 break-all text-[9px] font-mono-tech uppercase tracking-[0.2em] text-proyecto-accent sm:text-[10px] sm:tracking-[0.4em]">Node Active: {profile?.username || profile?.full_name || user?.id?.slice(0, 8) || 'G-0X23'}</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-orbitron font-black text-white uppercase tracking-tighter flex items-center gap-4">
+              <h1 className="flex min-w-0 items-center gap-2 break-words text-2xl font-black uppercase tracking-tighter text-white font-orbitron sm:text-4xl md:gap-4 md:text-5xl">
                 {t(`nav.${activeTab}`)}
                 <span className="text-proyecto-accent opacity-20 text-2xl">//</span>
               </h1>
@@ -823,9 +823,9 @@ const App: React.FC = () => {
           {activeTab === 'dashboard' && (
             <div className="mx-auto w-full max-w-6xl space-y-6 animate-slide-in sm:space-y-8">
               {/* REFERRAL CENTER */}
-              <div className="holo-card p-6 rounded-none clip-corner flex flex-col md:flex-row items-center justify-between gap-6 transition-all hover:bg-slate-900/40">
-                <div className="flex items-center gap-5">
-                  <div className={`w-12 h-12 clip-corner flex items-center justify-center transition-all duration-500 ${isReferralCopied ? 'bg-proyecto-green/20 shadow-neon-cyan' : 'bg-proyecto-brand/20'}`}>
+              <div className="holo-card flex flex-col items-stretch justify-between gap-4 rounded-none p-4 transition-all clip-corner hover:bg-slate-900/40 sm:p-6 md:flex-row md:items-center md:gap-6">
+                <div className="flex items-center gap-3 sm:gap-5">
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center transition-all duration-500 clip-corner sm:h-12 sm:w-12 ${isReferralCopied ? 'bg-proyecto-green/20 shadow-neon-cyan' : 'bg-proyecto-brand/20'}`}>
                     {isReferralCopied ? (
                       <svg className="w-6 h-6 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
                     ) : (
@@ -833,7 +833,7 @@ const App: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <h3 className="text-sm font-orbitron font-bold text-white uppercase tracking-widest text-glow-cyan">{t('dashboard.referral_center')}</h3>
+                    <h3 className="text-xs font-orbitron font-bold text-white uppercase tracking-[0.12em] text-glow-cyan sm:text-sm sm:tracking-widest">{t('dashboard.referral_center')}</h3>
                     <p className="text-[10px] text-slate-400 font-mono-tech uppercase tracking-tighter">{t('dashboard.expand_network')}</p>
                   </div>
                 </div>
@@ -930,7 +930,7 @@ const App: React.FC = () => {
 
                   {/* CHARTS & TERMINAL */}
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                    <div className="md:col-span-3 holo-card p-6 rounded-none clip-corner h-80 flex flex-col relative overflow-hidden">
+                    <div className="relative flex h-72 flex-col overflow-hidden rounded-none p-4 holo-card clip-corner sm:h-80 sm:p-6 md:col-span-3">
                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-proyecto-accent to-transparent opacity-50"></div>
                       <div className="absolute top-2 right-2 z-10">
                         <div className="flex items-center gap-2 px-3 py-1 bg-black/40 border border-proyecto-accent/30 rounded clip-corner-sm">
@@ -941,7 +941,7 @@ const App: React.FC = () => {
                       <WeeklyYieldChart investments={investments || []} />
                     </div>
 
-                    <div className="md:col-span-2 h-80 holo-card p-0 clip-corner overflow-hidden bg-black/80">
+                    <div className="h-72 overflow-hidden bg-black/80 p-0 holo-card clip-corner sm:h-80 md:col-span-2">
                       <LiveTerminal messages={wsMessages} />
                     </div>
                   </div>
@@ -1067,8 +1067,8 @@ const App: React.FC = () => {
 
           {activeTab === 'network' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">{t('network.strategic_network')}</h2>
+              <div className="flex flex-col items-start gap-3 border-l-2 border-proyecto-accent bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="break-words text-base font-orbitron font-bold text-white uppercase tracking-[0.14em] text-glow-cyan sm:text-xl sm:tracking-[0.3em]">{t('network.strategic_network')}</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">{t('network.node_status')}</span>
               </div>
 
@@ -1178,8 +1178,8 @@ const App: React.FC = () => {
               </div>
 
               <div className="space-y-6 pt-6 border-t border-slate-900/50">
-                <div className="flex justify-between items-center px-2">
-                  <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">{t('finance.global_ledger')}</h2>
+                <div className="flex flex-col items-start gap-2 px-1 sm:flex-row sm:items-center sm:justify-between sm:px-2">
+                  <h2 className="break-words text-base font-orbitron font-bold text-white uppercase tracking-[0.14em] text-glow-cyan sm:text-xl sm:tracking-[0.3em]">{t('finance.global_ledger')}</h2>
                   <span className="text-[9px] font-mono-tech text-slate-500 uppercase tracking-widest">{t('finance.block')}: #{Date.now().toString().slice(-8)}</span>
                 </div>
                 <TransactionHistory transactions={transactions || []} />
@@ -1189,8 +1189,8 @@ const App: React.FC = () => {
 
           {activeTab === 'events' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent mb-6">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">Eventos Exclusivos</h2>
+              <div className="mb-6 flex flex-col items-start gap-3 border-l-2 border-proyecto-accent bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="text-base font-orbitron font-bold text-white uppercase tracking-[0.14em] text-glow-cyan sm:text-xl sm:tracking-[0.3em]">Eventos Exclusivos</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">LIVE OPS</span>
               </div>
               <EventsPanel
@@ -1216,8 +1216,8 @@ const App: React.FC = () => {
 
           {activeTab === 'profile' && (
             <div className="space-y-6 animate-slide-in">
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-white/50">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em]">{t('common.system_config')}</h2>
+              <div className="flex flex-col items-start gap-3 border-l-2 border-white/50 bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="break-words text-base font-orbitron font-bold text-white uppercase tracking-[0.14em] sm:text-xl sm:tracking-[0.3em]">{t('common.system_config')}</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">{t('common.access_granted')}</span>
               </div>
               {profile ? (
@@ -1247,8 +1247,8 @@ const App: React.FC = () => {
               <div className="mx-auto mb-6 w-full max-w-7xl">
                 <LivePredictionMarketSimulation />
               </div>
-              <div className="flex justify-between items-center bg-black/30 p-4 border-l-2 border-proyecto-accent mb-6">
-                <h2 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] text-glow-cyan">PREDICTION MARKETS</h2>
+              <div className="mb-6 flex flex-col items-start gap-3 border-l-2 border-proyecto-accent bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="break-words text-base font-orbitron font-bold text-white uppercase tracking-[0.14em] text-glow-cyan sm:text-xl sm:tracking-[0.3em]">PREDICTION MARKETS</h2>
                 <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">DATOS PÚBLICOS · POLYMARKET LIVE</span>
               </div>
               {profile ? (
@@ -1280,7 +1280,7 @@ const App: React.FC = () => {
           href={`https://wa.me/${supportWhatsapp}?text=${encodeURIComponent(t('common.whatsapp_support_text'))}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="fixed bottom-6 left-4 z-[9998] w-14 h-14 rounded-full bg-[#25D366] shadow-[0_0_30px_rgba(37,211,102,0.4)] flex items-center justify-center text-white group hover:scale-110 active:scale-95 transition-all duration-500 border-2 border-white/20"
+          className="group fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-3 z-[9998] flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/20 bg-[#25D366] text-white shadow-[0_0_30px_rgba(37,211,102,0.4)] transition-all duration-500 hover:scale-110 active:scale-95 sm:bottom-6 sm:left-4 sm:h-14 sm:w-14"
           title={t('common.whatsapp_support_title')}
         >
           {/* Pulsing Aura */}
@@ -1289,7 +1289,7 @@ const App: React.FC = () => {
           {/* Glassmorphism Inner Glow */}
           <div className="absolute inset-1 rounded-full border border-white/10 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none"></div>
 
-          <svg className="w-8 h-8 fill-current relative z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" viewBox="0 0 24 24">
+          <svg className="relative z-10 h-7 w-7 fill-current drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] sm:h-8 sm:w-8" viewBox="0 0 24 24">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.438 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
           </svg>
 
@@ -1304,8 +1304,8 @@ const App: React.FC = () => {
           </div>
         </a>
       )}
-      <footer className="mt-20 py-8 border-t border-slate-900/50 bg-black/40 text-center backdrop-blur-sm relative z-10">
-        <p className="text-slate-600 text-[10px] font-rajdhani font-bold tracking-[0.5em]">Nova Digital Systems • Verified Node Architecture • V2.5.5</p>
+      <footer className="relative z-10 mt-12 border-t border-slate-900/50 bg-black/40 px-4 py-6 text-center backdrop-blur-sm sm:mt-20 sm:py-8">
+        <p className="text-[9px] font-bold leading-relaxed tracking-[0.18em] text-slate-600 font-rajdhani sm:text-[10px] sm:tracking-[0.5em]">Nova Digital Systems • Verified Node Architecture • V2.5.5</p>
       </footer>
 
       <NotificationToast notifications={notifications} removeNotification={removeNotification} />

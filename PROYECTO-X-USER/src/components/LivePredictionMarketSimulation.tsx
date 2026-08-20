@@ -80,7 +80,7 @@ const LivePredictionMarketSimulation: React.FC = () => {
 
       <div className="grid xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
         <div className="border-b border-white/10 xl:border-b-0 xl:border-r">
-          <div className="grid grid-cols-[minmax(180px,1.8fr)_0.55fr_0.55fr_0.8fr_0.5fr] gap-2 border-b border-white/5 bg-black/30 px-5 py-3 text-[8px] font-mono-tech uppercase tracking-widest text-slate-500">
+          <div className="hidden grid-cols-[minmax(180px,1.8fr)_0.55fr_0.55fr_0.8fr_0.5fr] gap-2 border-b border-white/5 bg-black/30 px-5 py-3 text-[8px] font-mono-tech uppercase tracking-widest text-slate-500 sm:grid">
             <span>Mercado</span><span>Sí</span><span>No</span><span>Vol. sim.</span><span>Mov.</span>
           </div>
           <div>
@@ -93,17 +93,17 @@ const LivePredictionMarketSimulation: React.FC = () => {
                   key={market.id}
                   type="button"
                   onClick={() => setSelectedId(market.id)}
-                  className={`grid w-full grid-cols-[minmax(180px,1.8fr)_0.55fr_0.55fr_0.8fr_0.5fr] gap-2 border-b border-white/5 px-5 py-4 text-left transition-colors ${active ? 'bg-proyecto-accent/10 shadow-[inset_3px_0_0_#22d3ee]' : 'hover:bg-white/[0.035]'}`}
+                  className={`w-full border-b border-white/5 px-4 py-4 text-left transition-colors sm:grid sm:grid-cols-[minmax(180px,1.8fr)_0.55fr_0.55fr_0.8fr_0.5fr] sm:gap-2 sm:px-5 ${active ? 'bg-proyecto-accent/10 shadow-[inset_3px_0_0_#22d3ee]' : 'hover:bg-white/[0.035]'}`}
                 >
                   <span className="min-w-0">
-                    <span className="block truncate text-[11px] font-orbitron font-bold text-white">{market.title}</span>
+                    <span className="block text-[11px] font-orbitron font-bold leading-relaxed text-white sm:truncate">{market.title}</span>
                     <span className="mt-1 block text-[9px] font-mono-tech uppercase tracking-widest text-slate-500">{market.category} · simulación</span>
                   </span>
-                  <span className="self-center text-sm font-orbitron font-bold text-proyecto-green">{market.yes}%</span>
-                  <span className="self-center text-sm font-orbitron font-bold text-rose-400">{marketNo}%</span>
-                  <span className="self-center text-[11px] font-mono-tech text-slate-300">{compactUsd(market.volume)}</span>
-                  <span className={`flex self-center text-[11px] font-orbitron font-bold ${positive ? 'text-proyecto-green' : 'text-rose-400'}`}>
-                    {positive ? '+' : ''}{market.change}%
+                  <span className="mt-3 grid grid-cols-4 gap-2 sm:contents">
+                    <span className="self-center"><span className="block text-[7px] uppercase tracking-widest text-slate-600 sm:hidden">Sí</span><span className="text-sm font-orbitron font-bold text-proyecto-green">{market.yes}%</span></span>
+                    <span className="self-center"><span className="block text-[7px] uppercase tracking-widest text-slate-600 sm:hidden">No</span><span className="text-sm font-orbitron font-bold text-rose-400">{marketNo}%</span></span>
+                    <span className="self-center"><span className="block text-[7px] uppercase tracking-widest text-slate-600 sm:hidden">Vol.</span><span className="text-[11px] font-mono-tech text-slate-300">{compactUsd(market.volume)}</span></span>
+                    <span className="self-center"><span className="block text-[7px] uppercase tracking-widest text-slate-600 sm:hidden">Mov.</span><span className={`text-[11px] font-orbitron font-bold ${positive ? 'text-proyecto-green' : 'text-rose-400'}`}>{positive ? '+' : ''}{market.change}%</span></span>
                   </span>
                 </button>
               );
@@ -111,7 +111,7 @@ const LivePredictionMarketSimulation: React.FC = () => {
           </div>
         </div>
 
-        <aside className="p-5">
+        <aside className="p-4 sm:p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-[9px] font-mono-tech uppercase tracking-[0.2em] text-slate-500">{selected.category} · mercado seleccionado</p>
@@ -153,7 +153,7 @@ const LivePredictionMarketSimulation: React.FC = () => {
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="mt-5 grid grid-cols-1 gap-3 min-[380px]:grid-cols-2">
             <div className="border border-proyecto-green/20 bg-proyecto-green/5 p-3">
               <div className="flex items-center gap-2 text-proyecto-green"><TrendingUp className="h-3.5 w-3.5" /><span className="text-[8px] font-mono-tech uppercase tracking-widest">Señal</span></div>
               <p className="mt-2 text-xl font-orbitron font-black text-white">{selected.signal}<span className="text-[10px] text-slate-500">/100</span></p>
