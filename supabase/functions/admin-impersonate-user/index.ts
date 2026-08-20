@@ -1,5 +1,5 @@
-import "@supabase/functions-js/edge-runtime.d.ts";
-import { withSupabase } from "@supabase/server";
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const USER_APP_URL = "https://proyecto-x-user.vercel.app/login";
 const corsHeaders = {
@@ -18,71 +18,79 @@ const json = (body: Record<string, unknown>, status = 200) =>
     },
   });
 
-export default {
-  fetch: withSupabase({ auth: ["publishable", "secret"] }, async (req, ctx) => {
-    if (req.method === "OPTIONS") {
-      return new Response("ok", { headers: corsHeaders });
-    }
+const supabaseUrl = Deno.env.get("SUPABASE_URL");
+const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (req.method !== "POST") return json({ error: "Método no permitido" }, 405);
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
 
-    const authorization = req.headers.get("Authorization") ?? "";
-    const accessToken = authorization.startsWith("Bearer ")
-      ? authorization.slice("Bearer ".length)
-      : "";
+  if (req.method !== "POST") return json({ error: "Método no permitido" }, 405);
+  if (!supabaseUrl || !serviceRoleKey) {
+    return json({ error: "Configuración del servidor incompleta" }, 500);
+  }
 
-    if (!accessToken) return json({ error: "Sesión administrativa requerida" }, 401);
+  const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
 
-    const { data: callerData, error: callerError } =
-      await ctx.supabaseAdmin.auth.getUser(accessToken);
-    const caller = callerData?.user;
+  const authorization = req.headers.get("Authorization") ?? "";
+  const accessToken = authorization.startsWith("Bearer ")
+    ? authorization.slice("Bearer ".length)
+    : "";
 
-    if (callerError || !caller) return json({ error: "Sesión administrativa inválida" }, 401);
+  if (!accessToken) return json({ error: "Sesión administrativa requerida" }, 401);
 
-    const { data: adminProfile, error: profileError } = await ctx.supabaseAdmin
-      .from("profiles")
-      .select("id, role, status")
-      .eq("id", caller.id)
-      .single();
+  const { data: callerData, error: callerError } =
+    await supabaseAdmin.auth.getUser(accessToken);
+  const caller = callerData?.user;
 
-    if (
-      profileError ||
-      !adminProfile ||
-      !["admin", "sub-admin"].includes(adminProfile.role) ||
-      adminProfile.status !== "active"
-    ) {
-      return json({ error: "Acceso reservado para administradores activos" }, 403);
-    }
+  if (callerError || !caller) return json({ error: "Sesión administrativa inválida" }, 401);
 
-    const payload = await req.json().catch(() => ({}));
-    const targetUserId = typeof payload?.targetUserId === "string" ? payload.targetUserId : "";
+  const { data: adminProfile, error: profileError } = await supabaseAdmin
+    .from("profiles")
+    .select("id, role, status")
+    .eq("id", caller.id)
+    .single();
 
-    if (!targetUserId) return json({ error: "Usuario objetivo requerido" }, 400);
-    if (targetUserId === caller.id) {
-      return json({ error: "Ya estás conectado con esta cuenta administrativa" }, 400);
-    }
+  if (
+    profileError ||
+    !adminProfile ||
+    !["admin", "sub-admin"].includes(adminProfile.role) ||
+    adminProfile.status !== "active"
+  ) {
+    return json({ error: "Acceso reservado para administradores activos" }, 403);
+  }
 
-    const { data: targetData, error: targetError } =
-      await ctx.supabaseAdmin.auth.admin.getUserById(targetUserId);
-    const targetUser = targetData?.user;
+  const payload = await req.json().catch(() => ({}));
+  const targetUserId = typeof payload?.targetUserId === "string" ? payload.targetUserId : "";
 
-    if (targetError || !targetUser?.email) {
-      return json({ error: "No se encontró una cuenta de acceso para este usuario" }, 404);
-    }
+  if (!targetUserId) return json({ error: "Usuario objetivo requerido" }, 400);
+  if (targetUserId === caller.id) {
+    return json({ error: "Ya estás conectado con esta cuenta administrativa" }, 400);
+  }
 
-    const { data: linkData, error: linkError } =
-      await ctx.supabaseAdmin.auth.admin.generateLink({
-        type: "magiclink",
-        email: targetUser.email,
-        options: { redirectTo: USER_APP_URL },
-      });
+  const { data: targetData, error: targetError } =
+    await supabaseAdmin.auth.admin.getUserById(targetUserId);
+  const targetUser = targetData?.user;
 
-    const actionLink = linkData?.properties?.action_link;
-    if (linkError || !actionLink) {
-      console.error("No se pudo generar el acceso administrativo", linkError);
-      return json({ error: "No se pudo generar el acceso temporal" }, 500);
-    }
+  if (targetError || !targetUser?.email) {
+    return json({ error: "No se encontró una cuenta de acceso para este usuario" }, 404);
+  }
 
-    return json({ success: true, actionLink, targetUserId });
-  }),
-};
+  const { data: linkData, error: linkError } =
+    await supabaseAdmin.auth.admin.generateLink({
+      type: "magiclink",
+      email: targetUser.email,
+      options: { redirectTo: USER_APP_URL },
+    });
+
+  const actionLink = linkData?.properties?.action_link;
+  if (linkError || !actionLink) {
+    console.error("No se pudo generar el acceso administrativo", linkError);
+    return json({ error: "No se pudo generar el acceso temporal" }, 500);
+  }
+
+  return json({ success: true, actionLink, targetUserId });
+});
