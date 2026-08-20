@@ -80,59 +80,33 @@ const Users: React.FC = () => {
 
     if (!confirm(`¿Entrar al dashboard de ${user.full_name || user.email}?`)) return;
 
+    const userWindow = window.open('about:blank', '_blank');
+
     try {
       setImpersonating(user.id);
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-      // 1. Guardar hash original y poner contraseña temporal
-      const tempPassword = `GK_ADMIN_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-
-      const { data: rpcData, error: rpcError } = await supabase.rpc('admin_impersonate_user', {
-        target_user_id: user.id,
-        temp_password: tempPassword
+      const { data, error: invokeError } = await supabase.functions.invoke('admin-impersonate-user', {
+        body: { targetUserId: user.id }
       });
 
-      if (rpcError) throw new Error(rpcError.message);
+      if (invokeError) throw invokeError;
+      if (!data?.actionLink) throw new Error(data?.error || 'No se recibió el acceso temporal');
 
-      // 2. Sign in como el usuario usando el token endpoint
-      const tokenResponse = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
-        method: 'POST',
-        headers: {
-          'apikey': supabaseKey,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: user.email,
-          password: tempPassword
-        })
-      });
-
-      const tokenData = await tokenResponse.json();
-
-      if (!tokenResponse.ok) {
-        throw new Error(tokenData?.msg || tokenData?.error_description || 'Error al obtener sesión');
+      if (!userWindow) {
+        throw new Error('El navegador bloqueó la nueva ventana. Habilita las ventanas emergentes para NOVA Admin.');
       }
 
-      // 3. Restaurar la contraseña original
-      await supabase.rpc('admin_restore_user_password', {
-        target_user_id: user.id,
-        original_hash: rpcData?.original_hash
-      });
-
-      // 4. Abrir user app con los tokens de sesión
-      const accessToken = tokenData.access_token;
-      const refreshToken = tokenData.refresh_token;
-
-      // URL de la app del usuario - Forced domain update
-      const userAppBaseUrl = 'https://proyecto-x-user.vercel.app/login';
-      const userAppUrl = `${userAppBaseUrl}#access_token=${accessToken}&refresh_token=${refreshToken}&token_type=bearer&type=magiclink`;
-
-      window.open(userAppUrl, '_blank');
+      userWindow.opener = null;
+      userWindow.location.href = data.actionLink;
 
     } catch (error: any) {
+      userWindow?.close();
       console.error('Error impersonating user:', error);
-      alert('❌ Error al acceder: ' + error.message);
+      let message = error?.message || 'Error desconocido';
+      if (error?.context?.json) {
+        const responseBody = await error.context.json().catch(() => null);
+        message = responseBody?.error || message;
+      }
+      alert('❌ Error al acceder: ' + message);
     } finally {
       setImpersonating(null);
     }
