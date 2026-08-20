@@ -1139,8 +1139,8 @@ const App: React.FC = () => {
 
           {activeTab === 'finance' && (
             <div className="space-y-10 animate-slide-in">
-              {/* ── FILA 1: DEPOSITAR + ACTIVAR INVERSIÓN ── */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+              {/* ── FILA 1: DEPOSITAR ── */}
+              <div className="max-w-5xl space-y-4">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center px-2">
                     <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.inject_liquidity')}</h2>
@@ -1153,24 +1153,25 @@ const App: React.FC = () => {
                     onClearPromo={() => setActivePromotion(null)}
                   />
                 </div>
-
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center px-2">
-                    <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.activate_node')}</h2>
-                    <div className="w-2 h-2 rounded-full bg-proyecto-accent shadow-[0_0_10px_cyan]"></div>
-                  </div>
-                  <InvestmentPanel
-                    onInvest={handleInvestment}
-                    onWithdrawCapital={handleWithdrawDailyCapital}
-                    investments={investments || []}
-                    addNotification={addNotification}
-                    walletBalance={walletBalance}
-                    softwarePlans={softwarePlans}
-                  />
-                </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+              {/* ── FILA 2: ACTIVAR NODO A TODO EL ANCHO ── */}
+              <section className="space-y-4 border-t border-slate-900/50 pt-8">
+                <div className="flex items-center justify-between gap-4 px-2">
+                  <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.activate_node')}</h2>
+                  <div className="h-2 w-2 shrink-0 rounded-full bg-proyecto-accent shadow-[0_0_10px_cyan]"></div>
+                </div>
+                <InvestmentPanel
+                  onInvest={handleInvestment}
+                  onWithdrawCapital={handleWithdrawDailyCapital}
+                  investments={investments || []}
+                  addNotification={addNotification}
+                  walletBalance={walletBalance}
+                  softwarePlans={softwarePlans}
+                />
+              </section>
+
+              <div className="grid grid-cols-1 gap-8 items-start">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center px-2">
                     <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.liquidate')}</h2>
