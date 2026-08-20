@@ -26,7 +26,7 @@ const NAV_ITEMS = [
   },
   {
     id: 'binary',
-    icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01M12 12h.01M7 7l5 5m5-5l-5 5m0 0l-5 5m5-5l5 5" /></svg>,
+    icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2.25" strokeWidth={2} /><circle cx="6" cy="18" r="2.25" strokeWidth={2} /><circle cx="18" cy="18" r="2.25" strokeWidth={2} /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 7.25v3.25M12 10.5H6v5.25M12 10.5h6v5.25" /></svg>,
   },
   {
     id: 'finance',
