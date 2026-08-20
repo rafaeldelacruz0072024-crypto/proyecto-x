@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Activity, BarChart3, CheckCircle2, FileCheck2, Gauge, Loader2, ScanSearch, Sparkles, CalendarDays, WalletCards } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Activity, BarChart3, CheckCircle2, Clock3, FileCheck2, Gauge, Loader2, ScanSearch, Sparkles, CalendarDays, WalletCards } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 type TaskCode = 'SYNC_NODE' | 'VALIDATE_BLOCK' | 'AUDIT_MEMPOOL' | 'SIGN_CHECKPOINT';
@@ -24,6 +24,26 @@ const localDate = () => new Intl.DateTimeFormat('en-CA', {
   timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit', day: '2-digit',
 }).format(new Date());
 
+const secondsUntilDailyCut = () => {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Santo_Domingo',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date());
+  const readPart = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find(part => part.type === type)?.value || 0);
+  const elapsed = (readPart('hour') * 3600) + (readPart('minute') * 60) + readPart('second');
+  return 24 * 3600 - elapsed;
+};
+
+const formatCountdown = (totalSeconds: number) => {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return [hours, minutes, seconds].map(value => String(value).padStart(2, '0')).join(':');
+};
+
 export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivated, addNotification }: Props) {
   const [completed, setCompleted] = useState<Set<TaskCode>>(new Set());
   const [loading, setLoading] = useState(true);
@@ -31,6 +51,8 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   const [simulation, setSimulation] = useState<TaskCode | null>(null);
   const [history, setHistory] = useState<HistoryDay[]>([]);
   const [accumulatedRoi, setAccumulatedRoi] = useState(0);
+  const [secondsToCut, setSecondsToCut] = useState(secondsUntilDailyCut);
+  const activeTaskDay = useRef(localDate());
 
   const load = useCallback(async () => {
     if (!userId) return;
@@ -52,6 +74,21 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   }, [userId, addNotification]);
 
   useEffect(() => { void load(); }, [load]);
+
+  useEffect(() => {
+    const tick = () => {
+      const currentTaskDay = localDate();
+      setSecondsToCut(secondsUntilDailyCut());
+      if (activeTaskDay.current !== currentTaskDay) {
+        activeTaskDay.current = currentTaskDay;
+        void load();
+      }
+    };
+
+    tick();
+    const interval = window.setInterval(tick, 1000);
+    return () => window.clearInterval(interval);
+  }, [load]);
 
   const progress = useMemo(() => completed.size, [completed]);
 
@@ -101,6 +138,13 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
           <div className={`w-full min-w-0 border p-4 sm:min-w-[235px] lg:w-auto ${progress === 4 ? 'border-emerald-400/40 bg-emerald-400/10' : 'border-proyecto-accent/35 bg-proyecto-accent/5'}`}>
             <div className="flex items-center gap-3"><div className={`flex h-11 w-11 items-center justify-center border ${progress === 4 ? 'border-emerald-300 text-emerald-300' : 'border-proyecto-accent text-proyecto-accent'}`}>{progress === 4 ? <CheckCircle2 size={26} /> : <FileCheck2 size={24} />}</div><div><p className="font-orbitron text-2xl font-black text-white">{progress}/4</p><p className="text-[10px] font-mono-tech uppercase tracking-wider text-slate-400">Señales analizadas</p></div></div>
             <p className={`mt-3 text-xs ${progress === 4 ? 'text-emerald-300' : 'text-slate-400'}`}>{progress === 4 ? `Análisis confirmado el ${localDate()}. ROI solicitado para este ciclo.` : hasActiveContracts ? 'Completa la lectura del mercado para habilitar el ROI de hoy.' : 'Activa un contrato para habilitar el análisis.'}</p>
+            <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
+              <div className="flex items-center gap-2 text-slate-400"><Clock3 size={14} /><span className="text-[9px] font-mono-tech uppercase tracking-wider">Próximo corte</span></div>
+              <div className="text-right">
+                <p className="font-mono text-sm font-bold tabular-nums text-proyecto-accent">{formatCountdown(secondsToCut)}</p>
+                <p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">00:00 · Santo Domingo</p>
+              </div>
+            </div>
           </div>
         </div>
 
