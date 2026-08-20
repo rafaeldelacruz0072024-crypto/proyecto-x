@@ -120,6 +120,11 @@ const InvestmentPanel: React.FC<Props> = ({
                 <div className={`mt-4 text-xs font-bold sm:text-sm ${isMaturity ? 'text-blue-300' : 'text-emerald-400'}`}>
                   {isMaturity ? 'Pago al vencimiento' : 'Pago diario'}
                 </div>
+                {isMaturity && (
+                  <div className="mt-3 rounded-xl border border-amber-400/20 bg-amber-400/5 px-3 py-2 text-xs font-semibold leading-relaxed text-amber-200">
+                    Regla de continuidad: completa las 4 tareas cada día hábil. Si fallas un día, los días y el ROI pendiente vuelven a 0.
+                  </div>
+                )}
                 {!isMaturity && (
                   <div className="mt-3 rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-3 py-2 text-xs font-semibold leading-relaxed text-emerald-300">
                     Capital flexible: puedes retirarlo en cualquier momento.
