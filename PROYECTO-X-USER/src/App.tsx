@@ -628,7 +628,7 @@ const App: React.FC = () => {
 
     const result = await updateUserProfile(user.id, updates);
     if (result.success) {
-      refetch();
+      await refetch();
       return true;
     }
 

@@ -567,12 +567,20 @@ export async function createOrUpdateProfile(userId: string, email: string, refer
 
 export async function updateUserProfile(userId: string, updates: Partial<Profile>) {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .update(updates)
-      .eq('id', userId);
+      .eq('id', userId)
+      .select('id, withdrawal_wallet')
+      .maybeSingle();
 
     if (error) throw error;
+    if (!data || data.id !== userId) {
+      return { success: false, error: 'No se actualizó el perfil. Verifica la sesión y los permisos de tu cuenta.' };
+    }
+    if ('withdrawal_wallet' in updates && data.withdrawal_wallet !== updates.withdrawal_wallet) {
+      return { success: false, error: 'Supabase no confirmó el guardado de la wallet.' };
+    }
     return { success: true };
   } catch (error: any) {
     console.error('Error updating profile in Supabase:', error);
