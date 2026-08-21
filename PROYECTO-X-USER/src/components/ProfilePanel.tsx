@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 interface Props {
   user: any; // Flexible para aceptar tanto User de types como profile de Supabase
-  onUpdateUser: (updates: any) => void;
+  onUpdateUser: (updates: any) => void | Promise<boolean | void>;
   addNotification: (msg: string, type: 'success' | 'error' | 'info') => void;
 }
 
@@ -34,6 +34,9 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [mfaQrCode, setMfaQrCode] = useState('');
   const [mfaSecret, setMfaSecret] = useState('');
   const [mfaFactorId, setMfaFactorId] = useState('');
+  const [isWalletVerificationOpen, setIsWalletVerificationOpen] = useState(false);
+  const [walletVerificationCode, setWalletVerificationCode] = useState('');
+  const [isWalletVerifying, setIsWalletVerifying] = useState(false);
 
   // Extraer nombre compatible con ambos formatos
   const userName = user?.full_name || user?.name || user?.username || user?.email?.split('@')[0] || 'User';
@@ -107,27 +110,25 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
       return;
     }
 
-
     if (!wallet) {
       addNotification("Por favor introduzca alguna dirección", "error");
       return;
     }
 
     if (!twoFactorEnabled) {
-      setIsLinkingWalletWith2FA(true);
-      setIsSettingUp2FA(true);
       addNotification(t('profile.notifications.auth_req'), "info");
-    } else {
-      onUpdateUser({ 
-        withdrawal_wallet: wallet,
-      });
-      addNotification(t('profile.notifications.wallet_saved'), "success");
+      void start2FASetup(true);
+      return;
     }
+
+    setWalletVerificationCode('');
+    setIsWalletVerificationOpen(true);
+    addNotification('Verifique el código 2FA para confirmar la wallet.', 'info');
   };
 
-  const start2FASetup = async () => {
+  const start2FASetup = async (forWallet = false) => {
     setIs2faLoading(true);
-    setIsLinkingWalletWith2FA(false);
+    setIsLinkingWalletWith2FA(forWallet);
     const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'NOVA Authenticator' });
     if (error || !data?.id || !data.totp) {
       addNotification(error?.message || 'No se pudo iniciar el enrolamiento 2FA seguro.', 'error');
@@ -162,7 +163,11 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     }
     const updates: any = { two_factor_enabled: true };
     if (isLinkingWalletWith2FA) updates.withdrawal_wallet = wallet;
-    onUpdateUser(updates);
+    const enrollmentSaved = await onUpdateUser(updates);
+    if (enrollmentSaved === false) {
+      setIs2faLoading(false);
+      return;
+    }
     addNotification(t('profile.notifications.auth_success'), 'success');
     setIsSettingUp2FA(false);
     setIsLinkingWalletWith2FA(false);
@@ -172,7 +177,55 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     setIs2faLoading(false);
   };
 
+  const verifyWalletUpdate = async () => {
+    if (!/^\d{6}$/.test(walletVerificationCode)) {
+      addNotification('Introduzca un código 2FA válido de 6 dígitos.', 'error');
+      return;
+    }
+
+    setIsWalletVerifying(true);
+    const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
+    const factor = factors?.totp?.find(item => item.status === 'verified');
+    if (factorsError || !factor) {
+      addNotification(factorsError?.message || 'No hay un factor 2FA verificado para proteger esta wallet.', 'error');
+      setIsWalletVerifying(false);
+      return;
+    }
+
+    const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: factor.id });
+    if (challengeError || !challenge?.id) {
+      addNotification(challengeError?.message || 'No se pudo crear el desafío 2FA.', 'error');
+      setIsWalletVerifying(false);
+      return;
+    }
+
+    const { error: verifyError } = await supabase.auth.mfa.verify({
+      factorId: factor.id,
+      challengeId: challenge.id,
+      code: walletVerificationCode,
+    });
+    if (verifyError) {
+      addNotification(verifyError.message, 'error');
+      setIsWalletVerifying(false);
+      return;
+    }
+
+    const walletSaved = await onUpdateUser({ withdrawal_wallet: wallet });
+    if (walletSaved === false) {
+      setIsWalletVerifying(false);
+      return;
+    }
+    setIsWalletVerificationOpen(false);
+    setWalletVerificationCode('');
+    setIsWalletVerifying(false);
+    addNotification(t('profile.notifications.wallet_saved'), 'success');
+  };
+
   const disable2FA = async () => {
+    if (hasWallet) {
+      addNotification('No puede desactivar el 2FA mientras exista una wallet vinculada. Desvincule la wallet mediante el flujo seguro antes de continuar.', 'error');
+      return;
+    }
     setIs2faLoading(true);
     const { data, error } = await supabase.auth.mfa.listFactors();
     const factor = data?.totp?.find(item => item.status === 'verified');
@@ -387,8 +440,43 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800/30">
                 </div>
 
-                <div className="pt-4">
-                  {!isWalletFrozen && (
+                <div className="pt-4 space-y-4">
+                  {isWalletVerificationOpen && (
+                    <div className="p-5 bg-proyecto-accent/5 border border-proyecto-accent/30 clip-corner-sm space-y-4">
+                      <div>
+                        <p className="text-[10px] font-orbitron font-bold text-white uppercase tracking-widest">Confirmación 2FA requerida</p>
+                        <p className="mt-2 text-[10px] text-slate-500 font-mono-tech uppercase font-bold tracking-tight">Introduzca el código actual de su aplicación autenticadora para guardar la wallet.</p>
+                      </div>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          value={walletVerificationCode}
+                          onChange={(e) => setWalletVerificationCode(e.target.value.replace(/\D/g, ''))}
+                          placeholder="000000"
+                          className="flex-1 bg-black/60 border border-slate-800 clip-corner-sm py-3 px-4 text-center font-orbitron font-bold tracking-[0.45em] text-proyecto-accent text-lg focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]"
+                        />
+                        <button
+                          onClick={verifyWalletUpdate}
+                          disabled={isWalletVerifying || walletVerificationCode.length !== 6}
+                          className="px-6 py-3 bg-proyecto-green text-slate-950 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest disabled:opacity-30"
+                        >
+                          {isWalletVerifying ? 'VERIFICANDO...' : 'CONFIRMAR WALLET'}
+                        </button>
+                        <button
+                          onClick={() => { setIsWalletVerificationOpen(false); setWalletVerificationCode(''); }}
+                          disabled={isWalletVerifying}
+                          className="px-4 py-3 bg-slate-900 text-slate-400 border border-slate-800 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest disabled:opacity-30"
+                        >
+                          CANCELAR
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {!isWalletFrozen && !isWalletVerificationOpen && (
                     <button onClick={saveWallet} className="w-full md:w-auto px-12 py-4 bg-proyecto-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all hover:brightness-110">
                       {twoFactorEnabled ? t('profile.vault.update_button') : t('profile.vault.save_button')}
                     </button>

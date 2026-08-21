@@ -616,14 +616,16 @@ const App: React.FC = () => {
   }, [addNotification, refetch]);
 
   const handleUpdateUser = useCallback(async (updates: Partial<Profile>) => {
-    if (!user) return;
+    if (!user) return false;
 
     const result = await updateUserProfile(user.id, updates);
     if (result.success) {
       refetch();
-    } else {
-      addNotification(`Error updating profile: ${result.error}`, "error");
+      return true;
     }
+
+    addNotification(`Error updating profile: ${result.error}`, "error");
+    return false;
   }, [user, refetch, addNotification]);
 
   const binaryReferralLinks = useMemo(() => {
