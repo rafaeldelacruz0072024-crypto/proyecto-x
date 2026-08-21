@@ -17,17 +17,6 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [isChangingPass, setIsChangingPass] = useState(false);
   const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.withdrawalWallet || '');
 
-  // Derivados de seguridad
-  const kycVerified = user?.kycVerified || user?.kyc_verified || false;
-  // El estado real del 2FA proviene de Supabase Auth; profiles no requiere una columna two_factor_enabled.
-  const twoFactorEnabled = hasVerifiedMfa || Boolean(user?.two_factor_enabled || user?.twoFactorEnabled);
-  const walletAddress = user?.withdrawal_wallet || user?.withdrawalWallet || '';
-  const hasWallet = !!walletAddress;
-
-  // La bóveda solo se congela si el 2FA está ACTIVO y ya existe una wallet configurada.
-  // Si el usuario desactiva el 2FA, la bóveda se desbloquea automáticamente.
-  const isWalletFrozen = twoFactorEnabled && hasWallet;
-
   // 2FA Setup Flow State
   const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
   const [isLinkingWalletWith2FA, setIsLinkingWalletWith2FA] = useState(false);
@@ -39,6 +28,17 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [isWalletVerificationOpen, setIsWalletVerificationOpen] = useState(false);
   const [walletVerificationCode, setWalletVerificationCode] = useState('');
   const [isWalletVerifying, setIsWalletVerifying] = useState(false);
+
+  // Derivados de seguridad
+  const kycVerified = user?.kycVerified || user?.kyc_verified || false;
+  // El estado real del 2FA proviene de Supabase Auth; profiles no requiere una columna two_factor_enabled.
+  const twoFactorEnabled = hasVerifiedMfa || Boolean(user?.two_factor_enabled || user?.twoFactorEnabled);
+  const walletAddress = user?.withdrawal_wallet || user?.withdrawalWallet || '';
+  const hasWallet = !!walletAddress;
+
+  // La bóveda solo se congela si el 2FA está ACTIVO y ya existe una wallet configurada.
+  // Si el usuario desactiva el 2FA, la bóveda se desbloquea automáticamente.
+  const isWalletFrozen = twoFactorEnabled && hasWallet;
 
   useEffect(() => {
     let cancelled = false;
