@@ -512,20 +512,28 @@ const App: React.FC = () => {
   }, [addNotification, refetch]);
 
   // ✅ WITHDRAWAL - CONECTADO A SUPABASE
-  const handleWithdrawal = useCallback((amount: number, method: string, address: string) => {
-    if (!user) return;
+  const handleWithdrawal = useCallback(async (amount: number, method: string, address: string) => {
+    if (!user) return false;
     if (walletBalance < amount) {
       addNotification(t('common.insufficient_funds'), "error");
-      return;
+      return false;
     }
 
-    if (user.two_factor_enabled || user.twoFactorEnabled) {
+    const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
+    if (factorsError) {
+      addNotification('No se pudo comprobar la protección 2FA del retiro.', 'error');
+      return false;
+    }
+
+    const hasVerifiedMfa = Boolean(factors?.totp?.some(item => item.status === 'verified'));
+    if (hasVerifiedMfa || user.two_factor_enabled || user.twoFactorEnabled) {
       setPendingWithdrawal({ amount, method, address });
       setShow2FAModal(true);
-      return;
+      return false;
     }
 
-    executeFinalWithdrawal(amount, method, address);
+    await executeFinalWithdrawal(amount, method, address);
+    return true;
   }, [walletBalance, user, addNotification]);
 
   const executeFinalWithdrawal = useCallback(async (amount: number, method: string, address: string) => {

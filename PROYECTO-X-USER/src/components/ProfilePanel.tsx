@@ -15,7 +15,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [showPass, setShowPass] = useState(false);
   const [is2faLoading, setIs2faLoading] = useState(false);
   const [isChangingPass, setIsChangingPass] = useState(false);
-  const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.withdrawalWallet || '');
+  const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.wallet_address || user?.withdrawalWallet || '');
 
   // 2FA Setup Flow State
   const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
@@ -33,7 +33,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const kycVerified = user?.kycVerified || user?.kyc_verified || false;
   // El estado real del 2FA proviene de Supabase Auth; profiles no requiere una columna two_factor_enabled.
   const twoFactorEnabled = hasVerifiedMfa || Boolean(user?.two_factor_enabled || user?.twoFactorEnabled);
-  const walletAddress = user?.withdrawal_wallet || user?.withdrawalWallet || '';
+  const walletAddress = user?.withdrawal_wallet || user?.wallet_address || user?.withdrawalWallet || '';
   const hasWallet = !!walletAddress;
 
   // La bóveda solo se congela si el 2FA está ACTIVO y ya existe una wallet configurada.
@@ -119,8 +119,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const saveWallet = () => {
     if (isWalletFrozen) return;
 
-    if (wallet && (wallet.length < 10 || !wallet.startsWith('0x'))) {
-      addNotification(t('profile.notifications.wallet_invalid'), "error");
+    if (wallet && !/^0x[a-fA-F0-9]{40}$/.test(wallet)) {
+      addNotification('La wallet debe ser una dirección BEP20 válida de 42 caracteres.', "error");
       return;
     }
 

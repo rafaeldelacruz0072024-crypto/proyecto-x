@@ -6,7 +6,7 @@ interface Props {
   profile: Profile;
   walletBalance: number;
   referralCommissionBalance: number;
-  handleWithdrawal: (amount: number, method: string, address: string) => void;
+  handleWithdrawal: (amount: number, method: string, address: string) => void | Promise<boolean | void>;
 }
 
 interface CommissionStats {
@@ -92,7 +92,8 @@ export default function DirectCommissionPanel({ profile, walletBalance: _walletB
 
     try {
       // La comisión directa usa su propio RPC sin ventana horaria.
-      handleWithdrawal(num, 'Comisión Directa', withdrawalAddress);
+      const accepted = await handleWithdrawal(num, 'Comisión Directa', withdrawalAddress);
+      if (accepted === false) return;
       setAmount('');
       setSuccess(true);
       setTimeout(() => { setSuccess(false); fetchStats(); }, 4000);

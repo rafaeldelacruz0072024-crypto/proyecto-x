@@ -17,7 +17,7 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
   const hasPhyzerCard = !!(user?.phyzer_card_address);
   const address = method === 'PHYZER CARD'
     ? (user?.phyzer_card_address || '')
-    : (user?.withdrawal_wallet || '');
+    : (user?.withdrawal_wallet || user?.wallet_address || '');
   const [withdrawalFeePercent, setWithdrawalFeePercent] = useState<number>(10);
   const [minWithdrawal, setMinWithdrawal] = useState<number>(25);
   const [windowState, setWindowState] = useState<{ isOpen: boolean; timeRemaining: string; label: string }>({
