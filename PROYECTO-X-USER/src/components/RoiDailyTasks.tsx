@@ -20,6 +20,14 @@ interface Props {
 
 type HistoryDay = { task_day: string; completed_tasks: number; completed_at: string | null };
 type TaskCompletion = { task_code: TaskCode; task_day: string; completed_at: string };
+type CycleEvent = {
+  id: string;
+  type: 'CAPITAL_RETURN' | 'MATURITY_PAYOUT';
+  amount: number;
+  status: string;
+  description: string | null;
+  created_at: string;
+};
 
 const localDate = () => new Intl.DateTimeFormat('en-CA', {
   timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit', day: '2-digit',
@@ -38,6 +46,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   const [working, setWorking] = useState<TaskCode | null>(null);
   const [simulation, setSimulation] = useState<TaskCode | null>(null);
   const [history, setHistory] = useState<HistoryDay[]>([]);
+  const [cycleEvents, setCycleEvents] = useState<CycleEvent[]>([]);
   const [accumulatedRoi, setAccumulatedRoi] = useState(0);
   const [nextAvailableAt, setNextAvailableAt] = useState<Date | null>(null);
   const [secondsToCut, setSecondsToCut] = useState(0);
@@ -46,10 +55,17 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   const load = useCallback(async () => {
     if (!userId) return;
     setLoading(true);
-    const [todayResult, historyResult, investmentsResult] = await Promise.all([
+    const [todayResult, historyResult, investmentsResult, cycleEventsResult] = await Promise.all([
       supabase.from('roi_daily_task_completions').select('task_code, task_day, completed_at').eq('user_id', userId).eq('task_day', localDate()),
       supabase.from('roi_daily_task_completions').select('task_code, task_day, completed_at').eq('user_id', userId).order('completed_at', { ascending: false }).limit(100),
       supabase.from('investments').select('accumulated_earnings').eq('user_id', userId),
+      supabase
+        .from('transactions')
+        .select('id, type, amount, status, description, created_at')
+        .eq('user_id', userId)
+        .in('type', ['CAPITAL_RETURN', 'MATURITY_PAYOUT'])
+        .order('created_at', { ascending: false })
+        .limit(20),
     ]);
 
     if (todayResult.error || historyResult.error) {
@@ -82,10 +98,34 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
       setHistory(groupedHistory.slice(0, 7));
     }
     setAccumulatedRoi((investmentsResult.data || []).reduce((sum, investment) => sum + Number(investment.accumulated_earnings || 0), 0));
+    if (cycleEventsResult.error) {
+      addNotification('No se pudieron cargar los cierres de ciclos.', 'error');
+    } else {
+      setCycleEvents((cycleEventsResult.data || []).map(event => ({
+        ...event,
+        amount: Number(event.amount || 0),
+      })) as CycleEvent[]);
+    }
     setLoading(false);
   }, [userId, addNotification]);
 
   useEffect(() => { void load(); }, [load]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const channel = supabase
+      .channel(`cycle-ledger-${userId}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'transactions', filter: `user_id=eq.${userId}` },
+        payload => {
+          const type = String(payload.new?.type || '');
+          if (type === 'CAPITAL_RETURN' || type === 'MATURITY_PAYOUT') void load();
+        },
+      )
+      .subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [load, userId]);
 
   useEffect(() => {
     const tick = () => {
@@ -191,6 +231,32 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
           <div className="flex items-center gap-2"><CalendarDays size={18} className="text-proyecto-accent" /><h3 className="font-orbitron text-sm font-black text-white">Bitácora de análisis y rendimiento</h3></div>
           <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[560px] text-left text-xs"><thead className="border-b border-white/10 text-[9px] font-mono-tech uppercase tracking-wider text-slate-500"><tr><th className="pb-3">Fecha</th><th className="pb-3">Señales</th><th className="pb-3">Lectura</th><th className="pb-3">Rendimiento</th><th className="pb-3">Acumulado</th></tr></thead><tbody className="divide-y divide-white/5 text-slate-300">{history.map(day => <tr key={day.task_day}><td className="py-3 font-mono">{day.task_day}</td><td>{day.completed_tasks}/4</td><td className={day.completed_tasks === 4 ? 'text-emerald-300' : 'text-amber-300'}>{day.completed_tasks === 4 ? 'Confirmada' : 'Incompleta'}</td><td>{day.completed_tasks === 4 ? 'ROI procesado por ciclo' : 'Sin acreditación'}</td><td className="text-proyecto-accent">${accumulatedRoi.toFixed(2)}</td></tr>)}</tbody></table></div>
           {!history.length && <p className="py-4 text-xs text-slate-500">Aún no hay análisis diarios registrados.</p>}
+          <div className="mt-5 border-t border-white/10 pt-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h4 className="font-orbitron text-xs font-black uppercase tracking-wider text-white">Cierres y cancelaciones de ciclos</h4>
+              <span className="text-[9px] font-mono-tech uppercase tracking-wider text-slate-500">Últimos 20 movimientos</span>
+            </div>
+            {cycleEvents.length ? (
+              <div className="mt-3 grid gap-3">
+                {cycleEvents.map(event => {
+                  const cancelled = event.type === 'CAPITAL_RETURN';
+                  const eventDate = new Intl.DateTimeFormat('es-DO', {
+                    timeZone: 'America/Santo_Domingo',
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit',
+                  }).format(new Date(event.created_at));
+                  return (
+                    <article key={event.id} className={`grid gap-3 border p-3 sm:grid-cols-[145px_170px_1fr_auto] sm:items-center ${cancelled ? 'border-amber-400/20 bg-amber-400/[0.04]' : 'border-emerald-400/20 bg-emerald-400/[0.04]'}`}>
+                      <div><p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">Fecha y hora</p><p className="mt-1 font-mono text-[11px] text-slate-300">{eventDate}</p></div>
+                      <div><p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">Evento</p><p className={`mt-1 text-xs font-bold ${cancelled ? 'text-amber-300' : 'text-emerald-300'}`}>{cancelled ? 'Ciclo cancelado' : 'Ciclo finalizado'}</p></div>
+                      <div className="min-w-0"><p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">Detalle</p><p className="mt-1 text-xs leading-relaxed text-slate-300">{event.description || (cancelled ? 'Capital flexible devuelto a Wallet Bank.' : 'Capital y ROI liberados al vencimiento.')}</p></div>
+                      <div className="sm:text-right"><p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">{cancelled ? 'Capital devuelto' : 'Capital + ROI liberados'}</p><p className="mt-1 font-orbitron text-base font-black text-emerald-300">+${event.amount.toFixed(2)}</p><p className="text-[8px] font-mono-tech uppercase text-slate-500">Wallet Bank · {event.status}</p></div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : <p className="mt-3 py-3 text-xs text-slate-500">Aún no hay ciclos cancelados o finalizados.</p>}
+          </div>
           <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-slate-500"><WalletCards size={15} className="mt-0.5 shrink-0 text-proyecto-accent" />El acumulado refleja el ROI actual de tus contratos. El motor de ciclos calcula el rendimiento cuando confirmas las cuatro lecturas del mercado.</p>
         </section>
       </div>
