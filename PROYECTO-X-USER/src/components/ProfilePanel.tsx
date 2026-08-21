@@ -176,7 +176,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
       return;
     }
     const updates: any = {};
-    if (isLinkingWalletWith2FA) updates.withdrawal_wallet = wallet;
+    if (isLinkingWalletWith2FA) updates.wallet_address = wallet;
     const enrollmentSaved = await onUpdateUser(updates);
     if (enrollmentSaved === false) {
       setIs2faLoading(false);
@@ -225,7 +225,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
       return;
     }
 
-    const walletSaved = await onUpdateUser({ withdrawal_wallet: wallet });
+    const walletSaved = await onUpdateUser({ wallet_address: wallet });
     if (walletSaved === false) {
       setIsWalletVerifying(false);
       return;
