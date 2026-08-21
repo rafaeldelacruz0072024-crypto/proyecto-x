@@ -12,7 +12,9 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const NOWPAY_BASE = 'https://api.nowpayments.io/v1';
+const NOWPAY_BASE = Deno.env.get('NOWPAYMENTS_MODE') === 'live'
+  ? 'https://api.nowpayments.io/v1'
+  : 'https://api.sandbox.nowpayments.io/v1';
 
 interface PayoutItem {
   id: string;
@@ -39,6 +41,8 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
 
   try {
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) throw new Error('Sesión administrativa requerida');
     // ── Load secrets ─────────────────────────────────────────
     const NOWPAY_KEY      = Deno.env.get('NOWPAYMENTS_API_KEY');
     const NOWPAY_EMAIL    = Deno.env.get('NOWPAYMENTS_EMAIL');
@@ -52,6 +56,12 @@ serve(async (req) => {
     const SERVICE_KEY   = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase      = createClient(SUPABASE_URL, SERVICE_KEY);
 
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) throw new Error('Sesión administrativa inválida');
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
+    if (!profile || !['admin', 'sub-admin'].includes(profile.role)) throw new Error('Acceso administrativo requerido');
+
     // ── Parse body ───────────────────────────────────────────
     const { withdrawals }: { withdrawals: PayoutItem[] } = await req.json();
     if (!withdrawals || withdrawals.length === 0) {
@@ -64,11 +74,12 @@ serve(async (req) => {
     // ── Step 2: Build payout batch ───────────────────────────
     // NOWPayments Payout API: POST /v1/payout
     // Requires: x-api-key + Authorization: Bearer JWT
-    const payouts = withdrawals.map(w => ({
+    const withdrawalsPayload = withdrawals.map(w => ({
       address:        w.wallet,
       currency:       'usdtbsc',   // USDT BEP-20
       amount:         w.amount,
-      ipn_extra_info: `gx_${w.id}`,
+      extra_id:       w.id,
+      ipn_callback_url: `${SUPABASE_URL}/functions/v1/nowpayments-payout-ipn`,
     }));
 
     const nowResponse = await fetch(`${NOWPAY_BASE}/payout`, {
@@ -78,7 +89,7 @@ serve(async (req) => {
         'Authorization': `Bearer ${jwt}`,
         'Content-Type':  'application/json',
       },
-      body: JSON.stringify({ payouts }),
+      body: JSON.stringify({ withdrawals: withdrawalsPayload }),
     });
 
     const nowData = await nowResponse.json();
@@ -103,19 +114,20 @@ serve(async (req) => {
 
     // ── Step 4: Batch accepted — update DB ───────────────────
     const batchId     = nowData.id || String(Date.now());
-    const nowPayouts: any[] = nowData.payouts || [];
+    const nowPayouts: any[] = nowData.withdrawals || [];
     const results: any[]    = [];
 
     for (const w of withdrawals) {
-      // Match payout by ipn_extra_info
-      const match = nowPayouts.find((p: any) => p.ipn_extra_info === `gx_${w.id}`);
+      const match = nowPayouts.find((p: any) => p.extra_id === w.id);
 
+      // La aceptación del batch no equivale a pago terminado. El IPN firmado
+      // será el único que cambie el retiro a COMPLETED.
       await supabase
         .from('withdrawals')
         .update({
-          status:               'completed',
+          status:               'approved',
           blockchain_tx_hash:   match?.id || batchId,
-          completed_at:         new Date().toISOString(),
+          approved_at:          new Date().toISOString(),
         })
         .eq('id', w.id);
 
@@ -124,7 +136,7 @@ serve(async (req) => {
         user_email:           w.user_email,
         amount:               w.amount,
         wallet:               w.wallet,
-        status:               'sent',
+        status:               'processing',
         batch_withdrawal_id:  batchId,
       });
     }

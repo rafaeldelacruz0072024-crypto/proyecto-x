@@ -1,0 +1,7 @@
+project_id = "highecwkafvuhptqodue"
+
+[functions.nowpayments-ipn]
+verify_jwt = false
+
+[functions.nowpayments-payout-ipn]
+verify_jwt = false

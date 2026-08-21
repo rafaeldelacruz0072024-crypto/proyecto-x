@@ -6,7 +6,9 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const NP_BASE = 'https://api.nowpayments.io/v1'
+const NP_BASE = Deno.env.get('NOWPAYMENTS_MODE') === 'live'
+  ? 'https://api.nowpayments.io/v1'
+  : 'https://api.sandbox.nowpayments.io/v1'
 
 // Authenticates with NowPayments and returns a short-lived JWT
 async function getNowPaymentsJWT(email: string, password: string): Promise<string> {
@@ -126,13 +128,10 @@ serve(async (req) => {
           'x-api-key':     apiKey,
           'Authorization': `Bearer ${jwt}`,
         },
-        body: JSON.stringify({
-          address,
-          currency,
-          amount,
-          extra_id:         withdrawal_id,
+        body: JSON.stringify({ withdrawals: [{
+          address, currency, amount, extra_id: withdrawal_id,
           ipn_callback_url: `${supabaseUrl}/functions/v1/nowpayments-payout-ipn`,
-        }),
+        }] }),
       })
 
       const payoutData = await payoutRes.json()
@@ -144,13 +143,14 @@ serve(async (req) => {
         })
       }
 
-      const nowpaymentsId = payoutData?.id ?? `NP-${withdrawal_id.slice(0, 8)}`
+      const item = payoutData?.withdrawals?.[0]
+      const nowpaymentsId = item?.id ?? payoutData?.id
+      if (!nowpaymentsId) throw new Error('NOWPayments accepted the payout without a provider id.')
 
-      // Mark withdrawal as COMPLETED in DB
-      const { data: rpcResult, error: rpcError } = await supabase.rpc('mark_payout_completed', {
-        p_withdrawal_id:  withdrawal_id,
-        p_nowpayments_id: String(nowpaymentsId),
-      })
+      // La solicitud queda en procesamiento; solo el IPN firmado puede completarla.
+      const { error: rpcError } = await supabase.from('withdrawals').update({
+        status: 'approved', blockchain_tx_hash: String(nowpaymentsId), approved_at: new Date().toISOString(),
+      }).eq('id', withdrawal_id)
 
       if (rpcError) {
         console.error('RPC error:', rpcError)
@@ -163,7 +163,7 @@ serve(async (req) => {
         success: true,
         withdrawal_id,
         nowpayments_id: nowpaymentsId,
-        payout: payoutData,
+        status: 'processing',
       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
     }
 
@@ -191,7 +191,7 @@ serve(async (req) => {
         }))
       }
 
-      const batchRes = await fetch(`${NP_BASE}/batch-payment`, {
+      const batchRes = await fetch(`${NP_BASE}/payout`, {
         method: 'POST',
         headers: {
           'Content-Type':  'application/json',
@@ -210,7 +210,7 @@ serve(async (req) => {
         })
       }
 
-      // Mark each withdrawal as COMPLETED
+      // Persist provider ids but wait for the signed IPN before completion.
       const results: { withdrawal_id: string; success: boolean; nowpayments_id?: string; error?: string }[] = []
 
       const batchItems: any[] = batchData?.withdrawals ?? []
@@ -219,10 +219,9 @@ serve(async (req) => {
         const npItem = batchItems.find((i: any) => i.extra_id === w.withdrawal_id) ?? batchItems[results.length]
         const npId   = npItem?.id ? String(npItem.id) : `BATCH-${batchData?.id ?? 'unknown'}`
 
-        const { error: rpcError } = await supabase.rpc('mark_payout_completed', {
-          p_withdrawal_id:  w.withdrawal_id,
-          p_nowpayments_id: npId,
-        })
+        const { error: rpcError } = await supabase.from('withdrawals').update({
+          status: 'approved', blockchain_tx_hash: npId, approved_at: new Date().toISOString(),
+        }).eq('id', w.withdrawal_id)
 
         results.push({
           withdrawal_id:  w.withdrawal_id,

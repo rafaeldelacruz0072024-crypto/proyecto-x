@@ -1,52 +1,9 @@
 import { supabase } from '../lib/supabase';
-import { GatewayConfig } from '../types';
 
 /**
  * NOWPayments Service
  * Handles interaction with the NOWPayments API to create payment orders.
  */
-
-const API_BASE_URL = 'https://api.nowpayments.io/v1';
-const SANDBOX_API_BASE_URL = 'https://api.sandbox.nowpayments.io/v1';
-
-export async function getGatewayConfig(provider: string = 'now'): Promise<GatewayConfig | null> {
-    try {
-        // Broad search for ANY gateway that might be NOWPayments
-        const { data: allGateways, error: fetchAllError } = await supabase
-            .from('system_gateways')
-            .select('*');
-
-        if (fetchAllError) {
-            console.error("Error fetching any gateway:", fetchAllError.message);
-            return null;
-        }
-
-        console.log("Total pasarelas encontradas en DB:", allGateways?.length || 0);
-        console.log("Nombres de pasarelas:", allGateways?.map(g => g.provider).join(', '));
-
-        // Find the most likely candidate
-        const candidate = allGateways?.find(g =>
-            g.is_active &&
-            g.provider.toLowerCase().includes(provider.toLowerCase())
-        );
-
-        if (candidate) {
-            console.log("Candidato encontrado:", candidate.provider);
-            return candidate;
-        }
-
-        // Fallback: If no direct match, take the first active one if it's the only one
-        if (allGateways?.length === 1 && allGateways[0].is_active) {
-            console.log("Solo hay una pasarela activa, usándola:", allGateways[0].provider);
-            return allGateways[0];
-        }
-
-        return null;
-    } catch (error) {
-        console.error(`Unexpected error in getGatewayConfig:`, error);
-        return null;
-    }
-}
 
 export interface PaymentRequest {
     price_amount: number;

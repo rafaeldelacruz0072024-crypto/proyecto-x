@@ -45,17 +45,11 @@ serve(async (req) => {
 
         const numAmount = Number(amount)
 
-        // 2. Obtener la configuración del Gateway
-        console.log("Paso 2: Buscando pasarela NOWPayments activa")
-        const { data: config, error: configError } = await supabase
-            .from('system_gateways')
-            .select('*')
-            .ilike('provider', '%Now%')
-            .eq('is_active', true)
-            .maybeSingle()
-
-        if (configError) throw new Error(`Error en base de datos (Gateways): ${configError.message}`)
-        if (!config) throw new Error("No hay una pasarela NOWPayments activa en el sistema.")
+        // 2. Las credenciales se leen solo desde secretos del servidor.
+        const apiKey = Deno.env.get('NOWPAYMENTS_API_KEY') ?? ''
+        const callbackUrl = Deno.env.get('NOWPAYMENTS_IPN_URL') ?? ''
+        const mode = Deno.env.get('NOWPAYMENTS_MODE') === 'live' ? 'live' : 'test'
+        if (!apiKey || !callbackUrl) throw new Error('NOWPayments no está configurado en el servidor.')
 
         // 3. Crear registro en DB (Depósito y Transacción)
         console.log("Paso 3: Creando registros preventivos en base de datos")
@@ -90,8 +84,8 @@ serve(async (req) => {
 
         // 4. Crear el pago en NOWPayments
         console.log("Paso 4: Solicitando pago a NOWPayments API")
-        const baseUrl = config.mode === 'test'
-            ? 'https://api-sandbox.nowpayments.io/v1'
+        const baseUrl = mode === 'test'
+            ? 'https://api.sandbox.nowpayments.io/v1'
             : 'https://api.nowpayments.io/v1'
 
         const npPayload = {
@@ -100,13 +94,13 @@ serve(async (req) => {
             pay_currency: 'usdtbsc',
             order_id: deposit.id,
             order_description: `Deposit ${deposit.id}`,
-            ipn_callback_url: Deno.env.get('NOWPAYMENTS_IPN_URL')
+            ipn_callback_url: callbackUrl
         }
 
         const response = await fetch(`${baseUrl}/payment`, {
             method: 'POST',
             headers: {
-                'x-api-key': config.api_key,
+                'x-api-key': apiKey,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(npPayload)

@@ -22,9 +22,6 @@ serve(async (req) => {
         const payload = JSON.parse(bodyText)
         const signature = req.headers.get('x-nowpayments-sig')
 
-        console.log("NOWPayments IPN Header Sig:", signature)
-        console.log("NOWPayments IPN Payload:", payload)
-
         const {
             payment_status,
             payment_id,
@@ -34,15 +31,8 @@ serve(async (req) => {
             actually_paid
         } = payload
 
-        // 2. GET API KEY / IPN SECRET FROM DB
-        const { data: config } = await supabase
-            .from('system_gateways')
-            .select('webhook_secret')
-            .ilike('provider', '%Now%')
-            .eq('is_active', true)
-            .maybeSingle()
-
-        const ipnSecret = config?.webhook_secret
+        // 2. El secreto IPN nunca se almacena ni se consulta desde el navegador.
+        const ipnSecret = Deno.env.get('NOWPAYMENTS_IPN_SECRET') ?? ''
 
         // 3. SECURE SIGNATURE VERIFICATION
         if (ipnSecret && signature) {
@@ -75,10 +65,8 @@ serve(async (req) => {
                     .map(b => b.toString(16).padStart(2, '0'))
                     .join('');
 
-                console.log("Generated Sig:", generatedSig);
-
                 if (generatedSig !== signature) {
-                    console.error(`IPN signature mismatch. Expected: ${generatedSig} | Received: ${signature}`);
+                    console.error('IPN signature mismatch.');
                     return new Response(
                         JSON.stringify({ error: "Invalid IPN signature. Request rejected." }),
                         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -92,9 +80,9 @@ serve(async (req) => {
                     { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
                 );
             }
-        } else if (!ipnSecret) {
+        } else {
             // Webhook secret not configured — block all IPN processing as a safety measure
-            console.error("IPN rejected: webhook_secret not configured in system_gateways.");
+            console.error('IPN rejected: signature or server secret missing.');
             return new Response(
                 JSON.stringify({ error: "Gateway not configured." }),
                 { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -105,7 +93,8 @@ serve(async (req) => {
         const status = (payment_status || '').toLowerCase()
         console.log(`Processing IPN for Order: ${order_id} | Payment: ${payment_id} | Status: ${status}`)
 
-        if (status !== 'finished' && status !== 'partially_paid' && status !== 'confirmed') {
+        // El dinero solo se acredita cuando NOWPayments declara el pago terminado.
+        if (status !== 'finished') {
             console.log(`Payment status ${status} is not final yet. Skipping processing.`);
             return new Response(JSON.stringify({ message: `Status ${status} ignored.` }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
