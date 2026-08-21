@@ -19,7 +19,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
 
   // Derivados de seguridad
   const kycVerified = user?.kycVerified || user?.kyc_verified || false;
-  const twoFactorEnabled = user?.two_factor_enabled || user?.twoFactorEnabled || false;
+  // El estado real del 2FA proviene de Supabase Auth; profiles no requiere una columna two_factor_enabled.
+  const twoFactorEnabled = hasVerifiedMfa || Boolean(user?.two_factor_enabled || user?.twoFactorEnabled);
   const walletAddress = user?.withdrawal_wallet || user?.withdrawalWallet || '';
   const hasWallet = !!walletAddress;
 
@@ -34,9 +35,22 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [mfaQrCode, setMfaQrCode] = useState('');
   const [mfaSecret, setMfaSecret] = useState('');
   const [mfaFactorId, setMfaFactorId] = useState('');
+  const [hasVerifiedMfa, setHasVerifiedMfa] = useState(false);
   const [isWalletVerificationOpen, setIsWalletVerificationOpen] = useState(false);
   const [walletVerificationCode, setWalletVerificationCode] = useState('');
   const [isWalletVerifying, setIsWalletVerifying] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadMfaStatus = async () => {
+      const { data, error } = await supabase.auth.mfa.listFactors();
+      if (!cancelled && !error) {
+        setHasVerifiedMfa(Boolean(data?.totp?.some(item => item.status === 'verified')));
+      }
+    };
+    void loadMfaStatus();
+    return () => { cancelled = true; };
+  }, []);
 
   // Extraer nombre compatible con ambos formatos
   const userName = user?.full_name || user?.name || user?.username || user?.email?.split('@')[0] || 'User';
@@ -161,13 +175,14 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
       setIs2faLoading(false);
       return;
     }
-    const updates: any = { two_factor_enabled: true };
+    const updates: any = {};
     if (isLinkingWalletWith2FA) updates.withdrawal_wallet = wallet;
     const enrollmentSaved = await onUpdateUser(updates);
     if (enrollmentSaved === false) {
       setIs2faLoading(false);
       return;
     }
+    setHasVerifiedMfa(true);
     addNotification(t('profile.notifications.auth_success'), 'success');
     setIsSettingUp2FA(false);
     setIsLinkingWalletWith2FA(false);
@@ -238,7 +253,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     if (unenrollError) {
       addNotification(unenrollError.message, 'error');
     } else {
-      onUpdateUser({ two_factor_enabled: false });
+      setHasVerifiedMfa(false);
       addNotification(t('profile.notifications.auth_disabled'), 'info');
     }
     setIs2faLoading(false);
