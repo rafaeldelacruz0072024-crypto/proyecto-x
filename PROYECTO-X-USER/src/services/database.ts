@@ -567,19 +567,27 @@ export async function createOrUpdateProfile(userId: string, email: string, refer
 
 export async function updateUserProfile(userId: string, updates: Partial<Profile>) {
   try {
+    if ('withdrawal_wallet' in updates) {
+      const { data, error } = await supabase.rpc('save_my_withdrawal_wallet', {
+        p_wallet: updates.withdrawal_wallet,
+      });
+      if (error) throw error;
+      if (!data?.success || data.user_id !== userId || data.withdrawal_wallet !== updates.withdrawal_wallet) {
+        return { success: false, error: 'Supabase no confirmó el guardado de la wallet.' };
+      }
+      return { success: true };
+    }
+
     const { data, error } = await supabase
       .from('profiles')
       .update(updates)
       .eq('id', userId)
-      .select('id, withdrawal_wallet')
+      .select('id')
       .maybeSingle();
 
     if (error) throw error;
     if (!data || data.id !== userId) {
       return { success: false, error: 'No se actualizó el perfil. Verifica la sesión y los permisos de tu cuenta.' };
-    }
-    if ('withdrawal_wallet' in updates && data.withdrawal_wallet !== updates.withdrawal_wallet) {
-      return { success: false, error: 'Supabase no confirmó el guardado de la wallet.' };
     }
     return { success: true };
   } catch (error: any) {
