@@ -51,6 +51,7 @@ import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import BinaryBonusPanel from './components/BinaryBonusPanel';
 import UserSidebar from './components/UserSidebar';
+import { requestWelcomeEmail, requestWithdrawalEmail } from './services/emailNotifications';
 // Red vacía - se llenará con datos reales cuando se implemente backend de referidos
 const EMPTY_NETWORK: NetworkNode = {
   id: 'root',
@@ -113,6 +114,12 @@ const App: React.FC = () => {
   const [activePromotion, setActivePromotion] = useState<any>(null);
   const [showFlashOffer, setShowFlashOffer] = useState(false);
   const [passivePaidToday, setPassivePaidToday] = useState(false);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    // La función remota es idempotente: en inicios de sesión posteriores no reenvía el correo.
+    void requestWelcomeEmail();
+  }, [user?.id]);
 
   const addNotification = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = Date.now().toString();
@@ -543,6 +550,9 @@ const App: React.FC = () => {
         isConfirmed: false
       };
       setMockEmails(prev => [withdrawalEmail, ...prev]);
+
+      // El retiro ya fue confirmado por el RPC atómico. El correo no bloquea la operación.
+      void requestWithdrawalEmail(result.withdrawal.id);
 
       refetch(); // Recargar datos
     } else {
