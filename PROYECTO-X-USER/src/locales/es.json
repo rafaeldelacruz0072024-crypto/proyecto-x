@@ -299,7 +299,7 @@
             "title": "BÓVEDA DE RETIRO",
             "status_locked": "Bóveda Bloqueada",
             "frozen_desc": "Su dirección USDT (BEP-20) está vinculada permanentemente a este nodo por seguridad.",
-            "unfrozen_desc": "Configure su dirección de billetera USDT (BEP-20). Una vez vinculada con 2FA, no se puede cambiar.",
+            "unfrozen_desc": "Configure o cambie directamente su dirección de billetera USDT (BEP-20).",
             "placeholder": "0x...",
             "save_button": "GUARDAR WALLET",
             "update_button": "ACTUALIZAR WALLET",

@@ -290,7 +290,7 @@
             "title": "WITHDRAWAL VAULT",
             "status_locked": "Vault Locked",
             "frozen_desc": "Your USDT (BEP-20) address is permanently linked to this node for security.",
-            "unfrozen_desc": "Configure your USDT (BEP-20) wallet address. Once linked with 2FA, it cannot be changed.",
+            "unfrozen_desc": "Configure or directly change your USDT (BEP-20) wallet address.",
             "placeholder": "0x...",
             "save_button": "SAVE WALLET",
             "update_button": "UPDATE WALLET",

@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTranslation } from 'react-i18next';
-import { requestWalletConfirmationEmail } from '../services/emailNotifications';
 
 interface Props {
   user: any; // Flexible para aceptar tanto User de types como profile de Supabase
@@ -14,30 +13,16 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [activeSubTab, setActiveSubTab] = useState<'info' | 'security' | 'sessions'>('info');
   const [passForm, setPassForm] = useState({ current: '', new: '', confirm: '' });
   const [showPass, setShowPass] = useState(false);
-  // Estado heredado, no expuesto: el flujo de retiro ya no usa 2FA.
-  const [is2faLoading, setIs2faLoading] = useState(false);
   const [isChangingPass, setIsChangingPass] = useState(false);
   const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.wallet_address || user?.withdrawalWallet || '');
 
-  // 2FA Setup Flow State
-  const [isSettingUp2FA, setIsSettingUp2FA] = useState(false);
-  const [isLinkingWalletWith2FA, setIsLinkingWalletWith2FA] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
-  const [mfaQrCode, setMfaQrCode] = useState('');
-  const [mfaSecret, setMfaSecret] = useState('');
-  const [mfaFactorId, setMfaFactorId] = useState('');
-  const [hasVerifiedMfa, setHasVerifiedMfa] = useState(false);
-  const [isWalletVerificationOpen, setIsWalletVerificationOpen] = useState(false);
-  const [walletVerificationCode, setWalletVerificationCode] = useState('');
-  const [isWalletVerifying, setIsWalletVerifying] = useState(false);
-
-  // La seguridad de retiro se basa en la confirmación por correo, no en 2FA.
   const kycVerified = user?.kycVerified || user?.kyc_verified || false;
-  const twoFactorEnabled = false;
   const walletAddress = user?.withdrawal_wallet || user?.wallet_address || user?.withdrawalWallet || '';
   const hasWallet = !!walletAddress;
-  const walletConfirmedAt = user?.withdrawal_wallet_confirmed_at || user?.wallet_confirmed_at;
-  const isWalletFrozen = hasWallet && Boolean(walletConfirmedAt);
+
+  useEffect(() => {
+    setWallet(walletAddress);
+  }, [walletAddress]);
 
   // Extraer nombre compatible con ambos formatos
   const userName = user?.full_name || user?.name || user?.username || user?.email?.split('@')[0] || 'User';
@@ -104,8 +89,6 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   };
 
   const saveWallet = async () => {
-    if (isWalletFrozen) return;
-
     if (!/^0x[a-fA-F0-9]{40}$/.test(wallet.trim())) {
       addNotification('Ingresa una dirección BEP-20 válida.', "error");
       return;
@@ -116,131 +99,12 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
       return;
     }
 
-    const result = await requestWalletConfirmationEmail(wallet.trim());
-    if (!result.success && !result.duplicate) {
-      addNotification('No se pudo enviar el correo de confirmación. Intenta nuevamente.', 'error');
+    const saved = await onUpdateUser({ withdrawal_wallet: wallet.trim() });
+    if (saved === false) {
+      addNotification('No se pudo guardar la wallet. Intenta nuevamente.', 'error');
       return;
     }
-    addNotification('Revisa tu correo y confirma la dirección BEP-20. La billetera no quedará activa hasta confirmarla.', 'info');
-  };
-
-  const start2FASetup = async (forWallet = false) => {
-    setIs2faLoading(true);
-    setIsLinkingWalletWith2FA(forWallet);
-    const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'NOVA Authenticator' });
-    if (error || !data?.id || !data.totp) {
-      addNotification(error?.message || 'No se pudo iniciar el enrolamiento 2FA seguro.', 'error');
-      setIs2faLoading(false);
-      return;
-    }
-    setMfaFactorId(data.id);
-    setMfaQrCode(data.totp.qr_code);
-    setMfaSecret(data.totp.secret);
-    setIsSettingUp2FA(true);
-    setIs2faLoading(false);
-    addNotification(t('profile.notifications.auth_syncing'), 'info');
-  };
-
-  const complete2FASetup = async () => {
-    if (verificationCode.length !== 6 || !mfaFactorId) {
-      addNotification(t('profile.notifications.code_invalid'), 'error');
-      return;
-    }
-    setIs2faLoading(true);
-    const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: mfaFactorId });
-    if (challengeError || !challenge?.id) {
-      addNotification(challengeError?.message || 'No se pudo crear el desafÃ­o 2FA.', 'error');
-      setIs2faLoading(false);
-      return;
-    }
-    const { error: verifyError } = await supabase.auth.mfa.verify({ factorId: mfaFactorId, challengeId: challenge.id, code: verificationCode });
-    if (verifyError) {
-      addNotification(verifyError.message, 'error');
-      setIs2faLoading(false);
-      return;
-    }
-    const updates: any = {};
-    if (isLinkingWalletWith2FA) updates.withdrawal_wallet = wallet;
-    const enrollmentSaved = await onUpdateUser(updates);
-    if (enrollmentSaved === false) {
-      setIs2faLoading(false);
-      return;
-    }
-    setHasVerifiedMfa(true);
-    addNotification(t('profile.notifications.auth_success'), 'success');
-    setIsSettingUp2FA(false);
-    setIsLinkingWalletWith2FA(false);
-    setVerificationCode('');
-    setMfaQrCode('');
-    setMfaSecret('');
-    setIs2faLoading(false);
-  };
-
-  const verifyWalletUpdate = async () => {
-    if (!/^\d{6}$/.test(walletVerificationCode)) {
-      addNotification('Introduzca un código 2FA válido de 6 dígitos.', 'error');
-      return;
-    }
-
-    setIsWalletVerifying(true);
-    const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
-    const factor = factors?.totp?.find(item => item.status === 'verified');
-    if (factorsError || !factor) {
-      addNotification(factorsError?.message || 'No hay un factor 2FA verificado para proteger esta wallet.', 'error');
-      setIsWalletVerifying(false);
-      return;
-    }
-
-    const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: factor.id });
-    if (challengeError || !challenge?.id) {
-      addNotification(challengeError?.message || 'No se pudo crear el desafío 2FA.', 'error');
-      setIsWalletVerifying(false);
-      return;
-    }
-
-    const { error: verifyError } = await supabase.auth.mfa.verify({
-      factorId: factor.id,
-      challengeId: challenge.id,
-      code: walletVerificationCode,
-    });
-    if (verifyError) {
-      addNotification(verifyError.message, 'error');
-      setIsWalletVerifying(false);
-      return;
-    }
-
-    const walletSaved = await onUpdateUser({ withdrawal_wallet: wallet });
-    if (walletSaved === false) {
-      setIsWalletVerifying(false);
-      return;
-    }
-    setIsWalletVerificationOpen(false);
-    setWalletVerificationCode('');
-    setIsWalletVerifying(false);
     addNotification(t('profile.notifications.wallet_saved'), 'success');
-  };
-
-  const disable2FA = async () => {
-    if (hasWallet) {
-      addNotification('No puede desactivar el 2FA mientras exista una wallet vinculada. Desvincule la wallet mediante el flujo seguro antes de continuar.', 'error');
-      return;
-    }
-    setIs2faLoading(true);
-    const { data, error } = await supabase.auth.mfa.listFactors();
-    const factor = data?.totp?.find(item => item.status === 'verified');
-    if (error || !factor) {
-      addNotification(error?.message || 'No hay un factor 2FA verificado para eliminar.', 'error');
-      setIs2faLoading(false);
-      return;
-    }
-    const { error: unenrollError } = await supabase.auth.mfa.unenroll({ factorId: factor.id });
-    if (unenrollError) {
-      addNotification(unenrollError.message, 'error');
-    } else {
-      setHasVerifiedMfa(false);
-      addNotification(t('profile.notifications.auth_disabled'), 'info');
-    }
-    setIs2faLoading(false);
   };
 
   const securityScore = (kycVerified ? 50 : 0) + (hasWallet ? 50 : 0);
@@ -402,19 +266,9 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
 
             {/* Withdrawal Configuration */}
             <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group">
-              {isWalletFrozen && (
-                <div className="absolute top-0 right-0 p-4">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-proyecto-green/10 border border-proyecto-green/20 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                    <svg className="w-3 h-3 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                    <span className="text-[9px] font-mono-tech font-bold text-proyecto-green uppercase tracking-widest">{t('profile.vault.status_locked')}</span>
-                  </div>
-                </div>
-              )}
               <h3 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] mb-4 text-glow-cyan">{t('profile.vault.title')}</h3>
               <p className="text-[11px] text-slate-500 font-mono-tech uppercase font-bold tracking-tighter mb-8 border-b border-slate-800 pb-4">
-                {isWalletFrozen
-                  ? 'Dirección confirmada por correo. Por seguridad no se puede modificar.'
-                  : 'Agrega tu dirección BEP-20 y confirma el enlace que recibirás por correo.'}
+                Agrega o cambia directamente tu dirección de retiro USDT (BEP-20).
               </p>
               
               <div className="space-y-6">
@@ -426,10 +280,9 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                       <input
                         type="text"
                         value={wallet}
-                        onChange={(e) => !isWalletFrozen && setWallet(e.target.value)}
-                        disabled={isWalletFrozen}
+                        onChange={(e) => setWallet(e.target.value)}
                         placeholder="0x..."
-                        className={`w-full bg-black/50 border clip-corner-sm py-4 px-5 font-mono text-sm transition-all ${isWalletFrozen ? 'border-proyecto-green/30 text-slate-400 cursor-not-allowed' : 'border-slate-800 text-proyecto-accent focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]'}`}
+                        className="w-full bg-black/50 border border-slate-800 clip-corner-sm py-4 px-5 font-mono text-sm text-proyecto-accent focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan] transition-all"
                       />
                     </div>
                   </div>
@@ -440,17 +293,9 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                 </div>
 
                 <div className="pt-4 space-y-4">
-                  {!isWalletFrozen && (
-                    <button onClick={saveWallet} className="w-full md:w-auto px-12 py-4 bg-proyecto-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all hover:brightness-110">
-                      Confirmar por correo
-                    </button>
-                  )}
-                  {isWalletFrozen && (
-                    <div className="px-6 py-4 bg-slate-900/50 border border-slate-800 clip-corner-sm flex items-center justify-center md:justify-start gap-3">
-                      <div className="w-2 h-2 rounded-full bg-proyecto-green animate-pulse"></div>
-                      <span className="text-[10px] font-mono-tech font-bold text-slate-500 uppercase tracking-widest">{t('profile.vault.immutable')}</span>
-                    </div>
-                  )}
+                  <button onClick={saveWallet} className="w-full md:w-auto px-12 py-4 bg-proyecto-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all hover:brightness-110">
+                    Guardar wallet
+                  </button>
                 </div>
               </div>
             </div>
@@ -495,99 +340,6 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                 </div>
               </form>
             </div>
-
-            {/* El 2FA fue sustituido por confirmación de correo para la billetera. */}
-            {false && <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group">
-              <div className="flex flex-col md:flex-row gap-8 items-center mb-8 relative z-10">
-                <div className={`w-20 h-20 clip-corner-sm flex items-center justify-center shrink-0 border transition-all duration-500 ${twoFactorEnabled ? 'bg-proyecto-green/10 border-proyecto-green shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'bg-red-500/10 border-red-500 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.2)]'}`}>
-                  <svg className={`w-10 h-10 ${twoFactorEnabled ? 'text-proyecto-green' : 'text-red-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                </div>
-                <div className="flex-grow text-center md:text-left">
-                  <div className="flex items-center gap-3 justify-center md:justify-start">
-                    <h4 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('profile.2fa.title')}</h4>
-                    {twoFactorEnabled && (
-                      <span className="bg-proyecto-green/10 text-proyecto-green text-[8px] font-mono-tech font-bold px-2 py-0.5 rounded border border-proyecto-green/20 shadow-[0_0_5px_green]">{t('profile.2fa.active')}</span>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-slate-500 font-mono-tech uppercase font-bold tracking-tighter mt-1 leading-relaxed">
-                    {isLinkingWalletWith2FA
-                      ? t('profile.2fa.mandatory')
-                      : t('profile.2fa.desc')}
-                  </p>
-                </div>
-                {!isSettingUp2FA && (
-                  <button
-                    onClick={twoFactorEnabled ? disable2FA : start2FASetup}
-                    disabled={is2faLoading}
-                    className={`px-10 py-4 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest transition-all active:scale-95 ${twoFactorEnabled ? 'bg-slate-900 text-slate-400 border border-slate-800' : 'bg-proyecto-brand text-white shadow-[0_0_15px_rgba(0,114,255,0.4)] hover:brightness-110'}`}
-                  >
-                    {is2faLoading ? t('auth.processing').toUpperCase() : (twoFactorEnabled ? t('profile.2fa.disable') : t('profile.2fa.setup'))}
-                  </button>
-                )}
-              </div>
-
-              {/* Setup Wizard UI */}
-              {isSettingUp2FA && (
-                <div className="mt-8 pt-8 border-t border-slate-800/50 animate-fade-in relative z-10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-[0_0_20px_white]">
-                      {mfaQrCode ? (
-                        <img src={mfaQrCode} alt="CÃ³digo QR de NOVA Authenticator" className="w-40 h-40 rounded-xl bg-white p-2" />
-                      ) : (
-                        <div className="flex h-40 w-40 items-center justify-center rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 text-center text-[10px] font-mono-tech font-bold uppercase tracking-widest text-amber-700">2FA seguro</div>
-                      )}
-                      <p className="mt-4 text-[9px] text-black font-mono-tech font-bold uppercase tracking-widest border-t border-black/10 pt-2 w-full text-center">{t('profile.2fa.scan_protocol')}</p>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div className="space-y-1">
-                        <h5 className="text-[10px] font-orbitron font-bold text-white uppercase tracking-widest">{t('profile.2fa.step1')}</h5>
-                        <p className="text-[10px] text-slate-500 leading-relaxed font-mono-tech uppercase font-bold">{t('profile.2fa.step1_desc')}</p>
-                      </div>
-
-                      <div className="space-y-1">
-                        <h5 className="text-[10px] font-orbitron font-bold text-white uppercase tracking-widest">{t('profile.2fa.step2')}</h5>
-                        <div className="bg-black border border-proyecto-accent/20 px-4 py-3 clip-corner-sm font-mono text-proyecto-accent text-[10px] flex justify-between items-center group/key shadow-[0_0_10px_rgba(0,243,255,0.1)]">
-                          <span>{mfaSecret || 'Secreto generado por Supabase Auth'}</span>
-                          <button className="text-slate-700 group-hover/key:text-proyecto-accent transition-colors">
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
-                          </button>
-                        </div>
-                        <p className="text-[8px] text-red-500/80 font-mono-tech uppercase font-bold tracking-widest">{t('profile.2fa.recovery_warn')}</p>
-                      </div>
-
-                      <div className="space-y-3">
-                        <h5 className="text-[10px] font-orbitron font-bold text-white uppercase tracking-widest">{t('profile.2fa.step3')}</h5>
-                        <div className="flex gap-3">
-                          <input
-                            type="text"
-                            maxLength={6}
-                            placeholder="000000"
-                            value={verificationCode}
-                            onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
-                            className="flex-grow bg-black/50 border border-slate-800 clip-corner-sm py-3 px-4 text-center font-orbitron font-bold tracking-[0.5em] text-proyecto-accent text-lg focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan] transition-all"
-                          />
-                          <button
-                            onClick={complete2FASetup}
-                            disabled={is2faLoading || verificationCode.length !== 6}
-                            className="px-6 bg-proyecto-green text-slate-950 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.4)] disabled:opacity-30 transition-all hover:brightness-110"
-                          >
-                            {is2faLoading ? '...' : t('profile.2fa.verify_button')}
-                          </button>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => setIsSettingUp2FA(false)}
-                        className="text-[9px] text-slate-600 font-mono-tech font-bold uppercase tracking-widest hover:text-white transition-colors border-b border-transparent hover:border-white"
-                      >
-                        {t('profile.2fa.cancel')}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>}
           </div>
         )}
 

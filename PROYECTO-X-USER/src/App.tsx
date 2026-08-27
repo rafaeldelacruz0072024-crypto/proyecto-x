@@ -513,11 +513,9 @@ const App: React.FC = () => {
       return false;
     }
 
-    // La autorización del retiro usa la dirección BEP-20 confirmada por correo.
-    // No se usa 2FA como requisito del flujo NOVA.
-    const confirmedWallet = profile?.withdrawal_wallet || profile?.wallet_address || profile?.withdrawalWallet;
-    if (!confirmedWallet || !profile?.withdrawal_wallet_confirmed_at || address !== confirmedWallet) {
-      addNotification('Configura y confirma por correo tu Wallet BEP-20 antes de retirar.', 'error');
+    const savedWallet = profile?.withdrawal_wallet || profile?.wallet_address || profile?.withdrawalWallet;
+    if (!savedWallet || address.toLowerCase() !== savedWallet.toLowerCase()) {
+      addNotification('Configura tu Wallet BEP-20 antes de retirar.', 'error');
       return false;
     }
     await executeFinalWithdrawal(amount, method, address);
