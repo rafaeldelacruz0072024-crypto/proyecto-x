@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTranslation } from 'react-i18next';
+import { requestWalletConfirmationEmail } from '../services/emailNotifications';
 
 interface Props {
   user: any; // Flexible para aceptar tanto User de types como profile de Supabase
@@ -13,6 +14,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [activeSubTab, setActiveSubTab] = useState<'info' | 'security' | 'sessions'>('info');
   const [passForm, setPassForm] = useState({ current: '', new: '', confirm: '' });
   const [showPass, setShowPass] = useState(false);
+  // Estado heredado, no expuesto: el flujo de retiro ya no usa 2FA.
   const [is2faLoading, setIs2faLoading] = useState(false);
   const [isChangingPass, setIsChangingPass] = useState(false);
   const [wallet, setWallet] = useState(user?.withdrawal_wallet || user?.wallet_address || user?.withdrawalWallet || '');
@@ -29,28 +31,13 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
   const [walletVerificationCode, setWalletVerificationCode] = useState('');
   const [isWalletVerifying, setIsWalletVerifying] = useState(false);
 
-  // Derivados de seguridad
+  // La seguridad de retiro se basa en la confirmación por correo, no en 2FA.
   const kycVerified = user?.kycVerified || user?.kyc_verified || false;
-  // El estado real del 2FA proviene de Supabase Auth; profiles no requiere una columna two_factor_enabled.
-  const twoFactorEnabled = hasVerifiedMfa || Boolean(user?.two_factor_enabled || user?.twoFactorEnabled);
+  const twoFactorEnabled = false;
   const walletAddress = user?.withdrawal_wallet || user?.wallet_address || user?.withdrawalWallet || '';
   const hasWallet = !!walletAddress;
-
-  // La bóveda solo se congela si el 2FA está ACTIVO y ya existe una wallet configurada.
-  // Si el usuario desactiva el 2FA, la bóveda se desbloquea automáticamente.
-  const isWalletFrozen = twoFactorEnabled && hasWallet;
-
-  useEffect(() => {
-    let cancelled = false;
-    const loadMfaStatus = async () => {
-      const { data, error } = await supabase.auth.mfa.listFactors();
-      if (!cancelled && !error) {
-        setHasVerifiedMfa(Boolean(data?.totp?.some(item => item.status === 'verified')));
-      }
-    };
-    void loadMfaStatus();
-    return () => { cancelled = true; };
-  }, []);
+  const walletConfirmedAt = user?.withdrawal_wallet_confirmed_at || user?.wallet_confirmed_at;
+  const isWalletFrozen = hasWallet && Boolean(walletConfirmedAt);
 
   // Extraer nombre compatible con ambos formatos
   const userName = user?.full_name || user?.name || user?.username || user?.email?.split('@')[0] || 'User';
@@ -116,11 +103,11 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     setIsChangingPass(false);
   };
 
-  const saveWallet = () => {
+  const saveWallet = async () => {
     if (isWalletFrozen) return;
 
-    if (wallet && !/^0x[a-fA-F0-9]{40}$/.test(wallet)) {
-      addNotification('La wallet debe ser una dirección BEP20 válida de 42 caracteres.', "error");
+    if (!/^0x[a-fA-F0-9]{40}$/.test(wallet.trim())) {
+      addNotification('Ingresa una dirección BEP-20 válida.', "error");
       return;
     }
 
@@ -129,15 +116,12 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
       return;
     }
 
-    if (!twoFactorEnabled) {
-      addNotification(t('profile.notifications.auth_req'), "info");
-      void start2FASetup(true);
+    const result = await requestWalletConfirmationEmail(wallet.trim());
+    if (!result.success && !result.duplicate) {
+      addNotification('No se pudo enviar el correo de confirmación. Intenta nuevamente.', 'error');
       return;
     }
-
-    setWalletVerificationCode('');
-    setIsWalletVerificationOpen(true);
-    addNotification('Verifique el código 2FA para confirmar la wallet.', 'info');
+    addNotification('Revisa tu correo y confirma la dirección BEP-20. La billetera no quedará activa hasta confirmarla.', 'info');
   };
 
   const start2FASetup = async (forWallet = false) => {
@@ -259,7 +243,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
     setIs2faLoading(false);
   };
 
-  const securityScore = (twoFactorEnabled ? 33 : 0) + (kycVerified ? 34 : 0) + (hasWallet ? 33 : 0);
+  const securityScore = (kycVerified ? 50 : 0) + (hasWallet ? 50 : 0);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-fade-in">
@@ -299,8 +283,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
             <span className={`px-3 py-1 clip-corner-sm text-[8px] font-mono-tech font-bold uppercase border transition-all ${kycVerified ? 'bg-proyecto-green/10 text-proyecto-green border-proyecto-green/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
               KYC {kycVerified ? t('profile.sidebar.verified') : t('profile.sidebar.pending')}
             </span>
-            <span className={`px-3 py-1 clip-corner-sm text-[8px] font-mono-tech font-bold uppercase border transition-all ${twoFactorEnabled ? 'bg-proyecto-accent/10 text-proyecto-accent border-proyecto-accent/20' : 'bg-slate-800 text-slate-500 border-slate-700'}`}>
-              2FA {twoFactorEnabled ? t('profile.2fa.on') : t('profile.2fa.off')}
+            <span className={`px-3 py-1 clip-corner-sm text-[8px] font-mono-tech font-bold uppercase border transition-all ${hasWallet ? 'bg-proyecto-accent/10 text-proyecto-accent border-proyecto-accent/20' : 'bg-slate-800 text-slate-500 border-slate-700'}`}>
+              EMAIL {hasWallet ? 'CONFIRMADO' : 'PENDIENTE'}
             </span>
           </div>
 
@@ -429,8 +413,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
               <h3 className="text-xl font-orbitron font-bold text-white uppercase tracking-[0.3em] mb-4 text-glow-cyan">{t('profile.vault.title')}</h3>
               <p className="text-[11px] text-slate-500 font-mono-tech uppercase font-bold tracking-tighter mb-8 border-b border-slate-800 pb-4">
                 {isWalletFrozen
-                  ? t('profile.vault.frozen_desc')
-                  : t('profile.vault.unfrozen_desc')}
+                  ? 'Dirección confirmada por correo. Por seguridad no se puede modificar.'
+                  : 'Agrega tu dirección BEP-20 y confirma el enlace que recibirás por correo.'}
               </p>
               
               <div className="space-y-6">
@@ -456,44 +440,9 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                 </div>
 
                 <div className="pt-4 space-y-4">
-                  {isWalletVerificationOpen && (
-                    <div className="p-5 bg-proyecto-accent/5 border border-proyecto-accent/30 clip-corner-sm space-y-4">
-                      <div>
-                        <p className="text-[10px] font-orbitron font-bold text-white uppercase tracking-widest">Confirmación 2FA requerida</p>
-                        <p className="mt-2 text-[10px] text-slate-500 font-mono-tech uppercase font-bold tracking-tight">Introduzca el código actual de su aplicación autenticadora para guardar la wallet.</p>
-                      </div>
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          autoComplete="one-time-code"
-                          maxLength={6}
-                          value={walletVerificationCode}
-                          onChange={(e) => setWalletVerificationCode(e.target.value.replace(/\D/g, ''))}
-                          placeholder="000000"
-                          className="flex-1 bg-black/60 border border-slate-800 clip-corner-sm py-3 px-4 text-center font-orbitron font-bold tracking-[0.45em] text-proyecto-accent text-lg focus:border-proyecto-accent focus:shadow-[0_0_10px_cyan]"
-                        />
-                        <button
-                          onClick={verifyWalletUpdate}
-                          disabled={isWalletVerifying || walletVerificationCode.length !== 6}
-                          className="px-6 py-3 bg-proyecto-green text-slate-950 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest disabled:opacity-30"
-                        >
-                          {isWalletVerifying ? 'VERIFICANDO...' : 'CONFIRMAR WALLET'}
-                        </button>
-                        <button
-                          onClick={() => { setIsWalletVerificationOpen(false); setWalletVerificationCode(''); }}
-                          disabled={isWalletVerifying}
-                          className="px-4 py-3 bg-slate-900 text-slate-400 border border-slate-800 clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest disabled:opacity-30"
-                        >
-                          CANCELAR
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {!isWalletFrozen && !isWalletVerificationOpen && (
+                  {!isWalletFrozen && (
                     <button onClick={saveWallet} className="w-full md:w-auto px-12 py-4 bg-proyecto-brand text-white clip-corner-sm text-[10px] font-orbitron font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,114,255,0.3)] active:scale-95 transition-all hover:brightness-110">
-                      {twoFactorEnabled ? t('profile.vault.update_button') : t('profile.vault.save_button')}
+                      Confirmar por correo
                     </button>
                   )}
                   {isWalletFrozen && (
@@ -547,8 +496,8 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
               </form>
             </div>
 
-            {/* Multi-Factor Shield */}
-            <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group">
+            {/* El 2FA fue sustituido por confirmación de correo para la billetera. */}
+            {false && <div className="holo-card p-8 rounded-none clip-corner border border-proyecto-accent/20 relative overflow-hidden group">
               <div className="flex flex-col md:flex-row gap-8 items-center mb-8 relative z-10">
                 <div className={`w-20 h-20 clip-corner-sm flex items-center justify-center shrink-0 border transition-all duration-500 ${twoFactorEnabled ? 'bg-proyecto-green/10 border-proyecto-green shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'bg-red-500/10 border-red-500 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.2)]'}`}>
                   <svg className={`w-10 h-10 ${twoFactorEnabled ? 'text-proyecto-green' : 'text-red-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
@@ -638,7 +587,7 @@ const ProfilePanel: React.FC<Props> = ({ user, onUpdateUser, addNotification }) 
                   </div>
                 </div>
               )}
-            </div>
+            </div>}
           </div>
         )}
 

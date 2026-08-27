@@ -149,14 +149,11 @@ export async function createWithdrawal(
   try {
     // RPC atómico: una sola solicitud en lugar de 3+ llamadas secuenciales.
     // Evita "TypeError: Load failed" en iOS Safari por múltiples fetch fallidos.
-    const { data, error } = await supabase.rpc('create_withdrawal_request', {
-      p_user_id:        userId,
-      p_amount:         amount,
-      p_method:         method,
-      p_wallet_address: walletAddress,
-      // Usuarios normales nunca deben enviar bypass de ventana. El backend
-      // rechaza p_bypass_window=true con "Parámetro no permitido.".
-      p_bypass_window:  false,
+    // El servidor toma la dirección ya confirmada del perfil. El navegador no
+    // puede elegir otra ni saltarse la confirmación por correo.
+    const { data, error } = await supabase.rpc('request_withdrawal_email_confirmation', {
+      p_amount: amount,
+      p_method: method,
     });
 
     if (error) {
@@ -174,7 +171,7 @@ export async function createWithdrawal(
     // Retornamos un objeto compatible con el código existente en App.tsx
     return {
       success: true,
-      withdrawal: { id: data.withdrawal_id, amount: data.amount }
+      withdrawal: { id: data.withdrawal_id, amount: data.amount, confirmationId: data.confirmation_id }
     };
   } catch (error: any) {
     console.error('Error creating withdrawal:', error);

@@ -2,7 +2,8 @@ import { supabase } from '../lib/supabase';
 
 type NotificationPayload =
   | { type: 'WELCOME' }
-  | { type: 'WITHDRAWAL_REQUESTED'; withdrawalId: string };
+  | { type: 'WITHDRAWAL_REQUESTED'; withdrawalId: string; confirmationId?: string }
+  | { type: 'WALLET_CONFIRMATION'; walletAddress: string };
 
 async function requestEmailNotification(payload: NotificationPayload) {
   try {
@@ -21,5 +22,8 @@ async function requestEmailNotification(payload: NotificationPayload) {
 
 export const requestWelcomeEmail = () => requestEmailNotification({ type: 'WELCOME' });
 
-export const requestWithdrawalEmail = (withdrawalId: string) =>
-  requestEmailNotification({ type: 'WITHDRAWAL_REQUESTED', withdrawalId });
+export const requestWithdrawalEmail = (withdrawalId: string, confirmationId?: string) =>
+  requestEmailNotification({ type: 'WITHDRAWAL_REQUESTED', withdrawalId, confirmationId });
+
+export const requestWalletConfirmationEmail = (walletAddress: string) =>
+  requestEmailNotification({ type: 'WALLET_CONFIRMATION', walletAddress });

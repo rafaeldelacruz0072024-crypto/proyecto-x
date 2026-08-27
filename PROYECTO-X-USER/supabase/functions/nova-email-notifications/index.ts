@@ -19,12 +19,45 @@ const money = (value: number) => new Intl.NumberFormat('en-US', {
 }).format(value)
 
 serve(async (req) => {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  // El enlace no entrega una sesión: sólo confirma un identificador UUID de un solo uso.
+  if (req.method === 'GET') {
+    const requestId = new URL(req.url).searchParams.get('confirm_wallet')
+    const withdrawalRequestId = new URL(req.url).searchParams.get('confirm_withdrawal')
+    if ((!requestId && !withdrawalRequestId) || !supabaseUrl || !serviceRoleKey) return new Response('Invalid confirmation link', { status: 400 })
+    const admin = createClient(supabaseUrl, serviceRoleKey, { auth: { autoRefreshToken: false, persistSession: false } })
+    if (withdrawalRequestId) {
+      const { data: pendingWithdrawal } = await admin.from('withdrawal_confirmation_requests')
+        .select('id,withdrawal_id,expires_at,confirmed_at').eq('id', withdrawalRequestId).maybeSingle()
+      if (!pendingWithdrawal || pendingWithdrawal.confirmed_at || new Date(pendingWithdrawal.expires_at) < new Date()) {
+        return new Response('This confirmation link is invalid or expired.', { status: 400 })
+      }
+      const { error } = await admin.from('withdrawals').update({ status: 'PENDING' }).eq('id', pendingWithdrawal.withdrawal_id).eq('status', 'EMAIL_CONFIRMATION_PENDING')
+      if (error) return new Response('Could not confirm withdrawal.', { status: 500 })
+      await admin.from('withdrawal_confirmation_requests').update({ confirmed_at: new Date().toISOString() }).eq('id', pendingWithdrawal.id)
+      const appUrl = Deno.env.get('NOVA_APP_URL') ?? 'https://proyecto-x-user.vercel.app/login'
+      return Response.redirect(`${appUrl}?withdrawal-confirmed=1`, 302)
+    }
+    const { data: pending } = await admin.from('wallet_confirmation_requests')
+      .select('id,user_id,wallet_address,expires_at,confirmed_at').eq('id', requestId).maybeSingle()
+    if (!pending || pending.confirmed_at || new Date(pending.expires_at) < new Date()) {
+      return new Response('This confirmation link is invalid or expired.', { status: 400 })
+    }
+    const { error } = await admin.from('profiles').update({
+      withdrawal_wallet: pending.wallet_address,
+      withdrawal_wallet_confirmed_at: new Date().toISOString(),
+      two_factor_enabled: false,
+    }).eq('id', pending.user_id)
+    if (error) return new Response('Could not confirm wallet.', { status: 500 })
+    await admin.from('wallet_confirmation_requests').update({ confirmed_at: new Date().toISOString() }).eq('id', pending.id)
+    const appUrl = Deno.env.get('NOVA_APP_URL') ?? 'https://proyecto-x-user.vercel.app/login'
+    return Response.redirect(`${appUrl}?wallet-confirmed=1`, 302)
+  }
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
 
-  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
   const anonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
   const resendApiKey = Deno.env.get('RESEND_API_KEY') ?? ''
   const fromEmail = Deno.env.get('RESEND_FROM_EMAIL') ?? ''
   const replyTo = Deno.env.get('RESEND_REPLY_TO') ?? ''
@@ -44,14 +77,14 @@ serve(async (req) => {
   const { data: { user }, error: userError } = await userClient.auth.getUser()
   if (userError || !user?.email) return json({ error: 'Unauthorized' }, 401)
 
-  let payload: { type?: string; withdrawalId?: string }
+  let payload: { type?: string; withdrawalId?: string; confirmationId?: string; walletAddress?: string }
   try {
     payload = await req.json()
   } catch {
     return json({ error: 'Invalid JSON body' }, 400)
   }
 
-  const type = payload.type === 'WITHDRAWAL_REQUESTED' ? 'WITHDRAWAL_REQUESTED' : payload.type === 'WELCOME' ? 'WELCOME' : null
+  const type = payload.type === 'WITHDRAWAL_REQUESTED' ? 'WITHDRAWAL_REQUESTED' : payload.type === 'WELCOME' ? 'WELCOME' : payload.type === 'WALLET_CONFIRMATION' ? 'WALLET_CONFIRMATION' : null
   if (!type) return json({ error: 'Unsupported notification type' }, 400)
 
   const { data: profile } = await admin
@@ -83,6 +116,9 @@ serve(async (req) => {
     eventKey = withdrawal.id
     subject = `Solicitud de retiro recibida · ${money(Number(withdrawal.amount))}`
     preheader = 'Tu solicitud de retiro está pendiente de revisión.'
+    const confirmationLink = payload.confirmationId
+      ? `${supabaseUrl}/functions/v1/nova-email-notifications?confirm_withdrawal=${payload.confirmationId}`
+      : ''
     content = `
       <h1 style="margin:0 0 16px;color:#fff;font-size:28px">Solicitud de retiro recibida</h1>
       <p style="color:#cbd5e1;font-size:16px;line-height:1.7">Hola ${displayName}, registramos correctamente tu solicitud.</p>
@@ -93,7 +129,29 @@ serve(async (req) => {
         <p style="margin:5px 0;color:#94a3b8">Estado: <strong style="color:#fbbf24">${withdrawal.status}</strong></p>
         <p style="margin:5px 0;color:#94a3b8">Referencia: <strong style="color:#fff">${withdrawal.id}</strong></p>
       </div>
-      <p style="color:#94a3b8;font-size:14px;line-height:1.6">Este mensaje confirma la solicitud; no confirma todavía el pago final.</p>
+      ${confirmationLink ? `<p><a href="${confirmationLink}" style="display:inline-block;padding:14px 22px;background:#22d3ee;color:#071226;text-decoration:none;font-weight:700;border-radius:8px">Confirmar retiro</a></p>` : ''}
+      <p style="color:#94a3b8;font-size:14px;line-height:1.6">El retiro no será enviado a pago hasta que confirmes este enlace. El enlace vence en 30 minutos.</p>
+    `
+  }
+
+  if (type === 'WALLET_CONFIRMATION') {
+    const walletAddress = payload.walletAddress?.trim()
+    if (!walletAddress || !/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) return json({ error: 'Invalid wallet address' }, 400)
+    const { data: request, error: requestError } = await admin.from('wallet_confirmation_requests')
+      .insert({ user_id: user.id, wallet_address: walletAddress })
+      .select('id').single()
+    if (requestError || !request) return json({ error: 'Could not create wallet confirmation' }, 500)
+    eventKey = request.id
+    const appUrl = Deno.env.get('SUPABASE_URL') ?? ''
+    const link = `${appUrl}/functions/v1/nova-email-notifications?confirm_wallet=${request.id}`
+    subject = 'Confirma tu billetera BEP-20 · NOVA Digital'
+    preheader = 'Confirma la dirección que usarás para retiros.'
+    content = `
+      <h1 style="margin:0 0 16px;color:#fff;font-size:28px">Confirma tu billetera BEP-20</h1>
+      <p style="color:#cbd5e1;font-size:16px;line-height:1.7">Hola ${displayName}, confirma esta dirección antes de poder solicitar retiros:</p>
+      <p style="padding:14px;border:1px solid #26395c;background:#071226;color:#22d3ee;font-family:monospace">${walletAddress}</p>
+      <p><a href="${link}" style="display:inline-block;padding:14px 22px;background:#22d3ee;color:#071226;text-decoration:none;font-weight:700;border-radius:8px">Confirmar billetera</a></p>
+      <p style="color:#94a3b8;font-size:14px">El enlace vence en 30 minutos. Si no solicitaste este cambio, ignora este mensaje.</p>
     `
   }
 

@@ -18,7 +18,7 @@ interface CommissionStats {
 
 const EMPTY_STATS: CommissionStats = { totalLifetime: 0, thisWeek: 0, todayEarned: 0, directCount: 0 };
 
-export default function DirectCommissionPanel({ profile, walletBalance: _walletBalance, referralCommissionBalance, handleWithdrawal }: Props) {
+export default function DirectCommissionPanel({ profile, walletBalance, referralCommissionBalance, handleWithdrawal }: Props) {
   const [stats, setStats] = useState<CommissionStats>(EMPTY_STATS);
   const [loading, setLoading]   = useState(true);
   const [amount, setAmount]     = useState('');
@@ -138,7 +138,7 @@ export default function DirectCommissionPanel({ profile, walletBalance: _walletB
         </div>
       </div>
 
-      {/* "Disponible cualquier día" banner */}
+      {/* Una sola Wallet Bank: no hay balance separado de comisiones. */}
       <div className="mb-5 border border-cyan-500/20 bg-cyan-500/5 clip-corner p-3 flex items-center gap-3 relative z-10">
         <div className="w-8 h-8 clip-corner-sm bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center shrink-0">
           {/* Calendar-check icon */}
@@ -150,7 +150,7 @@ export default function DirectCommissionPanel({ profile, walletBalance: _walletB
         <div>
           <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.15em]">Sin restricción de día</p>
           <p className="text-[9px] text-slate-500 font-mono-tech">
-            Puedes retirar el 10% de tus comisiones de invitados directos cualquier día de la semana.
+            Cada comisión directa se acredita automáticamente a Wallet Bank. Los retiros se solicitan desde Finanzas.
           </p>
         </div>
       </div>
@@ -181,10 +181,12 @@ export default function DirectCommissionPanel({ profile, walletBalance: _walletB
         <div className="w-1 h-6 bg-cyan-400/60 rounded" />
         <p className="text-[10px] text-slate-400 font-mono-tech">
           <span className="text-cyan-400 font-black">{stats.directCount}</span> invitados directos activos
-          <span className="ml-2 text-slate-600">· Saldo disponible: <span className="text-white font-black">${fmtUSD(referralCommissionBalance)}</span></span>
+          <span className="ml-2 text-slate-600">· Wallet Bank: <span className="text-white font-black">${fmtUSD(walletBalance)}</span></span>
         </p>
       </div>
 
+      {/* El bloque heredado de retiro directo queda desactivado: no hay una segunda cartera. */}
+      {false && <>
       {/* Success message */}
       {success && (
         <div className="mb-4 p-3 border border-emerald-500/30 bg-emerald-500/5 clip-corner flex items-center gap-2 relative z-10">
@@ -267,6 +269,12 @@ export default function DirectCommissionPanel({ profile, walletBalance: _walletB
             </>
           )}
         </button>
+      </div>
+      </>}
+
+      <div className="relative z-10 border border-cyan-500/20 bg-cyan-500/5 clip-corner p-4 text-center">
+        <p className="text-[10px] font-black uppercase tracking-widest text-cyan-300">Retiro unificado</p>
+        <p className="mt-1 text-[10px] text-slate-400">Tus indicaciones directas y bonos binarios usan la misma Wallet Bank.</p>
       </div>
 
       {/* Footer note */}

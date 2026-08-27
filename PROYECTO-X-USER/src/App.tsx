@@ -33,7 +33,6 @@ import MockEmailInbox from './components/MockEmailInbox';
 import AuthPortal from './components/AuthPortal';
 import ProfilePanel from './components/ProfilePanel';
 import ResetPasswordForm from './components/ResetPasswordForm';
-import TwoFactorVerificationModal from './components/TwoFactorVerificationModal';
 import RankWidget from './components/RankWidget';
 import LiveTerminal from './components/LiveTerminal';
 import WeeklyYieldChart from './components/WeeklyYieldChart';
@@ -97,11 +96,6 @@ const App: React.FC = () => {
   const [lastWithdrawal, setLastWithdrawal] = useState<{ id: string; amount: number } | null>(null);
   const [lastDeposit, setLastDeposit] = useState<{ id: string; amount: number } | null>(null);
   const [lastDepositHash, setLastDepositHash] = useState<string>('');
-
-  // 2FA Flow State
-  const [show2FAModal, setShow2FAModal] = useState(false);
-  const [is2FAVerifying, setIs2FAVerifying] = useState(false);
-  const [pendingWithdrawal, setPendingWithdrawal] = useState<{ amount: number, method: string, address: string } | null>(null);
 
   // Mock Email Simulation State (temporal - puedes quitarlo después)
   const [mockEmails, setMockEmails] = useState<MockEmail[]>([]);
@@ -519,24 +513,18 @@ const App: React.FC = () => {
       return false;
     }
 
-    const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
-    if (factorsError) {
-      addNotification('No se pudo comprobar la protección 2FA del retiro.', 'error');
+    // La autorización del retiro usa la dirección BEP-20 confirmada por correo.
+    // No se usa 2FA como requisito del flujo NOVA.
+    const confirmedWallet = profile?.withdrawal_wallet || profile?.wallet_address || profile?.withdrawalWallet;
+    if (!confirmedWallet || !profile?.withdrawal_wallet_confirmed_at || address !== confirmedWallet) {
+      addNotification('Configura y confirma por correo tu Wallet BEP-20 antes de retirar.', 'error');
       return false;
     }
-
-    const hasVerifiedMfa = Boolean(factors?.totp?.some(item => item.status === 'verified'));
-    if (hasVerifiedMfa || user.two_factor_enabled || user.twoFactorEnabled) {
-      setPendingWithdrawal({ amount, method, address });
-      setShow2FAModal(true);
-      return false;
-    }
-
     await executeFinalWithdrawal(amount, method, address);
     return true;
-  }, [walletBalance, user, addNotification]);
+  }, [walletBalance, user, profile, addNotification, executeFinalWithdrawal]);
 
-  const executeFinalWithdrawal = useCallback(async (amount: number, method: string, address: string) => {
+  async function executeFinalWithdrawal(amount: number, method: string, address: string) {
     if (!user) return;
     const result = await createWithdrawal(user.id, amount, method, address);
 
@@ -559,8 +547,8 @@ const App: React.FC = () => {
       };
       setMockEmails(prev => [withdrawalEmail, ...prev]);
 
-      // El retiro ya fue confirmado por el RPC atómico. El correo no bloquea la operación.
-      void requestWithdrawalEmail(result.withdrawal.id);
+      // El saldo queda reservado. El admin sólo verá el retiro tras confirmar el enlace enviado al correo.
+      void requestWithdrawalEmail(result.withdrawal.id, result.withdrawal.confirmationId);
 
       refetch(); // Recargar datos
     } else {
@@ -570,44 +558,7 @@ const App: React.FC = () => {
         addNotification(`Error: ${result.error}`, "error");
       }
     }
-  }, [user, addNotification, refetch]);
-
-  const handleVerify2FA = useCallback(async (code: string) => {
-    if (!pendingWithdrawal || !user) return;
-    setIs2FAVerifying(true);
-
-    const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
-    const factor = factors?.totp?.find(item => item.status === 'verified');
-    if (factorsError || !factor) {
-      addNotification(factorsError?.message || 'No hay un factor 2FA verificado para autorizar este retiro.', 'error');
-      setIs2FAVerifying(false);
-      return;
-    }
-
-    const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: factor.id });
-    if (challengeError || !challenge?.id) {
-      addNotification(challengeError?.message || 'No se pudo crear el desafÃ­o 2FA.', 'error');
-      setIs2FAVerifying(false);
-      return;
-    }
-
-    const { error: verifyError } = await supabase.auth.mfa.verify({
-      factorId: factor.id,
-      challengeId: challenge.id,
-      code,
-    });
-    if (verifyError) {
-      addNotification(verifyError.message, 'error');
-      setIs2FAVerifying(false);
-      return;
-    }
-
-    await executeFinalWithdrawal(pendingWithdrawal.amount, pendingWithdrawal.method, pendingWithdrawal.address);
-    setIs2FAVerifying(false);
-    setShow2FAModal(false);
-    setPendingWithdrawal(null);
-    addNotification(t('profile.2fa.verified_notify'), 'success');
-  }, [pendingWithdrawal, executeFinalWithdrawal, addNotification, user, t]);
+  }
 
   const handleRoiActivated = useCallback((result: any) => {
     if (!result?.already_activated_today) setPassivePaidToday(true);
@@ -1366,13 +1317,6 @@ const App: React.FC = () => {
         amount={lastDeposit?.amount || 0}
         txId={lastDeposit?.id || ''}
         hash={lastDepositHash}
-      />
-
-      <TwoFactorVerificationModal
-        isOpen={show2FAModal}
-        onClose={() => { setShow2FAModal(false); setPendingWithdrawal(null); }}
-        onVerify={handleVerify2FA}
-        isLoading={is2FAVerifying}
       />
 
       <MockEmailInbox
