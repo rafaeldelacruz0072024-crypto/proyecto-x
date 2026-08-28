@@ -40,6 +40,17 @@ const formatCountdown = (totalSeconds: number) => {
   return [hours, minutes, seconds].map(value => String(value).padStart(2, '0')).join(':');
 };
 
+const nextBusinessCutoff = (completedAt: string) => {
+  const cutoff = new Date(new Date(completedAt).getTime() + 24 * 60 * 60 * 1000);
+  while (true) {
+    const weekday = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Santo_Domingo', weekday: 'short',
+    }).format(cutoff);
+    if (weekday !== 'Sat' && weekday !== 'Sun') return cutoff;
+    cutoff.setTime(cutoff.getTime() + 24 * 60 * 60 * 1000);
+  }
+};
+
 export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivated, addNotification }: Props) {
   const [completed, setCompleted] = useState<Set<TaskCode>>(new Set());
   const [loading, setLoading] = useState(true);
@@ -85,15 +96,12 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
         .filter(day => day.completed_tasks === 4 && day.completed_at)
         .sort((a, b) => new Date(b.completed_at!).getTime() - new Date(a.completed_at!).getTime())[0];
       const availableAt = latestComplete?.completed_at
-        ? new Date(new Date(latestComplete.completed_at).getTime() + 24 * 60 * 60 * 1000)
+        ? nextBusinessCutoff(latestComplete.completed_at)
         : null;
-      const coolingDown = !!availableAt && availableAt.getTime() > Date.now();
 
-      setNextAvailableAt(coolingDown ? availableAt : null);
+      setNextAvailableAt(availableAt && availableAt.getTime() > Date.now() ? availableAt : null);
       setCompleted(new Set(
-        coolingDown && latestComplete
-          ? rows.filter(row => row.task_day === latestComplete.task_day).map(row => row.task_code)
-          : ((todayResult.data || []) as TaskCompletion[]).map(item => item.task_code),
+        ((todayResult.data || []) as TaskCompletion[]).map(item => item.task_code),
       ));
       setHistory(groupedHistory.slice(0, 7));
     }
@@ -201,7 +209,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
               <div className="flex items-center gap-2 text-slate-400"><Clock3 size={14} /><span className="text-[9px] font-mono-tech uppercase tracking-wider">Próxima sesión</span></div>
               <div className="text-right">
                 <p className="font-mono text-sm font-bold tabular-nums text-proyecto-accent">{nextAvailableAt ? formatCountdown(secondsToCut) : 'Disponible'}</p>
-                <p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">24 h desde completar 4/4</p>
+                <p className="text-[8px] font-mono-tech uppercase tracking-wider text-slate-500">Corte personal del próximo día hábil</p>
               </div>
             </div>
           </div>
