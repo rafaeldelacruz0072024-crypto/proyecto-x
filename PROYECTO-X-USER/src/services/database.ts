@@ -149,8 +149,8 @@ export async function createWithdrawal(
   try {
     // RPC atómico: una sola solicitud en lugar de 3+ llamadas secuenciales.
     // Evita "TypeError: Load failed" en iOS Safari por múltiples fetch fallidos.
-    // El servidor toma la dirección ya confirmada del perfil. El navegador no
-    // puede elegir otra ni saltarse la confirmación por correo.
+    // El servidor toma la dirección BEP-20 guardada en el perfil. La reserva
+    // del saldo se hace de forma atómica en Wallet Bank.
     const { data, error } = await supabase.rpc('request_withdrawal_email_confirmation', {
       p_amount: amount,
       p_method: method,
