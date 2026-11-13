@@ -10,7 +10,7 @@ export default function NoveIaPanel() {
       <p className="text-2xl font-bold text-white">Deja que la IA lo haga por ti</p>
       <p className="text-slate-300">Próximamente podrás automatizar las cuatro tareas de cada ciclo activo de lunes a viernes.</p>
       <p className="text-xl font-black text-proyecto-accent">50 USDT al mes</p>
-      <p className="text-slate-300">La mensualidad se descontará de tu saldo cuando autorices la suscripción.</p>
+      <p className="text-slate-300">La mensualidad se pagará en USDT por la red BEP20 mediante NOWPayments.</p>
     </section>
   );
 }
