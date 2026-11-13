@@ -23,6 +23,7 @@ import Games from './pages/Games';
 import PredictionMarkets from './pages/PredictionMarkets';
 import RoadMap from './pages/RoadMap';
 import Marketing from './pages/Marketing';
+import Influencer from './pages/Influencer';
 import Communications from './pages/Communications';
 import Payroll from './pages/Payroll';
 import NovaDigitalCards from './pages/NovaDigitalCards';
@@ -302,6 +303,11 @@ const App: React.FC = () => {
               </Layout>
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/influencer"
+          element={<ProtectedRoute><Layout><Influencer /></Layout></ProtectedRoute>}
         />
 
         <Route
