@@ -26,7 +26,8 @@ import {
   Map,
   Megaphone,
   MailOpen,
-  Banknote
+  Banknote,
+  Camera
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -56,6 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { path: '/games', label: 'Games Catalog', icon: Gamepad2 },
     { path: '/predictions', label: 'Prediction Markets', icon: TrendingUp },
     { path: '/marketing', label: 'Marketing Hub', icon: Megaphone },
+    { path: '/influencer', label: 'Influencer', icon: Camera },
     { path: '/communications', label: 'Comunicaciones', icon: MailOpen },
   { path: '/payroll', label: 'Nómina Cripto', icon: Banknote },
     { path: '/gateways', label: 'Payment Gateways', icon: CreditCard },

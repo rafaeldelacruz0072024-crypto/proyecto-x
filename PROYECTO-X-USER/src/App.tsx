@@ -50,6 +50,7 @@ import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import BinaryBonusPanel from './components/BinaryBonusPanel';
 import UserSidebar from './components/UserSidebar';
+import InfluencerPanel from './components/InfluencerPanel';
 import { requestWelcomeEmail, requestWithdrawalEmail } from './services/emailNotifications';
 // Red vacía - se llenará con datos reales cuando se implemente backend de referidos
 const EMPTY_NETWORK: NetworkNode = {
@@ -78,7 +79,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -1256,6 +1257,10 @@ const App: React.FC = () => {
                 </div>
               )}
             </div>
+          )}
+
+          {activeTab === 'influencer' && (
+            <InfluencerPanel key={user.id} userId={user.id} refCode={profile?.ref_code} />
           )}
 
           {activeTab === 'roadmap' && (
