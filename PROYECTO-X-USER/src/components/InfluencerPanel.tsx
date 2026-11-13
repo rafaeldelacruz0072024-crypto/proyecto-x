@@ -142,7 +142,7 @@ export default function InfluencerPanel({ userId, refCode }: { userId: string; r
 
   return (
     <section className="mx-auto max-w-6xl space-y-10 text-white">
-      <header className="rounded-3xl border border-proyecto-accent/25 bg-gradient-to-br from-violet-950/60 via-slate-950 to-slate-900 px-5 py-12 text-center sm:py-16">
+      <header className="rounded-3xl border border-proyecto-accent/25 bg-gradient-to-br from-emerald-950/60 via-slate-950 to-slate-900 px-5 py-12 text-center sm:py-16">
         <p className="mb-4 text-sm font-bold uppercase tracking-widest text-proyecto-accent">Influencer · Programa de creadores</p>
         <h1 className="text-4xl font-black tracking-tight sm:text-6xl">Crea. Publica. <span className="text-proyecto-accent">Cobra.</span></h1>
         <p className="mx-auto mt-5 max-w-xl text-slate-300">Participa en las campañas y gana por vistas verificadas o por contenido original aprobado.</p>

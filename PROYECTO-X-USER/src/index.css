@@ -7,12 +7,12 @@
 @layer base {
   body {
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: #020617;
+    background-color: #06110e;
     color: #e2e8f0;
     background-image:
-      radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 92% 18%, rgba(139, 92, 246, 0.16) 0%, transparent 38%),
-      radial-gradient(circle at 0% 50%, rgba(188, 19, 254, 0.05) 0%, transparent 40%);
+      radial-gradient(circle at 50% 0%, rgba(199, 255, 51, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 92% 18%, rgba(97, 226, 148, 0.16) 0%, transparent 38%),
+      radial-gradient(circle at 0% 50%, rgba(30, 138, 75, 0.05) 0%, transparent 40%);
     background-attachment: fixed;
     overflow-x: hidden;
   }
@@ -34,17 +34,17 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: #06110e;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #00f3ff;
+  background: #c7ff33;
   border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8b5cf6;
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
+  background: #61e294;
+  box-shadow: 0 0 10px rgba(97, 226, 148, 0.8);
 }
 
 /* Chrome Autofill — keep dark background */
@@ -77,12 +77,12 @@ input:-webkit-autofill:active {
   /* Holographic Card (The Evolution of Blue Glass) */
   .blue-glass,
   .holo-card {
-    background: rgba(8, 14, 28, 0.7);
+    background: rgba(12, 31, 21, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 243, 255, 0.15);
-    border-top: 1px solid rgba(139, 92, 246, 0.42);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(139, 92, 246, 0.04);
+    border: 1px solid rgba(199, 255, 51, 0.15);
+    border-top: 1px solid rgba(97, 226, 148, 0.42);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(97, 226, 148, 0.04);
     position: relative;
     overflow: hidden;
   }
@@ -105,13 +105,13 @@ input:-webkit-autofill:active {
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #00f3ff 42%, #8b5cf6 58%, transparent);
+    background: linear-gradient(90deg, transparent, #c7ff33 42%, #61e294 58%, transparent);
     opacity: 0.6;
   }
 
   /* Neon Gradients */
   .blue-brand-gradient {
-    background: linear-gradient(135deg, #00f3ff 0%, #2563eb 50%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #c7ff33 0%, #187b42 50%, #61e294 100%);
   }
 
   .gold-gradient {
@@ -120,11 +120,11 @@ input:-webkit-autofill:active {
 
   /* Text Glows */
   .text-glow-cyan {
-    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    text-shadow: 0 0 10px rgba(199, 255, 51, 0.5);
   }
 
   .text-glow-purple {
-    text-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
+    text-shadow: 0 0 10px rgba(30, 138, 75, 0.5);
   }
 
   .text-glow-white {
@@ -170,8 +170,8 @@ input:-webkit-autofill:active {
   /* Grid Background */
   .bg-grid {
     background-size: 40px 40px;
-    background-image: linear-gradient(to right, rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(139, 92, 246, 0.06) 1px, transparent 1px);
+    background-image: linear-gradient(to right, rgba(199, 255, 51, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(97, 226, 148, 0.06) 1px, transparent 1px);
   }
 
   .animate-fade-in {
@@ -280,8 +280,8 @@ input:-webkit-autofill:active {
 }
 
 @keyframes neonPulse {
-  0%, 100% { box-shadow: 0 0 6px rgba(0,243,255,0.3), inset 0 0 6px rgba(0,243,255,0.05); }
-  50%       { box-shadow: 0 0 18px rgba(0,243,255,0.6), inset 0 0 12px rgba(0,243,255,0.1); }
+  0%, 100% { box-shadow: 0 0 6px rgba(199,255,51,0.3), inset 0 0 6px rgba(199,255,51,0.05); }
+  50%       { box-shadow: 0 0 18px rgba(199,255,51,0.6), inset 0 0 12px rgba(199,255,51,0.1); }
 }
 
 @keyframes betSuccess {
