@@ -121,7 +121,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
     // REGLA DE ORO: código de patrocinador obligatorio
     const sponsorCode = (localStorage.getItem('nova_digital_referral') || formData.referralCode?.trim() || '').toUpperCase();
     if (!sponsorCode || !sponsorCode.startsWith('GK-')) {
-      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a Nova Digital.');
+      setError('El código de patrocinador es obligatorio. Solicítalo a quien te invitó a Nova Copy Trade.');
       return;
     }
 
@@ -330,7 +330,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
   ];
 
   return (
-    <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4 sm:p-6 lg:p-8 font-rajdhani relative overflow-hidden">
+    <div className="min-h-screen bg-[#07130e] flex items-center justify-center p-4 sm:p-6 lg:p-8 font-rajdhani relative overflow-hidden">
       <div
         className="fixed inset-0 bg-[length:auto_100%] bg-[center_right] bg-no-repeat pointer-events-none"
         style={{ backgroundImage: "url('/nova-login-background.png')" }}
@@ -351,7 +351,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
           <Logo size="lg" variant="blue" glow className="transition-all hover:scale-105 duration-1000 ease-in-out" />
           <div className="flex flex-col items-center mt-4">
             <p className="text-[10px] uppercase text-proyecto-accent font-black tracking-[0.6em] text-glow-cyan text-center opacity-90 animate-pulse">
-              NOVA Digital · Mercados de predicción
+              Nova Copy Trade
             </p>
             <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-proyecto-accent/50 to-transparent mt-2"></div>
           </div>

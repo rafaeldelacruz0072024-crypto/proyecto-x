@@ -38,18 +38,17 @@ import LiveTerminal from './components/LiveTerminal';
 import WeeklyYieldChart from './components/WeeklyYieldChart';
 import SponsorWidget from './components/SponsorWidget';
 import WorldMapWidget from './components/WorldMapWidget';
-import LivePredictionMarketSimulation from './components/LivePredictionMarketSimulation';
 import LiveValidatedOperations from './components/LiveValidatedOperations';
 import { SocketMessage } from './services/websocket';
 import EventsPanel from './components/EventsPanel';
 import FlashOfferModal from './components/FlashOfferModal';
 import TutorialsPanel from './components/TutorialsPanel';
-import PredictionMarketsPanel from './components/PredictionMarketsPanel';
 import RoadMapPanel from './components/RoadMapPanel';
 import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import BinaryBonusPanel from './components/BinaryBonusPanel';
 import UserSidebar from './components/UserSidebar';
+import NoveIaPanel from './components/NoveIaPanel';
 import InfluencerPanel from './components/InfluencerPanel';
 import { requestWelcomeEmail, requestWithdrawalEmail } from './services/emailNotifications';
 // Red vacía - se llenará con datos reales cuando se implemente backend de referidos
@@ -79,7 +78,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'predictions' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -709,7 +708,7 @@ const App: React.FC = () => {
 
   if (!loading && profile && (profile.status === 'suspended' || profile.status === 'inactive')) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#06110e] flex items-center justify-center p-6">
         <div className="max-w-md w-full bg-[#111114] border border-rose-500/20 rounded-[3rem] p-12 text-center space-y-8 shadow-2xl">
           <div className="mx-auto w-24 h-24 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
             <svg className="w-12 h-12 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -748,7 +747,7 @@ const App: React.FC = () => {
   const unreadCount = mockEmails.filter(e => !e.isConfirmed).length;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-slate-200 font-rajdhani selection:bg-proyecto-accent/30 selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#06110e] text-slate-200 font-rajdhani selection:bg-proyecto-accent/30 selection:text-white relative overflow-x-hidden">
       {/* GLOBAL FUTURISTIC BACKGROUND LAYER */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
         {/* Holographic Brand Core */}
@@ -757,7 +756,7 @@ const App: React.FC = () => {
         </div>
         <div className="absolute inset-0 bg-grid opacity-[0.15]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,_rgba(0,114,255,0.15),_transparent_70%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,_rgba(0,243,255,0.05),_transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,_rgba(199,255,51,0.05),_transparent_50%)]"></div>
         <div className="absolute inset-0 bg-[noise] opacity-[0.02]"></div>
       </div>
 
@@ -912,8 +911,6 @@ const App: React.FC = () => {
                   {/* WORLD MAP WIDGET */}
                   <WorldMapWidget settings={simulationSettings} latestEvent={latestEvent} />
 
-                  {/* MERCADOS DE PREDICCIÃ“N: visualizaciÃ³n local sin operaciones reales */}
-                  <LivePredictionMarketSimulation />
 
                   {/* FLUJO VISUAL: operaciones algorítmicas simuladas, sin impacto financiero */}
                   <LiveValidatedOperations />
@@ -1235,29 +1232,14 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'predictions' && (
-            <div className="space-y-6 animate-slide-in">
-              <div className="mx-auto mb-6 w-full max-w-7xl">
-                <LivePredictionMarketSimulation />
-              </div>
-              <div className="mb-6 flex flex-col items-start gap-3 border-l-2 border-proyecto-accent bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <h2 className="break-words text-base font-orbitron font-bold text-white uppercase tracking-[0.14em] text-glow-cyan sm:text-xl sm:tracking-[0.3em]">PREDICTION MARKETS</h2>
-                <span className="text-[9px] font-mono-tech text-proyecto-accent bg-proyecto-accent/10 px-3 py-1 border border-proyecto-accent/20">DATOS PÚBLICOS · POLYMARKET LIVE</span>
-              </div>
-              {profile ? (
-<PredictionMarketsPanel
-                  user={profile}
-                  walletBalance={walletBalance}
-                  onUpdateBalance={refetch}
-                />
-              ) : (
-                <div className="p-10 text-center border border-dashed border-slate-800 rounded-2xl">
-                  <div className="w-8 h-8 border-2 border-proyecto-brand border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Cargando mercados...</p>
-                </div>
-              )}
-            </div>
+          {activeTab === 'copytrade' && (
+            <section className="holo-card rounded-xl p-6">
+              <h1 className="text-3xl font-black text-white">Copy trading</h1>
+              <p className="mt-3 text-slate-300">Conexión con el proveedor de trading pendiente.</p>
+            </section>
           )}
+
+          {activeTab === 'nove-ia' && <NoveIaPanel />}
 
           {activeTab === 'influencer' && (
             <InfluencerPanel key={user.id} userId={user.id} refCode={profile?.ref_code} />

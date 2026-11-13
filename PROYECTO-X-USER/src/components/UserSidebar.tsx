@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera } from 'lucide-react';
+import { Camera, Bot } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface UserSidebarProps {
@@ -38,13 +38,14 @@ const NAV_ITEMS = [
     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>,
   },
   {
-    id: 'predictions',
+    id: 'copytrade',
     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
   },
   {
     id: 'tutorials',
     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>,
   },
+  { id: 'nove-ia', icon: <Bot className="h-5 w-5" aria-hidden="true" /> },
   { id: 'influencer', icon: <Camera className="h-5 w-5" aria-hidden="true" /> },
   {
     id: 'roadmap',
@@ -88,8 +89,8 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
       {/* Sidebar */}
       <aside className={`
         fixed top-0 left-0 h-[100dvh] w-[min(86vw,18rem)] md:w-64 z-50 flex flex-col
-        bg-[#020408] border-r border-proyecto-accent/20
-        shadow-[4px_0_30px_rgba(139,92,246,0.14)]
+        bg-[#07130e] border-r border-proyecto-accent/20
+        shadow-[4px_0_30px_rgba(97,226,148,0.14)]
         transition-transform duration-300 ease-in-out
         pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -143,21 +144,21 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
                 className={`
                   group relative flex min-h-12 w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-all duration-200
                   ${isActive
-                    ? 'bg-proyecto-accent/10 border border-proyecto-accent/30 text-proyecto-accent shadow-[0_0_12px_rgba(0,243,255,0.08)]'
+                    ? 'bg-proyecto-accent/10 border border-proyecto-accent/30 text-proyecto-accent shadow-[0_0_12px_rgba(199,255,51,0.08)]'
                     : 'text-slate-500 hover:text-white hover:bg-white/[0.03] border border-transparent'}
                 `}
               >
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-proyecto-accent rounded-r-full shadow-[0_0_8px_rgba(0,243,255,0.6)]" />
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-proyecto-accent rounded-r-full shadow-[0_0_8px_rgba(199,255,51,0.6)]" />
                 )}
                 <span className={`transition-colors duration-200 ${isActive ? 'text-proyecto-accent' : 'text-slate-600 group-hover:text-slate-300'}`}>
                   {item.icon}
                 </span>
                 <span className={`text-[10px] font-orbitron font-black uppercase tracking-[0.15em] transition-colors duration-200 ${isActive ? 'text-proyecto-accent' : ''}`}>
-                  {item.id === 'nodes' ? 'Mis nodos' : t(`nav.${item.id}`, { defaultValue: item.id === 'influencer' ? 'Influencer' : `nav.${item.id}` })}
+                  {item.id === 'nodes' ? 'Mis nodos' : item.id === 'copytrade' ? 'Copy trading' : item.id === 'nove-ia' ? 'Nove IA' : t(`nav.${item.id}`, { defaultValue: item.id === 'influencer' ? 'Influencer' : `nav.${item.id}` })}
                 </span>
                 {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse shadow-[0_0_6px_rgba(0,243,255,0.8)]" />
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse shadow-[0_0_6px_rgba(199,255,51,0.8)]" />
                 )}
               </button>
             );
