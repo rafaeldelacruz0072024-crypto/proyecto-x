@@ -1,77 +1,2041 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#06110e">
-  <meta name="description" content="Nova Copy Trade. Gestiona tu cuenta y automatiza tus cuatro tareas con Nove IA.">
-  <title>Nova Copy Trade</title>
-  <link rel="icon" href="/nova-icon-32.png" type="image/png" sizes="32x32">
-  <link rel="apple-touch-icon" href="/nova-icon-180.png" sizes="180x180">
-  <style>
-    :root { color-scheme: dark; --bg:#06110e; --panel:#10221a; --ink:#f0f6f2; --muted:#b6c9bf; --lime:#c7ff33; --mint:#61e294; }
-    * { box-sizing:border-box; }
-    body { margin:0; background:var(--bg); color:var(--ink); font:1rem/1.55 system-ui,sans-serif; }
-    a { color:inherit; }
-    .wrap { width:min(1120px, calc(100% - 2.5rem)); margin-inline:auto; }
-    nav { display:flex; justify-content:space-between; align-items:center; gap:1rem; padding-block:1.25rem; }
-    .brand { font-weight:900; text-decoration:none; letter-spacing:.06em; }
-    .brand span, .eyebrow { color:var(--mint); }
-    .hero { display:grid; grid-template-columns:1fr 1.2fr; align-items:center; gap:2.5rem; min-height: min(680px,80vh); padding-block:3rem; }
-    h1,h2 { line-height:1.03; letter-spacing:-.045em; margin:.5rem 0 1rem; }
-    h1 { font-size:clamp(3rem,7vw,6.5rem); }
-    h2 { font-size:clamp(2rem,4vw,3.8rem); }
-    p { color:var(--muted); max-width:57ch; }
-    .hero img { width:100%; height:auto; border-radius:1.25rem; border:1px solid #2b513b; }
-    .eyebrow { text-transform:uppercase; font-size:.75rem; letter-spacing:.18em; font-weight:800; }
-    .button { display:inline-block; margin-top:.75rem; padding:.8rem 1.2rem; border-radius:.6rem; color:#121900; background:var(--lime); font-weight:800; text-decoration:none; }
-    .feature-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; padding-block:1rem 4rem; }
-    article { border:1px solid #294836; border-radius:1.25rem; background:var(--panel); padding:clamp(1.2rem,4vw,2.5rem); }
-    footer { border-top:1px solid #294836; padding-block:1.5rem; color:var(--muted); }
-    @media(max-width:720px) { .hero,.feature-grid { grid-template-columns:1fr; } .hero { gap:1.5rem; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Copy Trade</title>
+    <meta name="description" content="Nova Copy Trade. Gestiona tus ciclos y descubre Nove IA.">
+    <link rel="icon" type="image/png" sizes="32x32" href="/nova-icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/nova-icon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/nova-icon-180.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --space: #06110e;
+            --dark: #0b2016;
+            --brand: #187b42;
+            --cyan: #c7ff33;
+            --purple: #61e294;
+            --gold: #ffd700;
+            --green: #00ff9d;
+            --pink: #ff0055;
+            --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-body: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        /* NOVA type system: algorithmic and institutional, not generic SaaS. */
+        .nav, .nav-links a, .nav-cta, .hero-badge, .hero-rate-item .lbl,
+        .btn-primary, .btn-secondary, .section-tag, .plan-tag {
+            font-family: var(--font-body) !important;
+        }
+
+        .hero h1, .section-title, .hero-rate-item .val, .stat-val,
+        .plan-title, .sec-title, .footer-brand {
+            font-family: var(--font-display) !important;
+            letter-spacing: -.035em;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: #05170d;
+            color: #e4eee7;
+            overflow-x: hidden;
+            background-image: linear-gradient(180deg, rgba(5,23,13, .84) 0%, rgba(7,36,20, .9) 40%, #05170d 100%),
+                url('/nova-copy-trade.jpg');
+            background-size: auto, cover;
+            background-position: center, center top;
+            background-repeat: no-repeat, repeat-y;
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 900;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--space)
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyan);
+            border-radius: 2px
+        }
+
+        /* Fix for Google Translate injecting <font> tags and breaking WebKit fonts */
+        font {
+            font-family: inherit !important;
+            font-weight: inherit !important;
+        }
+
+        .font-outfit {
+            font-family: var(--font-display);
+        }
+
+        .font-chakra {
+            font-family: var(--font-body);
+        }
+
+        .glow-cyan {
+            text-shadow: 0 0 10px rgba(31,224,85, .5)
+        }
+
+        .glow-purple {
+            text-shadow: 0 0 10px rgba(47,226,97, .5)
+        }
+
+        .glow-gold {
+            text-shadow: 0 0 10px rgba(255,215,0, .5)
+        }
+
+        .glow-green {
+            text-shadow: 0 0 10px rgba(0,255,157, .5)
+        }
+
+        /* NAV */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(5,27,15, .86);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(31,224,85, .1);
+            transition: all .3s
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: .15em;
+            color: #fff;
+            text-transform: uppercase
+        }
+
+        .nav-logo span {
+            color: var(--cyan)
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center
+        }
+
+        .nav-links a {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .75rem;
+            color: #98b4a0;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            transition: all .3s;
+            position: relative
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan)
+        }
+
+        .nav-cta {
+            background: var(--brand);
+            color: #fff !important;
+            padding: .6rem 1.5rem;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-weight: 700;
+            transition: all .3s !important
+        }
+
+        .nav-cta:hover {
+            background: var(--cyan);
+            color: #000 !important;
+            box-shadow: 0 0 25px rgba(31,224,85, .4)
+        }
+
+        @media(max-width:768px) {
+            .nav-links {
+                display: none
+            }
+
+            .nav {
+                padding: .8rem 1rem
+            }
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            padding: 8rem 2rem 4rem;
+            overflow: hidden
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(5,23,13, .96) 0%, rgba(7,34,19, .9) 36%, rgba(9,47,26, .26) 67%, rgba(5,23,13, .52) 100%), url('/nova-copy-trade.jpg') center / cover no-repeat;
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(31,224,85, .03) 1px, transparent 1px), linear-gradient(to bottom, rgba(31,224,85, .03) 1px, transparent 1px);
+            pointer-events: none
+        }
+
+        .hero-orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(48,227,98, .24), rgba(98,234,136, .16), transparent 70%);
+            filter: blur(60px);
+            animation: float 8s ease-in-out infinite;
+            pointer-events: none
+        }
+
+        .hero-orb-2 {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(48,227,98, .16), transparent 70%);
+            filter: blur(40px);
+            animation: float 6s ease-in-out infinite reverse;
+            top: 20%;
+            right: 15%;
+            pointer-events: none
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1)
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.05)
+            }
+        }
+
+        .hero-content {
+            text-align: left;
+            position: relative;
+            z-index: 10;
+            max-width: 700px;
+            margin-left: max(3vw, calc((100vw - 1180px) / 2));
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem 1.2rem;
+            border: 1px solid rgba(31,224,85, .3);
+            background: rgba(31,224,85, .05);
+            margin-bottom: 2rem;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(31,224,85, .7)
+            }
+
+            70% {
+                opacity: 1;
+                box-shadow: 0 0 0 8px transparent
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1.05;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            letter-spacing: -.02em
+        }
+
+        .hero h1 .accent {
+            background: linear-gradient(135deg, var(--cyan), var(--brand));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: inherit;
+        }
+        .hero h1 .accent font {
+            font-family: inherit !important;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #98b4a0;
+            max-width: 600px;
+            margin: 0 0 2.5rem;
+            line-height: 1.7
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-start;
+            flex-wrap: wrap
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: 1rem 2.5rem;
+            background: var(--brand);
+            color: #fff;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all .4s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .btn-primary:hover {
+            background: var(--cyan);
+            color: #000;
+            box-shadow: 0 0 40px rgba(31,224,85, .3);
+            transform: translateY(-2px)
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255, .1), transparent);
+            transform: translateX(-100%);
+            transition: transform .6s
+        }
+
+        .btn-primary:hover::after {
+            transform: translateX(100%)
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: var(--cyan);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            border: 1px solid rgba(31,224,85, .3);
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all .4s
+        }
+
+        .btn-secondary:hover {
+            background: rgba(31,224,85, .1);
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(31,224,85, .15)
+        }
+
+        .hero-rate {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: flex-start;
+            gap: 2rem;
+            flex-wrap: wrap
+        }
+
+        @media(max-width: 700px) {
+            .hero { padding: 8rem 1.5rem 4rem; }
+            .hero::before { background: linear-gradient(180deg, rgba(5,23,13,.58), #05170d 78%), url('/nova-copy-trade.jpg') 64% top / auto 72% no-repeat; }
+            .hero-content { margin-left: 0; padding-top: 15rem; }
+            .hero-rate { gap: 1.35rem; }
+        }
+
+        .hero-rate-item {
+            text-align: center
+        }
+
+        .hero-rate-item .val {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--cyan)
+        }
+
+        .hero-rate-item .lbl {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .6rem;
+            color: #698671;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            margin-top: .25rem
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 6rem 2rem;
+            position: relative;
+            background: linear-gradient(180deg, rgba(5,28,16, .58), rgba(8,39,22, .74));
+            border-top: 1px solid rgba(48,227,98, .07)
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: .25em;
+            margin-bottom: 1rem;
+            padding: .3rem 1rem;
+            border: 1px solid rgba(31,224,85, .2);
+            background: rgba(31,224,85, .03)
+        }
+
+        .section-title {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            color: #fff;
+            margin-bottom: .75rem;
+            letter-spacing: -.02em
+        }
+
+        .section-sub {
+            font-size: 1rem;
+            color: #698671;
+            max-width: 600px;
+            line-height: 1.7;
+            margin-bottom: 3rem
+        }
+
+        /* STATS */
+        .stats {
+            background: linear-gradient(180deg, rgba(10,49,28, .62), rgba(17,74,43, .42), rgba(8,39,22, .62));
+            border-top: 1px solid rgba(31,224,85, .06);
+            border-bottom: 1px solid rgba(31,224,85, .06)
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem
+        }
+
+        @media(max-width:768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:480px) {
+            .stats-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .stat-card {
+            background: rgba(10,26,17, .7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(31,224,85, .12);
+            border-top: 1px solid rgba(31,224,85, .25);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            position: relative;
+            overflow: hidden;
+            transition: all .5s
+        }
+
+        .stat-card:hover {
+            border-color: rgba(31,224,85, .4);
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(31,224,85, .08)
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: .4
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1.2rem;
+            background: rgba(31,224,85, .08);
+            border: 1px solid rgba(31,224,85, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)
+        }
+
+        .stat-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--cyan);
+            fill: none;
+            stroke-width: 1.5
+        }
+
+        .stat-val {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: #fff;
+            line-height: 1
+        }
+
+        .stat-val .counter {
+            color: var(--cyan)
+        }
+
+        .stat-lbl {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .7rem;
+            color: #698671;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            margin-top: .5rem
+        }
+
+        /* PLANS */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            align-items: start
+        }
+
+        @media(max-width:900px) {
+            .plans-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .plan-card {
+            background: rgba(10,26,17, .7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255, .06);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all .5s
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brand), transparent);
+            opacity: .5
+        }
+
+        .plan-card:hover {
+            border-color: rgba(61,211,103, .4);
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(61,211,103, .1)
+        }
+
+        .plan-card.featured {
+            border-color: rgba(31,224,85, .3)
+        }
+
+        .plan-card.featured::before {
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: .8
+        }
+
+        .plan-card.featured:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 50px rgba(31,224,85, .15)
+        }
+
+        .plan-tag {
+            display: inline-block;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .6rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            padding: .25rem .8rem;
+            border: 1px solid rgba(255,255,255, .1);
+            color: #98b4a0;
+            margin-bottom: 1.5rem
+        }
+
+        .plan-card.featured .plan-tag {
+            border-color: rgba(31,224,85, .3);
+            color: var(--cyan);
+            background: rgba(31,224,85, .05)
+        }
+
+        .plan-title {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: .5rem
+        }
+
+        .plan-rate {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 3rem;
+            color: var(--cyan);
+            line-height: 1
+        }
+
+        .plan-rate small {
+            font-size: 1rem;
+            color: #698671;
+            font-weight: 400
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            font-size: .9rem;
+            color: #98b4a0
+        }
+
+        .plan-features li .check {
+            width: 20px;
+            height: 20px;
+            background: rgba(0,255,157, .1);
+            border: 1px solid rgba(0,255,157, .3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px)
+        }
+
+        .plan-features li .check svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--green);
+            fill: none;
+            stroke-width: 3
+        }
+
+        /* COMMISSIONS */
+        .comm-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem
+        }
+
+        @media(max-width:768px) {
+            .comm-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(max-width:480px) {
+            .comm-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .comm-card {
+            background: rgba(10,26,17, .6);
+            border: 1px solid rgba(255,255,255, .05);
+            padding: 2rem;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            position: relative;
+            overflow: hidden;
+            transition: all .4s
+        }
+
+        .comm-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            opacity: .4
+        }
+
+        .comm-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255, .1)
+        }
+
+        .comm-level {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: #698671;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            margin-bottom: .5rem
+        }
+
+        .comm-pct {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            line-height: 1
+        }
+
+        .comm-pct small {
+            font-size: 1rem;
+            color: #698671;
+            font-weight: 400
+        }
+
+        .comm-desc {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .7rem;
+            color: #4b6557;
+            margin-top: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .1em
+        }
+
+        .c1 {
+            border-color: rgba(31,224,85, .2)
+        }
+
+        .c1::before {
+            background: var(--cyan)
+        }
+
+        .c1 .comm-pct {
+            color: var(--cyan)
+        }
+
+        .c2 {
+            border-color: rgba(61,211,103, .2)
+        }
+
+        .c2::before {
+            background: var(--brand)
+        }
+
+        .c2 .comm-pct {
+            color: var(--brand)
+        }
+
+        .c3 {
+            border-color: rgba(47,226,97, .2)
+        }
+
+        .c3::before {
+            background: var(--purple)
+        }
+
+        .c3 .comm-pct {
+            color: var(--purple)
+        }
+
+        .c4 {
+            border-color: rgba(255,215,0, .15)
+        }
+
+        .c4::before {
+            background: var(--gold)
+        }
+
+        .c4 .comm-pct {
+            color: var(--gold)
+        }
+
+        .c5 {
+            border-color: rgba(0,255,157, .15)
+        }
+
+        .c5::before {
+            background: var(--green)
+        }
+
+        .c5 .comm-pct {
+            color: var(--green)
+        }
+
+        .c6 {
+            border-color: rgba(255,0,85, .15)
+        }
+
+        .c6::before {
+            background: var(--pink)
+        }
+
+        .c6 .comm-pct {
+            color: var(--pink)
+        }
+
+        /* SALARY TABLE */
+        .salary-table-wrap {
+            background: rgba(10,26,17, .7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(31,224,85, .1);
+            clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+            overflow: hidden;
+            position: relative
+        }
+
+        .salary-table-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: .5
+        }
+
+        .salary-table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .salary-table thead {
+            background: rgba(0,0,0, .4)
+        }
+
+        .salary-table th {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .7rem;
+            color: #698671;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255, .05)
+        }
+
+        .salary-table td {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255, .03);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            transition: background .3s
+        }
+
+        .salary-table tr:hover td {
+            background: rgba(255,215,0, .02)
+        }
+
+        .salary-table .vol {
+            font-weight: 700;
+            color: #e4eee7;
+            font-size: .95rem
+        }
+
+        .salary-table .bonus {
+            font-weight: 800;
+            color: var(--gold);
+            font-size: 1.1rem
+        }
+
+        .salary-table .rank-badge {
+            display: inline-block;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .55rem;
+            padding: .2rem .6rem;
+            border: 1px solid;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px)
+        }
+
+        @media(max-width:600px) {
+
+            .salary-table th,
+            .salary-table td {
+                padding: .8rem .7rem;
+                font-size: .8rem
+            }
+
+            .salary-table .bonus {
+                font-size: .95rem
+            }
+        }
+
+        /* SECURITY */
+        .sec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem
+        }
+
+        @media(max-width:768px) {
+            .sec-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .sec-card {
+            background: rgba(10,26,17, .5);
+            border: 1px solid rgba(255,255,255, .05);
+            padding: 2.5rem 2rem;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all .4s
+        }
+
+        .sec-card:hover {
+            border-color: rgba(31,224,85, .2);
+            transform: translateY(-3px)
+        }
+
+        .sec-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(31,224,85, .05);
+            border: 1px solid rgba(31,224,85, .15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)
+        }
+
+        .sec-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--cyan);
+            fill: none;
+            stroke-width: 1.5
+        }
+
+        .sec-title {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .05em
+        }
+
+        .sec-desc {
+            font-size: .85rem;
+            color: #698671;
+            line-height: 1.7
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255,255,255, .05);
+            text-align: center
+        }
+
+        footer .brand {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: #fff;
+            letter-spacing: .1em;
+            margin-bottom: .5rem;
+            white-space: nowrap
+        }
+
+        footer .brand span {
+            color: var(--cyan)
+        }
+
+        footer .legal {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: .65rem;
+            color: #375143;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            max-width: 700px;
+            margin: .8rem auto 0;
+            line-height: 1.8
+        }
+
+        /* SCROLL ANIMATIONS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all .8s cubic-bezier(.16, 1, .3, 1)
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        .reveal-delay-1 {
+            transition-delay: .1s
+        }
+
+        .reveal-delay-2 {
+            transition-delay: .2s
+        }
+
+        .reveal-delay-3 {
+            transition-delay: .3s
+        }
+
+        .reveal-delay-4 {
+            transition-delay: .4s
+        }
+
+        /* SCANLINE */
+        .scanline {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: .03;
+            z-index: 0
+        }
+
+        .scanline::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(31,224,85, .3) 50%, transparent 100%);
+            animation: scan 4s linear infinite
+        }
+
+        @keyframes scan {
+            0% {
+                transform: translateY(-100%)
+            }
+
+            100% {
+                transform: translateY(100%)
+            }
+        }
+
+        /* LANGUAGE SELECTOR */
+        .lang-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-selector {
+            background: rgba(31,224,85, 0.05);
+            border: 1px solid rgba(31,224,85, 0.2);
+            color: #1fe055;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 0.75rem;
+            padding: 0.4rem 1rem;
+            outline: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 4px;
+            letter-spacing: 0.1em;
+        }
+
+        .lang-selector option {
+            background: #05100a;
+            color: #fff;
+        }
+
+        .VIpgJd-ZVi9od-ORHb-OEVmcd,
+        .goog-te-banner-frame,
+        .goog-te-menu-frame,
+        #goog-gt-tt,
+        .goog-tooltip,
+        .goog-tooltip:hover,
+        .goog-text-highlight {
+            display: none !important;
+        }
+
+        body {
+            top: 0 !important;
+            position: static !important;
+        }
+
+        iframe.skiptranslate {
+            display: none !important;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                scroll-padding-top: 72px;
+            }
+
+            body {
+                overflow-x: hidden;
+                background-attachment: scroll;
+            }
+
+            .nav {
+                min-height: 64px;
+                padding: .65rem .8rem;
+                padding-top: calc(.65rem + env(safe-area-inset-top));
+            }
+
+            .mobile-nav {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: space-between;
+                gap: .65rem;
+            }
+
+            .mobile-brand {
+                display: flex;
+                min-width: 0;
+                align-items: center;
+                gap: .45rem;
+                color: #fff;
+                font-family: 'Outfit', sans-serif;
+                font-size: .76rem;
+                font-weight: 900;
+                letter-spacing: .12em;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+
+            .mobile-brand-mark {
+                display: grid;
+                width: 34px;
+                height: 34px;
+                flex: 0 0 auto;
+                place-items: center;
+                border: 1px solid rgba(31,224,85,.35);
+                background: linear-gradient(135deg, rgba(31,224,85,.2), rgba(98,234,136,.2));
+                color: var(--cyan);
+                font-size: 1rem;
+                box-shadow: 0 0 18px rgba(31,224,85,.12);
+            }
+
+            .mobile-actions {
+                display: flex;
+                flex: 0 0 auto;
+                gap: .4rem;
+            }
+
+            .mobile-action {
+                display: inline-flex;
+                min-height: 40px;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(31,224,85,.28);
+                padding: .5rem .65rem;
+                color: var(--cyan);
+                font-family: 'Outfit', sans-serif;
+                font-size: .61rem;
+                font-weight: 800;
+                letter-spacing: .08em;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .mobile-action.primary {
+                border-color: transparent;
+                background: var(--brand);
+                color: #fff;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: calc(4.75rem + env(safe-area-inset-top)) 1rem 3.5rem;
+                align-items: flex-start;
+            }
+
+            .hero::before {
+                background: linear-gradient(180deg, rgba(5,23,13,.28) 0%, rgba(5,23,13,.58) 34%, #05170d 65%), url('/nova-copy-trade.jpg') 68% top / auto 52% no-repeat;
+            }
+
+            .hero-content {
+                width: 100%;
+                max-width: none;
+                margin-left: 0;
+                padding-top: 12.25rem;
+            }
+
+            .hero-badge {
+                max-width: 100%;
+                margin-bottom: 1.25rem;
+                padding: .45rem .75rem;
+                font-size: .55rem;
+                letter-spacing: .12em;
+                line-height: 1.45;
+            }
+
+            .hero h1 {
+                font-size: clamp(2rem, 10vw, 2.8rem);
+                line-height: 1.03;
+                overflow-wrap: anywhere;
+            }
+
+            .hero p {
+                margin-bottom: 1.5rem;
+                font-size: .98rem;
+                line-height: 1.58;
+            }
+
+            .hero-ctas {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: .75rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                min-height: 50px;
+                justify-content: center;
+                padding: .9rem 1rem;
+                font-size: .75rem;
+            }
+
+            .hero-rate {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: .75rem;
+                margin-top: 2rem;
+            }
+
+            .hero-rate-item {
+                min-width: 0;
+                border: 1px solid rgba(31,224,85,.1);
+                background: rgba(8,36,21,.68);
+                padding: .85rem .5rem;
+            }
+
+            .hero-rate-item:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .hero-rate-item .val {
+                font-size: 1.25rem;
+            }
+
+            .hero-rate-item .lbl {
+                letter-spacing: .1em;
+                line-height: 1.35;
+            }
+
+            section {
+                padding: 4rem 1rem;
+            }
+
+            .section-title {
+                font-size: clamp(1.75rem, 9vw, 2.35rem);
+                line-height: 1.08;
+                overflow-wrap: anywhere;
+            }
+
+            .section-sub {
+                margin-bottom: 2rem;
+                font-size: .94rem;
+                line-height: 1.6;
+            }
+
+            .section-tag {
+                max-width: 100%;
+                font-size: .56rem;
+                letter-spacing: .16em;
+                line-height: 1.4;
+            }
+
+            .stats-grid,
+            .plans-grid {
+                gap: 1rem;
+            }
+
+            .stat-card,
+            .plan-card,
+            .sec-card {
+                padding: 1.4rem 1.15rem;
+            }
+
+            #ecosystem .section-container > div[style*="display:grid"],
+            #security .section-container > div[style*="display:grid"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+                margin-top: 1.5rem !important;
+            }
+
+            #nova-digital-card {
+                padding: 4rem 1rem !important;
+            }
+
+            #nova-digital-card > div > div[style*="display:flex"] {
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+            }
+
+            #nova-digital-card .card-visual,
+            #nova-digital-card .card-content {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            #nova-digital-card .card-visual img {
+                transform: none !important;
+                border-radius: 12px !important;
+            }
+
+            #nova-digital-card .card-content > div[style*="display:grid"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            footer {
+                padding: 2.5rem 1rem calc(2.5rem + env(safe-area-inset-bottom));
+            }
+
+            footer .legal {
+                letter-spacing: .07em;
+                overflow-wrap: anywhere;
+            }
+
+            .hero-orb,
+            .hero-orb-2 {
+                opacity: .55;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .mobile-brand {
+                font-size: 0;
+            }
+
+            .mobile-action {
+                padding-inline: .5rem;
+                font-size: .56rem;
+            }
+
+            .hero-content {
+                padding-top: 11rem;
+            }
+        }
+
+        @media (hover: none) {
+            .stat-card:hover,
+            .sec-card:hover,
+            .btn-primary:hover {
+                transform: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <header class="wrap">
-    <nav aria-label="Navegación principal">
-      <a class="brand" href="/landing">NOVA <span>COPY TRADE</span></a>
-      <a href="/login">Iniciar sesión</a>
+
+    <!-- NAVIGATION -->
+    <nav class="nav">
+        <div class="mobile-nav">
+            <a href="#inicio" class="mobile-brand" aria-label="Nova Copy Trade, inicio">
+                <span class="mobile-brand-mark">N</span>
+                Nova Copy Trade
+            </a>
+            <div class="mobile-actions">
+                <a href="https://proyecto-x-user.vercel.app/login" class="mobile-action">Entrar</a>
+                <a href="https://proyecto-x-user.vercel.app/?action=register" class="mobile-action primary">Crear cuenta</a>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="#plans">Planes</a>
+            <a href="#security">Seguridad</a>
+            <a href="#nove-ia">Nove IA</a>
+            <a href="#roadmap">Hoja de ruta</a>
+            <a href="https://proyecto-x-user.vercel.app/?action=register" class="nav-cta">Crear cuenta</a>
+            <a href="https://proyecto-x-user.vercel.app/login" class="nav-cta"
+                style="background:transparent;border:1px solid rgba(31,224,85,.3);color:var(--cyan)">Iniciar sesión</a>
+        </div>
     </nav>
-  </header>
-  <main class="wrap">
-    <section class="hero">
-      <div>
-        <h1>Nova<br>Copy Trade</h1>
-        <p>Gestiona tu cuenta y consulta tus ciclos desde un solo panel. La conexión con un proveedor de copy trading está pendiente.</p>
-        <a class="button" href="/login">Entrar a mi cuenta</a>
-      </div>
-      <img src="/nova-copy-trade.jpg" alt="Marca Nova Copy Trade" width="1672" height="941">
+
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+        <div class="hero-grid"></div>
+        <div class="hero-orb" style="top:-10%;left:30%"></div>
+        <div class="hero-orb-2"></div>
+        <div class="scanline"></div>
+        <div class="hero-content">
+            <div class="hero-badge reveal"><span class="dot"></span> Nova Copy Trade</div>
+            <h1 class="reveal reveal-delay-1">Nova <span class="accent">Copy Trade</span></h1>
+            <p class="reveal reveal-delay-2">Gestiona tus ciclos desde un solo panel. La conexión con un proveedor de copy trading está pendiente.</p>
+            <div class="hero-ctas reveal reveal-delay-3">
+                <a href="https://proyecto-x-user.vercel.app/?action=register" class="btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    Explorar NOVA
+                </a>
+                <a href="https://proyecto-x-user.vercel.app/login" class="btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M13.8 12H3" />
+                    </svg>
+                    Iniciar sesión
+                </a>
+            </div>
+
+        </div>
     </section>
-    <section class="feature-grid" aria-label="Servicios de Nova">
-      <article>
-        <p class="eyebrow">Automatización de tareas</p>
-        <h2>Nove IA</h2>
-        <p>Deja que la IA lo haga por ti.</p>
-        <p>Próximamente podrás automatizar las cuatro tareas de tus ciclos activos por 50 USDT al mes. Pagarás en USDT por la red BEP20 mediante NOWPayments.</p>
-      </article>
-      <article>
-        <p class="eyebrow">Programa de creadores</p>
-        <h2>Influencer</h2>
-        <p>Consulta las campañas, envía contenido y sigue el estado de tus recompensas desde el panel.</p>
-      </article>
+
+    <section id="nove-ia">
+        <div class="section-container">
+            <div class="section-tag reveal">Próximamente</div>
+            <h2 class="section-title reveal">Nove IA</h2>
+            <p class="section-sub reveal">Deja que la IA lo haga por ti. Automatiza las cuatro tareas de tus ciclos activos por 50 USDT al mes. Pagarás en USDT por la red BEP20 mediante NOWPayments.</p>
+        </div>
     </section>
-  </main>
-  <footer><div class="wrap">Nova Copy Trade</div></footer>
-  <script>
-    const referral = new URLSearchParams(location.search).get('ref') || localStorage.getItem('nova_digital_referral');
-    if (referral) {
-      document.querySelectorAll('a[href="/login"]').forEach(link => {
-        const url = new URL(link.href);
-        url.searchParams.set('ref', referral);
-        url.searchParams.set('action', 'register');
-        link.href = url.pathname + url.search;
-      });
-    }
-  </script>
+
+    <!-- STATS -->
+    <section class="stats" id="stats">
+        <div class="section-container">
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+                        </svg></div>
+                    <div class="stat-val"><span class="counter" id="stat-investors" data-target="0">0</span>+</div>
+                    <div class="stat-lbl">Inversores activos</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-1">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path
+                                d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2" />
+                        </svg></div>
+                    <div class="stat-val"><span class="counter" id="stat-countries" data-target="0">0</span>+</div>
+                    <div class="stat-lbl">Países</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-2">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                        </svg></div>
+                    <div class="stat-val">$<span class="counter" id="stat-payouts" data-target="0" data-prefix="">0</span>+</div>
+                    <div class="stat-lbl">Pagos totales</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-3">
+                    <div class="stat-icon"><svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 6v6l4 2" />
+                        </svg></div>
+                    <div class="stat-val"><span class="counter" id="stat-years" data-target="0">0</span> años</div>
+                    <div class="stat-lbl">En el mercado</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nova Copy Trade ECOSYSTEM -->
+    <section id="ecosystem" style="background:linear-gradient(180deg,transparent,rgba(31,224,85,.02),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🌐 Ecosistema</div>
+            <h2 class="section-title reveal">Nova Copy Trade <span style="color:var(--cyan)">Ecosistema</span></h2>
+            <div class="section-sub reveal">Consulta tus ciclos y conoce los servicios de Nova.</div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin-top:2.5rem">
+
+                <!-- ROI Investment -->
+                <a href="#plans" style="text-decoration:none">
+                    <div class="sec-card reveal" style="border-color:rgba(31,224,85,.2);background:rgba(31,224,85,.03);cursor:pointer;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(31,224,85,.5)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(31,224,85,.2)';this.style.transform='translateY(0)'">
+                        <div style="font-size:2rem;margin-bottom:.75rem">⚡</div>
+                        <div class="sec-title" style="color:var(--cyan);font-size:.9rem">Nodos de Inversión</div>
+                        <div class="sec-desc" style="font-size:.8rem">ROI variable por ciclo · Activación diaria · Desde $10</div>
+                        <div style="margin-top:.75rem;font-size:.65rem;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.15em;opacity:.7">Ver Planes →</div>
+                    </div>
+                </a>
+
+                <a href="#nove-ia" class="sec-card reveal" style="text-decoration:none">
+                    <div class="sec-title">Nove IA</div>
+                    <div class="sec-desc">Automatización de tus cuatro tareas diarias.</div>
+                </a>
+
+                <a href="/login" class="sec-card reveal" style="text-decoration:none">
+                    <div class="sec-title">Influencer</div>
+                    <div class="sec-desc">Consulta las campañas y sigue el estado de tus recompensas.</div>
+                </a>
+
+                <!-- NOVA bonuses -->
+                <a href="/login" style="text-decoration:none">
+                    <div class="sec-card reveal reveal-delay-2" style="border-color:rgba(47,226,97,.2);background:rgba(47,226,97,.03);cursor:pointer;text-align:center;transition:all .3s" onmouseover="this.style.borderColor='rgba(47,226,97,.5)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(47,226,97,.2)';this.style.transform='translateY(0)'">
+                        <div style="font-size:2rem;margin-bottom:.75rem">🔗</div>
+                        <div class="sec-title" style="color:var(--purple);font-size:.9rem">Bonos NOVA</div>
+                        <div class="sec-desc" style="font-size:.8rem">10% indicación directa · 8% binario</div>
+                        <div style="margin-top:.75rem;font-size:.65rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.15em;opacity:.7">Ver en mi cuenta →</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Nova Copy Trade CARD SECTION REMOVED -->
+    <!--
+    <section id="nova-digital-card" style="background:linear-gradient(180deg, #05140c 0%, #12271c 100%);padding:100px 0;overflow:hidden">
+        <div class="section-container" style="display:flex;align-items:center;gap:60px;flex-wrap:wrap">
+            <div class="card-visual reveal" style="flex:1;min-width:300px;position:relative">
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120%;height:120%;background:radial-gradient(circle, rgba(31,224,85,0.1) 0%, transparent 70%);z-index:0"></div>
+                <img src="/nova_digital_card.png" alt="Nova Copy Trade Card" style="width:100%;max-width:550px;position:relative;z-index:1;filter:drop-shadow(0 0 30px rgba(31,224,85,0.2));border-radius:20px;transform:perspective(1000px) rotateY(-10deg) rotateX(5deg)">
+                <div style="position:absolute;bottom:-20px;right:-20px;background:rgba(31,224,85,0.1);backdrop-filter:blur(10px);border:1px border rgba(31,224,85,0.3);padding:20px;border-radius:15px;z-index:2;box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+                    <div style="color:var(--cyan);font-family:var(--font-orbitron);font-weight:900;font-size:1.5rem">3% FEE</div>
+                    <div style="color:#98b4a0;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">Withdrawal Special</div>
+                </div>
+            </div>
+            <div class="card-content reveal reveal-delay-1" style="flex:1.2;min-width:300px">
+                <div class="section-tag" style="margin-left:0">💳 Financial Freedom</div>
+                <h2 class="section-title" style="text-align:left;font-size:2.5rem;line-height:1.1">Nova Copy Trade Card: <span style="color:var(--cyan)">Tu Capital sin Límites</span></h2>
+                <p class="section-sub" style="text-align:left;margin-left:0;max-width:100%;font-size:1.1rem">Presentamos la herramienta definitiva para gestionar tus beneficios. Olvida las esperas y las altas comisiones.</p>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-top:40px">
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(31,224,85,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--cyan);font-size:1.5rem;margin-bottom:10px">📉</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">COMISIÓN REDUCIDA</h4>
+                        <p style="color:#698671;font-size:0.8rem">Solo **3%** de comisión en retiros vía Nova Copy Trade Card (en lugar del 10% estándar).</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(47,226,97,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--purple);font-size:1.5rem;margin-bottom:10px">⚡</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">PAGOS INSTANTÁNEOS</h4>
+                        <p style="color:#698671;font-size:0.8rem">Tus comisiones de red y ROI disponibles para uso inmediato en todo el mundo.</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(31,224,85,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--cyan);font-size:1.5rem;margin-bottom:10px">🌎</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">ACEPTACIÓN VISA</h4>
+                        <p style="color:#698671;font-size:0.8rem">Utilízala en cajeros, tiendas físicas y compras online globalmente.</p>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:20px;border-radius:15px;transition:all 0.3s" onmouseover="this.style.background='rgba(47,226,97,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                        <div style="color:var(--purple);font-size:1.5rem;margin-bottom:10px">🛡️</div>
+                        <h4 style="color:white;font-family:var(--font-orbitron);font-size:0.9rem;margin-bottom:5px">BÓVEDA SEGURA</h4>
+                        <p style="color:#698671;font-size:0.8rem">Vinculación inmutable con tu cuenta Nova Copy Trade y protección 2FA.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top:40px">
+                    <a href="https://go.bancus.io/?ref=PETEXAM6" class="btn-primary" style="padding:15px 40px">SOLICITAR MI TARJETA →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    -->
+
+    <!-- INVESTMENT PLANS -->
+    <section id="plans">
+        <div class="section-container">
+            <div class="section-tag reveal">CICLOS NOVA</div>
+            <h2 class="section-title reveal">Elige tu <span style="color:var(--cyan)">ciclo de participación</span></h2>
+            <p class="section-sub reveal">La tasa de ROI se asigna al activar el plan y permanece fija durante todo el contrato. Completa las cuatro tareas diarias para activar el rendimiento.</p>
+            <div class="plans-grid">
+                <div class="plan-card reveal">
+                    <div class="plan-tag">SIN PLAZO</div>
+                    <div class="plan-title">Plan Diario</div>
+                    <div class="plan-rate">0.2%–0.4% <small>diario</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Tasa asignada y fija por contrato</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 4 tareas de lunes a viernes</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> ROI acreditado al completar tareas</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Disponible en wallet_balance</li>
+                    </ul>
+                    <a href="https://proyecto-x-user.vercel.app/?action=register" class="btn-secondary"
+                        style="width:100%;justify-content:center;padding:.8rem">Activar plan →</a>
+                </div>
+                <div class="plan-card featured reveal reveal-delay-1">
+                    <div class="plan-tag">10 DÍAS HÁBILES</div>
+                    <div class="plan-title">Plan 10 días</div>
+                    <div class="plan-rate">0.6%–0.8% <small>diario</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Tasa asignada y fija por contrato</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 4 tareas diarias consecutivas</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> ROI acumulado durante el ciclo</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Capital + ROI al vencimiento</li>
+                    </ul>
+                    <a href="https://proyecto-x-user.vercel.app/?action=register" class="btn-primary"
+                        style="width:100%;justify-content:center;padding:.8rem">Activar plan →</a>
+                </div>
+                <div class="plan-card reveal reveal-delay-2">
+                    <div class="plan-tag">15 DÍAS HÁBILES</div>
+                    <div class="plan-title">Plan 15 días</div>
+                    <div class="plan-rate">1%–1.3% <small>diario</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Tasa asignada y fija por contrato</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> 4 tareas diarias consecutivas</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> ROI acumulado durante el ciclo</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24">
+                                    <path d="M20 6L9 17l-5-5" />
+                                </svg></span> Capital + ROI al vencimiento</li>
+                    </ul>
+                    <a href="https://proyecto-x-user.vercel.app/?action=register" class="btn-secondary"
+                        style="width:100%;justify-content:center;padding:.8rem">Activar plan →</a>
+                </div>
+                <div class="plan-card reveal reveal-delay-2">
+                    <div class="plan-tag">30 DÍAS HÁBILES</div>
+                    <div class="plan-title">Plan 30 días</div>
+                    <div class="plan-rate">1.6%–2% <small>diario</small></div>
+                    <ul class="plan-features">
+                        <li><span class="check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> Tasa asignada y fija por contrato</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> 4 tareas diarias consecutivas</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> ROI acumulado durante el ciclo</li>
+                        <li><span class="check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" /></svg></span> Capital + ROI al vencimiento</li>
+                    </ul>
+                    <a href="https://proyecto-x-user.vercel.app/?action=register" class="btn-secondary"
+                        style="width:100%;justify-content:center;padding:.8rem">Activar plan →</a>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- REFERRAL COMMISSIONS -->
+    <section id="commissions" hidden aria-hidden="true">
+        <div class="section-container">
+            <div class="section-tag reveal">🔗 BONOS NOVA</div>
+            <h2 class="section-title reveal">Dos bonos <span style="color:var(--purple)">claros y verificables.</span></h2>
+            <p class="section-sub reveal">NOVA paga 10% por cada indicación directa activada y 8% binario sobre el volumen emparejado de la pierna menor.</p>
+            <div class="comm-grid" style="grid-template-columns:repeat(2,minmax(280px,520px));justify-content:center">
+                <div class="comm-card c1 reveal" style="text-align:center;padding:3.5rem 2rem">
+                    <div class="comm-level">INDICACIÓN DIRECTA</div>
+                    <div class="comm-pct">10%<small> por activación</small></div>
+                    <div class="comm-desc" style="color:var(--cyan);font-weight:700">Retirable todos los días</div>
+                </div>
+                <div class="comm-card c2 reveal" style="text-align:center;padding:3.5rem 2rem">
+                    <div class="comm-level">BONO BINARIO</div>
+                    <div class="comm-pct">8%<small> pierna menor</small></div>
+                    <div class="comm-desc" style="color:var(--purple);font-weight:700">Corte diario a las 00:00</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAREER PLAN: non-monetary recognitions only -->
+    <section id="career" hidden aria-hidden="true">
+        <div class="section-container">
+            <div class="section-tag reveal">✦ NOVA Career Plan</div>
+            <h2 class="section-title reveal">El progreso se reconoce con <span style="color:var(--gold)">experiencias reales</span></h2>
+            <p class="section-sub reveal">El Plan de Carrera NOVA no genera pagos en efectivo ni comisiones adicionales. Reconoce el progreso con premios como tablets, teléfonos, laptops y viajes a eventos.</p>
+            <div class="salary-table-wrap reveal">
+                <table class="salary-table">
+                    <thead>
+                        <tr>
+                            <th>Meta de equipo</th>
+                            <th>Reconocimiento</th>
+                            <th>Rango</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="vol">$10,000</td>
+                            <td class="bonus">Reconocimiento NOVA</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--cyan);border-color:rgba(31,224,85,.3)">Bronze</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$25,000</td>
+                            <td class="bonus">Tablet</td>
+                            <td><span class="rank-badge"
+                                    style="color:#98b4a0;border-color:rgba(152,180,160,.3)">Silver</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$40,000</td>
+                            <td class="bonus">Teléfono móvil</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--gold);border-color:rgba(255,215,0,.3)">Gold</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$65,000</td>
+                            <td class="bonus">Acceso a evento NOVA</td>
+                            <td><span class="rank-badge" style="color:var(--gold);border-color:rgba(255,215,0,.3)">Gold
+                                    II</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$100,000</td>
+                            <td class="bonus glow-gold">Laptop</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--cyan);border-color:rgba(31,224,85,.4);background:rgba(31,224,85,.05)">Platinum</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$200,000</td>
+                            <td class="bonus glow-gold">Viaje a evento NOVA</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--purple);border-color:rgba(47,226,97,.3)">Diamond</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$400,000</td>
+                            <td class="bonus glow-gold">Viaje internacional a evento</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--purple);border-color:rgba(47,226,97,.4);background:rgba(47,226,97,.05)">Diamond
+                                    II</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$800,000</td>
+                            <td class="bonus glow-gold">Experiencia NOVA Black Crown</td>
+                            <td><span class="rank-badge" style="color:var(--pink);border-color:rgba(255,0,85,.3)">Black
+                                    Crown</span></td>
+                        </tr>
+                        <tr>
+                            <td class="vol">$1,000,000</td>
+                            <td class="bonus glow-gold" style="font-size:1.3rem">Experiencia NOVA Legend</td>
+                            <td><span class="rank-badge"
+                                    style="color:var(--gold);border-color:var(--gold);background:rgba(255,215,0,.08)">👑
+                                    Legend</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="reveal" style="margin-top:2rem;background:rgba(110,228,143,.05);border:1px solid rgba(110,228,143,.25);border-radius:16px;padding:1.75rem 2rem">
+                <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#98edb0" stroke-width="2"><path d="M12 3l2.8 5.7L21 9.6l-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9L12 3z"/></svg>
+                    <span style="font-size:.7rem;font-weight:700;letter-spacing:.2em;color:#bef4cd;text-transform:uppercase">Reconocimientos del Plan de Carrera</span>
+                </div>
+                <p style="margin:0;color:#98b4a0;line-height:1.7">Los rangos se validan por NOVA antes de la entrega. Estos premios no se convierten en saldo, retiro ni comisión.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section id="security" style="background:linear-gradient(180deg,transparent,rgba(31,224,85,.02),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🛡️ Security Infrastructure</div>
+            <h2 class="section-title reveal">Enterprise-Grade <span style="color:var(--cyan)">Seguridad</span></h2>
+            <p class="section-sub reveal">Your assets are protected by military-grade encryption and immutable
+                blockchain technology.</p>
+            <div class="sec-grid">
+                <div class="sec-card reveal">
+                    <div class="sec-icon"><svg viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg></div>
+                    <div class="sec-title">AES-256 Encryption</div>
+                    <div class="sec-desc">All data is encrypted with military-grade AES-256-GCM. Your transactions and
+                        personal data are protected at every layer.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-1">
+                    <div class="sec-icon"><svg viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0110 0v4" />
+                        </svg></div>
+                    <div class="sec-title">2FA Authentication</div>
+                    <div class="sec-desc">Time-based one-time passwords (TOTP) protect every withdrawal. Compatible with
+                        Google Authenticator and Authy.</div>
+                </div>
+                <div class="sec-card reveal reveal-delay-2">
+                    <div class="sec-icon"><svg viewBox="0 0 24 24">
+                            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+                        </svg></div>
+                    <div class="sec-title">BSC Blockchain Native</div>
+                    <div class="sec-desc">All payouts processed through BEP-20 on Binance Smart Chain. Fast,
+                        transparent, and verifiable on-chain.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Nova Copy Trade GOLD SECTION -->
+
+    <!-- Nova Copy Trade BACCARAT SECTION -->
+
+    <!-- ROADMAP -->
+    <section id="roadmap" style="background:linear-gradient(180deg,transparent,rgba(31,224,85,.02),transparent)">
+        <div class="section-container">
+            <div class="section-tag reveal">🗺️ Ecosystem Roadmap</div>
+            <h2 class="section-title reveal">Mapa de <span style="color:var(--cyan)">Ruta Nova Copy Trade</span></h2>
+            <p class="section-sub reveal">Nuestro ecosistema crece con cada producto. Desde la inversión base hasta el software AI más avanzado del mercado — cada lanzamiento expande tus oportunidades de rentabilidad.</p>
+
+            <div style="position:relative;margin-top:3rem">
+                <!-- Vertical line -->
+                <div style="position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--cyan),#f59e0b,rgba(245,158,11,.1));transform:translateX(-50%);display:none" class="roadmap-line-desktop"></div>
+
+                <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+                    <!-- FASE 1 — ROI -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div style="background:rgba(31,224,85,.05);border:1px solid rgba(31,224,85,.2);border-radius:16px;padding:1.5rem;text-align:right">
+                            <div style="font-size:.6rem;font-weight:800;color:var(--cyan);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 1 · ACTIVO</div>
+                            <div style="font-size:1rem;font-weight:800;color:#e4eee7;margin-bottom:.4rem">Nodos de Inversión ROI</div>
+                            <div style="font-size:.8rem;color:#698671">Planes Diario, 10, 15 y 30 días · Desde $10 USDT</div>
+                        </div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(31,224,85,.15);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(31,224,85,.3);font-size:1.2rem">⚡</div>
+                        <div></div>
+                    </div>
+
+                    <!-- FASE 2 — RED -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div></div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(47,226,97,.15);border:2px solid var(--purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(47,226,97,.3);font-size:1.2rem">🔗</div>
+                        <div style="background:rgba(47,226,97,.05);border:1px solid rgba(47,226,97,.2);border-radius:16px;padding:1.5rem">
+                            <div style="font-size:.6rem;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 2 · ACTIVO</div>
+                            <div style="font-size:1rem;font-weight:800;color:#e4eee7;margin-bottom:.4rem">Red NOVA y Plan de Carrera</div>
+                            <div style="font-size:.8rem;color:#698671">Indicación directa 10% · Binario 8% · Premios no monetarios por rangos</div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 6 — PRÓXIMO -->
+                    <div class="reveal" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1.5rem">
+                        <div></div>
+                        <div style="width:44px;height:44px;border-radius:50%;background:rgba(105,134,113,.1);border:2px dashed rgba(105,134,113,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;opacity:.6">🚀</div>
+                        <div style="background:rgba(105,134,113,.05);border:1px dashed rgba(105,134,113,.2);border-radius:16px;padding:1.5rem;opacity:.6">
+                            <div style="font-size:.6rem;font-weight:800;color:#698671;text-transform:uppercase;letter-spacing:.2em;margin-bottom:.4rem">FASE 6 · PRÓXIMAMENTE</div>
+                            <div style="font-size:1rem;font-weight:800;color:#98b4a0;margin-bottom:.4rem">Próximo Producto Nova Copy Trade</div>
+                            <div style="font-size:.8rem;color:#4b6557">Más innovación en camino. Mantente atento a los anuncios del equipo.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <style>
+                #roadmap > .section-container > div > div > div:has(div[style*="rgba(255,215,0,.05)"]),
+                #roadmap > .section-container > div > div > div:has(div[style*="rgba(245,158,11,.1)"]) {
+                    display: none;
+                }
+                @keyframes pulse-amber {
+                    0%, 100% { box-shadow: 0 0 30px rgba(245,158,11,.5), 0 0 60px rgba(245,158,11,.2); }
+                    50% { box-shadow: 0 0 40px rgba(245,158,11,.8), 0 0 80px rgba(245,158,11,.4); }
+                }
+                @media (max-width: 640px) {
+                    #roadmap [style*="grid-template-columns:1fr auto 1fr"] {
+                        grid-template-columns: auto 1fr !important;
+                        gap: 1rem !important;
+                    }
+                    #roadmap [style*="grid-template-columns:1fr auto 1fr"] > div:empty {
+                        display: none !important;
+                    }
+                    #roadmap [style*="text-align:right"] {
+                        text-align: left !important;
+                    }
+                }
+            </style>
+
+            <div class="reveal" style="margin-top:3rem;text-align:center">
+                <a href="./login" class="btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Acceder al Ecosistema Nova Copy Trade
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="brand">NOVA <span>COPY TRADE</span></div>
+        <p style="font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:.75rem;color:#4b6557;margin-bottom:.5rem">Participación digital con ciclos transparentes</p>
+        <p class="legal">Nova Copy Trade operates as a decentralized finance protocol. All investments carry risk. Past
+            performance does not guarantee future results. Users are responsible for compliance with local regulations.
+            © 2024-2026 Nova Copy Trade. All rights reserved.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Scroll Reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target) }
+            })
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        reveals.forEach(el => observer.observe(el));
+
+        // Counter Animation
+        function animateCounter(el) {
+            const target = parseInt(el.getAttribute('data-target'));
+            const duration = 2000;
+            const start = performance.now();
+            function update(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(eased * target);
+                el.textContent = target >= 10000 ? current.toLocaleString() : current;
+                if (progress < 1) requestAnimationFrame(update);
+                else el.textContent = target >= 10000 ? target.toLocaleString() : target;
+            }
+            requestAnimationFrame(update);
+        }
+
+        function initCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const counterObs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { animateCounter(e.target); counterObs.unobserve(e.target) }
+                })
+            }, { threshold: 0.5 });
+            counters.forEach(el => counterObs.observe(el));
+        }
+
+        // Fetch landing stats from Supabase
+        (async function loadLandingStats() {
+            const SUPABASE_URL = '%VITE_SUPABASE_URL%';
+            const SUPABASE_ANON = '%VITE_SUPABASE_ANON_KEY%';
+            if (SUPABASE_URL.startsWith('%VITE_') || SUPABASE_ANON.startsWith('%VITE_')) {
+                initCounters();
+                return;
+            }
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/site_stats?limit=1`, {
+                    headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
+                });
+                if (res.ok) {
+                    const rows = await res.json();
+                    if (rows && rows.length > 0) {
+                        const d = rows[0];
+                        if (d.active_investors) document.getElementById('stat-investors').setAttribute('data-target', d.active_investors);
+                        if (d.countries) document.getElementById('stat-countries').setAttribute('data-target', d.countries);
+                        if (d.total_payouts) document.getElementById('stat-payouts').setAttribute('data-target', d.total_payouts);
+                        if (d.years_in_market) document.getElementById('stat-years').setAttribute('data-target', d.years_in_market);
+                    }
+                }
+            } catch (_) {}
+            initCounters();
+        })();
+
+        // Nav scroll effect
+        const nav = document.querySelector('.nav');
+        window.addEventListener('scroll', () => {
+            nav.style.background = window.scrollY > 80 ? 'rgba(5,16,10,.95)' : 'rgba(5,16,10,.85)';
+            nav.style.borderBottomColor = window.scrollY > 80 ? 'rgba(31,224,85,.15)' : 'rgba(31,224,85,.1)';
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // ✅ URL Referral Propagation
+        // Capture ?ref= from URL and add it to all links pointing to index.html
+        (function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            let ref = urlParams.get('ref');
+
+            // If not in URL, try localStorage (set by App.tsx during clean redirect)
+            if (!ref) {
+                ref = localStorage.getItem('nova_digital_referral');
+                if (ref) console.log("Referral found in storage:", ref);
+            }
+
+            if (ref) {
+                console.log("Applying referral to app links:", ref);
+                // Target both /login and potential root/index links
+                const appLinks = document.querySelectorAll('a[href*="/login"], a[href*="action=register"]');
+                appLinks.forEach(link => {
+                    try {
+                        const url = new URL(link.href, window.location.origin);
+                        url.searchParams.set('ref', ref);
+                        url.searchParams.set('action', 'register');
+                        link.href = url.pathname + url.search;
+                    } catch (e) {
+                        console.error("Error updating link:", link.href, e);
+                    }
+                });
+            }
+        })();
+    </script>
+
+    <!-- Google Translate element: oculto visualmente pero accesible al DOM -->
+
+
 </body>
+
 </html>
