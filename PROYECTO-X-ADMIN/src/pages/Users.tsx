@@ -62,6 +62,7 @@ const Users: React.FC = () => {
   const USERS_PER_PAGE = 10;
   const [selectedUser, setSelectedUser] = useState<Profile | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activatingNovaIa, setActivatingNovaIa] = useState(false);
   const [activeTab, setActiveTab] = useState<'general' | 'security' | 'wallet'>('general');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -667,6 +668,23 @@ const Users: React.FC = () => {
 
               {activeTab === 'wallet' && (
                 <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+                  <button type="button" disabled={activatingNovaIa}
+                    className="rounded-xl bg-indigo-600 px-4 py-3 font-bold text-white disabled:opacity-50"
+                    onClick={async () => {
+                      if (!window.confirm('¿Activar Nova IA por un mes para este usuario sin cargo?')) return;
+                      setActivatingNovaIa(true);
+                      try {
+                        const { data, error } = await supabase.rpc('admin_activate_nova_ia', { p_user_id: selectedUser.id });
+                        if (error) throw error;
+                        window.alert(`Nova IA activa hasta el ${new Date(data).toLocaleDateString('es-DO', { timeZone: 'America/Santo_Domingo' })}.`);
+                      } catch (error) {
+                        window.alert(error instanceof Error ? error.message : 'No se pudo activar Nova IA.');
+                      } finally {
+                        setActivatingNovaIa(false);
+                      }
+                    }}>
+                    {activatingNovaIa ? 'Activando…' : 'Activar Nova IA por un mes'}
+                  </button>
                   <div className="bg-indigo-600/5 border border-indigo-600/10 p-8 rounded-[2.5rem] flex flex-col items-center justify-center gap-2">
                     <Wallet className="w-8 h-8 text-indigo-500 mb-1" />
                     <div>
