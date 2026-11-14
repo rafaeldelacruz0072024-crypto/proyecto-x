@@ -159,6 +159,11 @@
         "scanning": "SCANNING..."
     },
     "deposit": {
+        "provider": "Payment method",
+        "nowpayments_unavailable": "NOWPayments (unavailable)",
+        "minimum_usd": "$25 USD minimum",
+        "generate_provider_payment": "Create payment with {{provider}}",
+        "confirmed_credit": "Your balance is credited once the payment provider confirms full payment.",
         "title": "DEPOSIT USDT",
         "network": "Network: BSC (BEP20)",
         "amount_label": "Amount to Deposit (USDT)",

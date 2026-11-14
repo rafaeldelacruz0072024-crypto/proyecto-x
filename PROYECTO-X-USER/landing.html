@@ -205,6 +205,8 @@
             background: linear-gradient(90deg, rgba(5,23,13, .96) 0%, rgba(7,34,19, .9) 36%, rgba(9,47,26, .26) 67%, rgba(5,23,13, .52) 100%), url('/nova-copy-trade.jpg') center / cover no-repeat;
         }
 
+        .hero-art { display: none; }
+
         .hero-grid {
             position: absolute;
             inset: 0;
@@ -1217,18 +1219,30 @@
             .hero {
                 min-height: auto;
                 padding: calc(4.75rem + env(safe-area-inset-top)) 1rem 3.5rem;
-                align-items: flex-start;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.25rem;
             }
 
             .hero::before {
-                background: linear-gradient(180deg, rgba(5,23,13,.28) 0%, rgba(5,23,13,.58) 34%, #05170d 65%), url('/nova-copy-trade.jpg') 68% top / auto 52% no-repeat;
+                background: linear-gradient(180deg, #092519, #05170d);
+            }
+
+            .hero-art {
+                display: block;
+                position: relative;
+                width: 100%;
+                max-width: 560px;
+                height: auto;
+                border-radius: 1rem;
+                border: 1px solid rgba(31,224,85,.22);
             }
 
             .hero-content {
                 width: 100%;
                 max-width: none;
                 margin-left: 0;
-                padding-top: 12.25rem;
+                padding-top: 0;
             }
 
             .hero-badge {
@@ -1376,7 +1390,8 @@
 
         @media (max-width: 380px) {
             .mobile-brand {
-                font-size: 0;
+                font-size: .62rem;
+                letter-spacing: .06em;
             }
 
             .mobile-action {
@@ -1384,9 +1399,6 @@
                 font-size: .56rem;
             }
 
-            .hero-content {
-                padding-top: 11rem;
-            }
         }
 
         @media (hover: none) {
@@ -1430,6 +1442,7 @@
         <div class="hero-orb" style="top:-10%;left:30%"></div>
         <div class="hero-orb-2"></div>
         <div class="scanline"></div>
+        <img class="hero-art" src="/nova-copy-trade.jpg" alt="" width="1672" height="941">
         <div class="hero-content">
             <div class="hero-badge reveal"><span class="dot"></span> Nova Copy Trade</div>
             <h1 class="reveal reveal-delay-1">Nova <span class="accent">Copy Trade</span></h1>
