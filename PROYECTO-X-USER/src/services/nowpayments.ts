@@ -16,10 +16,10 @@ export async function isNowPaymentsAvailable(): Promise<boolean> {
   }
 }
 
-export async function createNowPayment(amount: number): Promise<{ data?: PaymentDetails; error?: string }> {
+export async function createNowPayment(amount: number, purpose?: 'nova-ia'): Promise<{ data?: PaymentDetails; error?: string }> {
   try {
     const { data, error } = await supabase.functions.invoke('nowpayments-proxy', {
-      body: { amount },
+      body: { amount, purpose },
     });
     if (error) {
       const details = await error.context?.json?.().catch(() => null);

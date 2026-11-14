@@ -27,11 +27,14 @@ Deno.serve(async (req) => {
   }
 
   if (payload.payment_status !== 'finished') return new Response(null, { status: 204 });
+  const rawOrderId = String(payload.order_id);
+  const novaIa = rawOrderId.startsWith('nova-ia:');
+  const orderId = novaIa ? rawOrderId.slice(8) : rawOrderId;
   const price = Number(payload.price_amount);
   const quoted = Number(payload.pay_amount);
   const paid = Number(payload.actually_paid);
   const paymentId = String(payload.payment_id);
-  if (!/^\d+$/.test(paymentId) || !/^[0-9a-f-]{36}$/i.test(payload.order_id) ||
+  if (!/^\d+$/.test(paymentId) || !/^[0-9a-f-]{36}$/i.test(orderId) ||
       payload.price_currency !== 'usd' || payload.pay_currency !== 'usdtbsc' ||
       !Number.isFinite(price) || price <= 0 || !Number.isFinite(quoted) || quoted <= 0 ||
       !Number.isFinite(paid) || paid < quoted) {
@@ -39,8 +42,8 @@ Deno.serve(async (req) => {
   }
 
   const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
-  const { error } = await supabase.rpc('confirm_nowpayments_deposit', {
-    p_id: payload.order_id, p_payment_id: paymentId, p_amount: price,
+  const { error } = await supabase.rpc(novaIa ? 'confirm_nova_ia_payment' : 'confirm_nowpayments_deposit', {
+    p_id: orderId, p_payment_id: paymentId, p_amount: price,
   });
   if (error) {
     console.error('No se pudo acreditar depósito NOWPayments', error.code);

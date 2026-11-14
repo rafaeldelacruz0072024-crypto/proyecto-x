@@ -27,7 +27,8 @@ Deno.serve(async (req) => {
     if (authError || !user) return reply(401, { error: 'Inicia sesión para depositar.' });
 
     const body = await req.json().catch(() => null);
-    const amount = body?.amount;
+    const novaIa = body?.purpose === 'nova-ia';
+    const amount = novaIa ? 50 : body?.amount;
     if (typeof amount !== 'number' || !Number.isFinite(amount) || amount < 25 ||
         amount > 50000 || Number(amount.toFixed(2)) !== amount) {
       return reply(400, { error: 'Introduce un importe entre 25 y 50,000 USD con hasta dos decimales.' });
@@ -42,8 +43,8 @@ Deno.serve(async (req) => {
         price_amount: amount,
         price_currency: 'usd',
         pay_currency: 'usdtbsc',
-        order_id: orderId,
-        order_description: 'Depósito Nova Copy Trade',
+        order_id: novaIa ? `nova-ia:${orderId}` : orderId,
+        order_description: novaIa ? 'Mensualidad Nova IA' : 'Depósito Nova Copy Trade',
         ipn_callback_url: new URL('/functions/v1/nowpayments-ipn', supabaseUrl).href,
       }),
     });
@@ -57,7 +58,9 @@ Deno.serve(async (req) => {
       return reply(502, { error: 'NOWPayments no pudo generar el pago para ese importe.' });
     }
 
-    const { error } = await supabase.rpc('create_nowpayments_deposit', {
+    const { error } = novaIa
+      ? await supabase.from('nova_ia_orders').insert({ id: orderId, user_id: user.id, payment_id: paymentId })
+      : await supabase.rpc('create_nowpayments_deposit', {
       p_id: orderId, p_user_id: user.id, p_amount: amount, p_payment_id: paymentId,
     });
     if (error) throw error;
