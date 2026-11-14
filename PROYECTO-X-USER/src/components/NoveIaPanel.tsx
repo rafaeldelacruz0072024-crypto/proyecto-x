@@ -82,6 +82,14 @@ export default function NoveIaPanel({ activeCycles, userId }: { activeCycles: nu
         {payment ? (
           <div className="space-y-3 rounded-xl border border-white/10 p-4 text-sm">
             <p>Envía exactamente <strong>{payment.pay_amount} USDT</strong> por BEP20.</p>
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(payment.pay_address)}`}
+              alt="Código QR de la dirección de pago BEP20"
+              width={200}
+              height={200}
+              referrerPolicy="no-referrer"
+              className="mx-auto h-auto w-full max-w-[200px] rounded-lg bg-white p-2"
+            />
             <p className="break-all font-mono">{payment.pay_address}</p>
             <p>Referencia de pago: {payment.payment_id}</p>
             <p>La vigencia se actualiza cuando NOWPayments confirma el pago completo.</p>
