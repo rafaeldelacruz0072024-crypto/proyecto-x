@@ -2,6 +2,8 @@ import React from 'react';
 import { Camera, Bot } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+const highlightedModules = new Set(['nove-ia', 'influencer', 'nodes', 'copytrade']);
+
 interface UserSidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -157,8 +159,8 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
                 <span className={`text-[10px] font-orbitron font-black uppercase tracking-[0.15em] transition-colors duration-200 ${isActive ? 'text-proyecto-accent' : ''}`}>
                   {item.id === 'nodes' ? 'Mis nodos' : item.id === 'copytrade' ? 'Copy trading' : t(`nav.${item.id}`, { defaultValue: item.id === 'influencer' ? 'Influencer' : `nav.${item.id}` })}
                 </span>
-                {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse shadow-[0_0_6px_rgba(199,255,51,0.8)]" />
+                {(isActive || highlightedModules.has(item.id)) && (
+                  <span aria-hidden="true" className="ml-auto size-1.5 shrink-0 rounded-full bg-proyecto-accent shadow-[0_0_6px_rgba(199,255,51,0.8)] motion-safe:animate-pulse" />
                 )}
               </button>
             );
