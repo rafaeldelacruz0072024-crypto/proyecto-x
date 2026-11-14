@@ -407,6 +407,8 @@
         "notify_error": "Error al activar el nodo: {{error}}"
     },
     "auth": {
+        "show_password": "Mostrar contraseña",
+        "hide_password": "Ocultar contraseña",
         "login_tab": "Inicio de Nodo",
         "register_tab": "Abrir Cuenta",
         "institutional_tag": "Nodo de Activos Institucionales",

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 import Logo from './Logo';
@@ -15,6 +16,8 @@ interface Props {
 const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode }) => {
   const { t } = useTranslation();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>(initialMode || 'login');
+  const [showPassword, setShowPassword] = useState(false);
+  useEffect(() => { setShowPassword(false); }, [mode]);
   const [forgotEmailSent, setForgotEmailSent] = useState(false);
 
   const defaultRef = initialReferralCode || '';
@@ -551,17 +554,32 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
 
             {mode !== 'forgot' && (
               <div className="animate-fade-in relative">
-                <label className="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">{t('auth.password')}</label>
-                <input
-                  type="password"
-                  required
-                  disabled={loading}
-                  minLength={6}
-                  className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-proyecto-accent transition-all disabled:opacity-50"
-                  placeholder="••••••••••••"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                />
+                <label htmlFor="auth-password" className="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">{t('auth.password')}</label>
+                <div className="relative">
+                  <input
+                    id="auth-password"
+                    type={mode === 'login' && showPassword ? 'text' : 'password'}
+                    autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                    required
+                    disabled={loading}
+                    minLength={6}
+                    className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-3 pl-4 pr-12 text-sm text-white focus:outline-none focus:border-proyecto-accent transition-all disabled:opacity-50"
+                    placeholder="••••••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  />
+                  {mode === 'login' && (
+                    <button
+                      type="button"
+                      aria-label={t(showPassword ? 'auth.hide_password' : 'auth.show_password')}
+                      aria-controls="auth-password"
+                      onClick={() => setShowPassword(visible => !visible)}
+                      className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-slate-400 hover:text-white focus-visible:outline focus-visible:outline-proyecto-accent"
+                    >
+                      {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                    </button>
+                  )}
+                </div>
                 {mode === 'register' && (
                   <p className="text-[8px] text-slate-600 mt-1 ml-1 font-bold text-right uppercase tracking-tighter">{t('auth.password_hint')}</p>
                 )}
