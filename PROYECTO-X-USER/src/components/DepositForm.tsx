@@ -1,7 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createCryptopPayment, CryptopPaymentResponse } from '../services/cryptop';
+import { createCryptopPayment } from '../services/cryptop';
+
+import { createNowPayment, isNowPaymentsAvailable, type PaymentDetails } from '../services/nowpayments';
 
 interface Props {
   onDeposit: (amount: number, hash?: string) => void;
@@ -13,11 +15,21 @@ interface Props {
 const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onClearPromo }) => {
   const { t } = useTranslation();
   const [amount, setAmount] = useState<string>('');
-  const [transactionHash, setTransactionHash] = useState<string>('');
   const [isCopied, setIsCopied] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [paymentData, setPaymentData] = useState<CryptopPaymentResponse | null>(null);
+  const [paymentData, setPaymentData] = useState<PaymentDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const [provider, setProvider] = useState<'CRYPTOP' | 'NOWPayments'>('CRYPTOP');
+  const [nowPaymentsAvailable, setNowPaymentsAvailable] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    isNowPaymentsAvailable().then((available) => {
+      if (active) setNowPaymentsAvailable(available);
+    });
+    return () => { active = false; };
+  }, []);
 
   const handleCopy = () => {
     if (!paymentData?.pay_address) return;
@@ -25,9 +37,6 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
-
-  // --- STRIPE HANDLER ---
-
 
   const handleGeneratePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +54,9 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
       setIsVerifying(true);
       setError(null);
 
-      const { data, error: apiError } = await createCryptopPayment(numAmount, userId);
+      const { data, error: apiError } = provider === 'NOWPayments'
+        ? await createNowPayment(numAmount)
+        : await createCryptopPayment(numAmount, userId);
 
       if (data) {
         setPaymentData(data);
@@ -56,19 +67,6 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
         setError(apiError || t('deposit.api_error'));
       }
       setIsVerifying(false);
-    }
-  };
-
-  const handleConfirmFinal = () => {
-    if (paymentData) {
-      // The deposit record was already created by the proxy.
-      // We just notify the user that we are waiting for blockchain confirmation.
-      setPaymentData(null);
-      setAmount('');
-      setTransactionHash('');
-      // We can call onDeposit as a callback to refetch data or show a success toast in the parent
-      // but we should pass a flag or handle it differently if it creates a record.
-      // For now, let's just reset and let the user know.
     }
   };
 
@@ -131,9 +129,21 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
         /* STEP 1: AMOUNT INPUT + MÉTODO DE PAGO */
         <form onSubmit={handleGeneratePayment} className="space-y-6">
           <div className="border border-proyecto-accent/25 bg-proyecto-accent/5 p-4 rounded-xl">
-            <p className="text-[9px] font-black uppercase tracking-widest text-proyecto-accent">Método de pago</p>
-            <p className="mt-2 text-sm font-orbitron font-black text-white">CRYPTOP · BNB Smart Chain (BEP20)</p>
-            <p className="mt-1 text-[9px] font-mono uppercase tracking-wider text-slate-500">USDT · Depósito cripto verificado</p>
+            <label htmlFor="deposit-provider" className="text-[9px] font-black uppercase tracking-widest text-proyecto-accent">
+              {t('deposit.provider')}
+            </label>
+            <select id="deposit-provider" value={provider} disabled={isVerifying}
+              onChange={(event) => {
+                setProvider(event.target.value === 'NOWPayments' ? 'NOWPayments' : 'CRYPTOP');
+                setError(null);
+              }}
+              className="mt-2 block w-full rounded-lg border border-slate-800 bg-slate-950 p-3 text-sm font-bold text-white">
+              <option value="CRYPTOP">CRYPTOP</option>
+              <option value="NOWPayments" disabled={!nowPaymentsAvailable}>
+                {nowPaymentsAvailable ? 'NOWPayments' : t('deposit.nowpayments_unavailable')}
+              </option>
+            </select>
+            <p className="mt-2 text-xs text-slate-400">USDT · BNB Smart Chain (BEP20)</p>
           </div>
 
 
@@ -150,10 +160,12 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
                 className="w-full bg-slate-950 border border-slate-900 rounded-xl py-4 pl-8 pr-4 text-white text-lg font-black focus:outline-none focus:border-proyecto-green transition-all placeholder:text-slate-800"
                 required
                 min="25"
+                max="50000"
+                step="0.01"
               />
             </div>
             <p className="text-[9px] text-slate-600 mt-1 ml-1">
-              Mínimo: $25 USD · CRYPTOP en BNB BEP20
+              {t('deposit.minimum_usd')}
             </p>
           </div>
 
@@ -161,7 +173,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
             <p className="text-[10px] text-red-500 font-bold uppercase text-center">{error}</p>
           )}
           <button type="submit" disabled={!amount || parseFloat(amount) < 25 || isVerifying} className="w-full py-4 bg-proyecto-green text-slate-950 font-black text-xs uppercase tracking-[0.3em] rounded-xl shadow-xl hover:brightness-110 active:scale-95 disabled:opacity-20 disabled:grayscale transition-all">
-            {isVerifying ? t('deposit.generating') : 'Generar pago CRYPTOP'}
+            {isVerifying ? t('deposit.generating') : t('deposit.generate_provider_payment', { provider })}
           </button>
 
 
@@ -174,6 +186,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
       ) : (
         /* STEP 2: SHOW PAYMENT ADDRESS & QR */
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <p className="text-center text-xs font-bold text-slate-300">{provider} · USDT · BNB Smart Chain (BEP20)</p>
           <div className="flex flex-col items-center">
             <div className="relative p-6 bg-white rounded-[2.5rem] shadow-[0_0_60px_rgba(0,243,255,0.15)] border-4 border-slate-900/10 mb-2">
               <div className="absolute -inset-1 bg-gradient-to-tr from-proyecto-accent/20 to-proyecto-green/20 rounded-[2.6rem] blur-xl opacity-50 -z-10 animate-pulse"></div>
@@ -246,13 +259,13 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
             <div className="bg-proyecto-brand/5 p-5 rounded-2xl border border-proyecto-brand/20 relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-proyecto-brand/10 rounded-full blur-2xl group-hover:bg-proyecto-brand/20 transition-all"></div>
               <p className="text-[10px] text-proyecto-accent leading-relaxed text-center font-bold uppercase tracking-tight relative z-10">
-                {t('deposit.automatic_process_notice', { defaultValue: 'El sistema detectará tu pago automáticamente. Una vez confirmado en la blockchain, tu saldo se acreditará en segundos.' })}
+                {t('deposit.confirmed_credit')}
               </p>
             </div>
 
             <div className="flex flex-col gap-3 pt-2">
               <button
-                onClick={handleConfirmFinal}
+                onClick={resetForm}
                 className="w-full py-4.5 bg-proyecto-brand text-white font-black text-xs uppercase tracking-[0.3em] rounded-xl shadow-[0_10px_30px_rgba(0,114,255,0.3)] hover:brightness-110 active:scale-[0.98] transition-all font-orbitron border border-proyecto-brand/50"
               >
                 {t('deposit.done_button', { defaultValue: 'ENTENDIDO, VOLVER AL PANEL' })}

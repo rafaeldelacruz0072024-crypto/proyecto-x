@@ -164,6 +164,11 @@
         "whatsapp_support_title": "Soporte Vía WhatsApp"
     },
     "deposit": {
+        "provider": "Método de pago",
+        "nowpayments_unavailable": "NOWPayments (no disponible)",
+        "minimum_usd": "Mínimo de $25 USD",
+        "generate_provider_payment": "Generar pago con {{provider}}",
+        "confirmed_credit": "El saldo se acredita cuando la pasarela confirma el pago completo.",
         "title": "DEPOSITAR USDT",
         "network": "Red: BSC (BEP20)",
         "amount_label": "Monto a Depositar (USDT)",
