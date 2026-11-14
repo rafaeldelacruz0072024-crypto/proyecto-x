@@ -397,6 +397,8 @@
         "notify_error": "Error activating node: {{error}}"
     },
     "auth": {
+        "show_password": "Show password",
+        "hide_password": "Hide password",
         "login_tab": "Node Login",
         "register_tab": "Open Account",
         "institutional_tag": "Institutional Asset Node",
