@@ -1,0 +1,5 @@
+@keyframes nova-ia-float {
+  50% {
+    transform: translateY(-6px);
+  }
+}

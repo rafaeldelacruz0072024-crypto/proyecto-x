@@ -1,7 +1,8 @@
+import './NoveIaPanel.css';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { createNowPayment, type PaymentDetails } from '../services/nowpayments';
-import { Bot, CalendarDays, CreditCard, Layers } from 'lucide-react';
+import { CalendarDays, CreditCard, Layers } from 'lucide-react';
 
 export default function NoveIaPanel({ activeCycles, userId }: { activeCycles: number; userId: string }) {
   const [paidUntil, setPaidUntil] = useState<string>();
@@ -33,14 +34,24 @@ export default function NoveIaPanel({ activeCycles, userId }: { activeCycles: nu
   return (
     <section aria-labelledby="nova-ia-plan" className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,24rem)]">
       <div className="holo-card space-y-6 rounded-xl p-6 sm:p-9">
-        <Bot className="text-proyecto-accent" size={32} aria-hidden="true" />
-        <h2 id="nova-ia-plan" className="text-3xl font-black text-white sm:text-4xl">
-          Deja que la IA lo haga por ti
-        </h2>
-        <p className="max-w-xl text-slate-300">
-          Nova IA completará las cuatro tareas de cada ciclo activo de lunes a viernes,
-          según el horario de Santo Domingo y el corte de cada ciclo.
-        </p>
+        <div className="grid items-center gap-5 sm:grid-cols-[minmax(0,1fr)_minmax(7rem,12rem)]">
+          <div className="space-y-3">
+            <h2 id="nova-ia-plan" className="text-3xl font-black text-white sm:text-4xl">
+              Deja que la IA lo haga por ti
+            </h2>
+            <p className="max-w-xl text-slate-300">
+              Nova IA completará las cuatro tareas de cada ciclo activo de lunes a viernes,
+              según el horario de Santo Domingo y el corte de cada ciclo.
+            </p>
+          </div>
+          <img
+            src="/nova-ia-avatar.jpg"
+            alt=""
+            width={640}
+            height={640}
+            className="order-first mx-auto aspect-square w-full max-w-[12rem] rounded-2xl border border-emerald-300/20 object-cover shadow-lg shadow-emerald-400/10 motion-safe:animate-[nova-ia-float_2.2s_ease-in-out_2] sm:order-last"
+          />
+        </div>
         <dl className="grid gap-4 border-t border-white/10 pt-5 sm:grid-cols-2">
           <div>
             <dt className="flex items-center gap-2 text-sm text-slate-300">
