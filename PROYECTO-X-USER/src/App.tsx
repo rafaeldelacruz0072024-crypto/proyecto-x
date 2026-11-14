@@ -50,7 +50,7 @@ import BinaryBonusPanel from './components/BinaryBonusPanel';
 import UserSidebar from './components/UserSidebar';
 import NoveIaPanel from './components/NoveIaPanel';
 import InfluencerPanel from './components/InfluencerPanel';
-import { requestWelcomeEmail, requestWithdrawalEmail } from './services/emailNotifications';
+import { requestWelcomeEmail } from './services/emailNotifications';
 // Red vacía - se llenará con datos reales cuando se implemente backend de referidos
 const EMPTY_NETWORK: NetworkNode = {
   id: 'root',
@@ -518,37 +518,20 @@ const App: React.FC = () => {
       addNotification('Configura tu Wallet BEP-20 antes de retirar.', 'error');
       return false;
     }
-    await executeFinalWithdrawal(amount, method, address);
-    return true;
+    return executeFinalWithdrawal(amount, method);
   }, [walletBalance, user, profile, addNotification, executeFinalWithdrawal]);
 
-  async function executeFinalWithdrawal(amount: number, method: string, address: string) {
-    if (!user) return;
-    const result = await createWithdrawal(user.id, amount, method, address);
+  async function executeFinalWithdrawal(amount: number, method: string) {
+    if (!user) return false;
+    const result = await createWithdrawal(amount, method);
 
     if (result.success) {
       setLastWithdrawal({ id: result.withdrawal.id, amount });
       setShowConfirmModal(true);
       addNotification(t('withdrawal.notify_success'), "info");
 
-      // Mock email (opcional - solo para UI)
-      const withdrawalEmail: MockEmail = {
-        id: `email_wd_${Date.now()}`,
-        type: 'WITHDRAWAL',
-        subject: "Retiro Solicitado - Esperando Aprobación Admin",
-        amount,
-        method,
-        address,
-        txId: result.withdrawal.id,
-        date: new Date(),
-        isConfirmed: false
-      };
-      setMockEmails(prev => [withdrawalEmail, ...prev]);
-
-      // El saldo queda reservado. El admin sólo verá el retiro tras confirmar el enlace enviado al correo.
-      void requestWithdrawalEmail(result.withdrawal.id, result.withdrawal.confirmationId);
-
-      refetch(); // Recargar datos
+      void refetch();
+      return true;
     } else {
       if (result.error?.includes('withdrawal.errors')) {
         addNotification(t(result.error), "error");
@@ -556,6 +539,7 @@ const App: React.FC = () => {
         addNotification(`Error: ${result.error}`, "error");
       }
     }
+    return false;
   }
 
   const handleRoiActivated = useCallback((result: any) => {
