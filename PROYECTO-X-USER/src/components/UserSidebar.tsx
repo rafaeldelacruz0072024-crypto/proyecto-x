@@ -155,7 +155,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
                   {item.icon}
                 </span>
                 <span className={`text-[10px] font-orbitron font-black uppercase tracking-[0.15em] transition-colors duration-200 ${isActive ? 'text-proyecto-accent' : ''}`}>
-                  {item.id === 'nodes' ? 'Mis nodos' : item.id === 'copytrade' ? 'Copy trading' : item.id === 'nove-ia' ? 'Nove IA' : t(`nav.${item.id}`, { defaultValue: item.id === 'influencer' ? 'Influencer' : `nav.${item.id}` })}
+                  {item.id === 'nodes' ? 'Mis nodos' : item.id === 'copytrade' ? 'Copy trading' : t(`nav.${item.id}`, { defaultValue: item.id === 'influencer' ? 'Influencer' : `nav.${item.id}` })}
                 </span>
                 {isActive && (
                   <span className="ml-auto w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse shadow-[0_0_6px_rgba(199,255,51,0.8)]" />

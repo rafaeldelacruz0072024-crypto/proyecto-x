@@ -1239,7 +1239,7 @@ const App: React.FC = () => {
             </section>
           )}
 
-          {activeTab === 'nove-ia' && <NoveIaPanel />}
+          {activeTab === 'nove-ia' && <NoveIaPanel activeCycles={investments?.filter(cycle => cycle.status === 'ACTIVE').length ?? 0} />}
 
           {activeTab === 'influencer' && (
             <InfluencerPanel key={user.id} userId={user.id} refCode={profile?.ref_code} />
