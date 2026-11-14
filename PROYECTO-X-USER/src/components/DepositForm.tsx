@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createCryptopPayment } from '../services/cryptop';
 
 import { createNowPayment, isNowPaymentsAvailable, type PaymentDetails } from '../services/nowpayments';
 
@@ -20,8 +19,8 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
   const [paymentData, setPaymentData] = useState<PaymentDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [provider, setProvider] = useState<'CRYPTOP' | 'NOWPayments'>('CRYPTOP');
-  const [nowPaymentsAvailable, setNowPaymentsAvailable] = useState(false);
+  const provider = 'NOWPayments';
+  const [nowPaymentsAvailable, setNowPaymentsAvailable] = useState<boolean | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -40,6 +39,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
 
   const handleGeneratePayment = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!nowPaymentsAvailable || isVerifying) return;
     if (!userId) {
       setError(t('deposit.user_unauthorized'));
       return;
@@ -54,9 +54,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
       setIsVerifying(true);
       setError(null);
 
-      const { data, error: apiError } = provider === 'NOWPayments'
-        ? await createNowPayment(numAmount)
-        : await createCryptopPayment(numAmount, userId);
+      const { data, error: apiError } = await createNowPayment(numAmount);
 
       if (data) {
         setPaymentData(data);
@@ -129,20 +127,13 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
         /* STEP 1: AMOUNT INPUT + MÉTODO DE PAGO */
         <form onSubmit={handleGeneratePayment} className="space-y-6">
           <div className="border border-proyecto-accent/25 bg-proyecto-accent/5 p-4 rounded-xl">
-            <label htmlFor="deposit-provider" className="text-[9px] font-black uppercase tracking-widest text-proyecto-accent">
+            <p className="text-[9px] font-black uppercase tracking-widest text-proyecto-accent">
               {t('deposit.provider')}
-            </label>
-            <select id="deposit-provider" value={provider} disabled={isVerifying}
-              onChange={(event) => {
-                setProvider(event.target.value === 'NOWPayments' ? 'NOWPayments' : 'CRYPTOP');
-                setError(null);
-              }}
-              className="mt-2 block w-full rounded-lg border border-slate-800 bg-slate-950 p-3 text-sm font-bold text-white">
-              <option value="CRYPTOP">CRYPTOP</option>
-              <option value="NOWPayments" disabled={!nowPaymentsAvailable}>
-                {nowPaymentsAvailable ? 'NOWPayments' : t('deposit.nowpayments_unavailable')}
-              </option>
-            </select>
+            </p>
+            <p className="mt-2 text-sm font-bold text-white">{provider}</p>
+            {nowPaymentsAvailable === false && (
+              <p role="status" className="mt-2 text-sm text-amber-300">{t('deposit.nowpayments_unavailable')}</p>
+            )}
             <p className="mt-2 text-xs text-slate-400">USDT · BNB Smart Chain (BEP20)</p>
           </div>
 
@@ -172,7 +163,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
           {error && (
             <p className="text-[10px] text-red-500 font-bold uppercase text-center">{error}</p>
           )}
-          <button type="submit" disabled={!amount || parseFloat(amount) < 25 || isVerifying} className="w-full py-4 bg-proyecto-green text-slate-950 font-black text-xs uppercase tracking-[0.3em] rounded-xl shadow-xl hover:brightness-110 active:scale-95 disabled:opacity-20 disabled:grayscale transition-all">
+          <button type="submit" disabled={!nowPaymentsAvailable || !amount || parseFloat(amount) < 25 || isVerifying} className="w-full py-4 bg-proyecto-green text-slate-950 font-black text-xs uppercase tracking-[0.3em] rounded-xl shadow-xl hover:brightness-110 active:scale-95 disabled:opacity-20 disabled:grayscale transition-all">
             {isVerifying ? t('deposit.generating') : t('deposit.generate_provider_payment', { provider })}
           </button>
 
