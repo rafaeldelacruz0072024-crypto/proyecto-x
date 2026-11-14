@@ -140,18 +140,9 @@ export async function withdrawDailyNodeCapital(investmentId: string) {
 // ==========================================
 // WITHDRAWALS
 // ==========================================
-export async function createWithdrawal(
-  userId: string,
-  amount: number,
-  method: string,
-  walletAddress: string
-) {
+export async function createWithdrawal(amount: number, method: string) {
   try {
-    // RPC atómico: una sola solicitud en lugar de 3+ llamadas secuenciales.
-    // Evita "TypeError: Load failed" en iOS Safari por múltiples fetch fallidos.
-    // El servidor toma la dirección BEP-20 guardada en el perfil. La reserva
-    // del saldo se hace de forma atómica en Wallet Bank.
-    const { data, error } = await supabase.rpc('request_withdrawal_email_confirmation', {
+    const { data, error } = await supabase.rpc('request_withdrawal_review', {
       p_amount: amount,
       p_method: method,
     });
@@ -171,7 +162,7 @@ export async function createWithdrawal(
     // Retornamos un objeto compatible con el código existente en App.tsx
     return {
       success: true,
-      withdrawal: { id: data.withdrawal_id, amount: data.amount, confirmationId: data.confirmation_id }
+      withdrawal: { id: data.withdrawal_id, amount: data.amount }
     };
   } catch (error: any) {
     console.error('Error creating withdrawal:', error);
