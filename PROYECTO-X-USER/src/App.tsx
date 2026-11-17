@@ -1217,7 +1217,7 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'copytrade' && <CopyTradingPanel />}
+          {activeTab === 'copytrade' && <CopyTradingPanel key={user.id} userId={user.id} />}
 
           {activeTab === 'nove-ia' && <NoveIaPanel key={user.id} userId={user.id} activeCycles={investments?.filter(cycle => cycle.status === 'ACTIVE').length ?? 0} />}
 
