@@ -1,3 +1,4 @@
+import CopyTradingPanel from './components/CopyTradingPanel';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from './lib/supabase';
@@ -1216,12 +1217,7 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'copytrade' && (
-            <section className="holo-card rounded-xl p-6">
-              <h1 className="text-3xl font-black text-white">Copy trading</h1>
-              <p className="mt-3 text-slate-300">Conexión con el proveedor de trading pendiente.</p>
-            </section>
-          )}
+          {activeTab === 'copytrade' && <CopyTradingPanel />}
 
           {activeTab === 'nove-ia' && <NoveIaPanel key={user.id} userId={user.id} activeCycles={investments?.filter(cycle => cycle.status === 'ACTIVE').length ?? 0} />}
 
