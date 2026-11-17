@@ -1,0 +1,49 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { RefreshCw, Search } from 'lucide-react';
+
+type Pair = { chainId:string; dexId:string; pairAddress:string; url:string; baseToken:{address:string;name:string;symbol:string}; priceUsd?:string; liquidity?:{usd?:number}; priceChange?:{h24?:number} };
+type Position = { id:string; address:string; name:string; symbol:string; amount:number; entryPrice:number; quantity:number; openedAt:number; closedAt?:number; exitPrice?:number };
+type Quote = { pair:Pair; price:number; receivedAt:number };
+const API = 'https://api.dexscreener.com';
+const interval = 30000;
+const price = (n:number) => '$' + n.toLocaleString('en-US', {maximumSignificantDigits: 6});
+const money = (n:number) => '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+function bestPairs(pairs:Pair[], addresses:string[]): Record<string,Pair> {
+ const wanted = new Set(addresses); const best:Record<string,Pair> = {};
+ for (const p of pairs) { const a=p.baseToken?.address; const n=Number(p.priceUsd); if (p.chainId!=='solana' || p.dexId!=='pumpswap' || !wanted.has(a) || !Number.isFinite(n) || n<=0) continue; if (!best[a] || (p.liquidity?.usd || 0) > (best[a].liquidity?.usd || 0)) best[a]=p; }
+ return best;
+}
+export default function PumpMarketSimulation({userId}:{userId:string}) {
+ const key=`nova-pump-simulation:${userId}`;
+ const [positions,setPositions]=useState<Position[]>(()=>{try {const x=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(x)?x:[];}catch{return [];}});
+ const [quotes,setQuotes]=useState<Record<string,Quote>>({});
+ const [market,setMarket]=useState<string[]>([]); const [search,setSearch]=useState(''); const [amount,setAmount]=useState('100'); const [selected,setSelected]=useState('');
+ const [loading,setLoading]=useState(true); const [error,setError]=useState(''); const [updated,setUpdated]=useState<number|null>(null);
+ useEffect(()=>{try{localStorage.setItem(key,JSON.stringify(positions));}catch{}},[key,positions]);
+ const openAddresses=useMemo(()=>positions.filter(p=>!p.closedAt).map(p=>p.address),[positions]);
+ const refresh=useCallback(async()=>{
+  try {
+   const res=await fetch(`${API}/token-profiles/latest/v1`,{cache:'no-store'});if(!res.ok)throw Error(); const profiles=await res.json();
+   if(!Array.isArray(profiles))throw Error();
+   const discovered=[...new Set<string>(profiles.filter((p:any)=>p.chainId==='solana' && typeof p.tokenAddress==='string' && p.tokenAddress.toLowerCase().endsWith('pump')).map((p:any)=>p.tokenAddress as string))].slice(0,30);
+   const addresses=[...new Set([...discovered,...openAddresses])]; const collected:Pair[]=[];
+   for(let i=0;i<addresses.length;i+=30){const response=await fetch(`${API}/tokens/v1/solana/${addresses.slice(i,i+30).join(',')}`,{cache:'no-store'});if(!response.ok)throw Error();const pairs=await response.json();if(!Array.isArray(pairs))throw Error();collected.push(...pairs);}
+   const mapped=bestPairs(collected,addresses);const now=Date.now();const fresh:Record<string,Quote>={};Object.entries(mapped).forEach(([a,p])=>{fresh[a]={pair:p,price:Number(p.priceUsd),receivedAt:now};});
+   setQuotes(fresh);setMarket(discovered.filter(a=>Boolean(fresh[a])));setUpdated(now);setError('');
+  } catch { setQuotes({});setMarket([]);setError('No se pudieron actualizar las cotizaciones. Intenta nuevamente antes de operar.'); } finally {setLoading(false);}
+ },[openAddresses.join('|')]);
+ useEffect(()=>{void refresh();const timer=window.setInterval(()=>void refresh(),interval);return()=>window.clearInterval(timer);},[refresh]);
+ const [clock,setClock]=useState(Date.now());useEffect(()=>{const t=window.setInterval(()=>setClock(Date.now()),1000);return()=>window.clearInterval(t);},[]);
+ const fresh=(q?:Quote)=>Boolean(q && clock-q.receivedAt<90000);
+ const visible=market.filter(a=>{const t=quotes[a]?.pair.baseToken;return t && `${t.name} ${t.symbol} ${a}`.toLowerCase().includes(search.toLowerCase());});
+ const open=(address:string)=>{const q=quotes[address];const value=Number(amount);if(!q||!fresh(q)||!Number.isFinite(value)||value<=0)return;setPositions(p=>[{id:crypto.randomUUID(),address,name:q.pair.baseToken.name,symbol:q.pair.baseToken.symbol,amount:value,entryPrice:q.price,quantity:value/q.price,openedAt:Date.now()},...p]);setSelected('');};
+ const close=(p:Position)=>{const q=quotes[p.address];if(!fresh(q))return;setPositions(current=>current.map(x=>x.id===p.id?{...x,exitPrice:q.price,closedAt:Date.now()}:x));};
+ return <section className="space-y-5 rounded-2xl border border-white/10 bg-[#101416] p-4 sm:p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-lime-400 text-xs uppercase tracking-widest font-bold">Mercado · Simulación</p><h2 className="text-2xl font-bold mt-2">Tokens de PumpSwap</h2><p className="text-slate-400 text-sm mt-2">Cotizaciones de DEX Screener en USD. Perfiles recientes de tokens con dirección terminada en «pump»; se usa el par PumpSwap con mayor liquidez.</p></div><button onClick={()=>void refresh()} className="border border-white/15 rounded-lg px-4 py-2 text-sm flex items-center gap-2"><RefreshCw size={16}/> Actualizar</button></div>
+ <p className="text-xs text-slate-400">{updated ? `Última consulta: ${new Date(updated).toLocaleTimeString()} · actualización cada 30 segundos`:'Esperando cotizaciones'} · Los precios pueden retrasarse o diferir de una ejecución real.</p><p className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-3 text-sm text-amber-100">Operaciones solo de práctica: no usan saldo real ni copian operaciones de un trader. El resultado es estimado y no incluye comisiones ni deslizamiento.</p>
+ {error&&<p role="alert" className="text-rose-400 text-sm">{error}</p>}
+ <div className="relative"><Search size={18} className="absolute left-3 top-3 text-slate-500"/><input aria-label="Buscar token" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar token por nombre, símbolo o dirección" className="w-full rounded-lg border border-white/10 bg-black/30 pl-10 pr-3 py-2 text-sm text-white"/></div>
+ {loading?<p className="text-slate-400">Consultando mercado...</p>:!visible.length?<p className="text-slate-400">No hay tokens disponibles para esta búsqueda.</p>:<div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3">{visible.slice(0,12).map(a=>{const q=quotes[a], t=q.pair.baseToken;return <div key={a} className="border border-white/10 rounded-xl p-4 space-y-2"><div className="flex justify-between gap-2"><div><strong>{t.symbol}</strong><p className="text-xs text-slate-400 truncate max-w-48">{t.name}</p></div><div className="text-right"><b className="text-lime-300">{price(q.price)}</b><p className="text-xs text-slate-500">USD</p></div></div><p className="text-xs text-slate-500 break-all">{a}</p><div className="flex items-center justify-between text-xs text-slate-400"><span>24h: {q.pair.priceChange?.h24 == null?'—':`${q.pair.priceChange.h24}%`}</span><a className="underline" href={q.pair.url} target="_blank" rel="noopener noreferrer">Ver par</a></div><button disabled={!fresh(q)} onClick={()=>setSelected(a)} className="w-full bg-lime-400 text-black font-bold rounded-lg py-2 disabled:opacity-40">Simular compra</button></div>})}</div>}
+ <div className="border-t border-white/10 pt-4"><h3 className="font-bold text-lg">Mis operaciones virtuales</h3>{positions.length===0?<p className="text-sm text-slate-400 mt-3">Aún no tienes operaciones simuladas.</p>:<div className="space-y-3 mt-3">{positions.map(p=>{const q=quotes[p.address];const current=p.closedAt?p.exitPrice:(fresh(q)?q?.price:undefined);const pnl=current!=null?(current-p.entryPrice)*p.quantity:undefined;return <div key={p.id} className="rounded-xl border border-white/10 p-4 text-sm"><div className="flex flex-wrap justify-between gap-2"><strong>{p.symbol} · {p.closedAt?'Cerrada':'Abierta'}</strong><span className={pnl==null?'text-slate-400':pnl>=0?'text-emerald-400':'text-rose-400'}>{pnl==null?'Cotización no disponible':`${pnl>=0?'+':''}${money(pnl)} (${((pnl/p.amount)*100).toFixed(2)}%)`}</span></div><p className="text-slate-400 mt-2">Monto virtual {money(p.amount)} · Entrada {price(p.entryPrice)} · {p.closedAt?'Salida':'Precio actual'} {current!=null?price(current):'no disponible'}</p><p className="text-xs text-slate-500 mt-1">{new Date(p.openedAt).toLocaleString()} · {p.address}</p>{!p.closedAt&&<button disabled={!fresh(q)} onClick={()=>close(p)} className="mt-3 rounded-lg border border-lime-400/40 px-3 py-2 text-lime-300 disabled:opacity-40">Cerrar operación virtual</button>}</div>})}</div>}</div>
+ {selected && quotes[selected] && <div className="fixed inset-0 z-[110] bg-black/80 flex items-center justify-center p-4" onClick={()=>setSelected('')}><div role="dialog" aria-modal="true" aria-labelledby="virtual-title" className="w-full max-w-md rounded-2xl border border-white/10 bg-[#101816] p-6 space-y-4" onClick={e=>e.stopPropagation()}><h3 id="virtual-title" className="font-bold text-xl">Compra virtual de {quotes[selected].pair.baseToken.symbol}</h3><p className="text-sm text-slate-400">Precio de referencia: {price(quotes[selected].price)} USD. No se enviarán órdenes ni se utilizarán fondos reales.</p><label className="block text-sm">Monto virtual (USD)<input type="number" min="0.01" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)} className="mt-2 w-full rounded-lg bg-black/30 border border-white/10 px-3 py-2"/></label><div className="flex gap-3"><button onClick={()=>setSelected('')} className="flex-1 border border-white/15 rounded-lg py-2">Cancelar</button><button disabled={!fresh(quotes[selected])||!Number.isFinite(Number(amount))||Number(amount)<=0} onClick={()=>open(selected)} className="flex-1 bg-lime-400 text-black font-bold rounded-lg py-2 disabled:opacity-40">Comprar virtual</button></div></div></div>}
+ </section>;
+}
