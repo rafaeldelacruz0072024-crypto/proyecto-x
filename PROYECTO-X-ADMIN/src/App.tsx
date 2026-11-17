@@ -1,3 +1,4 @@
+import CopyTraders from './pages/CopyTraders';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
@@ -83,6 +84,7 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/copy-traders" element={<ProtectedRoute><Layout><CopyTraders /></Layout></ProtectedRoute>} />
 
         <Route
           path="/"
