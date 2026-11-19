@@ -26,9 +26,12 @@ Deno.serve(async (req) => {
     return new Response(null, { status: 401 });
   }
 
-  if (payload.payment_status !== 'finished') return new Response(null, { status: 204 });
   const rawOrderId = String(payload.order_id);
   const novaIa = rawOrderId.startsWith('nova-ia:');
+  const canCredit = payload.payment_status === 'finished'
+    || (!novaIa && payload.payment_status === 'confirmed');
+  if (!canCredit) return new Response(null, { status: 204 });
+
   const orderId = novaIa ? rawOrderId.slice(8) : rawOrderId;
   const price = Number(payload.price_amount);
   const quoted = Number(payload.pay_amount);
