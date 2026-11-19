@@ -21,10 +21,10 @@
         "baccarat": "BACCARAT"
     },
     "dashboard": {
-        "bix_title": "BIX Card",
-        "bix_description": "Sign up with BIX to apply for your card.",
-        "bix_apply": "Apply for a BIX card",
-        "bix_commissions": "Nova commission payouts through BIX are in development.",
+        "bix_title": "NOVA Card",
+        "bix_description": "Sign up to apply for your NOVA card.",
+        "bix_apply": "Apply for a NOVA card",
+        "bix_commissions": "Nova commission payouts through the NOVA card are in development.",
         "referral_center": "REFERRAL CENTER",
         "expand_network": "EXPAND YOUR NETWORK INFLUENCE",
         "copy_link": "COPY LINK",
