@@ -861,7 +861,7 @@ const App: React.FC = () => {
                   )}
 
                   <section className="holo-card overflow-hidden rounded-2xl border border-lime-400/25">
-                    <img src="/nova-bix.jpg" alt="NOVA × BIX" width={800} height={800} loading="lazy" className="h-auto w-full" />
+                    <img src="/nova-card.jpg" alt="NOVA × BIX. Tu tarjeta Nova ya está disponible." width={800} height={800} loading="lazy" className="h-auto w-full" />
                     <div className="space-y-3 p-5">
                       <h2 className="text-lg font-bold text-white">{t('dashboard.bix_title')}</h2>
                       <p className="text-sm text-slate-300">{t('dashboard.bix_description')}</p>
