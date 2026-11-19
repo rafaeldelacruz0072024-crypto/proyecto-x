@@ -162,9 +162,10 @@
     },
     "deposit": {
         "provider": "Payment method",
-        "nowpayments_unavailable": "NOWPayments (unavailable)",
+        "payment_method": "USDT · BEP20",
+        "payment_unavailable": "The payment method is unavailable.",
         "minimum_usd": "$25 USD minimum",
-        "generate_provider_payment": "Create payment with {{provider}}",
+        "generate_payment": "Generate payment",
         "confirmed_credit": "Your balance is credited once the payment provider confirms full payment.",
         "title": "DEPOSIT USDT",
         "network": "Network: BSC (BEP20)",

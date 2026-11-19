@@ -19,7 +19,6 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
   const [paymentData, setPaymentData] = useState<PaymentDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const provider = 'NOWPayments';
   const [nowPaymentsAvailable, setNowPaymentsAvailable] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -54,7 +53,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
       setIsVerifying(true);
       setError(null);
 
-      const { data, error: apiError } = await createNowPayment(numAmount);
+      const { data } = await createNowPayment(numAmount);
 
       if (data) {
         setPaymentData(data);
@@ -62,7 +61,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
         onDeposit(numAmount, 'INITIATED');
         if (onClearPromo) onClearPromo();
       } else {
-        setError(apiError || t('deposit.api_error'));
+        setError(t('deposit.api_error'));
       }
       setIsVerifying(false);
     }
@@ -130,9 +129,9 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
             <p className="text-[9px] font-black uppercase tracking-widest text-proyecto-accent">
               {t('deposit.provider')}
             </p>
-            <p className="mt-2 text-sm font-bold text-white">{provider}</p>
+            <p className="mt-2 text-sm font-bold text-white">{t('deposit.payment_method')}</p>
             {nowPaymentsAvailable === false && (
-              <p role="status" className="mt-2 text-sm text-amber-300">{t('deposit.nowpayments_unavailable')}</p>
+              <p role="status" className="mt-2 text-sm text-amber-300">{t('deposit.payment_unavailable')}</p>
             )}
             <p className="mt-2 text-xs text-slate-400">USDT · BNB Smart Chain (BEP20)</p>
           </div>
@@ -164,7 +163,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
             <p className="text-[10px] text-red-500 font-bold uppercase text-center">{error}</p>
           )}
           <button type="submit" disabled={!nowPaymentsAvailable || !amount || parseFloat(amount) < 25 || isVerifying} className="w-full py-4 bg-proyecto-green text-slate-950 font-black text-xs uppercase tracking-[0.3em] rounded-xl shadow-xl hover:brightness-110 active:scale-95 disabled:opacity-20 disabled:grayscale transition-all">
-            {isVerifying ? t('deposit.generating') : t('deposit.generate_provider_payment', { provider })}
+            {isVerifying ? t('deposit.generating') : t('deposit.generate_payment')}
           </button>
 
 
@@ -177,7 +176,7 @@ const DepositForm: React.FC<Props> = ({ onDeposit, userId, activePromotion, onCl
       ) : (
         /* STEP 2: SHOW PAYMENT ADDRESS & QR */
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-          <p className="text-center text-xs font-bold text-slate-300">{provider} · USDT · BNB Smart Chain (BEP20)</p>
+          <p className="text-center text-xs font-bold text-slate-300">USDT · BNB Smart Chain (BEP20)</p>
           <div className="flex flex-col items-center">
             <div className="relative p-6 bg-white rounded-[2.5rem] shadow-[0_0_60px_rgba(0,243,255,0.15)] border-4 border-slate-900/10 mb-2">
               <div className="absolute -inset-1 bg-gradient-to-tr from-proyecto-accent/20 to-proyecto-green/20 rounded-[2.6rem] blur-xl opacity-50 -z-10 animate-pulse"></div>
