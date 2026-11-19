@@ -860,33 +860,18 @@ const App: React.FC = () => {
                     />
                   )}
 
-                  {/* SECURITY WIDGET */}
-                  <div className="holo-card p-6 rounded-none clip-corner border-slate-800">
-                    <h4 className="text-[10px] font-orbitron text-slate-500 uppercase tracking-widest mb-4">{t('dashboard.security_protocol')}</h4>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 clip-corner-sm bg-proyecto-accent/5 border border-proyecto-accent/20 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-proyecto-accent animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-white font-rajdhani font-bold uppercase tracking-wider">{t('dashboard.immutable_guard')}</p>
-                        <p className="text-[8px] text-proyecto-accent font-mono-tech">{t('dashboard.encryption')}</p>
-                      </div>
+                  <section className="holo-card overflow-hidden rounded-2xl border border-lime-400/25">
+                    <img src="/bix-card.jpg" alt="" width={529} height={650} loading="lazy" className="h-auto w-full" />
+                    <div className="space-y-3 p-5">
+                      <h2 className="text-lg font-bold text-white">{t('dashboard.bix_title')}</h2>
+                      <p className="text-sm text-slate-300">{t('dashboard.bix_description')}</p>
+                      <a href="https://bix.fi/r?code=DWENXXHH" target="_blank" rel="noopener noreferrer"
+                        className="block rounded-lg bg-lime-300 px-4 py-3 text-center text-sm font-bold text-slate-950 hover:bg-lime-200">
+                        {t('dashboard.bix_apply')}
+                      </a>
+                      <p className="text-xs text-slate-400">{t('dashboard.bix_commissions')}</p>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        onClick={() => { setActiveTab('finance'); }}
-                        className="py-3 px-2 bg-proyecto-brand text-white clip-corner-sm text-[9px] font-bold uppercase tracking-widest hover:brightness-110 hover:shadow-neon-cyan transition-all"
-                      >
-                        {t('dashboard.deposit_funds')}
-                      </button>
-                      <button
-                        onClick={() => { setActiveTab('finance'); }}
-                        className="py-3 px-2 bg-transparent border border-slate-700 text-slate-400 clip-corner-sm text-[9px] font-bold uppercase tracking-widest hover:border-slate-500 hover:text-white transition-all"
-                      >
-                        {t('dashboard.withdraw')}
-                      </button>
-                    </div>
-                  </div>
+                  </section>
                 </div>
               </div>
 
