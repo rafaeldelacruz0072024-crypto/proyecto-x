@@ -26,7 +26,7 @@ export default function NoveIaPanel({ activeCycles, userId }: { activeCycles: nu
     setError('');
     const result = await createNowPayment(50, 'nova-ia');
     setPayment(result.data);
-    if (!result.data) setError(result.error || 'No se pudo generar el pago. Intenta de nuevo.');
+    if (!result.data) setError('No se pudo generar el pago. Intenta de nuevo.');
     setBusy(false);
   }
 
@@ -73,7 +73,7 @@ export default function NoveIaPanel({ activeCycles, userId }: { activeCycles: nu
           Suscripción mensual
         </h2>
         <p className="text-3xl font-black text-proyecto-accent">50 USDT <span className="text-base">al mes</span></p>
-        <p className="text-sm text-slate-300">USDT por BNB Smart Chain (BEP20) mediante NOWPayments.</p>
+        <p className="text-sm text-slate-300">USDT por BNB Smart Chain (BEP20).</p>
         <p role="status" className="border-t border-white/10 pt-4 text-sm text-slate-300">
           {subscribed && paidUntil
             ? `Activa hasta el ${new Date(paidUntil).toLocaleDateString('es-DO', { timeZone: 'America/Santo_Domingo' })}`
@@ -92,7 +92,7 @@ export default function NoveIaPanel({ activeCycles, userId }: { activeCycles: nu
             />
             <p className="break-all font-mono">{payment.pay_address}</p>
             <p>Referencia de pago: {payment.payment_id}</p>
-            <p>La vigencia se actualiza cuando NOWPayments confirma el pago completo.</p>
+            <p>La vigencia se actualiza cuando se confirma el pago completo.</p>
           </div>
         ) : (
           <button type="button" onClick={buy} disabled={busy}
