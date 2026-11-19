@@ -953,6 +953,7 @@ const App: React.FC = () => {
                 walletBalance={walletBalance}
                 residualConfig={residualConfig}
                 isLoading={processingInvestment}
+                softwarePlans={softwarePlans}
                 dynamicSettings={systemSettings}
               />
             </div>
@@ -1036,22 +1037,6 @@ const App: React.FC = () => {
                   />
                 </div>
               </div>
-
-              {/* ── FILA 2: ACTIVAR NODO A TODO EL ANCHO ── */}
-              <section className="space-y-4 border-t border-slate-900/50 pt-8">
-                <div className="flex items-center justify-between gap-4 px-2">
-                  <h2 className="text-lg font-orbitron font-bold text-white uppercase tracking-widest">{t('finance.activate_node')}</h2>
-                  <div className="h-2 w-2 shrink-0 rounded-full bg-proyecto-accent shadow-[0_0_10px_cyan]"></div>
-                </div>
-                <InvestmentPanel
-                  onInvest={handleInvestment}
-                  onWithdrawCapital={handleWithdrawDailyCapital}
-                  investments={investments || []}
-                  addNotification={addNotification}
-                  walletBalance={walletBalance}
-                  softwarePlans={softwarePlans}
-                />
-              </section>
 
               <div className="grid grid-cols-1 gap-8 items-start">
                 <div className="space-y-4">
