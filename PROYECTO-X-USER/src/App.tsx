@@ -44,7 +44,6 @@ import EventsPanel from './components/EventsPanel';
 import FlashOfferModal from './components/FlashOfferModal';
 import TutorialsPanel from './components/TutorialsPanel';
 import RoadMapPanel from './components/RoadMapPanel';
-import DirectCommissionPanel from './components/DirectCommissionPanel';
 import RoiDailyTasks from './components/RoiDailyTasks';
 import BinaryBonusPanel from './components/BinaryBonusPanel';
 import UserSidebar from './components/UserSidebar';
@@ -920,40 +919,6 @@ const App: React.FC = () => {
                       directsCount={networkStats.activeNodes || 0}
                     />
                   )}
-
-                  {/* ── DIRECT COMMISSION SECTION ── */}
-                  {profile && (
-                    <div className="space-y-3">
-                      <DirectCommissionPanel
-                        profile={profile}
-                        walletBalance={walletBalance}
-                        referralCommissionBalance={referralCommissionBalance}
-                        handleWithdrawal={handleWithdrawal}
-                      />
-                    </div>
-                  )}
-
-                  {/* REGLA DE ORO ROI — las tareas diarias son el único disparador */}
-
-                  {/* PROMOS Y EVENTOS — acceso directo desde el dashboard */}
-                  {/* PROMOS Y EVENTOS — acceso compacto; el contenido completo vive en su módulo */}
-                  <section className="holo-card p-5 rounded-none clip-corner border-proyecto-accent/20 bg-proyecto-accent/[0.03]">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="min-w-0">
-                        <p className="text-[9px] font-mono-tech text-proyecto-accent uppercase tracking-[0.25em]">NOVA Digital</p>
-                        <h2 className="mt-1 text-base font-orbitron font-black text-white uppercase tracking-[0.18em]">Promos y Eventos</h2>
-                        <p className="mt-2 text-[10px] leading-relaxed text-slate-400">Consulta las novedades y promociones activas de la comunidad.</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('events')}
-                        className="w-full shrink-0 px-4 py-3 sm:w-fit border border-proyecto-accent/40 bg-proyecto-accent/10 text-[9px] font-orbitron font-black text-proyecto-accent uppercase tracking-widest hover:bg-proyecto-accent/20 transition-all"
-                        aria-label="Abrir módulo de Promos y Eventos"
-                      >
-                        Ver módulo completo
-                      </button>
-                    </div>
-                  </section>
 
                   {/* SECURITY WIDGET */}
                   <div className="holo-card p-6 rounded-none clip-corner border-slate-800">
