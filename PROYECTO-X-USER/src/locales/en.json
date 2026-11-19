@@ -2,6 +2,7 @@
     "nav": {
         "nove-ia": "Nova IA",
         "dashboard": "DASHBOARD",
+        "activate-nodes": "ACTIVATE NODES",
         "nodes": "MY NODES",
         "network": "NETWORK",
         "binary": "BINARY 8%",

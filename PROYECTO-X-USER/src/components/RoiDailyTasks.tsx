@@ -69,6 +69,12 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   const [working, setWorking] = useState<TaskCode | null>(null);
   const [simulation, setSimulation] = useState<TaskCode | null>(null);
   const [history, setHistory] = useState<HistoryDay[]>([]);
+  const [historyPage, setHistoryPage] = useState(0);
+  const historyPageSize = 10;
+  const lastHistoryPage = Math.max(0, Math.ceil(history.length / historyPageSize) - 1);
+  const currentHistoryPage = Math.min(historyPage, lastHistoryPage);
+  const firstHistoryRow = currentHistoryPage * historyPageSize;
+
   const [cycleEvents, setCycleEvents] = useState<CycleEvent[]>([]);
   const [accumulatedRoi, setAccumulatedRoi] = useState(0);
   const [nextAvailableAt, setNextAvailableAt] = useState<Date | null>(null);
@@ -125,7 +131,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
       setCompleted(new Set(
         rows.filter(item => item.investment_id === chosenCycleId && item.task_day === localDate()).map(item => item.task_code),
       ));
-      setHistory(groupedHistory.slice(0, 28));
+      setHistory(groupedHistory);
       setAccumulatedRoi(Number(cycles.find(cycle => cycle.id === chosenCycleId)?.accumulated_earnings || 0));
     }
     if (cycleEventsResult.error) {
@@ -295,10 +301,17 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
 
         <section className="mt-6 border border-white/10 bg-black/20 p-4 sm:p-5">
           <div className="flex items-center gap-2"><CalendarDays size={18} className="text-proyecto-accent" /><h3 className="font-orbitron text-sm font-black text-white">Bitácora de análisis y rendimiento</h3></div>
-          <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[900px] text-left text-xs"><thead className="border-b border-white/10 text-[9px] font-mono-tech uppercase tracking-wider text-slate-500"><tr><th className="pb-3">Ciclo</th><th className="pb-3">Fecha</th>{TASKS.map(task => <th key={task.code} className="pb-3">{task.title}</th>)}<th className="pb-3">Estado</th></tr></thead><tbody className="divide-y divide-white/5 text-slate-300">{history.map(day => {
+          <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[640px] text-left text-xs"><thead className="border-b border-white/10 text-[9px] font-mono-tech uppercase tracking-wider text-slate-500"><tr><th className="pb-3">Ciclo</th><th className="pb-3">Fecha</th>{TASKS.map(task => <th key={task.code} className="pb-3">{task.title}</th>)}<th className="pb-3">Estado</th></tr></thead><tbody className="divide-y divide-white/5 text-slate-300">{history.slice(firstHistoryRow, firstHistoryRow + historyPageSize).map(day => {
             const cycle = activeCycles.find(item => item.id === day.investment_id);
-            return <tr key={`${day.investment_id}:${day.task_day}`} className={day.investment_id === selectedCycleId ? 'bg-proyecto-accent/[0.04]' : ''}><td className="py-3"><p className="font-mono text-[10px] font-bold text-proyecto-accent">{cycleIdentifier(day.investment_id)}</p><p className="mt-1 text-[9px] text-slate-500">{cycle?.plans?.name || 'Ciclo histórico'}</p></td><td className="font-mono">{day.task_day}</td>{TASKS.map(task => <td key={task.code} className="font-mono text-[10px]">{formatTaskTime(day.completions.find(item => item.task_code === task.code))}</td>)}<td className={day.completions.length === 4 ? 'text-emerald-300' : 'text-amber-300'}>{day.completions.length}/4 · {day.completions.length === 4 ? 'ROI procesado' : 'Incompleto'}</td></tr>;
+            return <tr key={`${day.investment_id}:${day.task_day}`} className={day.investment_id === selectedCycleId ? 'bg-proyecto-accent/[0.04]' : ''}><td className="py-1.5 pr-3"><p className="font-mono text-[10px] font-bold text-proyecto-accent">{cycleIdentifier(day.investment_id)}</p><p className="mt-1 text-[9px] text-slate-500">{cycle?.plans?.name || 'Ciclo histórico'}</p></td><td className="font-mono">{day.task_day}</td>{TASKS.map(task => <td key={task.code} className="font-mono text-[10px]">{formatTaskTime(day.completions.find(item => item.task_code === task.code))}</td>)}<td className={day.completions.length === 4 ? 'text-emerald-300' : 'text-amber-300'}>{day.completions.length}/4 · {day.completions.length === 4 ? 'ROI procesado' : 'Incompleto'}</td></tr>;
           })}</tbody></table></div>
+          {history.length > historyPageSize && (
+            <nav aria-label="Páginas de la bitácora" className="mt-3 flex flex-wrap items-center justify-end gap-3 text-xs text-slate-300">
+              <button type="button" className="rounded border border-white/15 px-3 py-1.5 disabled:opacity-40" disabled={currentHistoryPage === 0} onClick={() => setHistoryPage(currentHistoryPage - 1)}>Anterior</button>
+              <span aria-live="polite">{firstHistoryRow + 1}–{Math.min(firstHistoryRow + historyPageSize, history.length)} de {history.length}</span>
+              <button type="button" className="rounded border border-white/15 px-3 py-1.5 disabled:opacity-40" disabled={currentHistoryPage >= lastHistoryPage} onClick={() => setHistoryPage(currentHistoryPage + 1)}>Siguiente</button>
+            </nav>
+          )}
           {!history.length && <p className="py-4 text-xs text-slate-500">Aún no hay análisis diarios registrados.</p>}
           <div className="mt-5 border-t border-white/10 pt-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
