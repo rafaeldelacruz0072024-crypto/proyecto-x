@@ -77,7 +77,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'activate-nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
   const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
@@ -963,6 +963,11 @@ const App: React.FC = () => {
                 addNotification={addNotification}
               />
 
+            </div>
+          )}
+
+          {activeTab === 'activate-nodes' && (
+            <div className="mx-auto w-full max-w-6xl animate-slide-in">
               <InvestmentPanel
                 onInvest={handleInvestment}
                 onWithdrawCapital={handleWithdrawDailyCapital}
