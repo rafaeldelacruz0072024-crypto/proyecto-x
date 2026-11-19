@@ -167,6 +167,7 @@
         "insufficient_funds": "Fondos insuficientes",
         "confirmed": "Confirmado",
         "whatsapp_support_text": "Hola, necesito asistencia con mi nodo GK PHYZER.",
+        "whatsapp_support_unavailable": "Soporte por WhatsApp: próximamente",
         "whatsapp_support_title": "Soporte Vía WhatsApp"
     },
     "deposit": {

@@ -1097,13 +1097,16 @@ const App: React.FC = () => {
 
 
       {/* WHATSAPP SUPPORT BUTTON */}
-      {supportWhatsapp && (
         <a
-          href={`https://wa.me/${supportWhatsapp}?text=${encodeURIComponent(t('common.whatsapp_support_text'))}`}
+          href={supportWhatsapp ? `https://wa.me/${supportWhatsapp}?text=${encodeURIComponent(t('common.whatsapp_support_text'))}` : undefined}
           target="_blank"
           rel="noopener noreferrer"
           className="group fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-3 z-[9998] flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/20 bg-[#25D366] text-white shadow-[0_0_30px_rgba(37,211,102,0.4)] transition-all duration-500 hover:scale-110 active:scale-95 sm:bottom-6 sm:left-4 sm:h-14 sm:w-14"
-          title={t('common.whatsapp_support_title')}
+          role={supportWhatsapp ? undefined : 'link'}
+          aria-disabled={!supportWhatsapp}
+          tabIndex={supportWhatsapp ? undefined : 0}
+          aria-label={t(supportWhatsapp ? 'common.whatsapp_support_title' : 'common.whatsapp_support_unavailable')}
+          title={t(supportWhatsapp ? 'common.whatsapp_support_title' : 'common.whatsapp_support_unavailable')}
         >
           {/* Pulsing Aura */}
           <div className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
@@ -1121,11 +1124,10 @@ const App: React.FC = () => {
           </span>
 
           {/* Tooltip */}
-          <div className="absolute left-full ml-3 px-3 py-1.5 bg-black/80 backdrop-blur-xl border border-emerald-500/30 text-white text-[10px] font-orbitron font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none">
-            Soporte WhatsApp
+          <div className="absolute left-full ml-3 px-3 py-1.5 bg-black/80 backdrop-blur-xl border border-emerald-500/30 text-white text-[10px] font-orbitron font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none">
+            {t(supportWhatsapp ? 'common.whatsapp_support_title' : 'common.whatsapp_support_unavailable')}
           </div>
         </a>
-      )}
       <footer className="relative z-10 mt-12 border-t border-slate-900/50 bg-black/40 px-4 py-6 text-center backdrop-blur-sm sm:mt-20 sm:py-8">
         <p className="text-[9px] font-bold leading-relaxed tracking-[0.18em] text-slate-600 font-rajdhani sm:text-[10px] sm:tracking-[0.5em]">Nova Digital Systems • Verified Node Architecture • V2.5.5</p>
       </footer>
