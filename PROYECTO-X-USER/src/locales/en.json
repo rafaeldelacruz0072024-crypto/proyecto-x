@@ -155,6 +155,9 @@
         "now": "NOW"
     },
     "common": {
+        "whatsapp_support_title": "WhatsApp support",
+        "whatsapp_support_unavailable": "WhatsApp support: coming soon",
+        "whatsapp_support_text": "Hi, I need help with my Nova account.",
         "loading": "INITIALIZING",
         "secure_conn": "SECURE CONNECTION ESTABLISHED",
         "access_granted": "ACCESS: GRANTED",
