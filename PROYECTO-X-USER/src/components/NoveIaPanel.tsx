@@ -41,7 +41,7 @@ export default function NoveIaPanel({ activeCycles, userId }: { activeCycles: nu
             </h2>
             <p className="max-w-xl text-slate-300">
               Nova IA completará las cuatro tareas de cada ciclo activo de lunes a viernes,
-              según el horario de Santo Domingo y el corte de cada ciclo.
+              según el horario y el corte de cada ciclo.
             </p>
           </div>
           <img
