@@ -1086,7 +1086,16 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'copytrade' && <CopyTradingPanel key={user.id} userId={user.id} />}
+          {activeTab === 'copytrade' && (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-lime-400/40 bg-lime-400/10 px-4 py-8 text-center">
+                <p className="text-3xl font-orbitron font-black text-lime-300 motion-safe:animate-pulse sm:text-5xl">
+                  PRÓXIMAMENTE
+                </p>
+              </div>
+              <CopyTradingPanel key={user.id} userId={user.id} />
+            </div>
+          )}
 
           {activeTab === 'nove-ia' && <NoveIaPanel key={user.id} userId={user.id} activeCycles={investments?.filter(cycle => cycle.status === 'ACTIVE').length ?? 0} />}
 
