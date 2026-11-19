@@ -21,10 +21,10 @@
         "baccarat": "BACCARAT"
     },
     "dashboard": {
-        "bix_title": "Tarjeta BIX",
-        "bix_description": "Regístrate en BIX para solicitar tu tarjeta.",
-        "bix_apply": "Solicitar tarjeta BIX",
-        "bix_commissions": "El pago de comisiones de Nova a través de BIX está en preparación.",
+        "bix_title": "Tarjeta NOVA",
+        "bix_description": "Completa el registro para solicitar tu tarjeta NOVA.",
+        "bix_apply": "Solicitar tarjeta NOVA",
+        "bix_commissions": "El pago de comisiones de Nova a través de la tarjeta NOVA está en preparación.",
         "referral_center": "CENTRO DE AFILIADOS",
         "expand_network": "EXPANDE TU INFLUENCIA EN LA RED",
         "copy_link": "COPIAR LINK",
