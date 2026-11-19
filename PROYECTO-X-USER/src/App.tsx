@@ -75,7 +75,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'activate-nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'activate-nodes' | 'network' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
   const [referralFromUrl, setReferralFromUrl] = useState<string | null>(null);
@@ -786,43 +786,6 @@ const App: React.FC = () => {
 
           {activeTab === 'dashboard' && (
             <div className="mx-auto w-full max-w-6xl space-y-6 animate-slide-in sm:space-y-8">
-              {/* REFERRAL CENTER */}
-              <div className="holo-card flex flex-col items-stretch justify-between gap-4 rounded-none p-4 transition-all clip-corner hover:bg-slate-900/40 sm:p-6 md:flex-row md:items-center md:gap-6">
-                <div className="flex items-center gap-3 sm:gap-5">
-                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center transition-all duration-500 clip-corner sm:h-12 sm:w-12 ${isReferralCopied ? 'bg-proyecto-green/20 shadow-neon-cyan' : 'bg-proyecto-brand/20'}`}>
-                    {isReferralCopied ? (
-                      <svg className="w-6 h-6 text-proyecto-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
-                    ) : (
-                      <svg className="w-6 h-6 text-proyecto-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.826L10.242 9.172a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.102 1.101" /></svg>
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-orbitron font-bold text-white uppercase tracking-[0.12em] text-glow-cyan sm:text-sm sm:tracking-widest">{t('dashboard.referral_center')}</h3>
-                    <p className="text-[10px] text-slate-400 font-mono-tech uppercase tracking-tighter">{t('dashboard.expand_network')}</p>
-                  </div>
-                </div>
-
-                <div className="grid flex-1 max-w-2xl w-full gap-2 sm:grid-cols-2">
-                  {(['LEFT', 'RIGHT'] as const).map(side => {
-                    const link = binaryReferralLinks?.[side];
-                    const copied = isReferralCopied === side;
-                    return (
-                      <div key={side} className="border border-proyecto-accent/20 bg-black/60 clip-corner px-3 py-3">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[9px] font-orbitron font-bold uppercase tracking-widest text-white">{side === 'LEFT' ? 'Izquierda' : 'Derecha'}</span>
-                          <span className="text-[9px] font-mono-tech text-proyecto-accent">{side}</span>
-                        </div>
-                        <span className="mt-2 block truncate text-[10px] font-mono-tech text-slate-400">{link || 'Enlace pendiente de sincronizar'}</span>
-                        <div className="mt-3 flex gap-2">
-                          <button onClick={() => copyReferralLink(side)} disabled={!link} className={`flex-1 border px-2 py-2 text-[9px] font-orbitron font-bold uppercase disabled:opacity-30 ${copied ? 'border-proyecto-green bg-proyecto-green text-slate-950' : 'border-proyecto-brand/50 bg-proyecto-brand/20 text-proyecto-accent hover:bg-proyecto-brand/40'}`}>{copied ? t('dashboard.copied') : `Copiar ${side}`}</button>
-                          <button onClick={() => shareOnWhatsApp(side)} disabled={!link} className="border border-green-500/30 bg-green-500/10 px-2 py-2 text-[9px] font-orbitron font-bold uppercase text-green-400 disabled:opacity-30">WhatsApp</button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
               {/* STATS GRID */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
@@ -1007,11 +970,6 @@ const App: React.FC = () => {
                 totalEarnings={networkStats.totalEarnings}
                 totalUsers={networkStats.activeNodes || 0}
               />
-            </div>
-          )}
-
-          {activeTab === 'binary' && (
-            <div className="space-y-6 animate-slide-in">
               <BinaryBonusPanel
                 userId={user?.id || ''}
                 refCode={profile?.ref_code || null}
