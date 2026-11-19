@@ -37,7 +37,6 @@ import ResetPasswordForm from './components/ResetPasswordForm';
 import RankWidget from './components/RankWidget';
 import LiveTerminal from './components/LiveTerminal';
 import WeeklyYieldChart from './components/WeeklyYieldChart';
-import SponsorWidget from './components/SponsorWidget';
 import WorldMapWidget from './components/WorldMapWidget';
 import LiveValidatedOperations from './components/LiveValidatedOperations';
 import { SocketMessage } from './services/websocket';
@@ -830,14 +829,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* REGLA DE ORO ROI: acceso principal de ancho completo */}
-              <RoiDailyTasks
-                userId={user?.id || ''}
-                hasActiveContracts={activeInvestmentTotal > 0}
-                onRoiActivated={handleRoiActivated}
-                addNotification={addNotification}
-              />
-
               {/* STATS GRID */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
@@ -930,28 +921,9 @@ const App: React.FC = () => {
                     />
                   )}
 
-                  {profile?.referred_by && (
-                    <SponsorWidget sponsorId={profile.referred_by} />
-                  )}
-
-
-
                   {/* ── DIRECT COMMISSION SECTION ── */}
                   {profile && (
                     <div className="space-y-3">
-                      {/* Section label */}
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/50 to-transparent" />
-                        <div className="flex items-center gap-2 px-3 py-1 border border-cyan-500/30 bg-cyan-500/5 clip-corner-sm">
-                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping absolute" />
-                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                          <span className="text-[8px] font-black uppercase tracking-[0.3em] text-cyan-400">
-                            Retiro Disponible Hoy
-                          </span>
-                        </div>
-                        <div className="flex-1 h-px bg-gradient-to-l from-cyan-500/50 to-transparent" />
-                      </div>
-
                       <DirectCommissionPanel
                         profile={profile}
                         walletBalance={walletBalance}
@@ -1018,7 +990,14 @@ const App: React.FC = () => {
           )}
 
           {activeTab === 'nodes' && (
-            <div className="mx-auto w-full max-w-6xl animate-slide-in">
+            <div className="mx-auto w-full max-w-6xl space-y-6 animate-slide-in">
+              <RoiDailyTasks
+                userId={user?.id || ''}
+                hasActiveContracts={activeInvestmentTotal > 0}
+                onRoiActivated={handleRoiActivated}
+                addNotification={addNotification}
+              />
+
               <InvestmentPanel
                 onInvest={handleInvestment}
                 onWithdrawCapital={handleWithdrawDailyCapital}
