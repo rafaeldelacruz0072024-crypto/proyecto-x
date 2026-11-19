@@ -35,8 +35,6 @@ import AuthPortal from './components/AuthPortal';
 import ProfilePanel from './components/ProfilePanel';
 import ResetPasswordForm from './components/ResetPasswordForm';
 import RankWidget from './components/RankWidget';
-import LiveTerminal from './components/LiveTerminal';
-import WeeklyYieldChart from './components/WeeklyYieldChart';
 import WorldMapWidget from './components/WorldMapWidget';
 import LiveValidatedOperations from './components/LiveValidatedOperations';
 import { SocketMessage } from './services/websocket';
@@ -78,7 +76,6 @@ const App: React.FC = () => {
   } = useUserData(user?.id);
 
   const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'activate-nodes' | 'network' | 'binary' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
-  const [wsMessages, setWsMessages] = useState<any[]>([]); // WebSocket deshabilitado
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
   const [referralFromUrl, setReferralFromUrl] = useState<string | null>(null);
@@ -189,7 +186,6 @@ const App: React.FC = () => {
         }
       };
 
-      setWsMessages((prev) => [...prev.slice(-49), newMsg]);
       setLatestEvent(newMsg);
     }, speed);
 
@@ -389,7 +385,6 @@ const App: React.FC = () => {
   const handleLogout = useCallback(async () => {
     await supabase.auth.signOut();
     setUser(null);
-    setWsMessages([]);
     setActiveTab('dashboard');
     setReferralFromUrl(null);
     window.history.replaceState({}, '', '/login');
@@ -889,24 +884,6 @@ const App: React.FC = () => {
 
                   {/* FLUJO VISUAL: operaciones algorítmicas simuladas, sin impacto financiero */}
                   <LiveValidatedOperations />
-
-                  {/* CHARTS & TERMINAL */}
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                    <div className="relative flex h-72 flex-col overflow-hidden rounded-none p-4 holo-card clip-corner sm:h-80 sm:p-6 md:col-span-3">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-proyecto-accent to-transparent opacity-50"></div>
-                      <div className="absolute top-2 right-2 z-10">
-                        <div className="flex items-center gap-2 px-3 py-1 bg-black/40 border border-proyecto-accent/30 rounded clip-corner-sm">
-                          <div className="w-1.5 h-1.5 rounded-full bg-proyecto-accent animate-pulse shadow-[0_0_8px_cyan]"></div>
-                          <span className="text-[8px] font-mono-tech text-proyecto-accent uppercase tracking-widest">{t('dashboard.arbitrage_live')}</span>
-                        </div>
-                      </div>
-                      <WeeklyYieldChart investments={investments || []} />
-                    </div>
-
-                    <div className="h-72 overflow-hidden bg-black/80 p-0 holo-card clip-corner sm:h-80 md:col-span-2">
-                      <LiveTerminal messages={wsMessages} />
-                    </div>
-                  </div>
 
                 </div>
 
