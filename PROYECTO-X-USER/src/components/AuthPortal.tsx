@@ -295,7 +295,7 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       // Omitting captcha verification as requested
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(
         normalizeEmail(formData.email),
-        { redirectTo: 'https://proyecto-x-user.vercel.app/login' }
+        { redirectTo: 'https://app.novacopy.digital/login' }
       );
       if (resetError) throw resetError;
       setForgotEmailSent(true);
