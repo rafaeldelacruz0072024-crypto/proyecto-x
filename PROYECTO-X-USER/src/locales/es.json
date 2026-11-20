@@ -414,6 +414,7 @@
         "notify_error": "Error al activar el nodo: {{error}}"
     },
     "auth": {
+        "card_flyer_close": "Cerrar anuncio de Tarjeta Nova",
         "show_password": "Mostrar contraseña",
         "hide_password": "Ocultar contraseña",
         "login_tab": "Inicio de Nodo",
