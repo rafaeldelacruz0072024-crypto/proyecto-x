@@ -1,3 +1,4 @@
+import { buildReferralLink } from '../lib/referral';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDownToLine, CheckCircle2, Copy, Crosshair, GitFork, Minus, Plus, UserRound, Users } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -125,8 +126,10 @@ export default function BinaryBonusPanel({ userId, refCode, addNotification }: P
 
   const links = useMemo(() => {
     if (!refCode) return null;
-    const base = `${window.location.origin}/login?ref=${encodeURIComponent(refCode)}&action=register`;
-    return { LEFT: `${base}&side=LEFT`, RIGHT: `${base}&side=RIGHT` } as const;
+    return {
+      LEFT: buildReferralLink(refCode, 'LEFT'),
+      RIGHT: buildReferralLink(refCode, 'RIGHT'),
+    } as const;
   }, [refCode]);
 
   const childMap = useMemo(() => {
