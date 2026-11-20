@@ -1,5 +1,13 @@
 export type ReferralSide = 'LEFT' | 'RIGHT';
 
+export function buildReferralLink(code: string, side?: ReferralSide): string {
+  const url = new URL('/login', 'https://app.novacopy.digital');
+  url.searchParams.set('ref', code);
+  url.searchParams.set('action', 'register');
+  if (side) url.searchParams.set('side', side);
+  return url.href;
+}
+
 const REFERRAL_CODE_PATTERN = /^GK-[A-Z0-9]+(?:-[A-Z0-9]+)*$/;
 
 function safeDecode(value: string | null): string {

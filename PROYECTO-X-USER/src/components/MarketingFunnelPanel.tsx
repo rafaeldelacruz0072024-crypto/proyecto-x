@@ -1,3 +1,4 @@
+import { buildReferralLink } from '../lib/referral';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
@@ -190,21 +191,18 @@ export default function MarketingFunnelPanel({ user }: { user: any }) {
     if (saved) {
       try { setHistory(JSON.parse(saved)); } catch {}
     }
-    const savedLink = localStorage.getItem('nova_digital_referral_link');
-    if (savedLink) setReferralLink(savedLink);
   }, []);
 
-  // Fetch referral link from profile
   useEffect(() => {
+    setReferralLink('');
     if (user?.id) {
+      let current = true;
       supabase.from('profiles').select('ref_code, username').eq('id', user.id).single().then(({ data }) => {
-        if (data?.ref_code && !referralLink) {
-          const link = `${window.location.origin}?ref=${data.ref_code}`;
-          setReferralLink(link);
-          localStorage.setItem('nova_digital_referral_link', link);
-        }
+        if (!current) return;
+        if (data?.ref_code) setReferralLink(buildReferralLink(data.ref_code));
         if (data?.username && !userName) setUserName(data.username);
       });
+      return () => { current = false; };
     }
   }, [user?.id]);
 
@@ -445,7 +443,7 @@ export default function MarketingFunnelPanel({ user }: { user: any }) {
             {[
               { label: 'Tu nombre', value: userName, setter: setUserName, placeholder: 'Tu nombre en redes', type: 'input' },
               { label: 'Audiencia objetivo', value: targetAudience, setter: setTargetAudience, placeholder: 'Ej: mamás que buscan ingresos desde casa', type: 'input' },
-              { label: 'Tu link de referido', value: referralLink, setter: setReferralLink, placeholder: 'https://nova-digital.app?ref=TUCODE', type: 'input' },
+              { label: 'Tu link de referido', value: referralLink, setter: setReferralLink, placeholder: 'https://app.novacopy.digital/login?ref=TUCODE&action=register', type: 'input' },
               { label: 'Tu testimonio personal', value: testimony, setter: setTestimony, placeholder: 'Ej: Llevo 3 meses y ya generé mi primer $500...', type: 'textarea' },
               { label: 'Contexto adicional (opcional)', value: extraContext, setter: setExtraContext, placeholder: 'Ej: Promoción especial, evento, lanzamiento...', type: 'textarea' },
             ].map(field => (

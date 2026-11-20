@@ -19,11 +19,20 @@ try {
   });
 
   const referral = await import(`${pathToFileURL(compiledModule).href}?test=${Date.now()}`);
-  const { normalizeReferralCode, readReferralContext } = referral;
+  const { buildReferralLink, normalizeReferralCode, readReferralContext } = referral;
 
   assert.equal(normalizeReferralCode('GK-NOVA-ROOT'), 'GK-NOVA-ROOT');
   assert.equal(normalizeReferralCode(' gk-nova-root '), 'GK-NOVA-ROOT');
   assert.equal(normalizeReferralCode('GK-NOVA_ROOT'), null);
+
+  for (const side of [undefined, 'LEFT', 'RIGHT']) {
+    const url = new URL(buildReferralLink('GK-NOVA-ROOT', side));
+    assert.equal(url.origin, 'https://app.novacopy.digital');
+    assert.equal(url.pathname, '/login');
+    assert.equal(url.searchParams.get('action'), 'register');
+    assert.equal(url.searchParams.get('side'), side ?? null);
+    assert.deepEqual(readReferralContext(url.search), { code: 'GK-NOVA-ROOT', side: side ?? 'LEFT' });
+  }
 
   const scenarios = [
     { name: 'raíz sin lado', search: '?ref=GK-NOVA-ROOT', expected: { code: 'GK-NOVA-ROOT', side: 'LEFT' } },
@@ -37,7 +46,7 @@ try {
   }
 
   assert.deepEqual(readReferralContext('', 'GK-NOVA-ROOT', 'RIGHT'), { code: 'GK-NOVA-ROOT', side: 'RIGHT' }, 'persistencia');
-  console.log(`PASS: ${scenarios.length + 4} pruebas automatizadas del flujo de referidos`);
+  console.log(`PASS: ${scenarios.length + 7} pruebas automatizadas del flujo de referidos`);
 } finally {
   await rm(tempDirectory, { recursive: true, force: true });
 }

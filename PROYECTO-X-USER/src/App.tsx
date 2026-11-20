@@ -1,3 +1,4 @@
+import { buildReferralLink } from './lib/referral';
 import CopyTradingPanel from './components/CopyTradingPanel';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -201,7 +202,7 @@ const App: React.FC = () => {
     if (refInUrl) {
       const expires90 = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
       localStorage.setItem('nova_digital_referral', refInUrl.toUpperCase());
-      if (binarySide === 'LEFT' || binarySide === 'RIGHT') localStorage.setItem('nova_digital_binary_side', binarySide);
+      localStorage.setItem('nova_digital_binary_side', binarySide === 'RIGHT' ? 'RIGHT' : 'LEFT');
       document.cookie = `nova_digital_ref=${encodeURIComponent(refInUrl.toUpperCase())};expires=${expires90};path=/;SameSite=Lax`;
       setReferralFromUrl(refInUrl.toUpperCase());
       // Limpiar ?ref de la URL sin recargar
@@ -565,10 +566,9 @@ const App: React.FC = () => {
 
   const binaryReferralLinks = useMemo(() => {
     if (!profile?.ref_code) return null;
-    const base = `${window.location.origin}/login?ref=${encodeURIComponent(profile.ref_code)}&action=register`;
     return {
-      LEFT: `${base}&side=LEFT`,
-      RIGHT: `${base}&side=RIGHT`,
+      LEFT: buildReferralLink(profile.ref_code, 'LEFT'),
+      RIGHT: buildReferralLink(profile.ref_code, 'RIGHT'),
     } as const;
   }, [profile?.ref_code]);
 
