@@ -81,26 +81,29 @@ returns jsonb language sql security definer set search_path = '' stable as $$
   select coalesce(jsonb_agg(jsonb_build_object('id',id,'parent_id',binary_parent_id,'side',binary_side,'username',coalesce(username,full_name,split_part(email,'@',1),'Usuario'),'depth',depth) order by depth,username),'[]'::jsonb) from tree;
 $$;
 
--- Reconcile the audited cohort only, with a matching, completed investment debit.
-with missing as (
-  select i.id,p.referred_by as sponsor_id,round(i.amount*0.10,2) as commission
-  from public.investments i join public.profiles p on p.id=i.user_id
-  where i.status='ACTIVE' and i.created_at >= '2026-08-27 21:46:00+00'::timestamptz
-    and i.created_at < '2026-08-27 21:48:00+00'::timestamptz
-    and i.amount>0 and not coalesce(i.is_referral_commission_paid,false)
-    and p.referred_by is not null and p.referred_by<>p.id
-    and exists (select 1 from public.transactions t where t.investment_id=i.id
-      and t.user_id=i.user_id and t.type='INVESTMENT_COST' and t.status='COMPLETED' and t.amount=-i.amount)
-    and not exists (select 1 from public.transactions t where (t.investment_id=i.id or t.reference_id=i.id::text)
-      and t.type='REFERRAL_COMMISSION')
-), credited as (
+-- The root profile may reference itself. Only a distinct sponsor can earn a commission.
+create or replace function private.pay_direct_referral_commission()
+returns trigger language plpgsql security definer set search_path = '' as $$
+declare
+  sponsor_id uuid;
+  commission numeric(18,2);
+begin
+  if upper(new.status) is distinct from 'ACTIVE' or coalesce(new.is_referral_commission_paid,false)
+    or not coalesce(new.amount>0,false) then return new; end if;
+  if tg_op='UPDATE' and upper(old.status)='ACTIVE' then return new; end if;
+  if exists (select 1 from public.transactions where type='REFERRAL_COMMISSION'
+       and (investment_id=new.id or reference_id=new.id::text)) then return new; end if;
+
+  select referred_by into sponsor_id from public.profiles where id=new.user_id;
+  if sponsor_id is null or sponsor_id=new.user_id then return new; end if;
+  commission := round(new.amount*0.10,2);
+  if commission<=0 then return new; end if;
+
+  update public.profiles set wallet_balance=coalesce(wallet_balance,0)+commission,updated_at=now()
+  where id=sponsor_id;
   insert into public.transactions(user_id,investment_id,type,amount,status,description,reference_id)
-  select sponsor_id,id,'REFERRAL_COMMISSION',commission,'COMPLETED','Conciliación de indicación directa 10%',id::text
-  from missing
-  returning user_id,investment_id,amount
-), marked as (
-  update public.investments i set is_referral_commission_paid=true
-  where i.id in (select investment_id from credited)
-)
-update public.profiles p set wallet_balance=coalesce(p.wallet_balance,0)+s.amount,updated_at=now()
-from (select user_id,sum(amount) amount from credited group by user_id) s where p.id=s.user_id;
+  values(sponsor_id,new.id,'REFERRAL_COMMISSION',commission,'COMPLETED','Indicación directa 10% por activación',new.id::text);
+  update public.investments set is_referral_commission_paid=true where id=new.id;
+  return new;
+end;
+$$;
