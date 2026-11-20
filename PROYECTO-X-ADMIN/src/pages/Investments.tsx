@@ -279,11 +279,22 @@ const Investments: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-4">
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => { setNewInvestment({ userId: '', planId: '', amount: '', generateCommission: true }); setIsModalOpen(true); }}
             className="flex items-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-lg shadow-indigo-600/20 transition-all active:scale-95 translate-y-[-2px]"
           >
             <Plus size={20} />
             Nuevo Contrato
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setNewInvestment({ userId: '', planId: '', amount: '', generateCommission: false });
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-3 rounded-3xl border border-emerald-500/40 px-6 py-4 text-xs font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/10"
+          >
+            <Plus size={20} />
+            Activar nodo sin comisiones
           </button>
         </div>
       </div>
@@ -732,7 +743,7 @@ const Investments: React.FC = () => {
                   <TrendingUp size={24} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-white uppercase tracking-tight">Emitir Contrato ROI</h3>
+                  <h3 className="text-xl font-black text-white uppercase tracking-tight">{newInvestment.generateCommission ? 'Emitir Contrato ROI' : 'Activar nodo sin comisiones'}</h3>
                   <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Inyección manual de capital</p>
                 </div>
               </div>
@@ -818,21 +829,21 @@ const Investments: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-slate-900/50 p-6 rounded-[2rem] border border-slate-800 flex items-center justify-between group cursor-pointer"
+              <button type="button" aria-pressed={newInvestment.generateCommission} className="w-full text-left bg-slate-900/50 p-6 rounded-[2rem] border border-slate-800 flex items-center justify-between group cursor-pointer"
                 onClick={() => setNewInvestment({ ...newInvestment, generateCommission: !newInvestment.generateCommission })}>
                 <div className="flex items-center gap-4">
                   <div className={`p-2 rounded-xl transition-colors ${newInvestment.generateCommission ? 'bg-indigo-500/10 text-indigo-500' : 'bg-slate-800 text-slate-500'}`}>
                     <Zap size={20} />
                   </div>
                   <div>
-                    <p className="text-xs font-black text-white uppercase">Generar Comisión</p>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Bono de referido para el Upline</p>
+                    <p className="text-xs font-black text-white uppercase">Comisión directa y volumen binario</p>
+                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{newInvestment.generateCommission ? 'La activación cuenta para la red' : 'La activación queda fuera de la compensación de la red'}</p>
                   </div>
                 </div>
                 <div className={`w-12 h-6 rounded-full transition-all flex items-center px-1 ${newInvestment.generateCommission ? 'bg-indigo-600' : 'bg-slate-700'}`}>
                   <div className={`w-4 h-4 bg-white rounded-full transition-all transform ${newInvestment.generateCommission ? 'translate-x-6' : 'translate-x-0'}`} />
                 </div>
-              </div>
+              </button>
 
               {error && (
                 <div className="p-4 bg-rose-500/5 rounded-2xl border border-rose-500/10 flex gap-3 text-rose-500">
