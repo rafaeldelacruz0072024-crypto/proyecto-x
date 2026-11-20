@@ -742,7 +742,6 @@ const App: React.FC = () => {
         <UserSidebar
           activeTab={activeTab}
           onTabChange={(tab) => { setActiveTab(tab as any); setIsSidebarOpen(false); }}
-          onLogout={handleLogout}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
           profile={profile}
@@ -754,6 +753,7 @@ const App: React.FC = () => {
           user={profile || user}
           balance={walletBalance || 0}
           onProfileClick={() => setActiveTab('profile')}
+          onLogout={handleLogout}
           onMenuToggle={() => setIsSidebarOpen(prev => !prev)}
         />
 

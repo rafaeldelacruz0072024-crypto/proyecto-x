@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LogOut } from 'lucide-react';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -7,10 +8,11 @@ interface Props {
   user: any; // Flexible to accept User from types.ts or Supabase profile
   balance: number;
   onProfileClick?: () => void;
+  onLogout: () => void;
   onMenuToggle?: () => void;
 }
 
-const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMenuToggle }) => {
+const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMenuToggle, onLogout }) => {
   const { t } = useTranslation();
   const [isLive, setIsLive] = useState(false);
 
@@ -45,12 +47,12 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
         </button>
 
         {/* LOGO */}
-        <div className="relative group cursor-pointer" onClick={onProfileClick}>
+        <div className="relative group cursor-pointer max-[359px]:hidden" onClick={onProfileClick}>
           <div className="absolute inset-0 bg-proyecto-accent blur-2xl opacity-10 group-hover:opacity-30 transition-opacity"></div>
           <Logo size="sm" variant="icon" glow={true} className="relative z-10 transition-transform duration-700 hover:scale-105" />
         </div>
 
-        <div className="hidden md:flex flex-col border-l border-white/10 pl-4">
+        <div className="hidden lg:flex flex-col border-l border-white/10 pl-4">
           <p className="text-[10px] uppercase text-proyecto-accent font-orbitron font-bold tracking-[0.3em] text-glow-cyan">
             Nova Copy Trade · Red segura
           </p>
@@ -63,8 +65,8 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
         </div>
       </div>
 
-      <div className="relative z-10 flex shrink-0 items-center gap-2 sm:gap-4 md:gap-8">
-        <div className="text-right hidden md:block">
+      <div className="relative z-10 flex shrink-0 items-center gap-1.5 sm:gap-3 lg:gap-6">
+        <div className="text-right hidden lg:block">
           <p className="text-[9px] uppercase text-slate-500 font-mono-tech font-bold tracking-widest mb-1">{t('dashboard.liquidity_available')}</p>
           <div className="flex items-center justify-end gap-2 group">
             <p className="text-2xl font-orbitron font-bold text-white group-hover:text-glow-white transition-all">
@@ -88,7 +90,7 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
             </div>
           </div>
 
-          <div className="hidden text-left min-[520px]:block md:hidden">
+          <div className="hidden text-left min-[600px]:block lg:hidden">
             <p className="text-[10px] text-white font-orbitron uppercase">{userName}</p>
             <p className="text-[8px] text-proyecto-accent font-mono-tech">ID: #{user?.id?.slice(0, 4)}</p>
           </div>
@@ -96,6 +98,16 @@ const DashboardHeader: React.FC<Props> = ({ user, balance, onProfileClick, onMen
 
         {/* LANGUAGE SWITCHER */}
         <LanguageSwitcher />
+        <button
+          type="button"
+          onClick={onLogout}
+          aria-label={t('nav.logout')}
+          title={t('nav.logout')}
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-rose-400/35 bg-rose-500/10 px-2 text-rose-200 transition-colors hover:bg-rose-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-300 sm:px-3"
+        >
+          <LogOut size={17} aria-hidden="true" />
+          <span className="hidden whitespace-nowrap text-xs font-bold sm:inline">{t('nav.logout')}</span>
+        </button>
       </div>
     </header>
   );
