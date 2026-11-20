@@ -406,7 +406,6 @@
         "notify_error": "Error activating node: {{error}}"
     },
     "auth": {
-        "card_flyer_close": "Close Nova card flyer",
         "show_password": "Show password",
         "hide_password": "Hide password",
         "login_tab": "Node Login",
