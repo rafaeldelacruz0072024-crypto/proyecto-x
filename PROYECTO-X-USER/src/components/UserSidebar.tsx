@@ -7,7 +7,6 @@ const highlightedModules = new Set(['nove-ia', 'influencer', 'nodes', 'copytrade
 interface UserSidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  onLogout: () => void;
   isOpen: boolean;
   onClose: () => void;
   profile: any;
@@ -62,7 +61,6 @@ const NAV_ITEMS = [
 const UserSidebar: React.FC<UserSidebarProps> = ({
   activeTab,
   onTabChange,
-  onLogout,
   isOpen,
   onClose,
   profile,
@@ -167,18 +165,6 @@ const UserSidebar: React.FC<UserSidebarProps> = ({
           })}
         </nav>
 
-        {/* Logout */}
-        <div className="p-3 border-t border-white/5">
-          <button
-            onClick={onLogout}
-            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-red-500 transition-all font-orbitron hover:border-red-500/40 hover:bg-red-500/15"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            {t('nav.logout')}
-          </button>
-        </div>
       </aside>
     </>
   );
