@@ -1,5 +1,6 @@
 create extension if not exists pg_net;
 create extension if not exists pg_cron;
+revoke all on net.http_request_queue, net._http_response from public, anon, authenticated;
 create schema if not exists private;
 
 create table private.nova_transactional_emails (
@@ -28,7 +29,7 @@ declare
 begin
   if tg_table_name = 'profiles' then
     if new.role is distinct from 'user' then return new; end if;
-    recipient_email := new.email;
+    select email into recipient_email from auth.users where id = new.id;
     event_key := 'welcome/' || new.id;
     email_subject := 'Te damos la bienvenida a Nova';
     email_message := 'Tu cuenta de Nova ya está disponible. Accede en https://app.novacopy.digital/login';
@@ -45,7 +46,7 @@ begin
     else
       return new;
     end if;
-    select email into recipient_email from public.profiles where id = new.user_id;
+    select email into recipient_email from auth.users where id = new.user_id;
     email_message := email_message || E'\n\nReferencia: ' || new.id
       || E'\nPuedes revisar los detalles en https://app.novacopy.digital/login';
   end if;
