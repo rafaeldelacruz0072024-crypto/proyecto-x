@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Eye, EyeOff, X } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 import Logo from './Logo';
@@ -16,7 +16,6 @@ interface Props {
 const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode }) => {
   const { t } = useTranslation();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>(initialMode || 'login');
-  const [showCardFlyer, setShowCardFlyer] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   useEffect(() => { setShowPassword(false); }, [mode]);
   const [forgotEmailSent, setForgotEmailSent] = useState(false);
@@ -347,22 +346,6 @@ const AuthPortal: React.FC<Props> = ({ onLogin, initialReferralCode, initialMode
       </div>
       <div className="fixed inset-0 bg-[linear-gradient(90deg,rgba(3,7,18,.94)_0%,rgba(3,7,18,.82)_38%,rgba(3,7,18,.24)_68%,rgba(3,7,18,.1)_100%)] pointer-events-none" />
       <div className="fixed inset-0 bg-grid opacity-40 pointer-events-none" />
-      {mode === 'login' && showCardFlyer && (
-        <aside
-          aria-label="Tarjeta Nova"
-          className="fixed bottom-4 right-4 z-40 w-24 overflow-hidden rounded-2xl border border-lime-300/40 bg-[#07130e] shadow-2xl shadow-black/50 sm:bottom-6 sm:right-6 sm:w-36 xl:w-52"
-        >
-          <img src="/nova_digital_card.png" alt="Tarjeta Nova" className="block h-auto w-full" />
-          <button
-            type="button"
-            aria-label={t('auth.card_flyer_close', { defaultValue: 'Close Nova card flyer' })}
-            onClick={() => setShowCardFlyer(false)}
-            className="absolute right-1 top-1 grid size-9 place-items-center rounded-full border border-white/40 bg-black/80 text-white hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-lime-300"
-          >
-            <X size={16} aria-hidden="true" />
-          </button>
-        </aside>
-      )}
       {/* Language Switcher Overlay */}
       <div className="absolute top-4 right-4 z-[60] pointer-events-auto">
         <LanguageSwitcher />
