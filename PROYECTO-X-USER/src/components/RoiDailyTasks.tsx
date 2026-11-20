@@ -28,6 +28,7 @@ type ActiveCycle = {
   assigned_roi_percentage: number;
   created_at: string;
   last_cycle_activation_at: string | null;
+  tasks_available_at: string | null;
   plans: { name: string; code: string; duration_business_days: number | null } | null;
 };
 type CycleEvent = {
@@ -79,6 +80,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
   const [accumulatedRoi, setAccumulatedRoi] = useState(0);
   const [nextAvailableAt, setNextAvailableAt] = useState<Date | null>(null);
   const [secondsToCut, setSecondsToCut] = useState(0);
+  const [clock, setClock] = useState(Date.now);
   const activeTaskDay = useRef(localDate());
 
   const load = useCallback(async () => {
@@ -86,7 +88,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
     setLoading(true);
     const [historyResult, investmentsResult, cycleEventsResult] = await Promise.all([
       supabase.from('roi_daily_task_completions').select('task_code, task_day, completed_at, investment_id').eq('user_id', userId).not('investment_id', 'is', null).order('completed_at', { ascending: false }).limit(400),
-      supabase.from('investments').select('id, amount, accumulated_earnings, business_days_elapsed, assigned_roi_percentage, created_at, last_cycle_activation_at, plans(name, code, duration_business_days)').eq('user_id', userId).eq('status', 'ACTIVE').order('created_at', { ascending: false }),
+      supabase.from('investments').select('id, amount, accumulated_earnings, business_days_elapsed, assigned_roi_percentage, created_at, last_cycle_activation_at, tasks_available_at, plans(name, code, duration_business_days)').eq('user_id', userId).eq('status', 'ACTIVE').order('created_at', { ascending: false }),
       supabase
         .from('transactions')
         .select('id, type, amount, status, description, created_at')
@@ -165,6 +167,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
 
   useEffect(() => {
     const tick = () => {
+      setClock(Date.now());
       const currentTaskDay = localDate();
       const remaining = nextAvailableAt
         ? Math.max(0, Math.ceil((nextAvailableAt.getTime() - Date.now()) / 1000))
@@ -190,13 +193,19 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
     () => activeCycles.find(cycle => cycle.id === selectedCycleId) || null,
     [activeCycles, selectedCycleId],
   );
+  const unlockTime = selectedCycle
+    ? (selectedCycle.tasks_available_at
+      ? Date.parse(selectedCycle.tasks_available_at)
+      : Date.parse(selectedCycle.created_at) + 86_400_000)
+    : 0;
+  const secondsToUnlock = Math.max(0, Math.ceil((unlockTime - clock) / 1000));
   const cycleIdentifier = (investmentId: string) => `NOVA-${investmentId.slice(0, 8).toUpperCase()}`;
   const formatTaskTime = (completion?: TaskCompletion) => completion
     ? new Intl.DateTimeFormat('es-DO', { timeZone: 'America/Santo_Domingo', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date(completion.completed_at))
     : '—';
 
   const complete = async (taskCode: TaskCode) => {
-    if (!selectedCycleId || completed.has(taskCode) || working) return;
+    if (!selectedCycleId || completed.has(taskCode) || working || unlockTime > Date.now()) return;
     setSimulation(taskCode);
     await new Promise(resolve => setTimeout(resolve, 650));
     setWorking(taskCode);
@@ -252,6 +261,13 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
           </div>
         </div>
 
+        {secondsToUnlock > 0 && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+            <span>Las tareas de este nodo se habilitan en</span>
+            <span className="font-mono font-bold tabular-nums" role="timer">{formatCountdown(secondsToUnlock)}</span>
+          </div>
+        )}
+
         <div className="mt-6">
           <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
             <div>
@@ -291,7 +307,7 @@ export default function RoiDailyTasks({ userId, hasActiveContracts, onRoiActivat
                   <div className={`flex h-12 w-12 shrink-0 items-center justify-center border ${done ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300' : 'border-proyecto-accent/40 bg-proyecto-brand/15 text-proyecto-accent'}`}>{done ? <CheckCircle2 size={25} /> : <Icon size={24} />}</div>
                   <div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-2"><h3 className="text-base font-orbitron font-black text-white sm:text-lg">{title}</h3><span className={`shrink-0 px-2 py-1 text-[9px] font-mono-tech uppercase ${done ? 'bg-emerald-500/10 text-emerald-300' : 'bg-slate-800 text-blue-200'}`}>{done ? `Completada · ${formatTaskTime(completion)}` : 'Pendiente'}</span></div><p className="mt-2 text-sm leading-relaxed text-slate-400">{description}</p><p className="mt-2 break-all font-mono text-[9px] text-slate-600">{selectedCycle ? cycleIdentifier(selectedCycle.id) : 'SIN CICLO SELECCIONADO'}</p></div>
                 </div>
-                <button type="button" onClick={() => void complete(code)} disabled={!hasActiveContracts || done || !!working || loading} className={`mt-5 w-full border px-4 py-3 text-sm font-orbitron font-black transition disabled:cursor-not-allowed ${done ? 'border-emerald-400/25 bg-emerald-500/15 text-emerald-300' : hasActiveContracts ? 'border-proyecto-accent/60 bg-gradient-to-r from-cyan-500 to-violet-600 text-white shadow-[0_8px_24px_rgba(53,100,255,0.25)] hover:brightness-110' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
+                <button type="button" onClick={() => void complete(code)} disabled={!hasActiveContracts || !selectedCycle || secondsToUnlock > 0 || done || !!working || loading} className={`mt-5 w-full border px-4 py-3 text-sm font-orbitron font-black transition disabled:cursor-not-allowed ${done ? 'border-emerald-400/25 bg-emerald-500/15 text-emerald-300' : hasActiveContracts ? 'border-proyecto-accent/60 bg-gradient-to-r from-cyan-500 to-violet-600 text-white shadow-[0_8px_24px_rgba(53,100,255,0.25)] hover:brightness-110' : 'border-slate-700 bg-slate-800 text-slate-500'}`}>
                   {busy || simulation === code ? <span className="flex items-center justify-center gap-2"><Loader2 size={18} className="animate-spin" /> Procesando señal…</span> : done ? `✓ Registrada ${formatTaskTime(completion)}` : selectedCycle ? action : 'Requiere contrato activo'}
                 </button>
               </article>
