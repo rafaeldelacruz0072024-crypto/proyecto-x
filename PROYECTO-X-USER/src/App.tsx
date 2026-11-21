@@ -3,6 +3,7 @@ import CopyTradingPanel from './components/CopyTradingPanel';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from './lib/supabase';
+import NodeCertificates from './components/NodeCertificates';
 import { useUserData } from './hooks/useUserData';
 import {
   createDeposit,
@@ -76,7 +77,7 @@ const App: React.FC = () => {
     refetch
   } = useUserData(user?.id);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'activate-nodes' | 'network' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'nodes' | 'activate-nodes' | 'certificates' | 'network' | 'finance' | 'events' | 'tutorials' | 'copytrade' | 'nove-ia' | 'profile' | 'roadmap' | 'influencer'>('dashboard');
   const [simulationSettings, setSimulationSettings] = useState<any>(null);
   const [latestEvent, setLatestEvent] = useState<SocketMessage | null>(null);
   const [referralFromUrl, setReferralFromUrl] = useState<string | null>(null);
@@ -889,6 +890,15 @@ const App: React.FC = () => {
               />
 
             </div>
+          )}
+
+          {activeTab === 'certificates' && (
+            <NodeCertificates
+              key={user.id}
+              nodes={investments.filter(node => node.user_id === user.id)}
+              holder={profile?.full_name || profile?.username || t('common.user_placeholder', { defaultValue: 'Nova' })}
+              loading={loading}
+            />
           )}
 
           {activeTab === 'activate-nodes' && (
