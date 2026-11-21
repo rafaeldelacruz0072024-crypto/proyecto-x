@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Bot } from 'lucide-react';
+import { Camera, Bot, FileCheck2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const highlightedModules = new Set(['nove-ia', 'influencer', 'nodes', 'copytrade']);
@@ -25,6 +25,10 @@ const NAV_ITEMS = [
   {
     id: 'activate-nodes',
     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14M5 12h14" /></svg>,
+  },
+  {
+    id: 'certificates',
+    icon: <FileCheck2 size={20} aria-hidden="true" />,
   },
   {
     id: 'network',
