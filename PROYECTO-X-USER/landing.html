@@ -1487,8 +1487,8 @@
                             <circle cx="9" cy="7" r="4" />
                             <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
                         </svg></div>
-                    <div class="stat-val"><span class="counter" id="stat-investors" data-target="0">0</span>+</div>
-                    <div class="stat-lbl">Inversores activos</div>
+                    <div class="stat-val">22</div>
+                    <div class="stat-lbl">Usuarios registrados</div>
                 </div>
                 <div class="stat-card reveal reveal-delay-1">
                     <div class="stat-icon"><svg viewBox="0 0 24 24">
@@ -1496,25 +1496,26 @@
                             <path
                                 d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2" />
                         </svg></div>
-                    <div class="stat-val"><span class="counter" id="stat-countries" data-target="0">0</span>+</div>
-                    <div class="stat-lbl">Países</div>
+                    <div class="stat-val">3</div>
+                    <div class="stat-lbl">Inversores activos</div>
                 </div>
                 <div class="stat-card reveal reveal-delay-2">
                     <div class="stat-icon"><svg viewBox="0 0 24 24">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
                         </svg></div>
-                    <div class="stat-val">$<span class="counter" id="stat-payouts" data-target="0" data-prefix="">0</span>+</div>
-                    <div class="stat-lbl">Pagos totales</div>
+                    <div class="stat-val">1.100</div>
+                    <div class="stat-lbl">Capital en inversiones activas (USDT)</div>
                 </div>
                 <div class="stat-card reveal reveal-delay-3">
                     <div class="stat-icon"><svg viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 6v6l4 2" />
                         </svg></div>
-                    <div class="stat-val"><span class="counter" id="stat-years" data-target="0">0</span> años</div>
-                    <div class="stat-lbl">En el mercado</div>
+                    <div class="stat-val">3</div>
+                    <div class="stat-lbl">Inversiones activas</div>
                 </div>
             </div>
+            <p style="text-align:center;margin-top:1.25rem">Cifras al <time datetime="2026-11-23">23 de noviembre de 2026</time>.</p>
         </div>
     </section>
 
@@ -1950,59 +1951,6 @@
             })
         }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
         reveals.forEach(el => observer.observe(el));
-
-        // Counter Animation
-        function animateCounter(el) {
-            const target = parseInt(el.getAttribute('data-target'));
-            const duration = 2000;
-            const start = performance.now();
-            function update(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(eased * target);
-                el.textContent = target >= 10000 ? current.toLocaleString() : current;
-                if (progress < 1) requestAnimationFrame(update);
-                else el.textContent = target >= 10000 ? target.toLocaleString() : target;
-            }
-            requestAnimationFrame(update);
-        }
-
-        function initCounters() {
-            const counters = document.querySelectorAll('.counter');
-            const counterObs = new IntersectionObserver((entries) => {
-                entries.forEach(e => {
-                    if (e.isIntersecting) { animateCounter(e.target); counterObs.unobserve(e.target) }
-                })
-            }, { threshold: 0.5 });
-            counters.forEach(el => counterObs.observe(el));
-        }
-
-        // Fetch landing stats from Supabase
-        (async function loadLandingStats() {
-            const SUPABASE_URL = '%VITE_SUPABASE_URL%';
-            const SUPABASE_ANON = '%VITE_SUPABASE_ANON_KEY%';
-            if (SUPABASE_URL.startsWith('%VITE_') || SUPABASE_ANON.startsWith('%VITE_')) {
-                initCounters();
-                return;
-            }
-            try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/site_stats?limit=1`, {
-                    headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` }
-                });
-                if (res.ok) {
-                    const rows = await res.json();
-                    if (rows && rows.length > 0) {
-                        const d = rows[0];
-                        if (d.active_investors) document.getElementById('stat-investors').setAttribute('data-target', d.active_investors);
-                        if (d.countries) document.getElementById('stat-countries').setAttribute('data-target', d.countries);
-                        if (d.total_payouts) document.getElementById('stat-payouts').setAttribute('data-target', d.total_payouts);
-                        if (d.years_in_market) document.getElementById('stat-years').setAttribute('data-target', d.years_in_market);
-                    }
-                }
-            } catch (_) {}
-            initCounters();
-        })();
 
         // Nav scroll effect
         const nav = document.querySelector('.nav');
