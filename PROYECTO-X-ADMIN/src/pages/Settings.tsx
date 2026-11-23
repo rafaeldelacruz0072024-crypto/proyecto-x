@@ -115,11 +115,9 @@ const Settings: React.FC = () => {
 
   // Landing Stats
   const [landingStats, setLandingStats] = useState({
-    active_investors: 0,
-    countries: 0,
-    total_payouts: 0,
-    years_in_market: 0
+    registered_users: '', active_investors: '', active_investments: '', active_capital: '', as_of: ''
   });
+  const [statsVersion, setStatsVersion] = useState('');
   const [landingStatsLoading, setLandingStatsLoading] = useState(false);
 
   // Estado del Salary Config (9 rangos por defecto)
@@ -280,27 +278,27 @@ const Settings: React.FC = () => {
 
   const fetchLandingStats = async () => {
     try {
-      const { data } = await supabase.from('site_stats').select('*').limit(1).single();
-      if (data) {
-        setLandingStats({
-          active_investors: data.active_investors ?? 0,
-          countries: data.countries ?? 0,
-          total_payouts: data.total_payouts ?? 0,
-          years_in_market: data.years_in_market ?? 0
-        });
-      }
-    } catch (_) {}
+      const { data, error } = await supabase.from('site_stats').select('*').eq('id',1).single();
+      if (error) throw error;
+      setLandingStats({
+        registered_users: String(data.registered_users), active_investors: String(data.active_investors),
+        active_investments: String(data.active_investments), active_capital: String(data.active_capital), as_of: data.as_of
+      });
+      setStatsVersion(data.updated_at);
+    } catch (err: any) { setError('Error al cargar las estadísticas: ' + err.message); }
   };
 
-  const saveLandingStats = async () => {
+  const saveLandingStats = async (event: React.FormEvent) => {
+    event.preventDefault();
     setLandingStatsLoading(true);
+    setError(null);
+    setSuccess(null);
     try {
-      const { data: existing } = await supabase.from('site_stats').select('id').limit(1).single();
-      if (existing?.id) {
-        await supabase.from('site_stats').update(landingStats).eq('id', existing.id);
-      } else {
-        await supabase.from('site_stats').insert(landingStats);
-      }
+      const { data, error } = await supabase.from('site_stats').update(landingStats)
+        .eq('id', 1).eq('updated_at', statsVersion).select('updated_at').maybeSingle();
+      if (error) throw error;
+      if (!data) throw new Error('Comprueba tus permisos y recarga la página para ver la última versión.');
+      setStatsVersion(data.updated_at);
       setSuccess('Estadísticas del landing actualizadas.');
       setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
@@ -586,7 +584,7 @@ const Settings: React.FC = () => {
               className={`w-full flex items-center space-x-3 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all ${activeTab === 'landing' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-900'}`}
             >
               <Globe size={18} />
-              <span>Landing Stats</span>
+              <span>Estadísticas de la landing</span>
             </button>
           </div>
 
@@ -1150,7 +1148,7 @@ const Settings: React.FC = () => {
             )}
 
             {activeTab === 'landing' && (
-              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 space-y-8 shadow-2xl animate-in fade-in duration-300">
+              <form onSubmit={saveLandingStats} className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 space-y-8 shadow-2xl animate-in fade-in duration-300">
                 <div className="flex items-center space-x-4 pb-6 border-b border-slate-800">
                   <Globe className="text-indigo-400" size={24} />
                   <h3 className="text-xl font-black text-slate-100">Estadísticas Landing Page</h3>
@@ -1158,37 +1156,38 @@ const Settings: React.FC = () => {
                 <p className="text-slate-400 text-sm">Estos valores se muestran en la sección de estadísticas del landing page público.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {[
-                    { key: 'active_investors', label: 'Active Investors', suffix: '+' },
-                    { key: 'countries', label: 'Countries', suffix: '+' },
-                    { key: 'total_payouts', label: 'Total Payouts ($)', suffix: '+' },
-                    { key: 'years_in_market', label: 'Years in Market', suffix: '' }
-                  ].map(({ key, label, suffix }) => (
+                    { key: 'registered_users', label: 'Usuarios registrados' },
+                    { key: 'active_investors', label: 'Inversores activos' },
+                    { key: 'active_capital', label: 'Capital en inversiones activas (USDT)' },
+                    { key: 'active_investments', label: 'Inversiones activas' },
+                    { key: 'as_of', label: 'Fecha de corte' }
+                  ].map(({ key, label }) => (
                     <div key={key} className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">{label}</label>
+                      <label htmlFor={key} className="text-xs font-black uppercase tracking-widest text-slate-400">{label}</label>
                       <div className="flex items-center gap-2 bg-[#05070a] border border-slate-800 rounded-2xl px-4 py-3">
                         <input
-                          type="number"
-                          min={0}
+                          id={key} required type={key === 'as_of' ? 'date' : 'number'} step={key === 'active_capital' ? 0.01 : 1}
+                          min={key === 'as_of' ? undefined : 0}
                           value={landingStats[key as keyof typeof landingStats]}
-                          onChange={e => setLandingStats(prev => ({ ...prev, [key]: Number(e.target.value) }))}
+                          onChange={e => setLandingStats(prev => ({ ...prev, [key]: e.target.value }))}
                           className="flex-1 bg-transparent border-none p-0 text-white font-black text-xl focus:ring-0 outline-none tabular-nums"
                         />
-                        {suffix && <span className="text-indigo-400 font-black text-sm">{suffix}</span>}
+
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="flex justify-end pt-2">
                   <button
-                    onClick={saveLandingStats}
-                    disabled={landingStatsLoading}
+                    type="submit"
+                    disabled={landingStatsLoading || !statsVersion}
                     className="flex items-center space-x-3 px-12 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[1.75rem] shadow-2xl shadow-indigo-600/30 transition-all font-black uppercase text-xs tracking-[0.2em] active:scale-95 disabled:opacity-50"
                   >
                     {landingStatsLoading ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
                     <span>Guardar Estadísticas</span>
                   </button>
                 </div>
-              </div>
+              </form>
             )}
 
             {activeTab !== 'landing' && (
