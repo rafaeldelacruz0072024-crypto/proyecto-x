@@ -247,7 +247,7 @@ const Settings: React.FC = () => {
           // Ventana de retiros
           withdrawal_global_blocked: data.withdrawal_global_blocked ?? false,
           withdrawal_window_enabled: data.withdrawal_window_enabled ?? true,
-          withdrawal_open_day: data.withdrawal_open_day ?? 6,
+          withdrawal_open_day: data.withdrawal_open_day ?? null,
           withdrawal_open_hour: data.withdrawal_open_hour ?? 9,
           withdrawal_close_hour: data.withdrawal_close_hour ?? 14,
         });
@@ -786,7 +786,7 @@ const Settings: React.FC = () => {
 
                       {/* HORA APERTURA */}
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Hora Apertura (UTC-4)</label>
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Hora Apertura (hora de Colombia)</label>
                         <div className="relative">
                           <input
                             type="number"
@@ -801,7 +801,7 @@ const Settings: React.FC = () => {
 
                       {/* HORA CIERRE */}
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Hora Cierre (UTC-4)</label>
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Hora Cierre (hora de Colombia)</label>
                         <div className="relative">
                           <input
                             type="number"
@@ -826,7 +826,7 @@ const Settings: React.FC = () => {
                       <p className="text-sm font-black text-emerald-400">🟢 Retiros disponibles 24/7</p>
                     ) : (
                       <p className="text-sm font-bold text-amber-400">
-                        🕐 Ventana: {settings.withdrawal_open_day === null ? 'Todos los días' : ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][settings.withdrawal_open_day as number]} · {String(settings.withdrawal_open_hour).padStart(2,'0')}:00 – {String(settings.withdrawal_close_hour).padStart(2,'0')}:00 UTC-4
+                        🕐 Ventana: {settings.withdrawal_open_day === null ? 'Todos los días' : ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][settings.withdrawal_open_day as number]} · {String(settings.withdrawal_open_hour).padStart(2,'0')}:00 – {String(settings.withdrawal_close_hour).padStart(2,'0')}:00 hora de Colombia
                       </p>
                     )}
                   </div>

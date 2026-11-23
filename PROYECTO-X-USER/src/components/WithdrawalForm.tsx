@@ -10,8 +10,17 @@ interface Props {
   user?: Profile; // USAMOS PROFILE EN LUGAR DE USER
 }
 
-const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) => {
+const WithdrawalForm: React.FC<Props> = ({ balance: walletBalance, handleWithdrawal, user }) => {
   const { t, i18n } = useTranslation();
+  const [balance, setBalance] = useState(0);
+  useEffect(() => {
+    let active = true;
+    setBalance(0);
+    if (user?.id) supabase.rpc('my_withdrawable_commissions').then(({ data, error }) => {
+      if (active && !error) setBalance(Number(data) || 0);
+    });
+    return () => { active = false; };
+  }, [user?.id, walletBalance]);
   const [amount, setAmount] = useState<string>('');
   const [method, setMethod] = useState<string>('USDT');
   const hasPhyzerCard = !!(user?.phyzer_card_address);
@@ -19,7 +28,7 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
     ? (user?.phyzer_card_address || '')
     : (user?.withdrawal_wallet || user?.wallet_address || '');
   const [withdrawalFeePercent, setWithdrawalFeePercent] = useState<number>(8);
-  const [minWithdrawal, setMinWithdrawal] = useState<number>(25);
+  const [minWithdrawal, setMinWithdrawal] = useState<number>(40);
   const [windowState, setWindowState] = useState<{ isOpen: boolean; timeRemaining: string; label: string }>({
     isOpen: false,
     timeRemaining: 'Calculando...',
@@ -29,8 +38,8 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
   const [windowConfig, setWindowConfig] = useState({
     globalBlocked: false,
     windowEnabled: true,
-    openDay: null as number | null,  // null = Diario
-    openHour: 9,
+    openDay: 5 as number | null,  // null = Diario
+    openHour: 8,
     closeHour: 15,
   });
 
@@ -47,9 +56,9 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
       setWindowConfig({
         globalBlocked: settings.withdrawal_global_blocked  ?? false,
         windowEnabled: settings.withdrawal_window_enabled  ?? true,
-        openDay:       null, // Lunes a Domingo
-        openHour:      9,    // 9 AM
-        closeHour:     15,   // 3 PM (15:00)
+        openDay:       settings.withdrawal_open_day,
+        openHour:      settings.withdrawal_open_hour ?? 8,
+        closeHour:     settings.withdrawal_close_hour ?? 15,
       });
     }
     loadSettings();
@@ -62,10 +71,10 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
     async function checkDailyLimit() {
       try {
         const now = new Date();
-        const utc4Time = new Date(now.getTime() - (4 * 60 * 60 * 1000));
-        const todayStr = utc4Time.toISOString().split('T')[0];
+        const colombiaTime = new Date(now.getTime() - (5 * 60 * 60 * 1000));
+        const todayStr = colombiaTime.toISOString().split('T')[0];
 
-        const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+        const twoDaysAgo = new Date(now.getTime() - 2 * 25 * 60 * 60 * 1000);
         const { data: recentWds, error } = await supabase
           .from('withdrawals')
           .select('created_at, status')
@@ -76,8 +85,8 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
         if (error) throw error;
 
         const existsToday = recentWds?.some(wd => {
-          const wdUtc4 = new Date(new Date(wd.created_at).getTime() - (4 * 60 * 60 * 1000));
-          const wdDateStr = wdUtc4.toISOString().split('T')[0];
+          const wdColombia = new Date(new Date(wd.created_at).getTime() - (5 * 60 * 60 * 1000));
+          const wdDateStr = wdColombia.toISOString().split('T')[0];
           return wdDateStr === todayStr;
         }) || false;
 
@@ -106,9 +115,9 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
       }
 
       const now = new Date();
-      const utc4Time = new Date(now.getTime() - (4 * 60 * 60 * 1000));
-      const day  = utc4Time.getUTCDay();
-      const hour = utc4Time.getUTCHours();
+      const colombiaTime = new Date(now.getTime() - (5 * 60 * 60 * 1000));
+      const day  = colombiaTime.getUTCDay();
+      const hour = colombiaTime.getUTCHours();
 
       const { openDay, openHour, closeHour } = windowConfig;
       const dayMatch = openDay === null || day === openDay;
@@ -116,25 +125,25 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
 
       if (isOpen) {
         // Tiempo hasta el cierre
-        const nextClose = new Date(utc4Time);
+        const nextClose = new Date(colombiaTime);
         nextClose.setUTCHours(closeHour, 0, 0, 0);
-        const diff = nextClose.getTime() - utc4Time.getTime();
+        const diff = nextClose.getTime() - colombiaTime.getTime();
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
         const dayLabel = openDay !== null
-          ? `${DAY_NAMES[openDay]}s`
+          ? `${DAY_NAMES[openDay]}`
           : (i18n.language?.startsWith('es') ? 'Lunes a Domingo' : 'Monday to Sunday');
         setWindowState({
           isOpen: true,
           timeRemaining: `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} para el cierre`,
-          label: `${dayLabel} · ${String(openHour).padStart(2,'0')}:00 – ${String(closeHour).padStart(2,'0')}:00 (UTC-4)`
+          label: `${dayLabel} · ${String(openHour).padStart(2,'0')}:00 – ${String(closeHour).padStart(2,'0')}:00 (hora de Colombia)`
         });
         return;
       }
 
       // Calcular próxima apertura
-      let nextOpen = new Date(utc4Time);
+      let nextOpen = new Date(colombiaTime);
       nextOpen.setUTCHours(openHour, 0, 0, 0);
 
       if (openDay === null) {
@@ -145,7 +154,7 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
         nextOpen.setUTCDate(nextOpen.getUTCDate() + daysUntil);
       }
 
-      const diff = nextOpen.getTime() - utc4Time.getTime();
+      const diff = nextOpen.getTime() - colombiaTime.getTime();
       const d = Math.floor(diff / 86400000);
       const h = Math.floor((diff % 86400000) / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
@@ -155,8 +164,8 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
         isOpen: false,
         timeRemaining: `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`,
         label: openDay !== null
-          ? `${DAY_NAMES[openDay]}s · ${String(openHour).padStart(2,'0')}:00 – ${String(closeHour).padStart(2,'0')}:00 (UTC-4)`
-          : `${i18n.language?.startsWith('es') ? 'Lunes a Domingo' : 'Monday to Sunday'} · ${String(openHour).padStart(2,'0')}:00 – ${String(closeHour).padStart(2,'0')}:00 (UTC-4)`
+          ? `${DAY_NAMES[openDay]} · ${String(openHour).padStart(2,'0')}:00 – ${String(closeHour).padStart(2,'0')}:00 (hora de Colombia)`
+          : `${i18n.language?.startsWith('es') ? 'Lunes a Domingo' : 'Monday to Sunday'} · ${String(openHour).padStart(2,'0')}:00 – ${String(closeHour).padStart(2,'0')}:00 (hora de Colombia)`
       });
     };
 
@@ -239,7 +248,7 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
                 {windowConfig.openDay !== null
                   ? ['Domingos','Lunes','Martes','Miércoles','Jueves','Viernes','Sábados'][windowConfig.openDay]
                   : (i18n.language?.startsWith('es') ? 'Lunes a Domingo' : 'Monday to Sunday')
-                } · {String(windowConfig.openHour).padStart(2,'0')}:00 – {String(windowConfig.closeHour).padStart(2,'0')}:00 <span className="text-slate-400">(UTC-4)</span>
+                } · {String(windowConfig.openHour).padStart(2,'0')}:00 – {String(windowConfig.closeHour).padStart(2,'0')}:00 <span className="text-slate-400">(hora de Colombia)</span>
               </p>
             )}
           </div>
@@ -329,7 +338,7 @@ const WithdrawalForm: React.FC<Props> = ({ balance, handleWithdrawal, user }) =>
               {t('withdrawal.min_amount', { amount: minWithdrawal.toFixed(2) })}
             </span>
             <span className={`text-[10px] font-black uppercase tracking-tighter ${numAmount > balance ? 'text-red-500' : 'text-phyzer-gold'}`}>
-              {t('withdrawal.available', { amount: balance.toLocaleString('en-US', { minimumFractionDigits: 2 }) })}
+              Comisiones disponibles: {balance.toFixed(2)} USDT
             </span>
           </div>
         </div>
