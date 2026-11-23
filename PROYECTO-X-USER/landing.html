@@ -1487,7 +1487,7 @@
                             <circle cx="9" cy="7" r="4" />
                             <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
                         </svg></div>
-                    <div class="stat-val">22</div>
+                    <div class="stat-val" data-stat="registered_users">22</div>
                     <div class="stat-lbl">Usuarios registrados</div>
                 </div>
                 <div class="stat-card reveal reveal-delay-1">
@@ -1496,14 +1496,14 @@
                             <path
                                 d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2" />
                         </svg></div>
-                    <div class="stat-val">3</div>
+                    <div class="stat-val" data-stat="active_investors">3</div>
                     <div class="stat-lbl">Inversores activos</div>
                 </div>
                 <div class="stat-card reveal reveal-delay-2">
                     <div class="stat-icon"><svg viewBox="0 0 24 24">
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
                         </svg></div>
-                    <div class="stat-val">1.100</div>
+                    <div class="stat-val" data-stat="active_capital">1.100</div>
                     <div class="stat-lbl">Capital en inversiones activas (USDT)</div>
                 </div>
                 <div class="stat-card reveal reveal-delay-3">
@@ -1511,7 +1511,7 @@
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 6v6l4 2" />
                         </svg></div>
-                    <div class="stat-val">3</div>
+                    <div class="stat-val" data-stat="active_investments">3</div>
                     <div class="stat-lbl">Inversiones activas</div>
                 </div>
             </div>
@@ -1943,6 +1943,30 @@
 
     <!-- JAVASCRIPT -->
     <script>
+        async function loadLandingStats() {
+            const url = '%VITE_SUPABASE_URL%';
+            const key = '%VITE_SUPABASE_ANON_KEY%';
+            if (!url.startsWith('https://') || !key) return;
+            try {
+                const response = await fetch(url + '/rest/v1/site_stats?id=eq.1&select=registered_users,active_investors,active_capital,active_investments,as_of', {
+                    headers: { apikey: key }, cache: 'no-store'
+                });
+                if (!response.ok) return;
+                const [stats] = await response.json();
+                if (!stats) return;
+                const date = new Date(stats.as_of + 'T12:00:00Z');
+                const dateLabel = new Intl.DateTimeFormat('es-CO', {dateStyle: 'long', timeZone: 'UTC'}).format(date);
+                const format = new Intl.NumberFormat('es-CO', {maximumFractionDigits: 2});
+                document.querySelectorAll('#stats [data-stat]').forEach(el => {
+                    el.textContent = format.format(stats[el.dataset.stat]);
+                });
+                const cutoff = document.querySelector('#stats time');
+                cutoff.dateTime = stats.as_of;
+                cutoff.textContent = dateLabel;
+            } catch { /* Keep the dated, verified figures included in the page. */ }
+        }
+        loadLandingStats();
+
         // Scroll Reveal
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
