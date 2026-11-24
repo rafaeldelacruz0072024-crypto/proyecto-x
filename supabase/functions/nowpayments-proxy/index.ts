@@ -42,6 +42,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         price_amount: amount,
         price_currency: 'usd',
+        ...(!novaIa && { pay_amount: amount }),
         pay_currency: 'usdtbsc',
         order_id: novaIa ? `nova-ia:${orderId}` : orderId,
         order_description: novaIa ? 'Mensualidad Nova IA' : 'Depósito Nova Copy Trade',
@@ -56,6 +57,10 @@ Deno.serve(async (req) => {
         payment?.pay_currency !== 'usdtbsc' || !Number.isFinite(payAmount) || payAmount <= 0) {
       console.error('NOWPayments rechazó la orden', response.status);
       return reply(502, { error: 'NOWPayments no pudo generar el pago para ese importe.' });
+    }
+
+    if (!novaIa && payAmount !== amount) {
+      return reply(502, { error: 'NOWPayments no confirmó el importe exacto en USDT. Intenta nuevamente.' });
     }
 
     const { error } = novaIa
